@@ -1,0 +1,67 @@
+Un tablou bidimensional este tablou pătratic sau matrice pătratică dacă numărul de linii este egal cu numărul de coloane.
+
+În această situație folosim pentru ambele dimensiuni o singură variabilă, de regulă n:
+
+int n, A[100][100];
+Într-o matrice pătratică se disting o categorie specială de elemente, diagonalele. Un element al matricei aparține sau nu diagonalelor sau zonelor delimitate de acestea dacă respectă anumite reguli, în care intervin indicii elementului, nu valoarea elementului. În cele ce urmează, pentru un element oarecare al matricei vom nota cu i indicele de linie și cu j indicele de coloană.
+Parcurgerea elementelor de pe diagonala principală:
+
+for(int i = 0 ; i < n ; i ++)
+{
+    // A[i][i]
+}
+Parcurgerea elementelor de pe diagonala secundară:
+
+//indexare de la 0
+for(int i = 0 ; i < n ; i ++)
+{
+    // A[i][n - 1 - i]
+}
+
+//indexare de la 1
+for(int i = 1 ; i <= n ; i ++)
+{
+    // A[i][n + 1 - i]
+}
+Observație: Dacă n este impar, cele două diagonale au un element comun. Dacă n este par, cele două diagonale nu au elemente comune.
+Zonele delimitate de diagonale
+Cele două diagonale delimitează în matrice patru zone: Nord, Est, Sud și Vest. Condițiile verificate de indicii elementelor din aceste zone sunt prezentate mai jos:
+In zona de Nord:
+//indexare de la 0
+if (i < j && i + j < n - 1)
+//indexare de la 1
+if (i < j && i + j < n)
+In zona de Est:
+//indexare de la 0
+if (i < j && i + j > n - 1)
+//indexare de la 1
+if (i < j && i + j > n)
+In zona de Sud:
+//indexare de la 0
+if (i > j && i + j > n - 1)
+//indexare de la 1
+if (i > j && i + j > n)
+In zona de Vest:
+//indexare de la 0
+if (i > j && i + j < n - 1)
+//indexare de la 1
+if (i > j && i + j < n)
+
+for (int i = 0; i < n; ++i)
+{
+    for (int j = 0; j < n; ++j)
+    {
+        if (i < j && i + j < n - 1)
+            cout << "Nord\n";
+        else if (i < j && i + j > n - 1)
+            cout << "Est\n";
+        else if (i > j && i + j > n - 1)
+            cout << "Sud\n";
+        else if (i > j && i + j < n - 1)
+            cout << "Vest\n";
+        else if (i == j)
+            cout << "Diagonala Principală\n";
+        else if (i + j == n - 1)
+            cout << "Diagonala Secundară\n";
+    }
+}

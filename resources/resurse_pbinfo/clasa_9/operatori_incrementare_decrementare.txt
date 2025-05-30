@@ -1,0 +1,49 @@
+În general, incrementarea unei date înseamnă mărirea valorii sale, de obicei cu 1, iar decrementarea unei date înseamnă micșorarea valorii sale.
+
+Aceste operații sunt foarte frecvente. De aceea, numeroase limbaje de programare (inclusiv C/C++, Java, Javascript, C#, PHP) pun la dispoziția programatorilor operatori care fac tocmai acest lucru.
+
+Operatorul de incrementare este ++, iar cel de decrementare este --. Sunt operatori unari și se pot aplica doar datelor (variabile sau operații care au rezultat de tip lvalue – element de tablou, câmp al unei structuri, etc.).
+
+Operatorii de incrementare/decrementare nu se pot aplica pentru constante sau pentru operații care au ca rezultat valori (operații aritmetice, comparații, etc.).
+
+De regulă, operatorii unari sunt prefixați (sunt plasați înaintea operandului, de exemplu - x). Operatorii de incrementare și decrementare pot fi atât prefixați ( se scriu înaintea operandului), cât și postfixați (se scriu după operand). Efectul lor este același (incrementarea/decrementarea operandului), dar rezultatul diferă.
+
+Incrementarea
+Operația de incrementare a variabilei X poate fi:
+
+postincrementare: X ++. Efectul expresiei este mărirea valorii lui X cu 1, iar rezultatul operației este valoarea inițială a lui X.
+preincrementare: ++ X. Efectul expresiei este mărirea valorii lui X cu 1, iar rezultatul operației este chiar variabila X (cu valoarea mărită, bineînțeles).
+Exemplu postincrementare
+int x = 5 , y = 10;
+y = x ++; // y primeste valoare lui (x++), adica valoarea initiala a lui x
+cout << x << " " << y; // 6 5
+Exemplu preincrementare
+int x = 5 , y = 10;
+y = ++ x; // y primeste valoare lui (++x), adica valoarea marita a lui x
+cout << x << " " << y; // 6 6
+Observații
+preincrementarea are ca rezultat variabila (data) asupra căreia se aplică operația. În consecință, rezultatul poate fi folosit în orice context se poate folosi o lvalue – de exemplu i se poate aplica din nou operatorul de incrementare sau cel de decrementare.
+postincrementarea are ca rezultat o valoare – valoarea inițială a variabilei. Rezultatul postincrementării poate fi folosit doar în expresiile unde intervin valori.
+Exemple:
+
+int x = 5 , y = 10;
+y = (++ x) ++; // x devine 7, y devine 6
+cout << x << " " << y;
+int x = 5 , y = 10;
+y = ++ (x ++); // eroare, rezultatul lui x ++ nu este lvalue
+cout << x << " " << y;
+int x = 5 , y = 10;
+y =  ++ ++ x; // x devine 7, y devine y
+cout << x << " " << y;
+Postincrementarea are prioritate mai mare decât preincrementarea (vezi aici prioritatea operatorilor). Din acest motiv următoarea secvență este greșită sintactic.
+
+int x = 5 , y = 10;
+y = ++ x ++; // eroare; prioritate are x ++, dar rezultatul sau nu este lvalue
+cout << x << " " << y;
+Decrementarea
+Decrementarea respectă toate proprietățile incrementării, cu observația că valoarea datei asupra căreia se aplică se va micșora cu 1.
+
+Operația de decrementare a variabilei X poate fi:
+
+postdecrementare: X --. Efectul expresiei este micșorarea valorii lui X cu 1, iar rezultatul operației este valoarea inițială a lui X.
+predecrementare: -- X. Efectul expresiei este micșorarea valorii lui X cu 1, iar rezultatul operației este chiar variabila X.

@@ -1,0 +1,40 @@
+Sortarea prin selecție (Selection Sort) se bazează pe următoarea idee:
+
+fie un vector X[] cu n elemente;
+plasăm în X[0] cea mai mică valoare din vector;
+plasăm în X[1] cea mai mică valoare rămasă;
+etc.
+O descriere a algoritmului este:
+
+parcurgem vectorul cu indicele i
+parcurgem cu indicele j elementele din dreapta lui X[i]
+dacă elementele X[i] și X[j] nu sunt în ordinea dorită, le interschimbăm
+Observații
+
+în algoritmul de mai sus, pentru fiecare valoare a lui i, în X[i] se obține cea mai mică (mare) valoare dintre elementele cu indici i, i+1, ..., n; altfel spus, pentru fiecare i, în X[i] se selectează minimul (maximul) dintre elementele i, i+1, ..., n.
+metoda se mai numește sortare prin selecție directă, sortare prin selecție implicită sau sortare prin interschimbare.
+Secvență C++
+int n, X[100];
+//citire X[] cu n elemente
+for(int i = 0 ; i < n - 1 ; i ++)
+    for(int j = i + 1 ; j < n ; j ++)
+        if(X[i] > X[j])
+        {
+            int aux = X[i];
+            X[i] = X[j];
+            X[j] = aux;
+        }
+Algoritmul descris mai sus se mai numește sortare prin selecție generală, sau implicită. O altă variantă este următoarea, în care pentru fiecare secvență i ... n-1 se determină explicit minimul și se interschimbă cu X[i].
+
+int n, X[100];
+//citire X[] cu n elemente
+for(int i = 0 ; i < n - 1 ; i ++)
+{
+    int p = i;
+    for(int j = i + 1 ; j < n ; j ++)
+        if(X[j] < X[p])
+            p= j;
+    int aux = X[i];
+    X[i] = X[p];
+    X[p] = aux;
+}

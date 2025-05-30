@@ -1,0 +1,20 @@
+Sortarea unui tablou reprezintă o rearanjare a elementelor astfel încât valorile acestora să fie într-o anumită ordine. De regulă ordinea cerută este cea crescătoare sau descrescătoare.
+
+Există numeroase metode de sortare, conform Wikipedia .
+
+Din punct de vedere al eficienței, avem:
+
+algoritmi neeficienți, de complexitate O(n^2):
+metoda bulelor: Bubble Sort
+sortarea prin selecție (interschimbare): Selection sort
+sortarea prin inserție: Insertion sort
+metoda piticului: Gnome Sort
+etc.
+algoritmi eficienți, de complexitate O(n * log n):
+QuickSort
+MergeSort
+HeapSort
+
+Pentru structuri de date particulare există și algoritmi de complexitate O(n). De asemenea, există algoritmi exponențiali, de complexitate
+O(n!), fără utilitate practică.
+

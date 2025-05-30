@@ -1,0 +1,72 @@
+Înmulțirea a la russe
+
+Considerăm următorul algoritm, aplicat pentru două numere naturale a și b:
+
+R = 0
+cât timp a > 0 execută
+    dacă a este impar atunci
+        R = R + b
+    a = [a / 2]
+    b = b * 2
+scrie R
+
+Dacă îl vom aplica pentru a = 18 și b = 12 vom constata că:
+
+a     b      R      Explicație
+18   12      0      a este par => R nu se modifică, a se înjumătățește, b se dublează
+9    24      24     a este impar => b se adună la R => 24
+4    48      24     a este par => R nu se modifică, a se înjumătățește, b se dublează
+2    96      24     a este par => R nu se modifică, a se înjumătățește, b se dublează
+1   192      216    a este impar => b se adună la R => 24 + 192
+0   384      -      a devine 0, ne oprim
+
+Observăm că rezultatul R = 216 este de fapt chiar 18 * 12. Aceasta nu este o coincidență!
+
+Algoritmul determină rezultatul înmulțirii dintre a și b și se numește înmulțirea a la russe (înmulțirea rusească). În ciuda numelui, se pare că metoda era cunoscută în Egiptul Antic și poate fi descrisă astfel:
+• înmulțim numerele a și b:
+  1. dacă a este impar, îl adunăm pe b la rezultat, care inițial este 0;
+  2. a se înjumătățește, b se dublează;
+  3. se continuă până când a devine 0.
+
+Aparent ciudată, metoda se bazează de fapt pe scrierea unui număr ca sumă de puteri ale lui 2 (sau reprezentarea numerelor în baza 2): oricare număr natural a se poate scrie într-o unică reprezentare în baza 2, poate fi scris în mod unic ca sumă de puteri ale lui 2.
+
+Să-l scriem pe a = 18 ca sumă de puteri ale lui 2: 18 = 2^4 + 2^1 = 16 + 2 = 0 * 2^0 + 1 * 2^1 + 0 * 2^2 + 0 * 2^3 + 1 * 2^4. Așadar, 0, 1, 0, 0, 1 sunt cifrele numărului 18 în baza 2, în ordine inversă (ordinea în care sunt determinate, prin metoda cunoscută ca resturi ale împărțirii la 2).
+
+Atunci:
+
+18 * 12 = (0 * 2^0 + 1 * 2^1 + 0 * 2^2 + 0 * 2^3 + 1 * 2^4) * 12
+        = 0 * 2^0 * 12 + 1 * 2^1 * 12 + 0 * 2^2 * 12 + 0 * 2^3 * 12 + 1 * 2^4 * 12
+        = 0 + 24 + 0 + 0 + 192
+        = 24 + 192 = 216
+
+Observăm că valorile care se adună pentru a obține rezultatul sunt tocmai acele valori obținute prin dublările succesive ale lui b când a este impar – ceea ce corespunde cifrei binare =1!
+
+Această modalitate de înmulțire poate părea interesantă, dar nu este neapărat utilă în practică. Mult mai interesant este următorul algoritm privind ridicarea la putere, care poate fi utilizat în rezolvarea de probleme de informatică.
+
+Ridicarea la putere rapidă
+
+Să considerăm A^25. În scrierea sa putem vedea că 25 se poate scrie ca sumă de puteri ale lui 2:
+25 = 1 + 8 + 16
+
+Atunci A^25 = A^1 * A^8 * A^16 = (A^1) * (A^2)^3 = (A^1)^1 * (A^2)^0 * (A^4)^0 * (A^8)^1 * (A^16)^1.
+Observăm, desigur, că exponentii 0 și 1 sunt cifrele reprezentării în baza 2 a lui 25.
+
+Pentru a determina A^n procedăm astfel:
+vom determina un produs P, format din factori de forma A1, A2, A4, A8, …
+determinăm cifrele reprezentării în baza 2 a lui n, începând cu cea mai nesemnificativă:
+dacă cifra curentă este 1, înmulțim pe A la P, P ← P * A;
+înmulțim pe A cu el însuși, A ← A * A;, obținând următoarea putere din șirul de mai sus
+Următorul program pseudocod descrie algoritmul de mai sus:
+
+citeste A,n (baza, exponent)
+P ← 1
+┌ cattimp n ≠ 0 executa
+│   c ← n % 2
+│   ┌ daca c = 1 atunci
+│   │   P ← P * A
+│   └■
+│   n ← [n / 2]
+│   A ← A * A
+└■
+scrie P
+Observăm că algoritmul este foarte eficient! Numărul de iterații este egal cu numărul de cifre din reprezentarea în baza 2 a lui n – mult mai mic decât n!

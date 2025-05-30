@@ -1,0 +1,65 @@
+În matematică factorialul unui număr întreg pozitiv n este notat cu n! și este egal cu produsul numerelor naturale mai mici sau egale cu n. Prin definiție, 0!=1.
+
+Factorialul unui număr oarecare n indică numărul de permutări (numărul de posibilități de rearanjare) ale unei mulțimi finite având n elemente.
+
+Definiții
+Factorialul poate fi definit:
+• iterativ: n! = 1·2·3·...·n, dacă n > 0
+• recursiv: n! = [n·(n-1)!] dacă n > 0,
+           0! = 1
+
+Observatii:
+Obs.1: Factorialul creste foarte rapid. Pentru valori mici ale lui n, valoarea lui n! depaseste tipurile de date standard:
+0! = 1
+1! = 1
+2! = 2
+3! = 6
+4! = 24
+5! = 120
+6! = 720
+7! = 5040
+8! = 40320
+9! = 362880
+10! = 3628800
+11! = 39916800
+12! = 479001600
+13! = 6227020800 -> depaseste tipul int
+14! = 87178291200
+15! = 1307674368000
+16! = 20922789888000
+17! = 355687428096000
+18! = 6402373705728000
+19! = 121645100408832000
+20! = 2432902008176640000
+21! = 51090942171709440000 -> depaseste tipul long long int
+
+Obs.2: Pentru n>=5, ultima cifra a lui n! este 0.
+Cifra 0 de la final unui produs, provine din n/5. Numărul de zerouri de la final unui n! este egal cu minimul dintre exponentul lui 2 şi exponentul lui 5 al factorului n! în descompunerea în factori primi a produsului!, aceasta obținându-se din descompunerea în factori a fiecărui factor. În cazul lui n!, numărul de zerouri de la final este egal cu exponentul lui 5 în descompunerea în factori a acestuia. Exponentul lui 5 poate fi determinat astfel:
+Numărul de zerouri de la final este egal cu [n/5] + [n/25] + [n/125] + ... + [n/5^k], unde [x] reprezintă partea întreagă a numărului x. Pentru k suficient de mare 5^k > n şi [n/5^k] = 0.
+
+O sursă C++ care determină rezultatul este:
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n, p = 5, s = 0;
+    cin >> n;
+    while(p <= n)
+    {
+        s = s + [n/p];
+        p = p * 5;
+    }
+    cout << s;
+    return 0;
+}
+
+Observația de mai sus este o consecință a:
+
+Obs. 4: Pentru un n dat și un număr prim p, exponentul lui p în descompunerea în factori primi a lui n! este [n/p] + [n/p^2] + [n/p^3] + ... + [n/p^k] + ..., rezultat cunoscut ca formula lui Legendre.
+
+O scriere alternativă este dată în următoarea observație:
+
+Obs. 5: Pentru un n dat și un număr prim p, exponentul lui p în descompunerea în factori primi a lui n! este (n - s_p(n))/(p-1), unde s_p(n) reprezintă suma cifrelor reprezentării în baza p a numărului n.
+

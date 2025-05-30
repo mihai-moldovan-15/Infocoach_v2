@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}InfoCoach Chat{% endblock %}
+
+{% block extra_css %}
+<!-- highlight.js pentru colorare sintaxă C++ -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>InfoCoach Chat</h2>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        {% if user_input %}
+            <div class="message user">
+                <b>Tu:</b><br>
+                <pre style="margin: 0; white-space: pre-wrap;">{{ user_input }}</pre>
+            </div>
+        {% endif %}
+    </div>
+    <div class="chat-input-area">
+        <div id="wait-message"></div>
+        <form id="chat-form" onsubmit="return submitForm(event)" autocomplete="off">
+            <div class="chat-input-row">
+                <select name="clasa" id="clasa">
+                    <option value="9" {% if clasa=='9' %}selected{% endif %}>Clasa a 9-a</option>
+                    <option value="10" {% if clasa=='10' %}selected{% endif %}>Clasa a 10-a</option>
+                    <option value="11-12" {% if clasa=='11-12' %}selected{% endif %}>Clasa a 11-a / a 12-a</option>
+                </select>
+                <textarea name="user_input" id="user-input" rows="2" placeholder="Scrie întrebarea aici..."></textarea>
+                <input type="submit" value="Trimite">
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.chat-container {
+    max-width: 800px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+}
+
+.chat-header {
+    padding: 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.chat-messages {
+    height: 500px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.message.user {
+    background-color: #e3f2fd;
+}
+
+.message.assistant {
+    background-color: #f5f5f5;
+}
+
+.chat-input-area {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 10px;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    padding: 8px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: #0056b3;
+}
+
+#wait-message {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 10px;
+    display: none;
+}
+</style>
+
+<script>
+function submitForm(event) {
+    event.preventDefault();
+    
+    const userInput = document.getElementById('user-input').value.trim();
+    if (!userInput) return false;
+    
+    const form = event.target;
+    const submitButton = form.querySelector('input[type="submit"]');
+    const waitMessage = document.getElementById('wait-message');
+    
+    submitButton.disabled = true;
+    waitMessage.style.display = 'block';
+    waitMessage.textContent = 'Se procesează răspunsul...';
+    
+    fetch('/', {
+        method: 'POST',
+        body: new FormData(form)
+    })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newMessage = doc.querySelector('.message.assistant');
+        
+        if (newMessage) {
+            document.getElementById('chat-messages').appendChild(newMessage);
+            document.getElementById('user-input').value = '';
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('A apărut o eroare. Te rugăm să încerci din nou.');
+    })
+    .finally(() => {
+        submitButton.disabled = false;
+        waitMessage.style.display = 'none';
+    });
+    
+    return false;
+}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

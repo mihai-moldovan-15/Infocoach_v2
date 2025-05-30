@@ -1,0 +1,51 @@
+Cifra de control a unui număr se obține efectuând suma cifrelor sale, apoi suma cifrelor acestei sume, până când suma obținută este un număr format dintr-o singură cifră. Această ultimă cifră poartă numele de cifră de control.
+
+Exemplu: Cifra de control
+ a numărului
+:
+.
+
+Secvență de implementare C++:
+
+while (n>9)
+{
+    s=0;
+    while (n>0)
+    {
+        s+=n%10;
+        n/=10;
+    }
+    n=s;
+}
+Algoritmul prezentat este intuitiv, ușor de înțeles și contribuie la dezvoltarea gândirii algoritmice.
+
+Tot pentru calcularea cifrei de control se poate folosi și următoarea metodă: se trunchiază numărul prin eliminarea ultimei cifre apoi se adună cu aceasta până se obține un număr format dintr-o singură cifră.
+
+Exemplu:
+
+
+
+
+
+
+
+
+
+Secvența de implementare C++:
+
+while(n>9)
+{
+    n=n/10+n%10;
+}
+În ambele cazuri timpul de execuție depinde de numărul de cifre ale numărului și de valorile acestora.
+
+Pornind de la criteriul de divizibilitate cu 9, un număr se divide cu 9 dacă suma cifrelor sale este multiplu de 9 și cum cifra cea mai mare în baza 10 este 9, putem afla cifra de control calculând restul împărțirii numărului la 9. Dacă restul este 0 atunci cifra de control este 9, altfel este acel rest.
+
+Secvența de implementare C++:
+
+r=n%9;
+if (r==0)
+    cc =  9;
+else
+    cc = r;
+În acest caz numărul de operații elementare nu mai depinde de valoarea lui n.

@@ -1,0 +1,40 @@
+Considerăm următoarea problemă: Se dau două șiruri de cifre zecimale. Să se determine cifrele comune, în ordine crescătoare.
+
+În funcție de numărul de cifre din cele două șiruri, putem realiza diverse soluții:
+
+căutăm fiecare termen din primul șir în al doilea șir. Șirul cu valorile comune va trebui sortat.
+dacă șirurile sunt sortate (sau le sortăm) procedăm ca mai sus, dar căutăm binar. Șirul cu valorile comune este de la început sortat.
+dacă șirurile sunt sortate (sau le sortăm) putem folosi interclasarea pentru a afla elementele comune.
+Vector caracteristic
+Nicio soluție dintre cele de mai sus nu ține cont de o proprietate a valorilor din șir – că sunt cifre, adică între 0 și 9. Putem proceda astfel:
+
+pentru fiecare șir vom folosi un vector cu doar 10 elemente, indexate de la 0 la 9; fie acestea v[] și u[];
+indicii elementelor din șir reprezintă cifrele – valorile posibile ale elementelor din șir;
+inițial elementele celor doi vectori sunt 0;
+pentru fiecare valoare x (care este cifră) care apare în primul șir vom marca în vectorul v[] elementul corespunzător cu 1, v[x] = 1;
+similar, fiecare element y din al doilea șir va fi marcat în vectorul u[] cu 1, u[y] = 1;
+la final sunt comune cifrele c (de la 0 la 9) care sunt marcate cu 1 atât în vectorul v[], cât și în vectorul u[].
+Cei doi vectori v[] și u[] sunt vectori caracteristici. Elementele lor caracterizează cifrele dintre 0 și 9, stabilind despre fiecare cifră dacă face sau nu parte din șirul corespunzător.
+
+Observăm că nu trebuie memorate elementele celor două șiruri date. Ne interesează numai valorile distincte care apar în fiecare șir, indiferent de ordinea în care apar.
+Observații:
+
+vectorul caracteristic are dimensiune constantă – egală cu numărul de valori pe care le caracterizează;
+elementele vectorului caracteristic sunt 0 sau 1 (echivalent cu Adevărat și Fals); valorile din vectorul caracteristic NU sunt valorile date;
+valorile date se află printre indicii vectorului caracteristic, respectiv indicii corespunzători elementelor egale cu 1;
+Când folosim vectorul caracteristic?
+
+Pentru a putea folosi un vector caracteristic trebuie îndeplinite (cel puțin) următoarele condiții:
+
+ordinea datelor de intrare nu contează
+datele de intrare au valori mici, sunt numere naturale dintr-un interval de forma [0,M] sau pot fi echivalente cu astfel de numere
+practic, putem folosi un vector caracteristic dacă memoria disponibilă permite declararea unui vector cu un număr de elemente corespunzător:
+dacă datele de intrare sunt din intervalul [0, 1000] sau [0,10000] putem folosi un vector caracteristic
+dacă datele de intrare sunt din intervalul [0, 1 milion] putem folosi un vector caracteristic – deși poate există metodă mai bună
+dacă datele de intrare sunt din intervalul [0, 1 miliard] NU putem folosi un vector caracteristic
+Vector de frecvență
+Să considerăm din nou un șir de cifre zecimale. Să se determine cifra care apare de cele mai multe ori. Dacă sunt mai multe cifre care apar de număr maxim de ori, să se determine cea mai mică (sau cea mai mare, sau toate, etc.).
+
+De această dată nu putem folosi un vector caracteristic, dar putem folosi un vector de frecvență, adică un vector cu același număr de elemente ca numărul posibil de valori distincte din șirul dat (adică 10), cu semnificația: v[c] =  numărul de apariții ale cifrei c în șirul dat.
+
+După construirea acestui vector, valoarea maximă din el va reprezenta numărul maxim de apariții ale unei cifre, iar indicii pentru care elementul corespunzător are valoare maximă reprezintă cifrele care apar de număr maxim de ori.

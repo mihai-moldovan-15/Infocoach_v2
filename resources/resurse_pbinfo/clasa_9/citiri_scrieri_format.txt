@@ -1,0 +1,153 @@
+Operațiile de citire și afișare se realizează de cele mai multe ori aplicându-se niște reguli standard ale limbajului C++, acest lucru fiind de regulă suficient. De exemplu, valorile întregi se afișează în baza 10, valorile reale se afișează de regulă cu 6 cifre (în fața și în spatele punctului zecimal), etc. Uneori este necesar să formatăm mai precis afișările și citirile, aceasta fiind tema prezentului articol.
+
+Introducere
+Formatarea citirii și afișării se face prin intermediul unor funcții speciale, numite manipulatori. O parte dintre ele se află în fișierele header fstream și iostream (probabil deja incluse), altele se află în fișierul header iomanip – care trebuie și el inclus.
+
+Afișarea poate fi formatată precizându-se:
+
+lungimea – setw(int n): numărul n de caractere care vor fi utilizate pentru afișarea valorii dorite – implicit este variabil și egal cu numărul de caractere necesar. Modificând lungimea putem afișa date în format tabelar, distingându-se clar liniile și coloanele;
+alinierea – left, right, internal: în cazul în care valoarea afișată ocupă mai puține caractere decât lungimea, ea poate fi aliniată la dreapta (implicit) sau la stânga (pentru orice fel de date) sau internal, pentru date numerice (întregi sau reale);
+caracterul de umplere – setfill(char f): dacă valoarea afișată ocupă mai puține caractere decât lungimea, pe pozițiile nefolosite se vor scrie caractere de umplere – implicit spații;
+precizia – setprecision(int n): numărul n de cifre folosite pentru afișarea valorilor reale; în funcție de context, poate reprezenta numărul total de cifre sau numărul de cifre de după punctul zecimal
+baza de numerație (dec, oct, hex) în care sunt scrise valorile de tip întreg. Valorile întregi se pot scrie în baza 10 (implicit), baza 8 sau baza 16;
+formatul de afișare (fixed, scientific sau implicit) valorilor reale.
+Citirea poate fi formatată precizându-se:
+
+baza de numerație (dec, oct, hex) în care se consideră valoarea întreagă introdusă. Se pot citi valori în bazele 10, 8 sau 16.
+modul de tratare a caracterelor albe – skipws, noskipws: implicit, la citire se sare peste eventualele caracterele albe aflate înainte de valoarea de citit (skipws). Dacă este setat modul noskipws și înainte de valoarea de citit există caractere albe, citirea va eșua.
+Manipulatorii se folosesc ca operanzi în operația de inserare în stream (cout << ) sau extragere din stream (cin >>). Unii dintre ei au efect în mod direct, alții au efect numai în combinație cu alți manipulatori. Unii manipulatori au efect doar asupra următoarei date afișate, alții au efect pentru toate datele care sunt afișate în continuare.
+
+Formatare afișării
+Lungimea
+Lungimea unei date afișate se referă la numărul de caractere folosite pentru afișarea acelei date. Implicit se folosesc atâtea caractere cât este necesar. De exemplu, pentru a afișa numărul 2019 se folosesc 4 caractere. Acest comportament poate fi modificat cu ajutorul manipulatorului setw(n), unde n reprezintă numărul de caractere folosite pentru afișare:
+
+cout << "|" << 2019 << "|" << endl;
+cout << "|" << setw(10) << 2019 << "|" << endl;
+
+Când lungimea de afișare este specificată (și mai mare decât cea ocupată efectiv), data poate fi aliniată la stânga (left) sau la dreapta (right) zonei de afișare.
+
+cout << "|" << setw(10) << 2019 << "|" << endl;
+cout << "|" << setw(10) << left << 2019 << "|" << endl;
+cout << "|" << setw(10) << right << 2019 << "|" << endl;
+
+La afișarea valorilor numerice, se poate face o aliniere specială: semnul să fie aliniat la stânga, iar valoarea să fie aliniată la dreapta. Se va folosi manipulatorul internal:
+
+cout << setw(10) << internal << -2019 << endl;
+cout << setw(10) << internal << 2019 << endl;
+
+Implicit, pentru valorile pozitive nu se afișează semnul. Acest lucru poate fi gestionat cu modificatorii showpos și noshowpos:
+
+cout << setw(10) << internal << -2019 << endl;
+cout << setw(10) << showpos << internal << 2019 << endl;
+
+Dacă lungimea de afișare este mai mare decât lungimea datei afișate, caracterele suplimentare sunt implicit spații. Putem modifica acest caracter prin intermediul modificatorului setfill(char), de exemplu:
+
+cout << setw(10) << setfill('#') << 2019 << endl;
+
+
+Afișarea datelor întregi
+Valorile întregi pot fi afișate (și citite) în baza 10 (decimal, dec), baza 8 (octal, oct) sau baza 16 (hexadecimal, hex):
+
+int n = 2019;
+cout << "implicit:    " << n << endl;
+cout << "decimal:     " << dec << n << endl;
+cout << "octal:       " << oct << n << endl;
+cout << "hexadecimal: " << hex << n << endl;
+
+
+Implicit, pentru valorile afișate în baza 8 și 16 nu se afișează prefixul care precizează baza (0, respectiv 0x). Aceasta poate fi gestionată cu manipulatorii showbase și noshowbase:
+
+int n = 2019;
+cout << "implicit:    " << n << endl;
+cout << "decimal:     " << showbase << dec << n << endl;
+cout << "octal:       " << oct << n << endl;
+cout << "hexadecimal: " << hex << n << endl;
+
+
+Manipulatorii uppercase și nouppercase stabilesc dacă prefixul (Ox, afișat cu showbase) precum și cifrele a, b, c, d, e, f pentru valorile în baza 16 este scris cu litere mari sau nu: 0X7E3 sau 0x7e3 – pentru valoarea zecimală 2019. Acești manipulatori controlează și modul de afișare în forma științifică a datelor reale.
+
+Afișarea valorilor reale
+Valorile reale sunt stocate folosind formatul cu virgulă mobilă, iar valoarea afișată este o aproximare a valorii memorate. Modul în care sunt afișate datele reale depinde de mai mulți factori: precizia, formatul de afișare (fix, științific sau implicit), etc.
+
+Precizia reprezintă numărul de cifre folosite pentru afișare sau numărul de zecimale afișate. Precizia are implicit valoarea 6 și este în strânsă legătură cu formatul de afișare:
+
+formatul implicit afișează valoarea în forma fixă sau în forma științifică, în funcție de precizie. Fie n numărul de cifre ale părții întregi a valorii de afișat și fie p precizia curentă:
+dacă n≤p, se va folosi formatul fix de afișare, iar pentru partea zecimală se vor afișa p-n zecimale, cu rotunjire
+dacă n>p, se va folosi formatul științific de afișare, cu mantisă și caracteristică, iar precizia reprezintă numărul de cifre ale mantisei
+double pi = atan(1) * 4; // PI
+// afisare implicită, precizie implicită 6
+cout << pi << endl;
+// format implicit; precizie 7, 3 cifre la partea intreaga, 4 la partea fractionara
+cout << setprecision(7) << 100 * pi << endl;
+// format implicit; precizie 7, 7 cifre la partea intreaga, 0 la partea fractionara
+cout << setprecision(7) << 1000000 * pi << endl;
+// format implicit; precizie 7, 8 cifre la partea intreaga; se afiseaza in format stiintific
+cout << setprecision(7) << 10000000 * pi << endl;
+
+dacă formatul de afișare precizat este formatul fix, prin intermediul manipulatorului fixed, precizia reprezintă numărul de cifre aflate după punctul zecimal:
+double pi = atan(1) * 4; // PI
+
+cout << fixed; // ATENTIE AICI!!
+cout << right;
+//format fix, precizie implicită 6, 6 cifre zecimale
+cout << setw(19) << pi << endl;
+// format fix; precizie 7, 7 cifre zecimale
+cout << setw(20) << setprecision(7) << 100 * pi << endl;
+cout << setw(20) << setprecision(7) << 1000000 * pi << endl;
+cout << setw(20) << setprecision(7) << 10000000 * pi << endl;
+
+
+dacă formatul de afișare este cel științific, prin intermediul manipulatorului scientific, precizia reprezintă numărul de zecimale ale mantisei:
+double pi = atan(1) * 4; // PI
+cout << scientific; // ATENTIE AICI!!
+cout << right;
+//format fix, precizie implicită 6, 6 zecimale la mantisa
+cout << setw(19) << pi << endl;
+// format fix; precizie 7, 7 zecimale la mantisa
+cout << setw(20) << setprecision(7) << 100 * pi << endl;
+cout << setw(20) << setprecision(7) << 1000000 * pi << endl;
+cout << setw(20) << setprecision(7) << 10000000 * pi << endl;
+
+La afișarea în format implicit, datele de tip real care nu contin zecimale (au partea fracționară nulă, de exemplu 1.0) vor fi afișate fără zecimale și fără punctul zecimal. Acest comportament poate fi gestionat cu ajutorul manipulatorilor showpoint și noshowpoint.
+
+Afișarea valorilor de tip bool
+Implicit, valorile de tip bool sunt afișate ca valori numerice. Mai precis:
+
+cout << true << endl; // 1
+cout << false << endl; // 0
+Este însă posibil să se afișeze și literalii true sau false, cu ajutorul manipulatorilor boolalpha și noboolalpha:
+
+cout << boolalpha << true << endl; // true
+cout << false << endl; // false
+cout << noboolalpha;
+cout << true << endl; // 1
+cout << false << endl; // 0
+Formatarea citirii
+Implicit la citire se sare peste caracterele albe aflate înaintea valorii care se citește. Mai precis:
+
+char x,y,z;
+cin >> x >> y >> z; // A B C
+cout << x << y << z; //ABC
+Dacă se introduce șirul A B C, variabila x va avea valoarea 'A', y va avea valoarea 'B', iar z va avea valoarea 'C'. Caracterele spațiu sunt sărite. Acest comportament este gestionat prin manipulatorii skipws și noskipws.
+
+char x,y,z;
+cin >> noskipws;
+cin >> x >> y >> z; // A B C
+cout << x << y << z; //A B
+Dacă se introduce șirul A B C, variabila x va avea valoarea 'A', y va avea valoarea ' ', iar z va avea valoarea 'B'. Ultimele două caractere sunt ignorate (rămân în stream).
+
+Dacă variabila citită nu poate memora spații (de exemplu este numerică) dar primele caractere sunt albe, citirea va eșua. Variabila va deveni 0 (începând cu C++11) și se va seta failbit, astfel că următoarele citiri nu vor mai avea loc.
+
+int x = 10, y = 10;
+cin >> noskipws;
+cin >> x; // "   25"
+cout << x << " " << y; // 0 10
+La citirea variabilelor întregi se poate preciza baza în care sunt valorile așteptate prin manipulatorii dec, oct sau hex.
+
+int x;
+cin >> hex >> x; // ff
+cout << x;  // 255
+
+
+
+

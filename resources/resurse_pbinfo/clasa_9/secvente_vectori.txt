@@ -1,0 +1,98 @@
+Definiție: Fie X[] un vector cu n element. Se numește secvență a vectorului X o succesiune de elemente consecutive din X, în ordinea din X.
+
+Orice secvență a unui vector este unic determinată de doi indici st ≤ dr, ai primului, respectiv ultimului element din secvență.
+
+Exemplu: Fie vectorul X[]=(10,20,30,40,50,60,70,80). Atunci:
+
+(10,20,30,40), (30,40,50,60,70), (10,20,30,40,50,60,70,80), (50), (80) reprezintă secvențe ale lui X
+(10,30,40,20) nu reprezintă secvență în X – ordinea valorilor nu este cea din X
+(10,20,40,50) nu reprezintă secvență în X – valorile nu sunt consecutive în X
+(10,20,30,35,40) nu reprezintă secvență în X – avem o valoare care nu apare în X
+Definiție: Prin lungimea unei secvențe se înțelege numărul de elemente care formează secvența. Lungimea secvenței delimitate de indicii st și dr este dr - st + 1.
+
+Numărul de secvențe ale unui vector
+Cum determinăm numărul total de secvențe ale unui vector cu n elemente? O modalitate este următoarea:
+
+sunt n secvențe de lungime 1 – fiecare element în parte.
+sunt n-1 secvențe de lungime 2 – cele determinate de indicii 1 2, 2 3, …, n-1 n
+sunt n-2 secvențe de lungime 3 – secvențele 1 3, 2 4, …, n-2 n
+…
+sunt două secvențe de lungime n-1 – secvențele 1 n-1 și 2 n
+este o secvența de lungime n – întreg vectorul.
+În total vor fi
+
+ secvențe!
+
+Secvență de lungime maximă
+O problemă care apare frecvent este următoarea:
+
+Fie X[] un vector cu elemente de un anumit tip. Să se determine cea mai lungă secvență din vector în care toate elementele au o anumită proprietate (sunt pare, impare, prime, nule, ordonate crescător, egale etc.).
+
+Problema are mai multe soluții, cu complexități diverse. În toate soluțiile vom determina smax și dmax – indicele elementului din stânga, respectiv din dreapta al secvenței de lungime maximă. Inițial smax = 1 și dmax = 0, astfel încât lungimea secvenței delimitate de st și dr să fie dr-st+1 = 0.
+
+În cele ce urmează vom numi secvență candidat o secvență de elemente din vector care respectă regula dată, deci ar putea fi răspunsul căutat.
+
+Soluție O(n^3)
+smax←1, dmax←0
+considerăm toate perechile de indici i ≤ j
+dacă secvența delimitată de i și j este secvență candidat
+dacă j - i + 1 > dmax - smax + 1
+actualizăm rezultatele: smax ← i, dmax ← j
+Secvență C++ (vectorul are elemente numere naturale, se cere cea mai lungă secvență cu elemente impare; dacă sunt mai multe, o reținem pe cea mai din stânga.):
+
+int n, X[100], smax , dmax;
+//citire n, X
+smax = 1, dmax = 0;
+for(int i = 0 ; i < n ; i ++)
+    for(int j = i ; j < n ; j ++)
+    {
+        bool pp = true;
+        for(int k = i ; k <= j ; k ++)
+            if(X[k] % 2 != 1)
+                pp = false;
+        if(pp)
+            if(j - i + 1 > dmax - smax + 1)
+                smax = i, dmax = j;
+    }
+Soluție O(n^2)
+smax←1, dmax←0
+parcurgem șirul cu un indice i
+dacă elementul X[i] respectă regula
+X[i] reprezintă capătul din stânga al unei secvențe candidat
+determinăm X[j] – capătul din dreapta al celei mai lungi secvențe candidat care începe la poziția i
+dacă j - i + 1 > dmax - smax + 1
+actualizăm rezultatele: smax ← i, dmax ← j
+Secvență C++:
+
+int n, X[1000], smax , dmax;
+//citire n, X
+smax = 1, dmax = 0;
+for(int i = 0 ; i < n ; i ++)
+    if(X[i] % 2 == 1)
+    {
+        int  j = i;
+        while(j + 1 < n && X[j + 1] % 2 == 1)
+            j ++;
+        if(j - i + 1 > dmax - smax + 1)
+            smax = i, dmax = j;
+    }
+Soluție O(n)
+Această soluție este o rafinare a celei anterioare. Observăm că dacă secvența delimitată de i j este candidat, atunci secvențele i+1 j, i+2, j, etc. sunt și ele secvențe candidat, dar nu pot fi mai lungi decât secvența i j și le putem ignora.
+
+Secvență C++:
+
+int n, X[100000], smax , dmax;
+//citire n, X
+smax = 1, dmax = 0;
+for(int i = 0 ; i < n ; i ++)
+    if(X[i] % 2 == 1)
+    {
+        int  j = i;
+        while(j + 1 < n && X[j + 1] % 2 == 1)
+            j ++;
+        if(j - i + 1 > dmax - smax + 1)
+            smax = i, dmax = j;
+        i = j;
+    }
+
+Observatie: La anumite facultăți din țară (UBB de exemplu), secvența este numită și subsecvență. A nu se confunda cu subșirul.

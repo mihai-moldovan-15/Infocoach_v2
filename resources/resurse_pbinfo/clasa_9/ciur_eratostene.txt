@@ -1,0 +1,120 @@
+Introducere
+Ciurul lui Eratostene reprezintă o metodă de determinare a tuturor numerelor prime mai mici sau egale cu o valoare dată, n. În practică, valoarea lui n trebuie să fie una rezonabilă, ea depinzând de restricțiile de timp și memorie aplicate problemei.
+
+Ciurului Eratostene se aplică în felul următor – în continuare lucrăm cu n=30:
+
+se scriu toate numerele naturale de la 1 la n=30:
+se taie din lista numărul 1, care nu este prim
+se identifică următorul număr netăiat, 2. Acest este prim, iar din listă se vor tăia toți multipli săi, mai mari decât acesta.
+se identifică următorul număr netăiat, 3. Acest este prim, iar din listă se vor tăia toți multipli săi, mai mari decât acesta. Unii dintre ei au fost deja tăiați, deoarece sunt și multipli ai lui 2.
+se identifică următorul număr netăiat, 5. Acest este prim, iar din listă se vor tăia toți multipli săi, mai mari decât acesta. Unii dintre ei au fost deja tăiați, deoarece sunt și multipli ai lui 2 sau 3.
+se identifică următorul număr netăiat, 7. Acesta este prim, dar totodată 7*7>30 căutarea numerelor prime s-a încheiat. Toate numerele care nu au fost tăiate sunt prime.
+Algoritm
+Pentru identificarea numerelor prime într-un algoritm/program, vom folosi un vector caracteristic, v[], cu următoarea semnificație:
+V[x] = 0, dacă x este prim
+V[x] = 1, dacă x nu este prim
+
+Deși poate părea ciudat ca 0 să marcheze o valoare căutată, acest lucru se face pentru a evita o parcurgere
+adițională a numerelor pe care dorim să le verificăm. Cu toate acestea, inversarea elementelor din vector
+poate fi o soluție mai ușor de înțeles.
+
+Vom porni de la un vector cu toate elementele nule, apoi vom marca pe rând cu 1 toate numerele care sunt multipli ai unor numere mai mici. Un algoritm pseudocod care realizează acest operații este:
+
+pentru i←0,n execută
+    V[i] ← 0
+sf_pentru
+V[0] ← 1
+V[1] ← 1
+pentru i ← 2,sqrt(n) execută
+    dacă V[i] = 0 atunci
+        pentru j ← 2, [n/i] execută
+            V[i*j] ← 1
+        sf_pentru
+    sf_dacă
+sf_pentru
+Probleme similare
+Mecanismul prin care se identifică numerele prime specific Ciurului lui Eraostene poate fi folosit și la determinarea altor rezultate. De exemplu, vrem să aflăm pentru un n dat (nu prea mare) câți divizori are fiecare număr natural din intervalul [1,n].
+
+Pentru acesta, vom construi un vector V, în care v[x] reprezintă numărul de divizori ai lui x. Pentru a construi acest vector, vom parcurge numerele de la 1 la n, și pentru fiecare număr x vom identifica multiplii săi. Pentru fiecare y multiplu al lui x vom incrementa valoarea lui v[y].
+
+Un algoritm pseudocod este:
+
+pentru i←1,n execută
+    V[i] ← 0
+sf_pentru
+pentru x ← 1,n execută
+    pentru y ← x, n , x  execută
+        V[y] ← V[y] + 1
+    sf_pentru
+sf_pentru
+
+
+Ideea de mai sus poate fi utilizată pentru a determina diverse rezultate în care intervin divizorii unui număr, rezultate calculate pentru toate numerele mai mici sau egale cu n:
+
+numărul de divizori
+suma divizorilor
+cel mai mic divizor prim
+cel mai mare divizor prim
+indicatorul lui Euler
+
+Numărul de divizori
+construim un vector Nr[]. La final, Nr[x] va fi numărul de divizori ai lui x;
+inițializăm elementele vectorului Nr[] cu 0;
+parcurgem vectorul și pentru fiecare element Nr[i] mărim valorile elementelor Nr[k], unde k = i * j este multiplu al lui i – dacă i este divizor al lui k, atunci trebuie numărat ca atare.
+int Nr[DIM + 1];
+for(int i = 1 ; i <= DIM ; i ++)
+    Nr[i] = 0;
+for(int i = 1; i <= DIM ; i ++)
+    for(int j = 1 ; i * j <= DIM ; j ++)
+        Nr[i * j] ++;
+OBS: Un număr x este prim dacă și numai dacă la final Nr[x] este egal cu 2.
+
+Suma divizorilor
+construim un vector S[]. La final, S[x] va reprezenta suma divizorilor lui x;
+inițializăm elementele vectorului S[] cu 0;
+parcurgem vectorul și pentru fiecare element S[i] mărim valorile elementelor S[k] cu i, unde k = i * j este multiplu al lui i – dacă i este divizor al lui k, atunci trebuie adunat la suma divizorilor lui k.
+int S[DIM + 1];
+for(int i = 1 ; i <= DIM ; i ++)
+    S[i] = 0;
+for(int i = 1; i <= DIM ; i ++)
+    for(int j = 1 ; i * j <= DIM ; j ++)
+        S[i * j] += i;
+OBS: Un număr x este prim dacă și numai dacă la final S[x] este egal cu x+1.
+
+Cel mai mic/mare divizor prim
+construim un vector M[]. La final, M[x] va reprezenta cel mai mic divizor (factor) prim al lui x;
+inițializăm elementele vectorului M[x] cu x – pentru numerele prime cel mai mic factor prim sunt ele însele;
+parcurgem numerele începând de la 2 și pentru fiecare număr i prim (pentru care M[i] = i) modificăm, dacă este cazul, cel mai mic factor prim pentru toți multipli k = i * j lui i.
+int M[DIM + 1];
+for(int i = 1 ; i <= DIM ; i ++)
+    M[i] = i;
+for(int i = 2; i <= DIM ; i ++)
+    if(M[i] == i)
+        for(int j = 2 ; i * j <= DIM ; j ++)
+            if(M[i * j] == i * j)
+                M[i * j] = i;
+OBS:
+
+Un număr x este prim dacă și numai dacă la final M[x] este egal cu x.
+La parcurgerea multiplilor lui i, vom modifica multiplul k = i * j numai dacă M[k] este încă k. De exemplu, pentru i=3, nu-l mai modifică pe M[6] – a fost deja modificat pentru i=2.
+Dacă modificăm M[k] de pentru fiecare i, deoarece i este considerat în ordine crescătoare, la final M[k] va memora cel mai mare divizor prim al lui k. Următoarea secvență obține acest rezultat – observați că modificările sunt minore:
+int M[DIM + 1];
+for(int i = 1 ; i <= DIM ; i ++)
+    M[i] = i;
+for(int i = 2; i <= DIM ; i ++)
+    if(M[i] == i)
+        for(int j = 2 ; i * j <= DIM ; j ++)
+            M[i * j] = i;
+Indicatorul lui Euler
+Indicatorul lui Euler este tratat în acest articol. Reluăm aici numai secvența C/C++:
+
+int F[DIM + 1];
+for(int i =1 ; i <= DIM ; i ++)
+    F[i] = i;
+for(int i = 2;  i <= DIM ; i ++)
+    if(F[i] == i)
+    {
+        for(int j = 1 ; j * i <= DIM ; j ++)
+            F[j * i]= F[j * i] / i * (i - 1);
+    }
+OBS: Un număr x este prim dacă și numai dacă la final F[x] este egal cu x-1.

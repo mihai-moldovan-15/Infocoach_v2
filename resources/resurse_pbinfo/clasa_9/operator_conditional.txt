@@ -1,0 +1,34 @@
+Definiție
+Operatorul condițional este singurul operator ternar (cu trei operanzi) din C++. Sintaxa lui este:
+
+ExpresieConditionala ? Expresie1 : Expresie2
+și se evaluează astfel:
+
+se evaluează ExpresieConditionala. Rezultatul său va fi convertit implicit la bool.
+dacă rezultatul lui ExpresieConditionala este true, se evaluează Expresie1 și rezultatul său va fi rezultatul operației ?
+dacă rezultatul lui ExpresieConditionala este false, se evaluează Expresie2 și rezultatul său va fi rezultatul operației ?
+Expresie2 și Expresie3 trebuie să aibă rezultate de același tip, sau de tipuri compatibile.
+
+Exemplu
+int x;
+cin >> x;
+cout << (x % 2 == 0? "par" : "impar");
+Observații
+Operatorul ? poate fi înlocuit cu instrucțiunea if. Secvența de mai sus poate fi rescrisă astfel:
+int x;
+cin >> x;
+if (x % 2 == 0)
+    cout << “par”;
+else
+    cout << “impar”;
+Operațiile condiționale pot fi imbricate:
+cout << (x > 0? “pozitiv” : x == 0 ? “nul” : “negativ”);
+Rezultatele celor două expresii care reprezintă rezultatele posibile trebuie să fie de același tip sau de tipuri compatibile. Următoarea secvență nu este corectă;
+int x;
+cin >> x;
+cout << (x == 1? 1 : “diferit de 1”); // error: operands to ?: have different types ‘int’ and ‘const char*’
+Dacă expresiile Expresie1 și Expresie2 sunt de tip lvalue (de exemplu, variabile), rezultatul operației este chiar data corespunzătoare, nu valoarea ei, care poate fi apoi supusă unei atribuiri:
+int x = 1, y = 2, a = 10;
+((a % 2 == 0) ? x : y) = 5;
+cout << x << “ “ << y << endl; // 5 2
+Cea mai fecventă eroare este să uităm prioritatea operatorilor. Operatorul condițional are prioritate scăzută și este probabil să facem diverse erori!

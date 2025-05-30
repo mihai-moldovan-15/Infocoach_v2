@@ -1,0 +1,39 @@
+Standard Template Library – STL conține o funcție ce realizează sortarea eficientă a unui tablou, sort. Ea poate fi folosită atât pentru sortarea unui vector STL, cât și pentru sortarea unui tablou standard C. Elementele tabloului pot avea orice tip pe care este definită operația <.
+
+Funcția sort este declarată în header-ul algorithm, care trebuie inclus în programul sursă:
+
+#include <algorithm>
+Ordonarea crescătoare
+Funcția sort permite sortarea unei secvențe a tabloului. Pentru a sorta în tabloul A secvența delimitată de indicii s și d (inclusiv aceștia), se face apelul:
+
+sort(A + s, A + d + 1);
+Dacă se dorește sortarea unui tablou A cu n elemente, indexate de la 0 la n-1, apelul va fi:
+
+sort(A, A + n);
+Dacă tabloul este indexat de la 1 la n, apelul va fi:
+
+sort(A + 1, A + n + 1);
+Apelurile de mai sus sortează crescător elementele secvenței/tabloului.
+
+Ordonarea descrescătoare
+Pentru a sorta descrescător elementele secvenței delimitate de indicii s și d în tabloul A cu elemente de tip int, se transmite funcției sort un parametru suplimentar, astfel:
+
+sort(A + s, A + d + 1, greater<int>());
+Dacă elementele tabloului A sunt de tip double, apelul va fi:
+
+sort(A + s, A + d + 1, greater<double>());
+Ordonarea după alte criterii
+Al treilea parametru al funcției sort este de fapt o funcție de comparare, care se folosește pentru a stabili dacă elementele secvenței/tabloului sunt în ordinea dorită. Mai precis, această funcție are doi parametri de același tip cu elementele tabloului sortat și returnează true dacă primul parametru este situat înaintea celui de-al doilea în ordinea în care se doresc a fi ordonate elementele tabloului și false în caz contrar.
+
+Astfel sortarea descrescătoare poate fi realizată și astfel:
+
+bool fcmp(int x, int y)
+{
+    if(x > y)
+        return true;
+    return false;
+}
+...
+int A[1001], n;
+...
+sort(A + 1, A + n + 1, fcmp);

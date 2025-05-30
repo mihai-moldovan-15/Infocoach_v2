@@ -1,0 +1,142 @@
+Operațiile pe biți sunt operații foarte eficiente, deoarece ele lucrează direct cu biții din reprezentările în memorie ale operanzilor. Înțelegerea lor presupune înțelegerea reprezentării în memorie a datelor întregi.
+
+Reprezentarea în memorie a valorilor întregi
+Valorile întregi se reprezintă în memorie ca o secvență de biți (cifre binare, 0 și 1). Acestă secvență poate avea 8, 16, 32 sau 64 de biți.
+
+Reprezentarea în memorie a datelor de tip întreg se face în mod similar pentru toate tipurile cu semn (char, short int, int, long long int) și similar pentru toate tipurile fără semn (unsigned char, unsigned short int, unsigned int, unsigned long long int).
+
+În exemplele care urmează vom folosi tipurile reprezentate pe 16 biți: unsigned short int, respectiv short int.
+
+Reprezentarea în memorie a valorilor de tip unsigned short int
+Tipul unsigned short int memorează valori mai mari sau egale cu 0. Acestea se reprezintă în memorie astfel:
+
+se transformă numărul în baza 2 și se memorează, adăugând la început cifre de 0 nesemnificative, atâtea câte sunt necesare până la completarea celor 16 biți.
+dacă reprezentarea în baza 2 a numărului are mai mult de 16 cifre, se vor memora numai ultimele 16 cifre – numărul se va trunchia.
+Astfel, valorile fără semn care se pot reprezenta pe 16 biți sunt cuprinse între 0 și 216-1, adică 0 și 65535.
+
+0 se reprezintă 0000000000000000
+65535 se reprezintă 1111111111111111
+5 se reprezintă 0000000000000101
+133 se reprezintă 0000000010000101
+Reprezentarea în memorie a valorilor de tip short int
+Tipul short int memorează atât valori pozitive, cât și valori negative. Astfel, dintre cei 16 biți disponibili, cel mai din stânga (numit bit de semn) stabilește semnul numărului. Dacă acest bit este 0, numărul este pozitiv, dacă acest bit este 1, numărul este negativ. Astfel, se pot memora 32768 valori negative, de la -32768 la -1, și 32768 pozitive sau zero, de la 0 la 32767.
+
+Reprezentarea numerelor pozitive se face exact ca mai sus: se transformă numărul în baza 2 și se completează cu zerouri nesemnificative.
+
+Nu la fel se face reprezentarea numerelor întregi negative. Această reprezentare se face conform pașilor următori, numită reprezentare în cod complementar:
+
+se determină reprezentarea în memorie a numărului ce reprezintă valoarea absolută a numărului inițial. Aceasta are bitul de semn 0.
+se determină complementul față de 1 a reprezentării de la pasul anterior – fiecare bit 1 devine 0 și fiecare bit 0 devine 1.
+se adună 1 la valoarea obținută
+De exemplu, pentru reprezentarea în memorie a numărului -133 (considerat de tip short int) se procedează astfel:
+
+se determină reprezentarea în memorie a lui 133 și se obține:
+0000000010000101
+se obține complementul față de 1:
+1111111101111010
+se adună 1 și se obține:
+1111111101111011
+Mecanismul de memorare numerelor este același pentru toate tipurile întregi. Diferă numai numărul de biți folosiți pentru reprezentare și implicit intervalul din care fac parte valorile reprezentate.
+
+Operatori pe biți
+Operațiile pe biți se aplică numai datelor de tip întreg, și presupun manipularea directă a biților din reprezentarea în memorie a operanzilor.
+
+Operatorul de negație ~
+Este un operator unar care are ca rezultat numărul obținut prin complementarea față de 1 a biților din reprezentarea numărului inițial (biții 0 devin 1, biții 1 devin 0).
+
+Exemplu:
+
+~ 133 == -134
+
+Reprezentarea lui 133 este 0000000010000101. Prin complementare se obține 1111111101111010. Aceasta este reprezentarea în memorie a lui -134.
+
+Pentru a verifica, îl reprezentăm conform celor de mai sus pe -134:
+
+reprezentarea lui 134 este 0000000010000110
+prin complementare se obține 1111111101111001
+adunăm 1 și obținem 1111111101111010
+Operatorul de conjuncție biți &
+Este un operator binar care are ca rezultat numărul obținut prin conjuncția fiecărei perechi de biți ce apar în reprezentare în memorie a operanzilor:
+
+0 & 0 == 0
+0 & 1 == 0
+1 & 0 == 0
+1 & 1 == 1
+Exemplu:
+
+Să calculăm 13 & 151.
+
+Reprezentarea lui 13 este 0000000000001101. Reprezentarea lui 151 este 0000000010010111:
+
+0000000000001101 &
+0000000010010111
+
+Se obține:
+
+0000000000000101, adică 5
+
+Deci: 13 & 151 == 5
+
+Operatorul de disjuncție pe biți |
+Este un operator binar care are ca rezultat numărul obținut prin disjuncția fiecărei perechi de biți ce apar în reprezentare în memorie a operanzilor:
+
+0 | 0 == 0
+0 | 1 == 1
+1 | 0 == 1
+1 | 1 == 1
+Exemplu:
+
+Să calculăm 13 | 151.
+
+Reprezentarea lui 13 este 0000000000001101. Reprezentarea lui 151 este 0000000010010111:
+
+0000000000001101 |
+0000000010010111
+
+Se obține:
+
+0000000010011111, adică 159
+
+Deci: 13 | 151 == 159
+
+Operatorul de disjuncție exclusivă ^
+Este un operator binar care are ca rezultat numărul obținut prin disjuncția exclusivă fiecărei perechi de biți ce apar în reprezentare în memorie a operanzilor:
+
+0 ^ 0 == 0
+0 ^ 1 == 1
+1 ^ 0 == 1
+1 ^ 1 == 0
+Exemplu:
+
+Să calculăm 13 ^ 151.
+
+Reprezentarea lui 13 este 0000000000001101. Reprezentarea lui 151 este 0000000010010111:
+
+0000000000001101 ^
+0000000010010111
+
+Se obține:
+
+0000000010011010, adică 2 + 8 + 16 + 128 = 154.
+
+Deci: 13 ^ 151 == 154
+
+Operatorul de deplasare spre stânga – shift left <<
+Este un operator binar care are ca rezultat numărul obținut prin deplasare spre stânga a biților din reprezentarea în memorie a primului operand cu un număr de poziții egal cu al doilea operand.
+
+Să calculăm 13 << 3.
+
+Reprezentarea lui 13 este 0000000000001101. Deplasând toți biții spre stânga cu 3 poziții se obține: 0000000001101000, adică 104.
+
+Să observăm că 104 este egal cu 13 * 23. În general n << k este n * 2k.
+
+Pentru a calcula 2n putem folosi operația 1 << n.
+
+Operatorul de deplasare spre dreapta – shift right >>
+Este un operator binar care are ca rezultat numărul obținut prin deplasare spre dreapta a biților din reprezentarea în memorie a primului operand cu un număr de poziții egal cu al doilea operand.
+
+Să calculăm 133 >> 3.
+
+Reprezentarea lui 133 este 0000000010000101. Deplasând toți biții spre dreapta cu 3 poziții se obține: 0000000000010000 adică 16.
+
+Să observăm că 16 este egal cu 133 / 23. În general n >> k este n / 2k.

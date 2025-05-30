@@ -1,0 +1,104 @@
+Descompunerea în factori primi se bazează pe Teorema fundamentală a aritmeticii: Orice număr natural n mai mare decât 1 se poate scrie în mod unic sub forma
+n = p1^e1 * p2^e2 * ... * pk^ek, unde p1 < p2 < ... < pk sunt numere prime, iar ei > 0, i = 1...k
+Exemplu: 140 = 2^2 * 5^1 * 7^1
+
+Pentru a determina descompunerea, vom proceda deductiv:
+
+știm că factorii primi ai lui n sunt cuprinși între 2 și n;
+vom parcurge succesiv aceste numere și pentru un divizor curent d al lui n:
+determinăm puterea sa în descompunere numărând de câte ori se poate împărții n la d. Această împărțire se realizează efectiv.
+afișam divizorul curent d și puterea sa;
+procesul se încheie când n devine 1.
+Program C++:
+
+#include <iostream>
+using namespace std;
+int main(){
+    int n;
+    cin >> n;
+    int d = 2,  // d va fi, pe rand, fiecare factor prim din descompunere
+        p;      // p va fi puterea lui d in descompunere
+    // il  impartim pe n la d in mod repetat, pana cand devine 1
+    while(n > 1)
+    {
+        if(n % d == 0) // d este divizor al lui n, deci factor prim al acestuia
+        {
+            // numaram de cate ori se imparte n la d. Aceasta va fi puterea lui d in descompunere
+            p = 0;
+            while(n % d == 0)
+            {
+                ++p;
+                n /= d;
+            }
+            cout << d << " " << p << endl;
+        }
+        ++ d;
+        //  daca d * d il depaseste pe n si n nu este 1, decidem ca n este prim,
+        //  si este factor in descompunerea valorii initiale a lui n
+        if(n>1 && d * d > n){
+            d = n; // trecem direct la n, urmatorul factor din descompunere
+        }
+    }
+    return 0;
+}
+Programul de mai sus afișează pentru n descompunerea în factori primi; pe fiecare linie se afișează perechea factor putere. Merită observat că nu se parcurg toate numerele de la 1 la n. Dacă la un moment dat se decide că valoarea curentă a lui n este număr prim, se trece direct la aceasta, fără a mai parcurge un șir lung de numere care nu mai pot fi factori primi ai lui n.
+
+
+APLICAȚII:
+Teorema fundamentală a aritmeticii:
+
+Orice număr natural n mai mare decât 1 se poate scrie în mod unic sub forma n = p1^e1 · p2^e2 · ... · pk^ek, unde p1 < p2 < ... < pk sunt numere prime, iar ei > 0, i = 1, ..., k
+
+V-ați întrebat de ce numărul 1 nu este prim? Dacă ar fi, teorema de mai sus ar fi falsă! Pentru numărul 12, ar fi valabile descompunerile:
+• 12 = 2^2 · 3
+• 12 = 1 · 2^2 · 3
+• 12 = 1^2 · 2^2 · 3
+• 12 = 17 · 2^2 · 3
+• ș.a.m.d.
+
+Iată trei aplicații interesante ale descompunerii în factori primi. Lăsăm demonstrarea lor în sarcina cititorului!
+
+Numărul de divizori
+
+Numărul de divizori al lui n poate fi determinat prin numărarea acestora: parcurgerea intervalului de divizori posibili și numărarea valorilor care sunt divizori ai lui n.
+
+O altă soluție este folosirea următoarei proprietăți:
+
+Proprietate: Pentru un număr natural care are descompunerea în factori primi: n = p1^e1 · p2^e2 · ... · pk^ek, numărul de divizori este:
+(e1 + 1) · (e2 + 1) · ... · (ek + 1)
+
+Exemplu: Fie n = 12. Divizorii lui 12: 1, 2, 3, 4, 6, 12 – 6 divizori.
+Descompunerea în factori este: n = 12 = 2^2 · 3^1.
+Aplicând formula de mai sus obținem (2 + 1) · (1 + 1) = 3 · 2 = 6.
+
+Suma divizorilor
+
+Proprietate: Pentru un număr natural care are descompunerea în factori primi: n = p1^e1 · p2^e2 · ... · pk^ek, suma divizorilor este:
+( p1^(e1+1) - 1 ) / (p1 - 1) · ( p2^(e2+1) - 1 ) / (p2 - 1) · ... · ( pk^(ek+1) - 1 ) / (pk - 1)
+
+Exemplu: Fie n = 12. Suma divizorilor este 1 + 2 + 3 + 4 + 6 + 12 = 28.
+Descompunerea în factori este: n = 12 = 2^2 · 3^1.
+Aplicând formula de mai sus obținem: (2^3 - 1)/(2 - 1) · (3^2 - 1)/(3 - 1) = (8 - 1)/1 · (9 - 1)/2 = 7 · 4 = 28.
+
+Indicatorul lui Euler
+
+Indicatorul lui Euler sau funcția lui Euler, sau totient se notează cu φ(n) (unde n este un număr natural nenul) și φ(n) reprezintă numărul de numere mai mici sau egale cu n și prime cu acesta.
+
+Indicatorul lui φ(n) poate fi determinat prin numărarea valorilor prime cu n, sau putem aplica următoarea proprietate:
+
+Proprietate: Pentru un număr natural n care are descompunerea în factori primi: n = p1^e1 · p2^e2 · ... · pk^ek, are loc relația:
+φ(n) = (p1 - 1) * p1^(e1 - 1) · (p2 - 1) * p2^(e2 - 1) · ... · (pk - 1) * pk^(ek - 1)
+
+Scrisă echivalent această relație este: φ(n) = n · (1 - 1/p1) · (1 - 1/p2) · ... · (1 - 1/pk)
+
+Exemplu: Pentru n = 12, numerele mai mici decât 12, prime cu acesta sunt 1, 5, 7, 11, adică 4 numere.
+Descompunerea în factori este: n = 12 = 2^2 · 3^1.
+Aplicând formula de mai sus obținem φ(12) = (2 - 1) · 2^(2 - 1) · (3 - 1) · 3^(1 - 1) = 1 · 2 · 2 · 1 = 4
+sau φ(12) = 12 · (1 - 1/2) · (1 - 1/3) = 12 · 1/2 · 2/3 = 2 · 2 = 4.
+
+Observație: Dacă n este număr prim, atunci φ(n) = n - 1.
+
+Teorema lui Euler:
+Dacă a, n sunt două numere naturale prime între ele, atunci:
+a^φ(n) ≡ 1 (mod n)
+

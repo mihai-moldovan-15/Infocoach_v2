@@ -1,0 +1,61 @@
+Introducere
+Se dă un tablou A cu n elemente întregi. Să se determine o secvență pentru care suma elementelor este maximă.
+
+Problema este una clasică și admite diverse soluții. Vom vedea în continuare trei soluții, de complexități diferite! Să observăm însă că, dacă elementele ar fi pozitive, atunci secvența cerută ar fi întreg tabloul.
+
+În continuare vom numi secvență candidat o secvență care ar putea fi secvența cerută.
+
+Soluția 1
+Prima soluție are complexitatea O(n^3) și poate fi folosită când valoarea lui n este în jur de 100.
+
+Fiecare secvență a vectorului poate fi secvență candidat. Vom identifica toate secvențele delimitate de indicii i j, cu 1 ≤ i ≤ j ≤ n. Pentru fiecare secvență, vom determina suma elementelor care o compun și vom reține secvența de sumă maximă:
+
+int st = 0 , dr = 1 , Smax = -2000000000 , S;
+for(int i = 1 ; i <= n ; ++ i)
+    for(int j=i;j<=n;++j)
+    {
+        S = 0;
+        for(int k = i ; k <= j ; ++ k)
+            S += A[k];
+        if(S > Smax)
+            Smax = S, st = i, dr = j;
+    }
+cout << Smax << endl;
+cout << st << " " << dr;
+Soluția 2
+Soluția anterioară poate fi îmbunătățită folosind sume partiale pentru a determina suma elementelor din secvența i j. În acest mod complexitatea scade la O(n^2)  și poate fi folosită când valoarea lui n este în jur de 1000.
+
+SP[0] = 0;
+for(int i =1 ; i <= n ; i ++)
+    SP[i] = SP[i-1] + A[i];
+int st = 0 , dr = 1 , Smax = -2000000000 , S;
+for(int i = 1 ; i <= n ; ++ i)
+    for(int j=i;j<=n;++j)
+    {
+        S = SP[j] - SP[i-1];
+        if(S > Smax)
+            Smax = S, st = i, dr = j;
+    }
+cout << Smax << endl;
+cout << st << " " << dr;
+Soluția 3
+Ultima soluție, de complexitate liniară – O(n) pleacă de la ideea că dacă într-o secvență (PQ), formată prin reuniunea (lipirea) secvențelor (P) și (Q), suma elementelor din secvența (P) este negativă, atunci suma elementelor din sevența (Q) este mai mare decât suma elementelor din secvența (PQ). În cest caz secvența (PQ) nu mai este secvență candidat, dar (Q) este (probabil) secvență candidat.
+
+Procedăm astfel:
+
+parcurgem tabloul și adunăm elementul curent A[i] la S – acesta reprezentând suma elementelor dintr-o secvență candidat;
+dacă S este mai mare decât suma maximă, actualizăm rezultatele;
+dacă S devine negativ, îl reinițializăm la 0; tot acum reinițializăm și poziția de început a secvenței candidat.
+int st , dr, Smax = -2000000000 , S = -1, start;
+for(int i = 1 ; i <= n ; ++ i)
+{
+    if(S < 0)
+        S = 0, start = i;
+    S += A[i];
+    if(S > Smax)
+        Smax = S, st = start, dr = i;
+}
+cout << Smax << endl;
+cout << st << " " << dr;
+Soluția de mai sus poate fi utilizată pentru valori mai mari ale lui n, de exemplu 100000 sau 1000000. De asemenea, poate fi ușor modificată încât să se evite folosirea tabloului, determinând rezultatul direct din citire. Astfel, complexitatea spațiu a algoritmului devine O(1).
+Aces algoritm mai este numit si Algoritmul lui Kadane.

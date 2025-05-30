@@ -1,0 +1,76 @@
+Se pot formula foarte multe probleme în care se cere să se verifice dacă elementele unui vector respectă diverse proprietăți, dar toate se pot reduce în cele din urmă la una dintre următoarele:
+
+să se verifice dacă toate elementele unui vector dat respectă o anumită regulă;
+să se verifice dacă într-un vector dat există elemente care respectă o anumită regulă.
+O rezolvare ar putea fi să numărăm elementele care respectă regula. La final:
+
+dacă numărul de elemente care respectă regula este egal cu numărul total de elemente din vector, atunci toate elementele respectă regula
+dacă numărul de elemente care respectă regula este nenul, atunci există elemente care respectă regula.
+Altă rezolvare, mai bună, ne permite să oprim parcurgerea când suntem siguri că vectorul respectă sau nu proprietatea dorită. Vom folosi o variabilă booleană (cu valori true sau false, 1 sau 0, …):
+
+dacă la final variabila are valoarea true, atunci vectorul respectă regula,
+dacă la final variabila are valoare false, atunci vectorul nu respectă regula.
+Toate elementele respectă regula
+inițializăm variabila cu true
+parcurgem vectorul
+dacă elementul curent nu respectă regula dorită
+variabila devine false
+parcurgerea vectorului poate opri
+Secvențe C++:
+
+bool OK = true;
+for(int i = 0 ; i < n && OK ; i ++)
+    if(X[i] - nu respectă regula)
+        OK = false;
+sau
+
+bool OK = true;
+for(int i = 0 ; i < n ; i ++)
+    if(X[i] - nu respectă regula)
+    {
+        OK = false;
+        break;
+    }
+sau
+
+bool OK = true;
+int i = 0;
+while(i < n && OK)
+{
+    if(X[i] - nu respectă regula)
+        OK = false;
+    else
+        i ++;
+}
+Există elemente care respectă regula
+inițializăm variabila cu false
+parcurgem vectorul
+dacă elementul curent respectă regula dorită
+variabila devine true
+parcurgerea vectorului poate opri
+Secvențe C++:
+
+bool OK = false;
+for(int i = 0 ; i < n && !OK ; i ++)
+    if(X[i] - respectă regula)
+        OK = true;
+sau
+
+bool OK = false;
+for(int i = 0 ; i < n ; i ++)
+    if(X[i] - respectă regula)
+    {
+        OK = true;
+        break;
+    }
+sau
+
+bool OK = false;
+int i = 0;
+while(i < n && !OK)
+{
+    if(X[i] - respectă regula)
+        OK = true;
+    else
+        i ++;
+}

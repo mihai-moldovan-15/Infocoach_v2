@@ -1,0 +1,11 @@
+anthropic
+cryptography
+google-generativeai
+numpy
+openai
+python-dotenv
+flask
+flask-sqlalchemy
+flask-login
+flask-wtf
+email-validator

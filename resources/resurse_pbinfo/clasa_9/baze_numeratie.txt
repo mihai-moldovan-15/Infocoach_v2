@@ -1,0 +1,119 @@
+Există 10 categorii de oameni: cei care înțeleg sistemul binar și cei care nu-l înțeleg!
+
+Oamenii sunt obișnuiți să folosească numerele în baza 10, adică să folosească sistemul de numerație zecimal. Un număr scris în baza 10 va avea cifrele 0, 1, 2, …, 9 – resturile posibile la împărțirea cu 10. Știm deja că există sistemul de numerație binar, în baza 2. Cifrele sunt 0 și 1 – resturile posibile la împărțirea cu 2.
+
+Există oare și alte baze de numerație? Răspunsul este afirmativ, orice număr natural b mai mare decât 1 poate fi considerat bază de numerație, iar cifrele folosite în baza b sunt 0, 1, 2, …, b-1. În contextul computerelor sunt utilizate frecvent bazele 10, 2, 8 și 16. Să le analizăm:
+
+numerele scrise în baza 10 vor conține cifrele: 0 1 2 3 4 5 6 7 8 9
+numerele scrise în baza 2 vor conține cifrele: 0 1
+numerele scrise în baza 8 vor conține cifrele: 0 1 2 3 4 5 6 7
+ce facem cu baza 16? Cele spuse mai sus conduc la ideea că cifrele trebuie să fie 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 – resturile posibile la împărțirea cu 16, dar apare o întrebare: Care sunt cifrele numărului 112(16)? Are trei cifre, 1, 1 și 2? Are două cifre, 11 și 2 sau 1 și 12? Este o situație confuză, inacceptabilă, astfel că, pentru cifrele cu valorile 10 11 12 13 14 15 se folosesc următoarele notații:
+10 se notează cu A (sau a)
+11 se notează cu B (sau b)
+12 se notează cu C (sau c)
+13 se notează cu D (sau d)
+14 se notează cu E (sau e)
+15 se notează cu F (sau f)
+cu convențiile de mai sus, situația numărului 112(16) este clarificată: are trei cifre, 1, 1 și 2. Dacă dorim să scriem numărul cu două cifre cu valorile 11 și 2, vom avea: B2(16).
+Transformarea din baza 10 în baza b
+Cum transformăm un număr oarecare n din baza 10 într-o bază oarecare, b? Algoritmul de transformare este foarte asemănător cu cel de determinare a cifrelor în baza 10. De fapt, este chiar identic, doar că baza nu este 10, ci b. Mai exact:
+
+împărțim numărul n la b. Obținem un cât și un rest;
+împărțim câtul la b. Obținem un cât și un rest;
+împărțim noul cât la b și obținem un cât și un rest;
+continuăm împărțirile până când obținem câtul 0;
+resturile obținute, scrise în ordinea inversă obținerii, reprezintă scrierea în baza b a lui n.
+Exemplu: să transformăm numărul 24 din baza 10 în baza 2. Efectuăm împărțirile:
+
+24 / 2 = 12 rest 0
+12 / 2 = 6 rest 0
+6 / 2 = 3 rest 0
+3 / 2 = 1 rest 1
+1 / 2 = 0 rest 1
+
+Scriem resturile în ordine inversă și obținem: 24(10) = 11000(2). Să observăm că am obținut cifrele în ordinea inversă față de poziția lor în număr!!
+
+Cum folosim această transformare într-un program? Dacă dorim să afișăm cifrele reprezentării în baza b, le putem afișa în ordinea determinării. Pentru a le afișa în ordinea din număr ar trebui să le stocăm pe toate într-o structură de date convenabilă – de exemplu un tablou. De asemenea, le putem număra, aduna, determina maximul, etc.
+
+Secvența C++ de mai jos determină cea mai mare cifră a reprezentării în baza b a numărului n.
+
+cmax = 0;
+cin >> n >> b;
+while(n)
+{
+    int cif= n % b;
+    if(cif > cmax)
+        cmax = cif;
+    n /= b;
+}
+
+Transformarea din baza b în baza 10
+
+Pentru transformarea numărului c_k c_{k-1} ... c_0(b) din baza b în baza 10 folosim formula
+c_k c_{k-1} ... c_0(b) = c_k * b^k + c_{k-1} * b^{k-1} + ... + c_1 * b^1 + c_0 * b^0,
+în care operațiile de adunare, înmulțire și ridicare la putere se fac în baza 10.
+
+De fapt această formulă este echivalentă cu reprezentarea zecimală a numerelor, de exemplu:
+253(10) = 2 * 10^2 + 5 * 10^1 + 3 * 10^0
+
+Exemplu
+
+11000(8) = 1 * 8^4 + 1 * 8^3 + 0 * 8^2 + 0 * 8^1 + 0 * 8^0
+         = 1 * 8^4 + 1 * 8^3
+         = 16 + 8
+         = 24
+
+Algoritm: Să presupunem că se citește baza b, numărul n de cifre ale numărului în baza b, apoi cifrele. Determinarea reprezentării în baza 10 este:
+
+cin >> b;
+int rez = 0, x;
+for (int i = 1; i <= n; i++) {
+    cin >> x;
+    rez = rez * b + x;
+}
+cout << rez;
+
+Transformarea din baza b în baza d
+
+De regulă, pentru transformarea dintr-o bază oarecare într-o bază oarecare se folosește ca "bază de manevră" baza 10. Mai exact:
+• se dă un număr x în baza b
+• se transformă numărul x din baza b în baza 10 și se obține un număr y
+• se transformă numărul y din baza 10 în baza d și se obține rezultatul final
+
+Transformări între baze puteri ale lui 2
+
+Un caz particular îl constituie transformările între baza 2 și altă bază care este putere a lui 2. De exemplu, să analizăm reprezentările în baza 2 și 16 ale numărului 2018(10):
+
+16 = 2^4
+2018(10) = 7E2(16)
+7E2(16) = 1111100010(2)
+
+dacă grupăm cifrele din baza 2 câte 4 (deoarece 16 = 2^4), 2018(10) = 1111100010(2) = 111.1100.0010(2)
+Transformăm fiecare grupă din baza 2 în baza 16 vom obține:
+111(2) = 7(16)
+1100(2) = C(16)
+0010(2) = 2(16)
+
+Vom obține: 7C2(16)
+
+Observație: pentru transformarea din baza 2 în baza 16 – algoritmul este similar și pentru alte baze, puteri ale lui 2:
+• numărul în baza 2 se împarte în grupe de câte 4 cifre. Prima grupă poate fi incompletă.
+• se transformă fiecare grupă în baza 16, de la stânga spre dreapta, obținând câte o cifră.
+• scriem rezultatul în baza 16
+
+Cum facem transformarea inversă, din baza 16 în baza 2:
+
+• transformăm fiecare cifră a numărului din baza 16 în baza 2. Vom obține pentru fiecare cifră un șir ce va conține cel mult 4 biți.
+• dacă șirul de biți obținut nu are 4 biți, îl completăm cu zerouri nesemnificative, cu excepția primului grup (corespunzător primei cifre)
+
+scriem secvențele de biți în ordine, obținând reprezentarea în baza 2
+
+Exemplu:
+7E2(16) = 111.1100.0010(2)
+
+• transformăm din baza 16 în baza 2
+7(16) = 111(2) – are 3 cifre, nu completăm cu zerouri
+E(16) = 1110(2) – are 4 cifre, nu completăm cu zerouri
+2(16) = 10(2) – are doar două cifre; completăm cu doi zerouri la început, pentru a obține patru cifre
+
+Reprezentarea în baza 2 este 11111000010(2)

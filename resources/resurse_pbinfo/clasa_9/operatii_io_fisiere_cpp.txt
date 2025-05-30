@@ -1,0 +1,73 @@
+Operațiile standard de intrare/ieșire se fac cu tastatură și ecranul, dar este posibil să realizăm și citiri din fișiere text, respectiv scrieri în fișiere text. Pentru a realiza operațiile propriu-zise, fișierele sunt asociate cu fluxuri de date, iar operațiile sunt similare cu cele cu tastatura și ecranul.
+
+Etapele lucrului cu fișiere text
+În C++ există mai multe modalități de lucru cu fișiere text. Toate respectă următoarele etape:
+
+deschiderea fișierului/asocierea fișierului cu un flux de date;
+citirea din fișier/scrierea în fișier;
+închiderea fișierului/fluxului de date
+Deschiderea fișierului
+O modalitate uzuală de a deschide fișiere constă în declararea unor variabile de tip flux. Acestea sunt de tip:
+
+ofstream pentru fluxurile de ieșire – asociate cu fișierele în care vom scrie;
+ifstream pentru fluxurile de intrare – asociate cu fișierele din care vom citi;
+Declararea variabilelor se poate face astfel:
+
+ifstream fin(NUME_FISIER_INTRARE);
+ofstream fout(NUME_FISIER_IESIRE);
+NUME_FISIER_INTRARE și NUME_FISIER_IESIRE sunt șiruri de caractere care conțin numele fișierelor din care se face citirea/în care se face scrierea, de exemplu:
+
+ifstream fin("fisier.in");
+ofstream fout("fisier.out");
+Nu este obligatoriu să folosim extensiile .in și .out, dar ele sunt frecvent folosite în algoritmică, pentru a desemna fișierul de intrare (INput), respectiv fișierul de ieșire (OUTput.)
+
+fin și fout sunt identificatori de variabile. Putem folosi orice identificator, dar alegerea unor nume clare precum fin și fout, sau is (input stream) și os (output stream) fac, considerăm noi, programele mai ușor de înțeles și depanat.
+
+Secvența de mai sus realizează simultan două operații: declararea variabilei de tip flux și dechiderea acestuia (asocierea cu fișierul corespunzător). Ele pot fi realizate și independent, de exemplu astfel:
+
+ifstream fin;
+fin.open("fisier.in");
+sau
+
+fstream fin("fisier.in", ios::in), fout("fisier.out", ios::out);
+Declararea variabilelor de tip flux se poate face oriunde, cu respectarea restricțiilor cunoscute: orice variabilă folosită trebuie să fi fost anterior declarată.
+
+Citirea din fișier/scrierea în fișier
+Pentru citirea propiu-zisă a datelor din fișier/scrierea datelor în fișier se folosesc operatorii de extracție din flux/inserare în flux.
+
+De exemplu:
+
+int x;
+fin >> x;
+fout << 2 * x;
+Închiderea fișierelor
+Se face astfel:
+
+fin.close();
+fout.close();
+Un exemplu complet
+Următorul program este soluție corectă pentru problema #sum :
+
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+int main()
+{
+    int a , b, s;
+    fin >> a >> b;
+    fin.close();
+    s = a + b;
+
+    fout << s;
+    fout.close();
+
+    return 0;
+}
+Observații
+fișierele de intrare (deschise pentru citire) trebuie să existe. Dacă se deschide pentru citire un fișier care nu există, operațiile de citire (fin >> ...) vor eșua și comportamentul programului devine de multe ori impredictibil;
+fișierele de ieșire (deschise pentru scriere) nu trebuie să existe. La deschidere ele vor fi create. Dacă fișierul de ieșire există conținurul său va fi înlocuit cu datele scrise de programul care rulează.

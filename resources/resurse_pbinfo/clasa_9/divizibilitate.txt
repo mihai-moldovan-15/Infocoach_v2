@@ -1,0 +1,4 @@
+Să începem cu niște definiții – în cele ce urmează vorbim despre numere naturale:
+
+Spunem că numărul n divide numărul m dacă există un număr p astfel încât n * p = m. De regulă, este echivalent cu faptul că restul împărțirii lui m la n este 0, în C/C++ m % n este 0.
+Dacă n divide pe m, spunem că n este divizor al lui m, iar m este multiplu al lui n.

@@ -1,0 +1,68 @@
+Indicatorul lui Euler sau funcția lui Euler, sau totient se notează cu φ(n) (unde n este un număr natural nenul) și reprezintă numărul de numere mai mici sau egale cu n și prime cu acesta.
+
+Valoarea lui φ(n) poate fi determinată prin numărarea valorilor prime cu n, sau putem aplica următoarea proprietate:
+
+Formula bazată pe descompunerea în factori
+
+Proprietate: Pentru un număr natural n care are descompunerea în factori primi n = p1^k1 * p2^k2 * ... * pr^kr, are loc relația:
+φ(n) = (p1^k1 - p1^(k1-1)) * (p2^k2 - p2^(k2-1)) * ... * (pr^kr - pr^(k-1)).
+O scriere echivalentă este: φ(n) = n * (1 - 1/p1) * (1 - 1/p2) * ... * (1 - 1/pr).
+
+Exemplu: Pentru n = 12, numerele mai mici decât n, prime cu acesta sunt: 1, 5, 7, 11, adică 4 numere.
+Descompunerea în factori este: n = 12 = 2^2 * 3^1.
+Aplicând formula de mai sus obținem φ(12) = (2^2 - 2^(2-1)) * (3^1 - 3^(1-1)) = (4 - 2) * (3 - 1) = 2 * 2 = 4.
+
+Observație: Dacă n este număr prim, atunci φ(n) = n - 1.
+
+Teorema lui Euler:
+
+Dacă a, n sunt două numere naturale prime între ele, atunci:
+a^φ(n) ≡ 1 (mod n)
+
+Secvență C++
+
+Următoarea funcție C++ determină valoarea indicatorului lui Euler pentru o valoare n transmisă ca parametru:
+
+int phi(int n) {
+    int r = n, d = 2;
+    while (d * d <= n) {
+        if (n % d == 0) {
+            while (n % d == 0)
+                n /= d;
+            r = r / d * (d - 1);
+        }
+        d++;
+    }
+    if (n > 1)
+        r = r / n * (n - 1);
+    return r;
+}
+
+Complexitatea ei este O(radical din n).
+Determinarea indicatorului lui Euler pe toate numerele mai mici sau egale cu n
+
+Uneori - vezi problema #Tramvaiul - trebuie să determinăm indicatorul lui Euler pentru multe numere, acestea fiind relativ mici (de exemplu, mai mici decât 1.000.000). În această situație se poate utiliza un algoritm similar cu Ciurul lui Eratostene, bazat tot pe formula de mai sus: φ(n) = n * (1 - 1/p1) * (1 - 1/p2) * ... * (1 - 1/pr). În plus, dacă p este număr prim, atunci φ(p) = p - 1.
+
+Algoritmul este următorul, pentru a determina valoarea indicatorului lui Euler pentru toate numerele mai mici sau egale cu DIM:
+
+declarăm un tabloul F[] cu DIM + 1 elemente; la final, F[x] va reprezenta indicatorul lui Euler pentru x
+inițializăm fiecare element F[i] = i; scopul acestei inițializari este dublu:
+pe de o parte în formula pentru indicatorul lui Euler al lui n produsul începe cu n;
+pe de altă parte, dacă pe parcurs F[p] este egal cu p, deducem că p este număr prim și va influența indicatorul lui Euler pentru toți multipli săi.
+parcurgem cu p numerele de la 2 la DIM:
+dacă F[p] este egal cu p, înseamnă că p este număr prim:
+decrementăm F[p], aducându-l la valoarea corectă a indicatorului pentru numere prime; (A)
+parcurgem toți multipli k ai lui p mai mari decât acesta și actualizăm valoarea lui F[k] = F[k] * (1 - 1/p)
+
+Secventa C ++:
+int F[DIM + 1];
+
+for(int i =1 ; i <= DIM ; i ++)
+    F[i] = i;
+for(int i = 2;  i <= DIM ; i ++)
+    if(F[i] == i)
+    {
+        F[i] --;
+        for(int j =2 ; j * i <= DIM ; j ++)
+            F[j * i]= F[j * i] / i * (i - 1);
+    }

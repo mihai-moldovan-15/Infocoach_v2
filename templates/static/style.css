@@ -1,0 +1,121 @@
+body {
+    background: #f6f8fa;
+    margin: 0;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    height: 100vh;
+    min-height: 100vh;
+}
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+.chat-header {
+    padding: 24px 24px 12px 24px;
+    text-align: center;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+.chat-messages {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: #f6f8fa;
+}
+.message {
+    max-width: 80%;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.message.user {
+    align-self: flex-end;
+    background: #e6f0fa;
+    color: #222;
+}
+.message.assistant {
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    color: #222;
+}
+.chat-input-area {
+    padding: 18px 24px 18px 24px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.chat-input-row {
+    display: flex;
+    gap: 8px;
+}
+textarea {
+    flex: 1 1 auto;
+    font-size: 16px;
+    font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    min-height: 48px;
+    max-height: 120px;
+}
+select, input[type="submit"], button {
+    font-size: 16px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    background: #0074d9;
+    color: #fff;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+input[type="submit"]:hover, button:hover {
+    background: #005fa3;
+}
+pre code.cpp {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    display: block;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+    font-size: 15px;
+    color: #222;
+    overflow-x: auto;
+}
+code {
+    background: #f3f3f3;
+    color: #c7254e;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 95%;
+    font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+}
+strong {
+    font-weight: bold;
+    color: #1a1a1a;
+}
+.feedback-form {
+    margin-top: 10px;
+}
+#wait-message {
+    margin: 10px 0;
+    font-weight: bold;
+    color: #0074d9;
+    display: none;
+}

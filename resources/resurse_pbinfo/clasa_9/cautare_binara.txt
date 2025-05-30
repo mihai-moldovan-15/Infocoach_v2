@@ -1,0 +1,302 @@
+Introducere
+Căutarea unei valori într-un vector se poate face în două moduri:
+
+secvențial – presupune analizarea fiecărui element al vectorului într-o anumită ordine (de obicei de la stânga la dreapta). Când se găsește valoarea căutată parcurgerea vectorului se poate opri. În cel mai rău caz, pentru un vector cu n elemente parcurgerea face n pași, complexitatea timp a căutării secvențiale este O(n)
+binar. Căutarea binară se poate face într-un vector numai dacă elementele acestuia sunt în ordine (de obicei crescătoare) după un anumit criteriu (de obicei criteriul este chiar relația de ordine naturală între numere, cuvinte, etc). Căutarea binară presupune împărțirea vectorului în secvențe din ce în ce mai mici, înjumătățindu-le și continuând cu jumătatea în care se poate afla valoarea dorită (conform ordinii elementelor din vector).
+Algoritm pseudocod
+Algoritmul căutării binare este următorul:
+
+Date de intrare:
+
+un vector v[] cu n elemente, indexate de la 1 la n, ordonate crescător și o valoare x care se va căuta.
+Date de ieșire:
+
+un indice poz dacă valoarea x apare în vectorul v[] sau 0 în caz contrar.
+Algoritm pseudocod:
+
+st ← 1
+dr ← n
+poz ← 0
+CÂTTIMP st≤dr SI poz=0 EXECUTĂ
+    m ← (st + dr) DIV 2
+    DACĂ v[m] = x ATUNCI
+        poz = m
+    ALTFEL
+        DACĂ v[m] < x ATUNCI
+            st ← m + 1
+        ALTFEL
+            dr ← m - 1
+        SFDACĂ
+    SFDACĂ
+SFCÂTTIMP
+
+DACĂ poz≠0 ATUNCI
+    // x apare în vector pe poziția poz
+ALTFEL
+    // x nu apare în vector
+SFDACĂ
+Notă: În algoritmul de mai sus a DIV b reprezintă câtul împărțirii lui a la b, iar cu V ← EXPR s-a notat atribuirea la variabila V a rezultatului expresiei EXPR.
+
+Altă variantă a căutării binare
+De multe ori nu este suficient să știm dacă o valoare dată apare sau nu în vector. Sunt numeroase situații în care trebuie să aflăm un indice al vectorului (element al vectorului) care respectă o anumită condiție în raport cu valoarea dată. De exemplu:
+
+să se determine cel mai mare indice poz pentru care v[poz] ≤ x;
+să se determine cel mai mare indice poz pentru care v[poz] < x;
+etc.
+Algoritmul de mai jos determină cel mai mare indice poz pentru care v[poz] ≤ x. El poate fi folosit și pentru a verifica dacă x apare în vector, astfel: dacă la final v[poz] = x, atunci x apare în vector, in caz contrar nu apare.
+
+st ← 1
+dr ← n
+poz ← n + 1
+CÂTTIMP st ≤ dr EXECUTĂ
+    m ← (st + dr) DIV 2
+    DACĂ v[m] ≥ x ATUNCI
+        poz ← m
+        dr ← m - 1
+    ALTFEL
+        st ← m + 1
+    SFDACĂ
+SFCÂTTIMP
+
+DACĂ v[poz] = x ATUNCI
+    // x apare în șir pe poziția poz
+ALTFEL
+    // x nu apare în șir (în acest caz, v[poz] > x)
+SFDACĂ
+
+În contextul căutării binare, se disting mai multe variații ale acesteia, prezente în problemele de pe pbInfo sau la
+examenele celor mai bune facultăți din țară. Câteva exemple de căutări binare pe tablouri sortate crescător ar fi:
+
+1) Poziția pe care un număr apare în vector(returnează -1 în caz contrar):
+
+int CautareBinaraPoz(int A[], int n, int x)
+{
+    int st = 1, dr = n;
+
+    while(st <= dr)
+    {
+        int mij = (st + dr) / 2;
+        if(A[mij] == x)
+            return mij;
+        else if(A[mij] < x)
+            st = mij + 1;
+        else
+            dr = mij - 1;
+    }
+
+    return -1;
+}
+
+Varianta recursivă:
+int CautareBinaraPozRec(int A[], int st, int dr, int x)
+{
+    if(st > dr)
+        return -1;
+
+    int mij = (st + dr) / 2;
+
+    if(A[mij] == x)
+        return mij;
+    else if(A[mij] < x)
+        return cautareBinaraPozitieRec(A, mij+1, dr, x);
+
+    return cautareBinaraPozitieRec(A, st, mij-1, x);
+}
+
+2) Poziția Celui mai mic element mai mare sau egal cu x:
+
+int CelMaiMicMaiMareSauEgal(int A[], int n, int val)
+{
+    int st = 1, dr = n, poz = -1;
+    while(st <= dr)
+    {
+        int mij = (st + dr) / 2;
+        if(A[mij] >= val)
+        {
+            poz = mij;
+            dr = mij - 1;
+        }
+        else
+            st = mij + 1;
+    }
+
+    return poz;
+}
+
+Varianta recursivă:
+int CelMaiMicMaiMareSauEgalRec(int A[], int st, int dr, int x)
+{
+    if(st > dr)
+        return -1;
+    int mij = (st + dr) / 2;
+    if(A[mij] >= x)
+    {
+        int poz = CelMaiMicMaiMareSauEgalRec(A, st, mij-1, x);
+        if(poz != -1)
+            return poz;
+        return mij;
+    }
+    return CelMaiMicMaiMareSauEgalRec(A, mij+1, dr, val);
+}
+
+3) Cel mai mare element mai mic sau egal cu x:
+
+int celMaiMareMaiMicSauEgal(int A[], int n, int x)
+{
+    int st = 1, dr = n, poz = -1;
+
+    while(st <= dr)
+    {
+        int mij = (st + dr) / 2;
+
+        if(A[mij] <= x)
+        {
+            poz = mij;
+            st = mij + 1;
+        }
+        else
+            dr = mij - 1;
+    }
+
+    return poz;
+}
+
+Varianta recursivă:
+int CelMaiMareMaiMicSauEgalRec(int A[], int st, int dr, int x)
+{
+    if(st > dr)
+        return -1;
+
+    int mij = (st + dr) / 2;
+
+    if(A[mij] <= x)
+    {
+        int poz = CelMaiMareMaiMicSauEgalRec(A, mij+1, dr, x);
+        if(poz != -1)
+            return poz;
+        return mij;
+    }
+
+    return CelMaiMareMaiMicSauEgalRec(A, st, mij-1, x);
+}
+
+4) Determinarea primei poziții pe care apare un număr x în vector:
+int PozPrimeiAparitii(int A[], int n, int x)
+{
+    int st = 1, dr = n, poz = -1;
+
+    while(st <= dr)
+    {
+        int mij = (st + dr) / 2;
+
+        if(A[mij] == val)
+        {
+            poz = mij;
+            dr = mij - 1;
+        }
+        else if(A[mij] < val)
+            st = mij + 1;
+        else
+            dr = mij - 1;
+    }
+
+    return poz;
+}
+
+Varianta recursivă:
+int PozPrimeiAparitiiRec(int A[], int st, int dr, int x)
+{
+    if(st > dr)
+        return -1;
+
+    int mij = (st + dr) / 2;
+
+    if(A[mij] == x)
+    {
+        int poz = PozPrimeiAparitiiRec(A, st, mij-1, x);
+        if(poz == -1)
+            return mij;
+        return poz;
+    }
+    else if(A[mij] < x)
+        return PozPrimeiAparitiiRec(A, mij + 1, dr, x);
+
+    return PozPrimeiAparitiiRec(A, st, mij-1, x);
+}
+
+5) Determinarea ultimei poziții pe care apare un număr x in vector:
+int UltimaAparitie(int A[], int n, int x)
+{
+    int st = 1, dr = n, poz = -1;
+    while(st <= dr)
+    {
+        int mij = (st + dr) / 2;
+        if(A[mij] == x)
+        {
+            poz = mij;
+            st = mij + 1;
+        }
+        else if(A[mij] < x)
+            st = mij + 1;
+        else
+            dr = mij - 1;
+    }
+
+    return poz;
+}
+
+Varianta recursivă:
+int UltimaAparitieRec(int A[], int st, int dr, int x)
+{
+    if(st > dr)
+        return -1;
+
+    int mij = (st + dr) / 2;
+
+    if(A[mij] == val)
+    {
+        int poz = UltimaAparitieRec(A, mij+1, dr, x);
+        if(poz != -1)
+            return poz;
+        return mij;
+    }
+    else if(A[mij] < val)
+        return UltimaAparitieRec(A, mij + 1, dr, x);
+
+    return UltimaAparitieRec(A, st, mij-1, x);
+}
+
+6) Numărul de apariții ale unui număr într-un vector ordonat, folosind funcțiile de la 4) și 5)
+
+int NumarAparitii(int A[], int n, int x)
+{
+    int prima_aparitie = primaAparitie(A, n, x);
+    int ultima_aparitie = ultimaAparitie(A, n, x);
+
+    if(prima_aparitie != -1)
+        return ultima_aparitie - prima_aparitie + 1;
+
+    return 0;
+}
+
+7) Rădăcina pătrată a unui număr, aproximată prin lipsă la cel mai apropiat număr întreg:
+
+int ParteIntreagaRadical(int n)
+{
+    int st = 1, dr = n, val = -1;
+    while(st <= dr)
+    {
+        int mij = (st + dr) / 2;
+        if(mij * mij <= n)
+        {
+            val = mij;
+            st = mij + 1;
+        }
+        else
+            dr = mij - 1;
+    }
+
+    return val;
+}
+
+Asemănător cu 7, putem verifica dacă un număr este pătrat perfect sau cub perfect.

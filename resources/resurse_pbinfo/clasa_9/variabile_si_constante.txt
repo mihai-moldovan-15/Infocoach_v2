@@ -1,0 +1,196 @@
+Orice program prelucrează date. Acestea se află în memoria RAM a calculatorului, și pot fi variabile (valoarea datei se poate modifica) sau constante (valoarea nu se poate modifica).
+
+Variabile
+O variabilă reprezintă o locație de memorie unde se află o valoare de un anumit tip. Orice variabilă este caracterizată de:
+
+adresa variabilei. Memoria RAM a calculatorului este adresată – fiecare octet (byte) din memorie are asociat un număr de ordine, începând de la 0. Acest număr reprezintă adresa acelui byte și se afișează implicit în baza 16.
+identificatorul variabilei – reprezintă un nume pentru variabilă – legătura dintre variabilă si adresa ei. Identificatorul respectă următoarele reguli:
+conține litere mari, mici ale alfabetului englez cifre și caracterul de subliniere '_' – underline. Literele mari sunt considerate diferite de cele mici, astfel că Raspuns, raspuns și RASPUNS reprezintă identificatori diferiți.
+primul caracter nu poate fi cifră. Deși este posibil ca un identificator să înceapă cu '_', nu este recomandat, pentru a evita anumite conflicte cu identificatori de sistem.
+identificatorul nu poate face parte din lista cuvintelor rezervate – disponibilă la finalul acestui articol.
+nu există limite legate de lungimea unui identificator, dar numai primele 31 de caractere sunt semnificative.
+tipul variabilei – stabilește ce fel de valori poate să ia variabila, între ce limite sunt acestea, precum și ce operații pot fi realizate cu variabila. Citește aici despre tipurile de date!
+domeniul de vizibilitate – reprezintă zona din program în care variabila există și poate fi utilizată. Variabilele pot fi globale sau locale.
+variabilele locale se declară într-un bloc (între paranteze acolade {...}) și sunt vizibile doar în acel bloc. Au valori inițiale aleatorii.
+variabilele globale se declară în exteriorul oricărui bloc și sunt vizibile în toate blocurile care urmează declarării. Sunt inițializate cu 0.
+În C/C++, variabilele trebuie declarate, precizând tipul și identificatorul. Sintaxa este:
+
+Tip_de_date Lista_identificatori;
+
+unde Tip_de_date poate fi orice tip C++ corect (citește aici despre tipurile de date), iar Lista_identificatori este alcătuită din cel puțin un identificator. Dacă sunt mai mulți, se vor separa prin caracterul virgulă ,.
+
+Exemple:
+
+int a , x;
+S-au declarat două variabile, cu numele a și x ce vor putea memora valori numere întregi dintr-un interval pe care îl vom studia mai târziu.
+
+La declarare, variabilele pot fi inițializate cu o valoare corespunzătoare tipului de date folosit:
+
+int a = 1, x;
+Următorii identificatori C++ sunt corecți: a, numar, Numar, alt_numar, a2b, _suma – nerecomandat, un_nume_de_variabila_foarte_lung.
+
+Următorii identificatori C++ sunt incorecți:
+
+2a – începe cu cifră. Identificatorii pot începe cu litere sau '_'
+alt numar – conține caracter interzis: spațiu
+un-numar – contine caracter interzis: minus
+număr – conține litera ă. Identificatorii pot conține numai litere ASCII – din alfabetul englez.
+Constante
+Constantele sunt date care nu-și modifică valoarea în timpul execuției programului. Pot fi constante cu nume, sau constante literale, date direct prin valoarea lor.
+
+Constante simbolice
+Constantele simbolice (cu nume) pot fi precizate în două moduri:
+
+prin directiva define. Exemplu:
+#define MAX 101
+se pot declara variabile cu modificatorul const; ele devin read-only, iar valoarea lor nu mai poate fi modificată. Exemplu:
+const int MAX = 101;
+Notă: la declararea variabilelor read-only este obligatorie inițializarea!
+
+Literali
+Într-un program pot apărea valori constante, fie că sunt numere, caractere, șiruri de caractere sau de altă natură. Acestea se mai numesc constante literale sau literali.
+
+Constante întregi
+Reprezintă numere întregi – fără parte fracționară. Pot fi:
+
+Constante zecimale – în baza 10
+exemple: 176, -54, 0;
+pot conține cifrele: 0 1 2 3 4 5 6 7 8 9;
+Constante octale – în baza 8
+încep întotdeauna cu 0;
+exemple: 015, 062;
+pot conține cifrele: 0 1 2 3 4 5 6 7;
+Constante hexazecimale – în baza 16:
+încep întodeauna cu 0x;
+exemple: 0x15, 0x6f, 0xff;
+pot conține cifrele: 0 1 2 3 4 5 6 7 8 9 A B C D E F.
+O constantă octală nu poate contine cifra 9. Valoarea 0295 nu este corectă și va produce eroare de compilare!
+
+Constante reale
+Reprezintă numere reale și se mai numesc în virgulă mobilă. Separatorul zecimal este caracterul punct '.' și pot apărea în două forme:
+
+scrierea standard (fixă): -1.5 14.974
+scrierea științifică, cu mantisă și exponent. Numărul -0.567E+2 înseamnă -0.567*10+2, adică -56.7:
+-0.567 reprezintă mantisa;
++2 reprezintă exponentul.
+Constante caracter – char
+Sunt alcătuite dintr-un singur caracter, delimitat de apostroafe: ‘.
+
+Exemplu
+
+'a', 'B', '~', '?'
+O categorie aparte de caractere constă în secvențele ESCAPE. O secvență escape este alcătuită din două caractere, dintre care primul este backslash: \. Reprezintă caractere care nu pot fi scrise ca atare sau au un înțeles special. Din punct de vedere sintactic sunt caractere, fiind delimitate prin aprostrof. Probabil cea mai cunoscută secvență escape este '\n' – new line (enter).
+
+Dintre secvențele escape amintim:
+
+'\n' – Newline
+'\b' – Backspace
+'\f' – Form feed
+'\r' – Return
+'\t' – TAB orizontal
+'\\' – Backslash
+'\'' – Apostrof
+'\"' – Ghilimele
+'\?' – Semn de întrebare
+'\0' -Caracterul nul
+O constantă char conține exact un caracter. Nu putem avea mai multe caractere între apostroafe, cu excepția secvențelor escape, dar o secvență escape reprezintă un singur caracter!
+
+Constante șir de caractere
+Sunt delimitate de ghilimele “. Pot să conțină secvențe escape.
+
+Exemple
+
+"numar", "n = ", "Am terminat.\n"
+'A' și "A" nu reprezintă același lucru: 'A' este un caracter, iar "A" este un șir de caractere, format dintr-un singur caracter!
+
+Cuvinte rezervate
+Nu orice cuvânt poate fi utilizat pe post de identificator. Există în C++ o listă de cuvinte care au o semnificație bine determinată și nu pot fi utilizate în alt scop. Ele se numesc cuvinte rezervate (keywords) și sunt următoarele:
+
+alignas
+alignof
+and
+and_eq
+asm
+auto
+bitand
+bitor
+bool
+break
+case
+catch
+char
+char16_t
+char32_t
+class
+compl
+concept
+const
+constexpr
+const_cast
+continue
+decltype
+default
+delete
+do
+double
+dynamic_cast
+
+else
+enum
+explicit
+export
+extern
+false
+float
+for
+friend
+goto
+if
+inline
+int
+long
+mutable
+namespace
+new
+noexcept
+not
+not_eq
+nullptr
+operator
+or
+or_eq
+private
+protected
+public
+register
+reinterpret_cast
+
+requires
+return
+short
+signed
+sizeof
+static
+static_assert
+static_cast
+struct
+switch
+template
+this
+thread_local
+throw
+true
+try
+typedef
+typeid
+typename
+union
+unsigned
+using
+virtual
+void
+volatile
+wchar_t
+while
+xor
+xor_eq

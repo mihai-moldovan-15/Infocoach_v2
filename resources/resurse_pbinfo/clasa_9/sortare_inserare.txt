@@ -1,0 +1,37 @@
+Sortarea prin inserție (Insertion Sort) se bazează pe următoarea idee:
+
+fie un vector X[] cu n elemente;
+dacă secvența cu indici 0, 1, …, i-1 este ordonată, atunci putem insera elementul X[i] în această secvență astfel încât să fie ordonată secvența cu indici 0, 1, …, i-1, i.
+luăm pe rând fiecare element X[i] și îl inserăm în secvența din stânga sa
+la final întreg vectorul va fi ordonat
+Algoritm
+O reprezentare a algoritmului este:
+
+parcurgem vectorul cu indicele i
+inserăm pe X[i] în secvența din stânga sa; pentru inserare se mută unele elemente din secvență spre dreapta
+Secvență C++
+În secvențele următoare considerăm că tabloul are elementele indexate de la 0 la n-1:
+
+int n, X[100];
+//citire X[] cu n elemente
+for(int i = 1 ; i < n ; i ++)
+{
+    int x = a[i];
+    int p = i - 1;
+    while(p >= 0 && a[p] > x)
+        a[p + 1] = a[p], p --;
+    a[p + 1] = x;
+}
+sau:
+
+for(int i = 1 ; i < n ; i ++)
+{
+    int p = i;
+    while(p > 0 && a[p] < a[p-1])
+    {
+        int aux = a[p];
+        a[p] = a[p-1];
+        a[p-1] = aux;
+        p --;
+    }
+}

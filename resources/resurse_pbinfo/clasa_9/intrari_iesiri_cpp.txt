@@ -1,0 +1,115 @@
+Introducere
+Operațiile de de intrare/ieșire sunt operațiile prin care un program primește date sau afișează rezultate. Aceste operații trebuie privite din perspectiva programului
+
+operații de intrare: datele intră în program, programul citește date
+operații de ieșire: datele ies din program, programul afișează date
+Practic, datele care intră în program sau ies din program sunt șiruri de caractere pe care programul le primește, respectiv le trimite
+
+Limbajul C++ oferă o modalitate uniformă de a realiza operațiile de intrare/ieșire, indiferent dacă se fac la consolă, în fișiere, sau cu alte dispozitive care prelucrează caractere. Este vorba despre stream sau flux. Stream-ul poate fi privit ca o înșiruire de caractere care sunt trimise într-o ordine bine determinată de la o sursă la o destinație. Programul va insera caractere în stream (dacă este un stream de ieșire, care afișează date) sau va extrage caractere din stream (dacă este un stream de intrare, din care se citesc date).
+
+Biblioteca standard C++ permite lucrul cu mai multe categorii de stream-uri. Dintre acestea vom discuta în continuare despre stream-urile cu consola, dispozitivul standard de intrare-ieșire, altfel spus stream-uri care permit citirea de la tastatură și afișarea pe ecran. Obiectele care permit aceste operații sunt:
+
+cin – stream standard de intrare
+cout – stream standard de ieșire
+cerr – stream standard de ieșire pentru erori
+clog – stream standard de ieșire pentru înregistrarea evenimentelor
+
+În continuare vom vorbi despre cout și cin – stream-ul standard de ieșire și de intrare. cerr și clog sunt și ele stream-uri de ieșire și funcționează precum cout; mai mult, de cele mai multe ori fac exact același lucru ca și cout – afișează pe ecran. Există însă situații când ieșirea produsă de cerr sau clog este redirectată către alte dispozitive.
+
+Stream-ul de ieșire cout
+În cele mai multe cazuri, dispozitivul standard de ieșire este ecranul și poate fi accesat cu stream-ul cout. Pentru aceasta, cout se folosește împreună cu operatorul de inserție <<, urmat de data care se va afișa:
+
+cout << "Salut"; // afiseaza pe ecran Salut
+cout << 17; // afiseaza numarul 17 pe ecran
+cout << n; // afiseaza pe ecran valoarea variabilei n
+Operatorul cout afișează în stream-ul din stânga valoarea din dreapta. Să observăm că "Salut" este delimitat de ghilimele, deoarece este o constantă literal de tip șir de caractere, iar n nu este delimitată de ghilimele, deoarece este o variabilă.
+
+Notă: Dacă textul care urmează după << este între ghilimele, se va afișa ca atare. Dacă nu este între ghilimele, se consideră că este o variabilă, și se afișează valoarea ei.
+
+cout << "Salut"; //afiseaza cuvantul Salut
+cout << Salut; // afiseaza valoare variabilei Salut
+Putem afișa mai multe valori în aceeași instrucțiune:
+
+cout << "Ana " << "are" << " mere."; // se va afisa Ana are mere
+sau
+
+int nr_mere = 17;
+cout << "Ana " << "are " << nr_mere << " mere."; // se va afisa Ana are 17 mere
+cout nu adaugă automat sfârșit de linie sau spatii. De exemplu:
+
+cout << "Aceasta este o";
+cout << "propozitie mai lunga!";
+va afișa:
+
+Aceasta este opropozitie mai lunga!
+Pentru a insera spațiu între o și propoziție, îl precizăm explicit:
+
+cout << "Aceasta este o "; // este un spatiu dupa o
+cout << "propozitie mai lunga!";
+sau
+
+cout << "Aceasta este o";
+cout << " propozitie mai lunga!"; // la inceput este un spatiu
+Dacă vrem să afișăm pe linii diferite procedăm astfel:
+
+cout << "Aceasta este o\n";
+cout << "propozitie mai lunga!";
+O altă variantă este să folosim manipulatorul endl pentru a întrerupe linia. De exemplu:
+
+cout << "Aceasta este o" << endl;
+cout << "propozitie mai lunga!";
+Ambele variante de mai sus vor afișa:
+
+Aceasta este o
+propozitie mai lunga!
+endl produce un caracter rând nou, exact ca și inserarea lui \n, dar mai face ceva: endl golește buffer stream-ului cout, adică forțează afișarea pe ecran tuturor caracterelor inserate în stream până în acest moment. endl poate produce întârzieri în execuția programului, deci trebuie folosit cu precauție.
+
+Stream-ul de intrare cin
+În cele mai multe cazuri, dispozitivul standard de intrare este tastatura și poate fi accesat cu stream-ul cin. Pentru aceasta, cin se folosește împreună cu operatorul de extragere >>, urmat de variabila în care se va memora valoarea extrasă (variabila care se va citi):
+
+int n;
+cin >> n;
+Mai întâi se declară variabila n, apoi se citește o valoare pentru ea – se extrage din cin o valoare care se memorează în variabila n. La execuție, programul așteaptă să se introducă o valoare de la tastatură. De fapt, caracterele introduse sunt transmise programului numai când se apasă tasta ENTER.
+
+Să considerăm următorul program:
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    int n = 7;
+    cout << "n = ";
+    cin >> n;
+    cout << "n este " << n << endl;
+    cout << "patratul lui n este " << n * n << endl;
+    return 0;
+}
+Rezultatul său depinde de valoare introdusă pentru n. Ar putea fi:
+
+n = 25
+n este 25
+patratul lui n este 625
+Dar dacă se nu se introduce un număr?
+
+n = salut
+n este 0
+patratul lui n este 0
+La operația de extragere din cin contează tipul variabilei de după >>. Caracterele din stream sunt interpretate în funcție de tipul variabilei. Dacă aceste caractere nu corespund cu tipul variabilei, operația de extragere eșuează. Dacă operația de extragere din stream eșuează:
+
+variabila nu se modifică și se setează un marcaj de eroare (failbit) – până la C++11;
+variabila primește valoarea 0 și se setează failbit. Dacă valoarea extrasă depășeste limitele tipului variabilei, aceasta primește valoarea maximă sau minimă a tipului său și se setează failbit – de la C++11.
+Se pot citi valorile a două sau mai multe variabile în aceeași instrucțiune:
+
+cin >> x >> y;
+este echivalent cu
+
+cin >> x;
+cin >> y;
+În ambele cazuri se așteaptă introducerea a două valori; acestea pot fi separate/precedate prin orice fel de caractere albe: spații, TAB-uri, caractere rând nou.
+
+Atenție: Una dintre cele mai frecvente erori este inversarea operatorilor pentru stream-urile cin și cout, sau citirea valorii unei constante. Următoarele instrucțiuni sunt greșite:
+
+cout >> "Salut";
+cin << n;
+cin >> "Salut";
+

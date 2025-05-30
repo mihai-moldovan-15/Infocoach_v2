@@ -1,0 +1,208 @@
+Structurile repetitive execută o instrucțiune de mai multe ori. Se mai numesc și bucle sau cicluri.
+
+Structurile repetitive pot fi:
+
+cu număr cunoscut de pași (iterații) – se cunoaște de la început de câte ori se va execută instrucțiunea
+cu număr necunoscut de pași (iterații). Instrucțiunea se execută cât timp o condiție este adevărată. La fiecare pas se va evalua condiția, iar dacă aceasta este adevărată se va executa instrucțiunea.
+Structurile repetitive cu număr necunoscut de pași pot fi:
+
+cu test inițial: mai întâi se evaluează condiția; dacă este adevărată se execută instrucțiunea și procesul se reia.
+cu test final: mai întâi se execută instrucțiunea, apoi se evaluează condiția; Dacă este adevărată, procesul se reia.
+Instrucțiunea care se execută în mod repetat poartă numele de corp al structurii repetitive, corp al ciclului, corp al buclei și de foarte multe ori este o instrucțiune compusă, care conține alte instrucțiuni.
+
+Înainte de a parcurge materialul, citiți și acest articol.
+
+În C/C++, instrucțiunile repetitive sunt:
+
+while – reprezintă o structură repetitivă cu număr necunoscut de pași și test inițial;
+do...while – reprezintă o structură repetitivă cu număr necunoscut de pași și test final;
+for – reprezintă de o structură repetitivă cu număr necunoscut de pași și test inițial; se folosește frecvent când se cunoaște numărul de pași. Putem spune că strucutra rerepetitivă cu număr cunoscut de pași se implementează în C/C++ prin intermediul său!
+Există de asemenea două instrucțiuni care controlează execuția structurilor repetitive:
+
+break – întrerupe execuția structurii repetitive curente;
+continue – la întâlnirea ei execuția programului trece la expresiile care controlează structura repetitivă curentă, ignorând instrucțiunile care îi urmează în corpul ciclului.
+
+
+INSTRUCȚIUNEA WHILE:
+Instrucțiunea while este o structură repetitivă cu număr necunoscut de pași și test inițial.
+
+Sintaxa
+while (Expresie)
+    Instructiune
+
+Mod de execuție
+Se evaluează Expresie, iar rezultatul se convertește la bool
+Dacă rezultatul este true
+Se execută Instructiune
+Se reia pasul 1.
+Dacă rezultatul este false, se trece la instrucțiunea de după while.
+Instructiune se execută cât timp Expresie este true – condiție adevărată.
+Dacă Expresie este de început false, Instructiune nu se execută deloc.
+Instructiune poate fi orice fel de instrucțiune, dar una singură. Dacă sunt necesare mai multe instrucțiuni, se va folosi instrucțiunea compusă.
+Este necesar ca cel puțin o variabilă care apare în Expresie să-și modifice valoarea în Instructiune. Altfel se obține o buclă infinită.
+Exemplu
+Următorul program citește valoarea variabilei n și calculează suma primelor n numere naturale. Rulați-l analizând rezultatul pentru diverse valori ale lui n, inclusiv 0.
+
+#include <iostream>
+using namespace std;
+int main ()
+{
+    int n;
+    cin >> n;
+    int S = 0;
+    int i = 1;
+    while(i <= n)
+    {
+        S += i;
+        i ++;
+    }
+    cout << S << endl;
+    return 0;
+}
+
+
+INSTRUCȚIUNEA DO...WHILE:
+Instrucțiunea do ... while este o structură repetitivă cu număr necunoscut de pași și test final.
+
+Sintaxa
+ do
+     Instructiune
+ while ( Expresie );
+
+Mod de execuție
+Se execută Instructiune
+Se evaluează Expresie. Rezultatul se convertește la bool.
+Dacă rezultatul este true, se reia pasul 1.
+Dacă rezultatul este false, se trece la instrucțiunea de după do ... while.
+Observații
+Instructiune se execută cât timp Expresie este true – condiție adevărată.
+Dacă Expresie este de început false, Instructiune se execută exact o dată. În orice situație, Instructiune se execută cel puțin o dată.
+Instructiune poate fi orice fel de instrucțiune, dar una singură. Dacă sunt necesare mai multe instrucțiuni, se va folosi instrucțiunea compusă.
+Este necesar ca cel puțin o variabilă care apare în Expresie să-și modifice valoarea în Instructiune. Altfel se obține o buclă infinită.
+Exemplu
+Următorul program citește valoarea variabilei n și calculează suma primelor n numere naturale. Rulați-l analizând rezultatul pentru diverse valori ale lui n, inclusiv 0.
+
+#include <iostream>
+using namespace std;
+int main ()
+{
+    int n;
+    cin >> n;
+    int S = 0;
+    int i = 1;
+    do
+    {
+        S += i;
+        i ++;
+    }
+    while(i <= n);
+    cout << S << endl;
+    return 0;
+}
+
+INSTRUCȚIUNEA FOR:
+Instrucțiunea for este o structură repetitivă cu număr necunoscut de pași și test inițial, echivalentă cu while.
+
+Sintaxa
+for (Expresie_de_Initializare ; Expresie_de_Testare ; Expresie_de_Continuare)
+    Instructiune
+
+Mod de execuție
+Se evaluează Expresie_de_Initializare
+Se evaluează Expresie_de_Testare. Rezultatul se convertește la bool.
+Dacă rezultatul este true:
+Se execută Instructiune.
+Se evaluează Expresie_de_Continuare.
+Se revine la pasul 2.
+Dacă rezultatul este false, se trece la instrucțiunea de după for.
+Observații
+Instrucțiunea for este echivalentă cu instrucțiunea while. Sintaxa descrisă mai sus este echivalentă cu:
+ Expresie_de_Initializare;
+ while( Expresie_de_Testare )
+ {
+    Instructiune
+    Expresie_de_Continuare;
+ }
+
+Instructiune se execută cât timp Expresie_de_Testare este nenulă – condiție adevărată.
+Dacă Expresie_de_Testare este de început vidă, Instructiune nu se execută deloc, iar Expresie_de_Continuare nu se mai evaluează.
+Instructiune poate fi orice fel de instrucțiune, dar una singură. Dacă sunt necesare mai multe instrucțiuni, se va folosi instrucțiunea compusă.
+Este necesar ca cel puțin o variabilă care apare în Expresie_de_Testare să-și modifice valoarea în Instructiune sau la evalurea Expresiei_de_Continuare. Altfel se obține o buclă infinită.
+Cele trei expresii, de_Initializare, _de_Testare și _de_Continuare sunt separate prin caracterul ; – obligatoriu!
+Oricare dintre cele trei expresii, de_Initializare, _de_Testare și _de_Continuare, eventual toate, poate să lipsească. În acest caz avem expresii vide. Dacă Expresie_de_Testare este vidă, rezultatul său este nenul!
+Expresie_de_Initializare se execută o singură dată. Poate să conțină și declararea unor variabile. În acest caz, variabilele vor exista numai în instrucțiunea for.
+Exemplu
+Următorul program citește valoarea variabilei n și calculează suma primelor n numere naturale. Rulați-l analizând rezultatul pentru diverse valori ale lui n, inclusiv 0.
+
+#include <iostream>
+using namespace std;
+int main ()
+{
+    int n;
+    cin >> n;
+    int S = 0;
+    for(int i = 1; i <= n ; i ++)
+        S += i;
+    cout << S << endl;
+    return 0;
+}
+
+
+INSTRUCȚIUNEA BREAK:
+Instrucțiunea break are sens și poate fi folosită numai în instrucțiunile switch, while, do ... while și for.
+
+Sintaxa
+break;
+
+Mod de execuție
+Am văzut semnificația instrucțiunii break atunci când apare în instrucțiunea switch.
+
+Efectul instrucțiunii break când apare într-o instrucțiune repetitivă este întreruperea execuției acesteia și trecerea la instrucțiunea care urmează celei repetitive.
+
+Exemplu
+#include <iostream>
+using namespace std;
+int main ()
+{
+    int n;
+    cin >> n;
+    int S = 0;
+    for(int i = 1; i <= n ; i ++)
+    {
+        S += i;
+        if(i == 5)
+            break;
+    }
+    cout << S << endl;
+    return 0;
+}
+Dacă valoarea lui n este cel mult 5, se va afișa suma numerelor de la 1 la n.
+Dacă n >= 5 se va afișa întotdeauna 15, deoarece execuția lui for se întrerupe, datorită lui break, când i este 5.
+
+INSTRUCȚIUNEA CONTINUE:
+nstrucțiunea continue are sens și poate fi folosită numai în instrucțiunile while, do ... while și for.
+
+Sintaxa
+continue;
+
+Mod de execuție
+Efectul instrucțiunii continue este ignorarea instrucțiunilor care îi urmează în corpul ciclului și revenirea la evaluarea Expresiei, în cazul lui while, do ... while, respectiv la evaluarea Expresiei_de_Continuare, în cazul lui for.
+
+Exemplu
+#include <iostream>
+using namespace std;
+int main ()
+{
+    int n;
+    cin >> n;
+    int S = 0;
+    for(int i = 1; i <= n ; i ++)
+    {
+        if(i % 2 == 0)
+            continue;
+        S += i;
+    }
+    cout << S << endl;
+    return 0;
+}
+

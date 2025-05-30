@@ -1,0 +1,69 @@
+O problemă frecvent întâlnită este determinarea divizorilor unui număr dat. În practică se pot cere diverse operații cu aceștia: afișarea, însumarea, numărarea, etc.
+
+Algoritmul naiv
+O primă metodă de determinare a divizorilor constă în a observa că toți divizorii lui n sunt între 1 și n, inclusiv. Putem parcurge numerele din acest interval și verifica dacă sunt într-adevăr divizori ai lui n, caz în care sunt luați în considerare. Următorul program afișează divizorii lui n în acest fel.
+
+#include <iostream>
+int main()
+{
+    int n;
+    std :: cin >> n;
+    for(int d =1 ; d <= n ; d ++ )
+        if(n % d == 0)
+            std :: cout << d << " ";
+    return 0;
+}
+De exemplu, pentru n = 24 se va afișa:
+
+1 2 3 4 6 8 12 24
+Programul de mai sus este corect, dar neeficient. Testați-l pentru n = 1.000.000.000 și veți vedea că execuția durează 2-3 secunde. Poate nu pare mult, dar dacă lucrăm cu 1000 de numere cu valori în jurul lui 1.000.000.000, execuția va dura aproximativ 45 de minute – prea mult.
+
+O primă soluție este să observăm că pentru orice n, de la n/2 la n nu mai sunt divizori. Putem astfel să înjumătățim intervalul în care căutăm divizorii. Astfel înjumătățim și timpul de execuție, dar nu este o îmbunătățire suficientă.
+
+Un algoritm mai eficient
+Soluția acceptabilă este să observăm că divizorii oricărui număr n sunt în pereche: dacă d este divizor al lui n, atunci și n/d este divizor al lui n. De exemplu, pentru n = 75.
+
+1 este divizor 75, atunci și 75/1 = 75 este divizor al lui 75;
+2 nu este divizor al lui 75
+3 este divizor 75, atunci și 75/3 = 25 este divizor al lui 75;
+4 nu este divizor al lui 75
+5 este divizor 75, atunci și 75/5 = 15 este divizor al lui 75;
+6 nu este divizor al lui 75
+7 nu este divizor al lui 75
+8 nu este divizor al lui 75
+9 nu este divizor al lui 75. Mai mult, 9 * 9 > 75, alți divizori nu vom mai găsi.
+Divizorii lui 75 sunt: 1 75  3 25 5 15. Constatăm astfel că pentru a determina divizorii lui n este suficient să parcurgem numerele de la 1 la
+.
+
+Un caz special îl constituie pătratele perfecte. În cazul lor trebuie evitată analizarea de două ori a lui
+, care este divizor al lui n. Pentru 36 avem divizorii:
+
+1 în pereche cu 36
+2 în pereche cu 18
+3 în pereche cu 12
+4 în pereche cu 9
+5 nu este divizor al lui 36
+6 în pereche cu 6. 6 trebuie luat o singură dată!
+7*7>36, ne oprim!
+Noua variantă a programului care afișează divizorii lui n este:
+
+#include <iostream>
+int main()
+{
+    int n;
+    std :: cin >> n;
+    for(int d =1 ; d * d <= n ; d ++ )
+        if(n % d == 0)
+        {
+            std :: cout << d << " ";
+            if(d * d < n) // dacă d != sqrt(n)
+                std :: cout << n / d << " ";
+        }
+    return 0;
+}
+În programul de mai sus am evitat utilizarea funcției sqrt, pentru calculul radicalului, prin expresia d <= sqrt(n). Am preferat o formă echivalentă: d * d <= n, mai eficientă!
+
+Observații
+Numerele care nu sunt pătrate perfecte au număr par de divizori.
+Singurele numere cu număr impar de divizori sunt pătratele perfecte.
+Cel mai mic divizor propriu al unui număr natural (diferit de 1 și de numărul însuși) este număr prim.

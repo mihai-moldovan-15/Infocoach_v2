@@ -1,0 +1,103 @@
+Operațiile logice lucrează cu valori de adevăr. Le folosim instinctiv în viața de zi cu zi, dar uneori ne pun în dificultate atunci când trebuie să le aplicăm într-un algoritm.
+
+Valori de adevăr. Propoziții adevărate și false
+Operațiile logice se fac cu valori de adevăr (notate TRUE / FALSE, sau ADEVĂRAT / FALS) sau propoziții care au ca rezultat valori de adevăr. De exemplu:
+
+“Orașul Sibiu este în România.” – este o propoziție adevărată, are valoarea ADEVĂRAT;
+“Orașul Sibiu este în Bulgaria.” – este o propoziție falsă, are valoare FALS.
+Exemple din matematică:
+
+numărul 19 este impar – ADEVĂRAT
+10 se divide cu 3 – FALS
+comparații:
+3 ≠ 4 – ADEVĂRAT
+10 < 5 – FALS
+x > 3 – nu știm rezultatul; depinde de valoarea lui x!!
+Exemple din algoritmică (C/C++):
+
+19%2==1 – ADEVĂRAT, în C/C++ rezultatul este 1
+10%3==0 – FALS, în C/C++ rezultatul este 0
+3 != 4 – ADEVĂRAT, în C/C++ rezultatul este 1
+10 < 5 – FALS, în C/C++ rezultatul este 0
+x > 3 – nu știm rezultatul; depinde de valoarea lui x din momentul in care se face comparația!!
+De multe ori o propoziție logică conține variabile, iar valoarea de adevăr a ei depinde de valorile variabilelor.
+
+Două propoziții logice, care depind de anumite variabile, sunt echivalente dacă, pentru orice valori ale variabilelor, sunt fie amândouă adevărate, fie amândouă false. De exemplu, propoziția “numărul natural n este par” este echivalentă cu propoziția “restul împărțirii numărului natural n la 2 este 0”.
+
+Operațiile logice
+Negarea
+Negarea este o operație foarte folosită în viața de zi cu zi. Prin negare, propoziția “Orașul Sibiu este în România.” devine “Orașul Sibiu nu este în România.”, care este FALSĂ. Prin negarea unei propoziții adevărate se obține o propoziție falsă, iar prin negarea unei propoziții false se obține o propoziție adevărată.
+
+În C/C++, negarea este o operație unară, cu prioritate mare, iar operatorul său este !. Ea poate fi aplicată pentru orice valori numerice (și nu numai), dar de regulă se aplică asupra altor valori logice.
+
+dacă p este o expresie cu valoarea 0 (FALS), atunci !p are valoarea 1 (ADEVĂRAT).
+dacă p este o expresie cu valoarea diferită de 0 (ADEVĂRAT), atunci !p are valoarea 0 (FALS).
+Exemple:
+
+int x = 10;
+cout << !(x == 10); // 0: x == 10 este adevărat și are rezultat 1, 1 negat este 0
+cout << !x == 10; // tot 0, dar se efectuează mai întâi !x, adică !10, cu rezultat 0, apoi 0 == 10, cu rezultat fals, adică 0
+cout << !(x < 5); // 1: x < 5 este fals, adică 0, 0 negat este 1
+Conjuncția
+Conjuncția realizează “compunerea” a două propoziții prin intermediul cuvântului ȘI. Exemple:
+
+Propoziția “Orașul Sibiu este în România.” ȘI “Orașul Craiova este în România.” este obținută prin compunerea a două propoziții adevărate și este la rândul său adevărată;
+Propoziția “Orașul Sibiu este în România.” ȘI “Orașul Craiova este în Bulgaria.” este obținută prin compunerea unei propoziții adevărate cu una falsă și este la rândul său falsă;
+Propoziția “Orașul Sibiu este în Bulgaria.” ȘI “Orașul Craiova este în România.” este obținută prin compunerea unei propoziții false cu una adevărate și este la rândul său falsă;
+Propoziția “Orașul Sibiu este în Bulgaria.” ȘI “Orașul Craiova este în Bulgaria.” este obținută prin compunerea a două propoziții false și este la rândul său falsă.
+Astfel, conjuncția a două propoziții este ADEVĂRAT dacă ambele propoziții sunt adevărate, în toate celelalte cazuri este FALSĂ.
+
+În C/C++ simbolul conjuncției este &&. La fel ca negarea, și conjuncția poate fi aplicată pentru orice valori numerice (și nu numai), dar de regulă se aplică asupra altor valori logice.
+
+Fie p și q două valori numerice:
+
+dacă p este nenul și q este nenul, atunci (p&&q)==1;
+dacă p este nenul și q este nul, atunci (p&&q)==0;
+dacă p este nul și q este nenul, atunci (p&&q)==0;
+dacă p este nul și q este nul, atunci (p&&q)==0;
+Exemple:
+
+cout << (1 < 2 && 2 == 1 + 1); // 1; ADEVĂRAT ȘI ADEVĂRAT este ADEVĂRAT
+cout << (1 < 2 && 2 != 1 + 1); // 0; ADEVĂRAT ȘI FALS este FALS
+cout << (1 == 2 && 2 == 1 + 1); // 0; FALS ȘI ADEVĂRAT este FALS
+cout << (1 == 2 && 2 != 1 + 1); // 0; FALS ȘI FALS este FALS
+Disjuncția
+Conjuncția realizează “compunerea” a două propoziții prin intermediul cuvântului SAU. Exemple:
+
+Propoziția “Orașul Sibiu este în România.” SAU “Orașul Craiova este în România.” este obținută prin compunerea a două propoziții adevărate și este la rândul său adevărată;
+Propoziția “Orașul Sibiu este în România.” SAU “Orașul Craiova este în Bulgaria.” este obținută prin compunerea unei propoziții adevărate cu una falsă și este la rândul său adevărată;
+Propoziția “Orașul Sibiu este în Bulgaria.” SAU “Orașul Craiova este în România.” este obținută prin compunerea unei propoziții false cu una adevărate și este la rândul său adevărată;
+Propoziția “Orașul Sibiu este în Bulgaria.” SAU “Orașul Craiova este în Bulgaria.” este obținută prin compunerea a două propoziții false și este la rândul său falsă.
+Astfel, disjuncția a două propoziții este ADEVĂRATĂ dacă cel puțin una dintre ele este adevărată; dacă ambele propoziții sunt false, disjucția lor este FALSĂ.
+
+În C/C++ simbolul disjuncției este ||. La fel ca negarea și conjuncția, și disjuncția poate fi aplicată pentru orice valori numerice (și nu numai), dar de regulă se aplică asupra altor valori logice.
+
+Fie p și q două valori numerice:
+
+dacă p este nenul și q este nenul, atunci (p || q)==1;
+dacă p este nenul și q este nul, atunci (p || q)==1;
+dacă p este nul și q este nenul, atunci (p || q)==1;
+dacă p este nul și q este nul, atunci (p || q)==0;
+Exemple:
+
+cout << (1 < 2 || 2 == 1 + 1); // 1; ADEVĂRAT SAU ADEVĂRAT este ADEVĂRAT
+cout << (1 < 2 || 2 != 1 + 1); // 1; ADEVĂRAT SAU FALS este ADEVĂRAT
+cout << (1 == 2 || 2 == 1 + 1); // 1; FALS SAU ADEVĂRAT este ADEVĂRAT
+cout << (1 == 2 || 2 != 1 + 1); // 0; FALS SAU FALS este FALS
+Legile lui De Morgan
+Acestea stabilesc niște reguli legate de situația în care aplicăm operația de negare asupra unor conjuncții și disjuncții. Formal, ele se exprimă astfel:
+
+Fie p și q două expresii logice. Atunci:
+
+!(p && q) ↔ !p || !q
+!(p || q) ↔ !p && !q
+Prin ↔ se înțelege echivalența a două propoziții.
+
+Exemplu
+Fie n un număr natural. Dorim o condiție care să fie adevărată dacă și numai dacă n are exact două cifre. Această condiție este: “mai mare sau egal cu 10 și mai mic decât 100”. Expresia C/C++ este: n >= 10 && n < 100.
+
+Care este condița inversă? Adică, cum exprimăm faptul că n nu are exact două cifre? Dacă n nu are exact două cifre înseamnă că n are o cifră sau n are cel puțin trei cifre. Adică “este mai mic decât 10 sau mai mare sau egal cu 100”. În C/C++: n < 10 || n >= 100.
+
+Adică !(n >= 10 && n < 100) este echivalent cu n < 10 || n >= 100.
+
+Atenție: nu există nicio valoare pentru care n < 10 && n >= 100.

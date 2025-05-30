@@ -1,0 +1,70 @@
+Structura liniară este reprezentată de instrucțiuni care se execută la fel la fiecare executare a programului (sau a secvenței de program), indiferent care sunt valorile variabilelor cu care se lucrează.
+
+Instrucțiunea expresie
+Instrucțiunea expresie este cel mai frecvent folosit tip de instrucțiune dintr-un program C++. O expresie devine instrucțiune dacă este urmată de ;.
+
+Sintaxa:
+
+Expresie;
+
+Exemple:
+
+x = 2;
+x ++;
+cout << x;
+Notă: În C++, operațiile de intrare/ieșire folosind stream-uri sunt și ele operații. În exemplul de mai sus, cout și x sunt operanzii, iar << este operatorul. Rezultat operației este o adresă de memorie, a stream-ului cout.
+
+Instrucțiunea declarativă
+Printr-o instrucțiune declarativă se pot declara identificatori de un anumit tip. Identificatorii pot fi variabile, dar vom vedea mai târziu că pot fi și funcții.
+
+Sintaxa este:
+
+Tip_de_date Lista_identificatori;
+
+unde
+
+Tip_de_date poate fi orice tip C++ corect (int, double, etc.), iar Lista_identificatori este alcătuită din cel puțin un identificator. Dacă sunt mai mulți, se vor separa prin caracterul virgulă ,.
+
+Exemple:
+
+int x, y , z;
+double a;
+Instrucțiunea compusă
+Instrucțiunea compusă sau blocul este o grupare de declarații și instrucțiuni închise între acolade {}. Ele au fost introduse cu scopul de a folosi mai multe instrucțiuni acolo unde sintaxa cere o singură instrucțiune. Instrucţiunea compusă sau blocul sunt echivalente sintactic cu o singură instrucţiune.
+
+Blocul determină și un domeniu de vizibilitate pentru identificatori. Mai precis, identificatorii declarați într-un bloc vor fi eliminați la terminarea acestuia.
+
+După acolada închisă } nu se scrie ;!
+
+Exemple:
+
+#include <iostream>
+using namespace std;
+int main(){
+    int x = 5;
+    {
+        int x = 7;
+        cout << x << endl; // se va afisa 7
+    }
+    cout << x << endl; // se va afisa 5
+    return 0;
+}
+Instrucțiunea return
+O instrucţiune return permite ieşirea dintr-o funcţie și transmiterea controlului apelantului funcției. O funcţie poate returna valori apelantului său, prin intermediul unei instrucţiuni return.
+
+Sintaxă:
+
+return;
+
+sau
+
+return expresie;
+
+În primul caz valoarea returnată nu este definită. În al doilea caz valoarea expresiei este returnată apelantului funcţiei.
+
+Instrucțiunea vidă
+În numite situații, sintaxa limbajului C++ cere prezența unei instrucțiuni într-un anumit punct al programului, dar logica acestuia nu cere acest lucru. Aici intervine instrucțiunea vidă, cu următoarea sintaxă:
+
+;
+
+La întâlnirea instrucțiunii vide nu se va executa nicio acțiune.

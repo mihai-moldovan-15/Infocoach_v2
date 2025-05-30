@@ -1,0 +1,27 @@
+Șirul lui Fibonacci
+Numerele Fibonacci sunt numere naturale care fac parte din următorul șir, în care fiecare număr este egal cu suma celor două de dinainte:
+
+1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, …
+
+Uneori, șirul este extins cu încă un termen, la început:
+
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, …
+
+Termenul Fn este calculat prin următoarea relație de recurență:
+
+Fn = Fn-1 + Fn-2
+
+cu valorile inițiale F1=1, F2=1 sau F0=0 și F1=1.
+
+Algoritm
+Cum determinăm primii N termeni din șirul lui Fibonacci? Vom folosi trei variabile simple a b c. Două dintre ele vor reprezenta termenii anteriori Fn-1 și Fn-2, iar a treia va reprezenta termenul curent Fn:
+
+a ← 1
+b ← 1
+scrie a, b
+pentru i ← 3,n execută
+    c ← a + b
+    scrie c
+    a ← b
+    b ← c
+sfarsit_pentru

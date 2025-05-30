@@ -1,0 +1,75 @@
+Considerăm un tablou cu elemente numerice. În unele probleme se cere să determinăm rapid suma elementelor din anumite secvențe date. Desigur, o soluție este parcurgerea tuturor elementelor din secvență și determinarea sumei, dar această operație are complexitatea
+, iar dacă numărul de sume care trebuie calculate este mare soluția poate fi inacceptabilă.
+
+În asemenea situații putem folosi sumele parțiale.
+
+Reamintim că se numește secvență a vectorului X o succesiune de elemente consecutive din X, în ordinea din X. Mai multe detalii sunt disponibile aici.
+
+Sume parțiale în vectori
+Fie un vector X[] cu n elemente. Pentru simplitate vom considera că elementele sunt indexate de la 1 la n.
+
+Pentru a determina rapid această sumă, vom construi un vector auxiliar, S[], cu următoarea semnificație:
+S[i] = X[1] + X[2] + X[3] + ... + X[i]. Acest vector se construiește în timp liniar, folosind următoarea relație de recurență:
+
+S[i] = 0, daca i = 0
+S[i] = S[i - 1] + X[i], daca i > 0
+
+
+pentru a determina suma elementelor din secvența determinată de indicii i j folosim următoarea formulă, în timp constant:
+X[i] + X[i + 1] + ... + X[j] = S[j] - S[i - 1]
+
+    S[j] = X[1] + X[2] + X[3] + ... + X[i - 1] + X[i] + X[i + 1] + ... + X[j];
+S[i - 1] = X[1] + X[2] + X[3] + ... + X[i - 1]
+
+                               S[j - 1] - S[i] = X[i] + X[i + 1] + ... + X[j];
+
+Observație: Este posibil ca suma elementelor din vectorul X[] să depășească limita maximă a tipului de date folosit (ex. int), ceea ce duce la overflow. În acest caz, vectorul S[] trebuie declarat de un tip mai larg (ex. long long int).
+
+Secvență C++
+int n, X[100001], S[100001];
+//citire n, X[]
+
+S[0] = 0;
+
+for(int i = 1 ; i <= n ; i ++)
+    S[i] = S[i-1] + X[i];
+
+int st, dr; // capetele secvenței
+//citire st,dr
+
+cout << S[dr] - S[st-1];
+Sume parțiale în matrice
+Observațiile de mai sus pot fi extinse pentru a calcula suma elementelor dintr-o submatrice a unei matrice date A[][], cu n linii și m coloane:
+Pentru matricea de mai sus, să calculăm suma elementelor din submatricea cu colțul stânga-sus la coordonatele (2,3) și colțul dreapta-jos la coordonatele (3,5). La fel ca în cazul vectorilor, considerăm, pentru simplitate, că liniile și coloanele matricei sunt indexate de la 1.
+
+Parcurgerea element cu element a submatricei are complexitate
+. Pentru o complexitate constantă considerăm matricea S[][] a sumelor parțiale, astfel:
+
+S[i][j] – suma elementelor din submatricea cu colțul stânga-sus la coordonatele (1,1) și colțul dreapta-jos la coordonatele (i,j). Elementele de pe linia 0 și coloana 0 vor avea valoarea 0:
+Odată construită această matrice, pentru determinarea sumei elementelor din submatricea cu colțul stânga-sus la coordonatele (is,js) și colțul dreapta-jos la coordonatele (ij,jj) vom folosi următoarea formulă:
+
+Suma(is,js,ij,jj) = S[ij][jj] - S[is-1][jj] - S[ij][js-1] + S[is-1][js-1]
+Matricea S[][] se construiește similar cu modul în care se determină suma din submatrice:
+
+S[i][j] = 0, daca i = 0 sau j = 0
+S[i][j] = S[i - 1][j] + S[i][j - 1] - S[i - 1][j - 1] + A[i][j], dacă i > 0 și j > 0
+Observație: Este posibil ca suma elementelor din matricea dată să depășească limita maximă a tipului de date folosit (ex. int), ceea ce duce la overflow. În acest caz, matricea S[][] trebuie declarată de un tip mai larg (ex. long long int).
+
+Secvență C++
+int n,m, A[1001][1001], S[1001][1001];
+//citire n,m,A[][]
+
+for(int i = 0 ; i <= n ; i ++)
+    S[i][0] = 0;
+for(int j = 0 ; j <= m ; j ++)
+    S[0][j] = 0;
+
+for(int i = 1 ; i <= n ; i ++)
+    for(int j = 1 ; j <= m ; j ++)
+        S[i][j] = S[i-1][j] + S[i][j-1] - S[i-1][j-1] + A[i][j];
+
+int is,js; // coltul stanga sus
+int ij,jj; // coltul dreapta jos
+//citire is,js, ij,jj;
+
+cout << S[ij][jj] - S[is-1][jj] - S[ij][js-1] + S[is-1][js-1];

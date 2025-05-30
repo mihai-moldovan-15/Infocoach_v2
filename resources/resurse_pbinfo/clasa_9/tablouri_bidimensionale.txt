@@ -1,0 +1,116 @@
+Tablourile unidimensionale C/C++ au elemente de același tip. Astfel, tipul elementelor poate fi chiar tablou (unidimensional); elementele tabloului sunt la rândul lor tablouri unidimensionale, care au elemente de un anumit tip. Aceste tablouri se numesc bidimensionale sau matrice.
+
+Dintr-o perspectivă ușor diferită, tablourile unidimensionale sunt structuri de date alcătuite din elemente de același tip, organizate pe linii și pe coloane. Astfel, fiecare element are doi indici: un indice de linie și un indice de coloană.
+Declararea tablourilor bidimensionale (matrice) face în C/C++ similar cu a tablourilor unidimensionale, dar trebuie precizate două dimensiuni fizice, maximale: numărul maxim de linii și numărul maxim de coloane ale matricei:
+
+tipDeBază denumire[NumarLinii][NumarColoane];
+de exemplu:
+
+int A[5][10];
+Mai sus s-a declarat un tablou bidimensional (o matrice) cu 5 linii și 10 coloane. Ni-l putem imagina astfel (valorile sunt aleatorii)
+Matricea are:
+
+5 • 10 = 50 de elemente;
+5 linii, indexate (numerotate) de la 0 la 4 – mai jos sunt evidențiate liniile cu indici 1 și 3;
+10 coloane, indexate de la 0 la 9 – mai jos sunt evidențiate coloanele cu indici 0, 4 și 9;
+Referirea elementelor se face prin intermediul operatorului C++ de indexare [], la fel ca în cazul vectorilor, dar trebuie precizați doi indici – cel de linie și cel de coloană. Astfel, A[2][4] reprezintă elementul matricei aflat pe linia 2 și pe coloana 4 – la intersecția dintre linia 2 și coloana 4. Astfel primul indice al unui element este cel de linie, iar al doilea indice este cel de coloană.
+Observație: Cade în sarcina programatorului (adică tu!) să se asigure că valorile indicilor folosiți în expresiile de indexare fac parte din intervalul corect, conform declarării tabloului. Dacă valorile indicilor nu sunt corecte, comportamentul programului este impredictibil: rezultatele obținute vor fi eronate sau se vor produce erori la execuția programului. Aceste erori la execuție sunt de regulă semnalate pe pbinfo cu mesajul Caught fatal signal 11.
+
+De exemplu, pentru matricea de mai sus, expresiile A[-1][7], A[2][20], A[7][7], A[7][30] sunt greșite. Rezultatele (efectele) sunt impredictibile.
+
+Legătura dintre matrice și tablourile unidimensionale în C/C++
+Ne putem gândi la un tablou bidimensional în două moduri:
+
+A este o matrice;
+A are linii și coloane. A[1][9] este elementul aflat pe linia 1 și coloana 9;
+sau:
+
+A este un vector; elementele lui A sunt vectori;
+A[1] este un vector – reprezintă o linie din matricea A;
+A[1][9] este un element al vectorului A[1], de tip int
+Câtă memorie ocupă un tablou bidimensional?
+După cum ați observat deja, toate problemele de pe pbinfo și toate problemele date în concursuri au precizate o serie de restricții, printre care limita maximă de memorie care poate fi folosită. Apare firesc întrebarea: cât de mare poate fi o matrice sau, mai degrabă, câtă memorie ocupă o matrice?
+
+Răspunsul diferă în funcție de doi factori:
+
+tipul elementelor matricei;
+dimensiunile precizate la declarare;
+De exemplu, pentru următoarea declarare:
+
+int A[1000][1000];
+matricea A are 1000 * 1000 = 1000000 de elemente de tip int. O dată de tip int se reprezintă pe (ocupă) 4B, deci matricea A va ocupa 4 * 1000 * 1000 B = 4.000.000B, adică ceva mai puțin de 4MB.
+Parcurgerea unui tablou reprezintă accesarea elementelor tabloului, într-o anumită ordine.
+
+Dimensiunile unei matrice
+La fel ca în cazul tablourilor unidimensionale, și tablourile bidimensionale au două categorii de dimensiuni:
+
+dimensiunile fizice, maxime – numărul maxim de linii, respectiv coloane pe care le poate avea tabloul; de regula se precizează în enunțul problemei
+dimensiunile logice, curente – numărul de linii și de coloane pe care le are matricea la un moment dat, pe parcursul execuției programului. Nu pot să depășească dimensiunile fizice.
+Datorită existenței acestor dimensiuni logice, într-un program C/C++ care folosește tablouri bidimensionale, pe lângă variabila care reprezintă tabloul propriu-zis este necesară prezența a încă două variabile, de regulă notate cu n și m, care reprezintă numărul curent de linii, respectiv coloane ale tabloului.
+
+int A[100][100], n , m;
+Indexarea de la 0 și indexarea de la 1
+Implicit, tablourile bidimensionale, la fel ca cele unidimensionale sunt indexate de a 0 (liniile sunt indexate de la 0 la n-1 și coloanele de la 0 la m-1).
+
+Putem însă să ignorăm prima linie și prima coloană, și să considerăm tabloul indexat de la 1, adică liniile sunt indexate de la 1 la n, iar coloanele de la 1 la m. În această situație matricea trebuie declarată corespunzător.
+
+De exemplu, pentru o matrice cu 100 de linii și 100 de coloane indexată de la 0 declararea va fi:
+
+int A[100][100], n , m;
+iar pentru o matrice similară indexată de la 1 declararea va fi:
+
+int A[101][101], n , m;
+Parcurgerea matricei
+Parcurgerea presupune accesarea elementelor curente ale matricei, într-o anumită ordine – de regulă aceasta se face pe linii, de sus în jos și de la stânga la dreapta:
+
+int n, m, A[100][100];
+...
+for(int i = 0 ; i < n ; i ++)
+{
+    // linia i
+    for(int j = 0 ; j < m ; j ++)
+         // A[i][j]
+    // .....
+}
+
+Următoarea secvență realizează parcurgerea pe coloane:
+
+int n, m, A[100][100];
+...
+for(int j = 0 ; j < m ; j ++)
+{
+    // linia i
+    for(int i = 0 ; i < n ; i ++)
+         // A[i][j]
+    // .....
+}
+Parcurgerea unei linii
+Toate elementele de pe o anumită linie au același indice de linie și diferă prin indicele de coloană. Pentru a parcurge o anumită linie k, vom parcurge indici de coloană:
+
+for(int j = 0 ; j < m ; j ++)
+{
+    // A[k][j]
+}
+Parcurgerea unei coloane
+Toate elementele de pe o anumită coloană au același indice de coloană și diferă prin indicele de linie. Pentru a parcurge o anumită coloană k, vom parcurge indici de linie:
+
+for(int i = 0 ; i < n ; i ++)
+{
+    // A[i][k]
+}
+Citirea unei matrice
+De regulă, elementele matricei se dau în ordine: de sus în jos și de la stânga la dreapta. Citirea presupune nu doar citirea elementelor matricei, dar și citirea dimensiunilor n și m:
+
+cin >> n >> m;
+for(int i = 0 ; i < n ; i ++)
+    for(int j = 0 ; j < m ; j ++)
+        cin >> A[i][j];
+Afișarea unei matrice
+Pentru a obține aspectul specific tabloului bidimensional, după afișarea elementelor de fiecare linie vom trece la linia următoare a ecranului. Elementele fiecărei linii sunt de regulă separate printr-un spațiu:
+
+for(int i = 0 ; i < n ; i ++)
+{
+    for(int j = 0 ; j < m ; j ++)
+        cout << A[i][j] << " ";
+    cout << "\n";
+}

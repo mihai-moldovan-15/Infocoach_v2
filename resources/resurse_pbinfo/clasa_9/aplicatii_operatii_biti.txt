@@ -1,0 +1,58 @@
+Înmulțirea cu puteri ale lui 2
+Înmulțirea cu o puterea lui 2 se face foarte rapid cu operația de deplasare la stânga pe biți, <<. Astfel, a * 2k este egal cu a << k. Desigur, atenție la overflow!
+
+Împărțirea cu puteri ale lui 2
+Câtul împărțirii poate fi determina prin deplasarea la dreapta, >>. Astfel, a / 2k este egal cu a >> k.
+
+Verificarea parității unui număr
+Reprezentarea în baza 2 a unui număr par (și reprezentarea sa internă) se termină cu cifra 0, iar a unui număr impar se termină cu 1. Atunci, deoarece reprezentarea lui 1 are un singur bit 1, restul fiind 0, operația n & 1 are rezultat:
+
+0, dacă n este par
+1, dacă n este impar
+ÎN general n & 1 reprezintă ultimul bit din reprezentarea internă a lui n.
+
+Verificarea faptului că un număr este putere a lui 2
+Puterile lui 2 au un singur bit 1, ceilalți fiind 0. Mai clar, 2k are doar bitul k egal cu 1, ceilalți fiind 0. În plus, 2k-1 are toate cifrele binare 1 – de fapt, primele k cifre (de la dreapta) sunt 1, celelalte fiind 0. Observăm că aplicăm operația & între 2k și 2k-1 vom obține 0.
+
+Pentru a verifica dacă un număr natural oarecare n este putere a lui 2, calculăm expresia n & (n-1). Rezultatul său este 0 dacă și numai dacă n este putere a lui 2.
+
+În general, n & (n-1) are ca rezultat valoarea lui n în care ultimul bit 1 a fost transformat în 0. Dacă n este putere a lui 2, în rezultatul expresiei anterioare singurul bit 1 al lui n devine 0, deci rezultatul este 0.
+
+Cea mai mare putere a lui 2 care îl divide pe n
+Este egală cu 2 la puterea numărul de biți 0 de la sfârșitul reprezentării în baza 2 a lui n. Acest număr poate fi determinat rapid ca rezultat al expresiei n & -n. Analizați reprezentările interne a lui n și a lui -n pentru a înțelege mai bine!
+
+Transformarea unui bit în 1
+Fie n un număr întreg (de regulă natural), iar k un număr natural. Ne propunem să transformăm bitul k al lui n în 1, operație numită și setare a bitului k, ceilalți biți rămânând nemodificați – considerăm că valoarea lui k este mai mică decât numărul de cifre binare din reprezentarea internă a lui n (16 pentru short și unsigned short, 32 pentru int și unsigned int, etc.).
+
+Transformarea unui bit în 1, precum și următoarele doua aplicații din acest articol (transformarea unui bit în 0 și determinarea valorii unui bit) se fac aplicând o anumită operație pe biți între numărul n și o mască, determinată convenabil pe baza valorii lui k.
+
+În cazul transformării bitului k în 1, masca va avea doar bitul k egal cu 1, restul biților fiind 0. Astfel, masca este 1 << k, iar operația este n | (1 << k). Rezultatul ei are aceeași reprezentare internă ca n, cu excepția bitului k, care este transformat în 1; dacă bitul k era de la început 1, el nu se va modifica.
+
+Mai precis, setarea bitului k se face prin următoarea atribuire: n = n | (1 << k);.
+
+Transformarea unui bit în 0
+Transformarea bitului k a lui n în 0, numită și resetarea bitului k, se face folosind o mască în care toți biții sunt 1, cu excepția bitului k sunt 1, bitul k fiind 0. Această mască este: ~(1 << k), ~ fiind operația de complementare a biților.
+
+Atunci, resetarea bitului k a lui n se poate face cu atribuirea: n = n & ~(1 << k);.
+
+Determinarea valorii unui bit
+Pentru a determina bitul k al lui n putem folosi expresia (n >> k) & 1. Prin operația n >> k se elimină ultimele k cife binare ale lui n, iar (n >> k) & 1 reprezintă ultimul bit al lui n >> k, deci bitul k al lui n.
+
+O altă variantă ar fi să folosim masca 1 << k, prin operația n & (1 << k). Rezultatul acestei operații este 0, dacă bitul k este 0, respectiv 2k (adică 1 << k), dacă bitul k este 1.
+
+Proprietăți ale disjuncției exclusive ^
+Disjuncția exclusivă are o proprietate interesantă, și anume că n ^ n este 0, indiferent de valoarea lui n. Acest lucru are câteva consecințe:
+
+a ^ b ^ b este egal cu a. Putem realizat astfel un mecanism de cripare:
+fie n un număr care trebuie criptat și k un număr care reprezintă cheia de criptare;
+pentru criptare folosim operația n ^ k, prin care obținem numărul criptat c;
+pentru decriptare folosim operația c ^ k, prin care obținem numărul inițial n;
+dacă avem mai multe valori x și una singură apare de un număr impar de ori (celelalte apărând de număr par de ori), o putem determina calculând suma XOR a numerelor x, adică:
+S = 0;
+pentru fiecare x
+S ^= x;
+rezultatul este S.
+putem interschimba valorile a două variabile a și b, fără a folosi o variabilă suplimentară:
+a = a ^ b;
+b = a ^ b;
+a = a ^ b;

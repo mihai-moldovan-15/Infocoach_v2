@@ -1,0 +1,107 @@
+n tablou unidimensional se declară în C++ astfel:
+
+tipDeBază denumire[Dimensiune];
+de exemplu:
+
+int X[10];
+Ne putem imagina tabloul declarat mai sus astfel (valorile elementelor sunt aleatorii):
+Spunem că fiecare element are un indice. Indicii unui tablou sunt între 0 și Dimensiune-1, deci în exemplul nostru între 0 și 9.
+
+Observație: Nu este necesar la declarare tabloul să fie singura variabilă declarată în instrucțiunea declarativă. Următoarea instrucțiune este corectă sintactic.
+
+int n, X[10], m, Y[100], p;
+Care sunt valorile inițiale ale elementelor tabloului? Regula este aceeași ca pentru alte variabile:
+
+elementele unui tablou declarat global (în afara oricărei funcții) sunt inițializate cu 0;
+elementele unui tablou declarat local (în interiorul unei funcții) sunt inițializate cu valori aleatorii. Faptul că anumite implementări la compilatorului C++ inițializează și variabilele local cu 0 nu este o regulă, ea nu este garantată de standardul C++.
+Referirea unui element
+Referirea unui element se face prin operatorul de indexare, [], care are prioritate maximă. De exemplu:
+
+X[0], X[5], X[i]
+Aici X este identificatorul tabloului (denumirea), iar 0, 5 sau i sunt indicii. Este necesar ca programatorul (adică TU!) să se asigure că valoarea indicelui se găsește în intervalul potrivit pentru tabloul dat (în exemplul nostru între 0 și 9).
+
+Un element al tabloului, referit prin indice este tratat ca o variabilă oarecare de tipul stabilit la declarare. Următoarele expresii/instrucțiuni sunt corecte:
+
+int X[10];
+cin >> X[0];
+X[0] = 17;
+cout << X[0];
+cout << X[0] / 5;
+Observație: C++ nu verifică dacă valoarea indicelui face parte din intervalul stabilit prin declararea tabloului. Dacă indicele are o valoare în afara acestui interval, comportamentul programului este impredictibil.
+
+Este necesar ca programatorul să se asigure că valorile indicilor sunt corecte.
+
+Dimensiunea unui tablou unidimensional
+La declararea unui tablou unidimensional se precizează o dimensiune pentru acesta. Aceasta reprezintă o dimensiune fizică a tabloului – numărul maxim de elemente pe care le-ar putea avea acesta, conform restricțiilor problemei.
+
+De cele mai multe ori, în program nu se folosesc toate elementele tabloului. De regulă, enunțul unei probleme cu tablouri este:
+
+“Se citește un vector cu n elemente, numere …. Să se …..”
+
+Este deci necesar ca în program să avem o variabilă – de regulă se notează n, care să reprezinte dimensiunea logică a tabloului – numărul de elemente ale tabloului care la un moment dat sunt utilizate în program.
+
+Parcurgerea unui tablou unidimensional
+Parcurgerea unui tablou reprezintă referirea fiecărui element al tabloului, într-o anumită ordine. Referirea elementului se face prin intermediul indicelui, cu ajutorul operatorului de indexare.
+
+Următorul exemplu declară un tablou cu 100 de elemente și memorează în primele n elemente ale tabloului valoarea 1. După cum știm deja, n trebuie să respecte relația n<=100. În caz contrar, comportamentul programului devine impredictibil – foarte probabil execuția sa va fi oprită de sistemul de operare.
+
+int X[100], n;
+//n = .... ;
+for(int i = 0 ; i < n ; i ++)
+    X[i] = 1;
+De regulă, parcurgerea tabloului se face în ordinea crescătoare a indicelor, de la 0 la n-1. Făcând o analogie cu axa numerelor, putem spune că parcurgerea se face de la stânga spre dreapta. Tabloul poate fi parcurs și de la dreapta la stânga, adică în ordinea descrescătoare a indicilor, de la n-1 la 0:
+
+for(int i = n - 1 ; i >= 0 ; i --)
+    X[i] = 1;
+Citirea unui vector
+int X[100], n;
+De fapt, în cele mai multe cazuri nu se poate face citirea unui tablou unidimensional (vector), adică
+
+cin >> X;
+Instrucțiunea de mai sus duce de regulă la eroare de sintaxă. În schimb, se pot citi elementele tabloului, în ordine, cu ajutorul parcurgerii:
+
+cin >> n;
+for(int i = 0 ; i < n ; i ++)
+    cin >> X[i];
+Afișarea unui vector
+int X[100], n;
+La fel ca în cazul citirii, în cele mai multe cazuri nu se poate face nici afișarea unui vector, adică
+
+cout <<  X;
+Spre deosebire de citire, afișarea unui tablou cu ajutorul operatorului de inserție << nu duce la eroare de sintaxă, însă nu se vor afișa elementele tabloului, ci o adresă (de exemplu 0x7ffc9711bcd0), reprezentând adresa primului element al tabloului. Elementele tabloului se pot afișa prin parcurgere, în ordinea dorită:
+
+for(int i = 0 ; i < n ; i ++)
+    cout << X[i] << ' ';
+sau
+
+for(int i = n - 1 ; i >= 0 ; i --)
+    cout << X[i] << ' ';
+Indexare de la 0 și indexare de la 1
+Orice tablou C++ are fizic elementele indexate de la 0 la Dimensiune-1. De exemplu, dacă avem nevoie de un tablou cu n≤100 elemente întregi, îl vom declara:
+
+int V[100];
+iar elementele vor avea indici între 0 și 99. Astfel, primul element al tabloului este V[0], al doilea este V[1], …, ultimul este V[n-1].
+
+Dacă dorim, putem ignora elementul V[0] (pur și simplu nu îl folosim, el există însă în continuare), și atunci toate operațiile (citire, afișare, parcurgere) vor utiliza elementele V[1] (primul element), V[2] (al doilea element), …, V[n] (ultimul element).
+
+Trebuie de asemenea să tratăm cu atenție declararea tabloului, dimensiunea fizică trebuind să fie mai mare cu 1 decât valoarea precizată în problemă. Dacă de exemplu, n≤100, declararea va fi:
+
+int V[101];
+Acest lucru este necesar pentru a exista elementul V[100].
+
+Inițializarea elementelor unui tablou
+La declararea tabloului este posibil să inițializăm elementele sale:
+
+int A[] = {10 , 20 , 30 , 40};
+int B[10] = {10 , 20 , 30 , 40};
+int C[10] = {0};
+A va avea patru elemente, cu valorile A[0] = 10, A[1] = 20, A[2] = 30, A[3] = 40.
+B va avea zece elemente; primele patru vor avea valorile B[0] = 10, B[1] = 20, B[2] = 30, B[3] = 40, celelalte vor avea valoarea 0!!!
+C va avea zece elemente. Toate vor avea valoarea 0!!!
+
+Atenție!!
+
+În declarația int A[10]={1};, numai A[0] primește valoarea 1, celelalte elemente fiind egale cu 0!!
+Tablourile pot fi inițializate în acest mod numai la declarare. Următoarea secvență este greșită sintactic:
+int A[10];
+A = {0};

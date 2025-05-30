@@ -1,0 +1,138 @@
+Când scriem un număr, sau când ne gândim la el lucrăm cu o înșiruire de cifre care sunt vizibile în mod direct și au o semnificație clară. În calculator un număr este memorat (și poate fi accesat) ca o entitate distinctă, ca o valoare, nu ca o înșiruire de cifre. De aceea, pentru a determina cifrele unui număr trebuie să folosim anumite operații dintre cele pe care le avem la dispoziție în limbajul de programare folosit.
+
+Determinarea cifrelor unui număr
+Să ne gândim la un număr (natural), n = 274 – aici n este o variabilă de tip int.
+
+Care dintre cifrele sale poate fi determinată cu o simplă operație aritmetică? Constatăm că putem determina ultima cifră a numărului cu operația C++ % 10 – restul împărțirii la 10. Într-adevăr, 274 % 10 este 4, adică ultima cifră (a unităților) a lui 274.
+
+Cum putem determina cifra zecilor? Sigur, o soluție ar fi n % 100 / 10. Într-adevăr, n % 100 este 74, iar 74 /10 este 7. Ne amintim că, dacă operanzii sunt întregi, operația / reprezintă câtul împărțirii întregi.
+
+Dar mai există o variantă, mai utilă pe termen lung :). Știm că n % 10 reprezintă cifra unităților lui n și vrem să determinăm cifra zecilor. Putem să modificăm mai întâi valoarea lui n, astfel: n = n / 10, și să determinăm ultima cifră a acestui număr. Este cifra unităților pentru valoarea curentă a lui n și cifra zecilor pentru valoarea inițială.
+
+int n = 274;
+cout << n % 10; // se va afisa 4
+n = n / 10; // n devine 27
+cout << n % 10; // se va afisa 7
+Vom numi trunchiere operația prin care se elimină ultima cifră a valorii unei variabile întregi. Pentru a realiza trunchierea, folosim operația de atribuire și împărțirea la 10: n = n / 10 sau n /= 10.
+
+Cum aflăm cifra sutelor? Trunchiem încă o dată valoarea lui n. n devine 2, iar n % 10 este 2, adică cifra sutelor pentru valoarea inițială a lui n. Mai mult, acum n are o singură cifră, și printr-o nouă trunchiere devine 0.
+
+Să tragem câteva concluzii:
+
+ultima cifră a lui n este n % 10;
+prin trunchiere se elimină ultima cifră a lui n; ultima cifră a valorii curente este cifra zecilor a valorii inițiale;
+prin trunchieri succesive valoarea lui n devine 0. Numărul de trunchieri este în concordanță cu numărul de cifre din valoarea inițială a lui n.
+Astfel, se conturează următorul program pentru determinarea cifrelor unui număr:
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    int n;
+    cin >> n;
+    while(n != 0) // cat timp n este nenul - mai are cifre
+    {
+        int uc = n % 10; //determinam ultima cifra a lui n
+        cout << uc << " "; // prelucram ultima cifra
+        n /= 10;    //  eliminam ultima cifra (trunchiem numarul)
+    }
+    return 0;
+}
+Observații:
+
+În programul de mai sus am afișat cifrele determinate. În probleme pot fi diverse cerințe.
+În program se obțin cifrele lui n în ordine inversă, de la ultima spre prima! Pentru n=274 se va afișa:
+4 7 2
+dacă pentru n se citește valoarea 0, nu se va afișa nimic, deoarece expresia n != 0 este de la început nulă. Acest lucru are o importanță deosebită în anumite situații – de exemplu dacă s-ar cere numărul de cifre ale lui n.
+în urma determinării cifrelor lui n prin procedeul de mai sus, valoarea inițială a lui n se pierde – devine 0. Dacă la final avem nevoie de ea, trebuie să o copiem într-o altă variabilă.
+Construirea unui număr cu cifre date
+Să considerăm următorul șir de cifre, în ordine: 2 8 5 3
+
+Cu ele se poate construi un număr, astfel:
+
+pornim de la valoarea R = 0;
+cifrele se adaugă în ordine:
+la sfârșitul lui R
+la începutul lui R
+Dacă cifrele se adaugă la sfârșit, procedăm astfel:
+
+R = 0
+c = 2. R = 10 * R + c, adică R devine 10 * 0 + 2 = 2
+c = 8. R = 10 * R + c, adică R devine 10 * 2 + 8 = 28
+c = 5. R = 10 * R + c, adică R devine 10 * 28 + 5 = 285
+c = 3. R = 10 * R + c, adică R devine 10 * 285 + 3 = 2853
+Dacă cifrele se inserează la început, procedăm astfel:
+
+R = 0
+c = 2. R = R + 1 * c, adică R devine 0 + 1 * 2 = 2
+c = 8. R = R + 10 * c, adică R devine 2 + 8 * 10 = 82
+c = 5. R = R + 100 * c, adică R devine 82 + 100 * 5 = 582
+c = 3. R = R + 1000 * c, adică R devine 582 +1000 * 3 = 3582
+Ambele metode folosesc de fapt scrierea zecimală a numărului:
+
+3582 = 0 + 1 * 2 + 10 * 8 + 100 * 5 + 1000 * 3
+
+Pe de altă parte:
+
+2853 =
+ 285 * 10 +3 =
+ (28*10 + 5) * 10 +3 =
+ ((2 * 10 + 8)*10 + 5) * 10 +3 =
+ (((0 * 10 + 2) * 10 + 8)*10 + 5) * 10 +3
+
+În practică, cifrele cu care se construiește numărul pot să provină din diverse surse. O situație frecventă este construirea unui număr folosind cifrele altui număr cunoscut.
+
+Exemple
+Exemplul 1: Determinarea oglinditului unui număr dat
+
+Prin oglinditul (inversul) unui număr se înțelege un numărul scris cu cifrele numărului inițial, în ordine inversă. De exemplu, oglinditul lui 274 este 472, iar oglinditul lui 1300 este 31 – numerele nu pot să înceapă cu cifra 0.
+
+Rezolvare:
+Fie n numărul dat, și ogl variabila în care vom calcula rezultatul.
+Inițial ogl = 0.
+Vom aplica procedeul de determinare prin trunchieri succesive a cifrelor lui n.
+Fiecare cifră a lui n, calculată prin n % 10 va fi adăugată la sfârșitul lui ogl, prin atribuirea ogl = 10 * ogl + n % 10.
+Program C++:
+
+#include <iostream>
+using namespace std;
+int main(){
+      int n;
+      cin >> n;
+      int ogl= 0;
+      while(n){
+        ogl =10*ogl + n%10;
+        n /= 10;
+      }
+      cout << ogl << endl;
+      return 0;
+ }
+Exemplul 2: Se dă un număr natural. Să se modifice acest număr, micșorând cu o unitate fiecare cifră impară. Dacă numărul dat este 275 rezultatul va fi 264.
+
+Rezolvare: Vom determina cifrele numărului dat și vom construi rezultatul, inserând cifrele la început. Cifrele pare se inserează ca atare, cifrele impare se inserează micșorate.
+
+Fie n numărul dat și R rezultatul. Vom utliliza o variabilă suplimentară, p, pentru a calcula puterile lui 10.
+Inițial R = 0, p = 1
+Vom determina prin trunchieri succesive cifrele lui n în variabila uc, uc = n % 10.
+Dacă uc este par, R = R + p * uc, apoi p = p * 10.
+Dacă uc este impar, R = R + p * (uc - 1), apoi p = p * 10.
+Program C++
+
+#include <iostream>
+int main()
+{
+    int n , R = 0, p = 1;
+    std :: cin >> n;
+    while(n)
+    {
+        int uc = n % 10;
+        if(uc % 2 == 0)
+            R += p * uc;
+        else
+            R += p * (uc - 1);
+        p *= 10;
+        n /= 10;
+    }
+    std :: cout << R << std :: endl;
+    return 0;
+}

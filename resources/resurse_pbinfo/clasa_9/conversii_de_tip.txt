@@ -1,0 +1,133 @@
+C++ ne permite să considerăm o valoare de un anumit tip ca fiind de alt tip. Aceasta se numește conversie de tip.
+
+În C++ sunt două feluri de conversii de tip:
+
+conversia implicită
+conversia explicită
+Conversia implicită
+Conversia implicită intervine de la sine când într-o operație avem operanzi de tipuri diferite. Compilatorul consideră automat ambele date de același tip pentru a putea efectua operația.
+
+Conversia implicită se face doar dacă operanzii sunt de tipuri compatibile – vezi mai jos o listă de compatibilități pentru tipurile numerice. Dacă tipurile nu sunt compatibile obținem eroare de sintaxă!
+
+Exemple
+Conversie de la int la double
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n = 5;
+    double x;
+
+    /// conversie de la int la double
+    x = n;
+
+    cout << "n = " << n << endl;
+    cout << "x = " << x << endl;
+    return 0;
+}
+n = 5
+x = 5
+Conversie de la double la int
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n;
+    double x = 5.75;
+
+    /// conversie de la double la int
+
+    n = x;
+
+    cout << "n = " << n << endl;
+    cout << "x = " << x << endl;
+    return 0;
+}
+n = 5
+x = 5.75
+Deoarece o dată de tip int memorează numere întregi, în timpul conversiei zecimalele valorii lui x s-au pierdut.
+În fapt, conversia este de două feluri:
+
+promovare – conversie de la un tip de date inferior la unul superior; nu produce pierdere de date!
+retrogradare – conversie de la un tip de date superior la unul inferior; poate produce pierdere de date!
+În primul exemplu de mai sus a avut loc o promovare de la int la double, iar în al doilea exemplu a avut loc o retrogradare de la double la int. Cea de-a doua a condus la pierderea unor date.
+
+În situațiile în care este posibil, compilatorul realizează conversiile implicite prin promovare.
+
+De exemplu, rezultatul expresiei 2 + 1.5 va fi 3.5, nu 3. Are loc promovarea valorii 2 la tipul double, nu retrogradarea lui 1.5 la int, ceea ce ar fi însemnat pierderi de date!
+
+Conversia explicită
+Conversia explicită a datelor înseamnă modificarea manuală, de către programator, a tipurilor de date folosite într-o expresie. Se mai numește și type casting.
+
+Operatorul de conversie explicită
+Are sintaxa:
+
+(TIP) expresie
+sau
+
+TIP(expresie)
+Observații
+
+este un operator unar;
+are prioritate mare;
+rezultatul său este rezultatul expresiei, considerat de tipul de date TIP;
+în varianta a doua TIP trebuie să fie un nume de tip format dintr-un singur cuvânt. Astfel, expresia unsigned int(expresie) este greșită.
+Exemplu
+
+char c='A';
+cout << (int) c << endl; // 65
+cout << char(97) << endl; // a
+Notă: Limbajul C++ oferă și următorii operatori de conversie: static_cast, dynamic_cast, const_cast și reinterpret_cast.
+
+Câteva reguli privind conversia
+dacă se convertește un întreg negativ la un tip fără semn rezultatul va fi complementul în baza 2 a valorii inițiale, datorită modului de reprezentare a valorilor întregi. Astfel, -1 devine cea mai mare valoare a tipului fără semn, -2 devine a doua cea mai mare valoare, etc.
+la conversia unei valori numerice la tiplul bool rezultatul va fi:
+true, dacă valoarea inițială este nenulă;
+false, dacă valoarea inițială este 0;
+la conversia unei valori de tip float, double la un tip întreg, valoare se va trunchia, pierzându-se partea zecimală. Dacă rezultatul nu se încadrează în limitele tipului întreg, comportamentul programului devine impredictibil.
+Regulile de mai sus se aplică atât pentru conversia implicită, cât și pentru cea explicită.
+
+Exemplu: media aritmetică
+Să presupunem că dorim să determinăm media aritmetică a trei numere întregi. Desigur, răspunsul este suma numerelor împărțită la 3, dar trebuie ținut cont de faptul că împărțirea a doi întregi este câtul împărțirii. Pentru a obține media corectă va trebui să facem anumite conversii.
+
+Exemplu 1 – conversie implicită
+int a , b,  c;
+cin >> a >> b >> c;
+int S = a + b + c;
+/// cout << S / 3; // gresit - impartire intreaga
+cout << S / 3.0;
+A avut loc conversia implicită a lui S la double (promovare).
+
+Exemplu 2 – conversie implicită
+int a , b,  c;
+cin >> a >> b >> c;
+int S = a + b + c;
+cout << 1.0 * S / 3;
+A avut loc conversia implicită a lui S, apoi a lui 3, la double (promovări).
+
+Exemplu 3 – conversie explicită
+int a , b,  c;
+cin >> a >> b >> c;
+int S = a + b + c;
+cout << (double)S / 3;
+Mai întâi se convertește explicit valoarea lui S la double, apoi are loc conversia implicită la double a lui 3.
+
+Evitarea depășirii de tip
+În numeroase situații avem operații cu date de tip int, dar rezultatul depășește limita maximă (sau minimă) a acestui tip. Astfel se produce depășirea de tip – overflow. Soluția este utilizarea unor conversii prin care operațiile se realizează într-un tip de date mai larg, de exemplu long long.
+
+Exemplu:
+
+int n = 1000000;
+cout << n * n << endl; /// posibil -727379968 - overflow
+cout << 1LL * n * n << endl; /// corect 1000000000000
+cout << (long long) n * n << endl; /// corect
+La realizarea conversiilor trebuie ținut cont de precedența operatorilor. De exemplu, secvența de mai jos nu obține rezultatul corect.
+
+int n = 1000000;
+cout << 1LL * n + n * n << endl;
+cout << (long long)n + n * n << endl;
+Mai multe detalii despre conversii sunt diponibile aici: en.cppreference.com/w/cpp/language/implicit_conversion.

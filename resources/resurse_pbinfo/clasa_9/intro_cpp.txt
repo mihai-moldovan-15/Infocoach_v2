@@ -1,0 +1,129 @@
+Limbajul C++ a fost inventat de către Bjarne Stroustrup în 1979, ca o extindere a limbajului C. Limbajul C a fost inventat în 1969-1973 de către Dennis Ritchie pentru a realiza sistemul de operare Unix. Astfel, aproape toate programele scrise în C pot fi compilate în C++, eventual cu foarte puține modificări.
+
+Limbaje de programare
+Limbajele de programare sunt limbaje asemănătoare cu limbajul uman. Conțin cuvinte (destul de puține), semne de punctuație, operații matematice și au reguli de scriere. Programele care rulează pe orice calculator au fost scrise într-un limbaj de programare. Există numeroase limbaje de programare, precum C, C++, Pascal, Java, Python, PHP, Javascript, etc.
+
+Programul scris într-un limbaj de programare se numește program sursă și trebuie traduse într-un limbaj pe care îl înțelege procesorul, numit cod mașină, sau program executabil. Pentru anumite limbaje de programare operația de traducere se numește compilare (cazul lui C, C++, Pascal, etc.), pentru alte limbaje (PHP, Python, Javascript, etc.) operația de traducere se numește interpretare. Traducerea este realizată de un program specializat numit compilator sau interpretor.
+
+Limbajul C++ este un limbaj compilat. Etapele scrierii unui program în C++ sunt:
+
+editarea programului C++; se obține fișierul sursă, cu extensia .cpp
+compilarea fișierului sursă; aici se verifică corectitudinea sintactică a programului (corectitudinea cuvintelor folosite, prezența semnelor de punctuație, etc.); dacă programul este corect sintactic, se va obține fișierul obiect, cu extensia .o sau .obj
+editarea de legături; se stabilesc legături între fișierul obiect curent și alte fișiere obiect, ale programatorului sau incluse în compilator; în urma acestei etape se obține programul executabil. În Windows, fișierele executabile au extensia .exe;
+programul executabil poate fi lansat în execuție (rulat).
+Primul program C++
+Cum scriem un program C++? Avem nevoie cel puțin de un editor de text pentru scrierea sursei și de un compilator C++. Deși fișierul sursă poate fi realizat cu orice editor de text, de cele mai multe ori folosim un IDE. Un IDE pentru C/C++ foarte utilizat este Code::Blocks. Acest articol prezintă modul de instalare a pachetului Code::Blocks pe calculator, împreună cu compilatorul MinGW, iar acest articol prezintă pașii necesari pentru a realiza un program C++ în Code::Blocks.
+
+Să considerăm un prim program C++:
+
+// primul program C++
+#include <iostream>
+int main()
+{
+    /*
+      primul program C++
+      il scriem in Code::Blocks
+    */
+    std :: cout << "Hello world";
+    return 0;
+}
+Dacă vom compila și rula acest program, pe ecran va apărea:
+
+Hello world
+Să analizăm acest program. El este alcătuit din mai multe linii:
+
+// primul program C++
+Această linie reprezintă un comentariu. Comentariile sunt texte explicative care nu influențează comportamentul programului. Ele sunt pentru programatori, pentru a înțelege mai repede semnificația programului. Acest comentariu începe de la cele două caractere slash // și se termină la sfârșitul liniei.
+#include <iostream>
+Liniile care încep cu # se numesc directive preprocesor. Ele sunt interpretate înainte de compilarea propriu-zisă, de către un program numit preprocesor. În cazul nostru, directiva #include cere preprocesorului să includă în sursă o secțiune a codului C++ standard, header-ul iostream, care permite realizarea operațiilor de citire și afișare – la noi afișarea mesajului Hello world pe ecran.
+int main()
+Această linie reprezintă declararea unei funcții. În esență, o funcție este un grup de instrucțiuni care are un nume dat; în acest caz, funcția se numește main și este alcătuită din toate instrucțiunile care urmează. Vom discuta pe larg despre functii mai târziu.
+Funcția numită main este specială în toate programele C++; această funcție este apelată când se lansează în execuție programul și trebuie să apară în orice program C++, o singură dată.
+{
+Parantezele acolade de la liniile 4 și 10 delimitează instrucțiunile care fac parte din funcția main
+/*
+primul program C++
+il scriem in Code::Blocks
+*/
+
+Și acesta este un comentariu. Textele cuprinse între /* și */ nu influențează comportamentul programului. Ele pot să ocupe mai multe linii, sau pot să apară în interiorul unei linii.
+std :: cout << “Hello world”;
+Aceasta este o instrucțiune C++. O instrucțiune este o construcție (expresie, comandă) care face ceva. Instrucțiunile sunt “miezul” programelor, ele stabilind comportamentul acestora. Instrucțiunile dintr-un program se execută în ordine, una după alta.
+Această instrucțiune produce afișarea pe ecran a textului Hello world. Ea este alcătuită din trei părți. std::cout semnifică dispozitivul standard de ieșire (standard character output) – de cele mai multe ori ecranul calculatorului. A doua parte este operatorul de inserție <<, care indică faptul că ceea ce urmează este inserat în std::cout (trimis spre ecran). A treia parte este textul, "Hello world", cuprins între ghilimele, care va fi inserat în std::cout.
+Să observăm prezența caracterului ; la sfârșitul instrucțiunii. Orice instructiune C++ trebuie să se termine cu ;, la fel cum orice propoziție în limba română se termină cu caracterul . (punct).
+Una dintre cele mai frecvente erori de sintaxă este să uităm să scriem ; la finalul unei instrucțiuni.
+return 0;
+Această instrucțiune marchează finalul execuției funcției main și a programului nostru. Valoarea 0 semnifica faptul că programul s-a încheiat cu succes!
+Dacă în programul nostru ar fi fost și alte instrucțiuni după instrucțiunea return 0;, acestea nu s-ar mai fi executat.
+}
+Acolada închisă } reprezintă finalul funcției main.
+Să reținem că nu toate liniile programului produc efecte la executarea programului. Unele linii (comentariile) sunt scrise numai pentru a ușura înțelegerea programului de către cel care îl citește/scrie. Mai mult, nu este obligatoriu ca fiecare instrucțiune să fie scrisă pe o singură linie. Următoarele trei exemple de funcție main au acelați efect:
+
+int main()
+{
+  cout << "Salut";
+  return 0;
+}
+int main() {  cout << "Salut";  return 0; }
+int main()
+{
+  cout <<
+       "Salut";
+
+  return 0;
+}
+Să modificăm primul program, astfel încât să afișăm pe ecran două propoziții:
+
+// al doilea program C++
+#include <iostream>
+int main()
+{
+    std :: cout << "Hello world!";
+    std :: cout << "Primul program C++!";
+    return 0;
+}
+La rulare, programul va afișa:
+
+Hello world!Primul program C++!
+Să observăm că cele doua propoziții sunt scrie pe același rând al ecranului, chiar dacă au fost scrise cu două instrucțiuni distincte. Dacă dorim ca cele doua propoziții să fie afișate pe linii diferite ale ecranului, folosim std::endl.
+
+// al doilea program C++
+#include <iostream>
+int main()
+{
+    std :: cout << "Hello world!" << std::endl;
+    std :: cout << "Primul program C++!";
+    return 0;
+}
+Acum, programul va afișa:
+
+Hello world!
+Primul program C++!
+Instrucțiunea using namespace std;
+În C++, identificatorii sunt grupați în spații de nume – namespaces. Există un spațiu de nume predefinit, cu numele std, din care fac parte toți identificatorii din biblioteca C++ standard.
+
+cout, ca și endl, este un identificator din spațiul de nume std și pentru a-l putea folosi trebuie folosită expresia std::cout. Pentru a ne referi mai simplu la identificatorii din spațiul de nume std se poate folosi instructiunea:
+
+using namespace std;
+Astfel, programul anterior poate fi rescris:
+
+// al doilea program C++
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    cout << "Hello world!" << endl;
+    cout << "Primul program C++!";
+    return 0;
+}
+Comentarii
+Comentariile sunt texte care pot să apară în programul sursă și nu sunt luate în considerare la compilare. Ele sunt citite doar de către oameni, pentru a explica anumite secțiuni mai importante din program. Așa cum am văzut mai sus, în C++ sunt două tipuri de comentarii:
+
+// comentariu pe o linie
+/* comentariu de tip bloc */
+Comentariul pe o linie începe de caracterele // și se termină la finalul liniei. Comentariul de tip bloc începe la /*, se termină la */ și se poate întinde pe mai multe linii.
+
+Comentariile sunt importante! Trebuie să învățăm să scriem cod pe care să-l înțelegem și peste o zi sau un an, iar prezența comentariilor este un pas înainte.
+
+

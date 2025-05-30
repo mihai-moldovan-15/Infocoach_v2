@@ -1,0 +1,200 @@
+În anumite situații, tipurile de date existente în limbajele de programare nu sunt suficient de “încăpătoare” – nu permit memorarea de valori foarte mari, alcătuite din multe cifre. De aceea este necesară implementarea unor structuri de date care să permită memorarea unor asemenea valori, precum și operațiile aritmetice de bază cu ele. Aceste structuri se numesc numere mari, iar operațiile realizate cu acestea se numesc operații cu numere mari.
+
+
+Acest articol prezintă operațiile cu numere mari pentru numere naturale, folosind limbajul C++.
+
+Memorarea numerelor mari
+Vom folosi în acest scop un vector, care sa conțină pe prima poziție v[0] lungimea numărului mare (numărul de cifre), iar pe pozițiile 1, 2, … , v[0] vom memora cifrele numărului, în ordine inversă.
+
+De exemplu, pentru memorarea numărului 15207, vom avea structura:
+
+   i  0  1  2  3  4  5  6  7
+v[i]  5  7  0  2  5  1  0  0
+unde v[0] = 5 reprezintă numărul de cifre, iar v[1] = 7 cifre unităților, v[2] = 0 cifra zecilor, v[3] = 2 cifra sutelor, etc.
+
+Memorarea “răsturnată” a numărului nu este foarte firească, dar este foarte practică pentru implementarea operațiilor aritmetice.
+
+ATENȚIE! Este important ca v[0] sa memoreze corect lungimea numărului, fără a fi luate în considerare zerourile nesemnificative (cele de la începutul numărului, respectiv sfârșitul vectorului).
+
+Pentru rezolvarea problemei vom defini tipul NrMare, pentru a clarifica operațiile care urmează.
+
+typedef int NrMare[1010];
+Inițializarea numerelor mari
+Un număr mare se poate inițializa cu alt număr mare sau cu un număr mic – adica un număr ce face parte dintr-un tip de date întreg predefinit; în cele ce urmează, îl vom considera int.
+
+void AtribMic(NrMare x, int n)
+{
+  x[0]=0;
+  if(n==0)
+    x[(x[0]=1)]=0;
+  else
+    for(;n;n/=10)
+      x[++x[0]]=n%10;
+}
+
+void AtribMare(NrMare Dest, NrMare Sursa)
+{
+  int i;
+  for(i=0;i<=Sursa[0];i++)
+    Dest[i]=Sursa[i];
+}
+Compararea numerelor mari
+Compararea este cea matematica:
+
+dacă un număr are mai multe cifre decât celălalt, este mai mare;
+dacă nu, se compară cifrele începând cu cele mai semnificative, până la capăt (în cazul egalității) sau până se deduce relația dintre cele două numere. Aici este foarte importantă corectitudinea numărului de cifre (memorata în v[0]).
+Funcția care urmează compară două numere mari, returnând 0 dacă numerele sunt egale, -1 dacă primul este mai mic decât al doilea și 1 în cealaltă situație.
+
+int Compara(NrMare x, NrMare y)
+{
+  while(x[0]>1 && x[x[0]]==0)
+    x[0]--; //ma asigur ca nu sunt zerouri nesemnificative
+  while(y[0]>1 && y[y[0]]==0)
+    y[0]--;
+  if(x[0]!=y[0])
+    return (x[0]<y[0]?-1:1);
+  int i=x[0];
+  while(x[i]==y[i] && i>0)
+    i--;
+  if(i==0)
+    return 0;
+  if(x[i]<y[i])
+    return -1;
+  return 1;
+}
+Adunarea numerelor mari
+Următoarele funcții realizează de fapt atribuirea A = A + B. Aceasta este suficientă în majoritatea problemelor. Dacă doriți, puteți implementa similar o operație de de forma A = B + C. Aceeași observație este valabilă pentru toate operațiile care urmează: scăderea, înmulțirea cu număr mic, înmulțirea cu număr mare, câtul împărțirii la un număr mic, restul împărțirii la un număr mic.
+
+Algoritmul de adunare este cel folosit la adunarea numerelor pe hârtie: se adună cifrele corespunzătoare între ele și cu eventualul transport. Dacă suma este mai mare decât 10, aflăm cifra corespunzătoare și recalculăm transportul.
+
+void Adunare(NrMare x,NrMare y)
+// x = x + y
+{
+  int i,t=0;
+  if(x[0]<y[0])
+    x[0]=y[0];
+  for(i=1;i<=x[0];i++,t/=10)
+  {
+    t=x[i]+y[i]+t;
+    x[i]=t%10;
+    // echivalent x[i]=(t+=x[i]+y[i])%10
+  }
+  if(t)
+    x[++x[0]]=t;
+}
+Scăderea numerelor mari
+În cazul scăderii A = A - B, se consideră ca A este mai mare sau egal cu B, chestiune ce poate fi verificată cu ajutorul funcției descrise mai sus.
+
+Scăderea se face și ea la fel ca pe hârtie. Dacă pot scădea cifrele corespunzătoare, le scădem, dacă nu “ne împrumutăm” de la următoarea cifră nenulă și facem scăderea corespunzătoare.
+
+void Scadere(NrMare x, NrMare y)
+// x <-- x-y
+{
+  int i,j, t = 0;
+  for (i = 1; i <= x[0]; i++)
+    if(x[i]>=y[i])
+      x[i]-=y[i];
+    else
+    {
+      j=i+1;
+      while(x[j]==0)
+        x[j++]=9;
+      x[j]--;
+      x[i]=10+x[i]-y[i];
+    }
+  for (; x[0] > 1 && !x[x[0]]; x[0]--); // sa n-am zerouri nesemnificative
+}
+Înmulțirea unui număr mare cu un număr mic
+Și înmulțirea se poate face ca pe foaie. De fapt chiar așa facem. Dacă numărul mic este de o singura cifra, este evident. Partea bună este că procedăm analog și dacă înmulțitorul (număr mic) are mai multe cifre. Trebuie însă să fim atenți că transportul final poate fi format din mai multe cifre, asă că trebuie distribuit pe mai multe poziții.
+
+void ProdusMic(NrMare x, int n)
+//x <- x*n
+{
+  int i,t=0;
+  for(i=1;i<=x[0];i++,t/=10)
+  {
+    t+=x[i]*n;
+    x[i]=t%10;
+  }
+  for(;t;t/=10)
+    x[++x[0]]=t%10;
+}
+Înmulțirea numerelor mari
+Și înmulțirea numerelor mari se face aproximativ conform algoritmului clasic: înmulțim fiecare cifră a numărului y cu numărul x și adunăm corespunzător rezultatele.
+
+De data aceasta este nevoie sa folosim un “număr mare” suplimentar, pentru rezultatele parțiale. Lungimea lui este x[0]+y[0]-1 sau x[0]+y[0], după cum avem transport la sfârșit.
+
+Prezentăm mai jos aplicarea algoritmului pe un caz concret:
+
+Înmulțim 312 cu 87
+
+      3   1   2 *
+          8   7
+Calculăm produsele intermediare
+
+      21   7  14
+  24   8  16
+Calculăm sumele
+
+  24  29  23  14
+ <-2 <-3 <-2 <-1
+Corectăm rezultatul
+
+2  7   1   4   4
+Funcția corespunzătoare este:
+
+void ProdusMare(NrMare x, NrMare y)
+//x = x * y
+{
+  int i,j,t=0;
+  NrMare z;
+  //stabilim lungimea rezultatului. S-ar putea modifica
+  z[0]=x[0]+y[0]-1;
+  //initializez vectorul z
+  for(i=1;i<=x[0]+y[0];i++)
+    z[i]=0;
+  //calculez produsele intermediare, impreuna cu suma intermediara
+  for(i=1;i<=x[0];i++)
+    for(j=1;j<=y[0];j++)
+      z[i+j-1]+=x[i]*y[j];
+  //corectez sumele intermediare
+  for(i=1;i<=z[0];i++)
+  {
+    t+=z[i];
+    z[i]=t%10;
+    t/=10;
+  }
+  if(t)
+    z[++z[0]]=t;
+  // pun rezultatul in x
+  for(i=0;i<=z[0];i++)
+    x[i]=z[i];
+}
+Impărțirea unui număr mare la un număr mic
+Ca de obicei, algoritmul folosit este cel folosit și la calculul pe hârtie: determinăm pe rand cifrele câtului și corectăm restul.
+
+Funcția prezentată mai jos returnează restul împărțirii și transformă deîmpărțitul în cât.
+
+int Divide(NrMare x, int n)
+//x = x /n, returneaza x%n
+{
+  int i,r=0;
+  for(i=x[0];i>0;i--)
+  {
+    r=10*r+x[i];
+    x[i]=r/n;
+    r%=n;
+  }
+  for(;x[x[0]]==0 && x[0]>1;)
+    x[0]--;
+  return r;
+}
+Folosirea altor baze de numerație
+În anumite situații, realizarea calculelor cu numere mari în baza 10 nu este destul de eficientă, datorită numărului mare de operații care se efectuează.
+
+Pentru a spori eficiența programului, putem considera numerele date ca fiind scrise în alte baze, puteri ale lui 10. De exemplu, numărul 123456789012345678901234567890 are 30 de cifre în baza 10, dar numai 5 cifre în baza 106. Acestea sunt: 123456 789012 345678 901234 567890
+
+Toate operațiile descrise mai sus se fac similar, dar trebuie ținut cont de următoarele observații:
+
+la afișare trebuie analizat numărul de cifre zecimale a fiecărei cifre a numărului mare și eventual completat cu zerouri. De exemplu, numărul scris în baza 1000 format din cifrele (în ordine inversă) 876 2 34 75 se va scrie 75034002876
+baza trebuie aleasă astfel încât operațiile cu cifrele numărului mare să nu producă depășire de tip (overflow). De exemplu, dacă numerele sunt scrise în baza 1000000 și se folosește pentru cifrele numărului mare tipul int, nu se vor realiza corect operațiile de înmulțire (la înmulțirea a două numere de ordinul sutelor de mii se depășește 231-1 – limita superioară a tipului int).

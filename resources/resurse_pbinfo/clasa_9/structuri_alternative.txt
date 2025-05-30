@@ -1,0 +1,155 @@
+În anumite situații, este necesară executarea unor instrucțiuni în cadrul unui program numai în anumite condiții. Structurile alternative (numite și structuri de decizie) permit rezolvarea unor asemenea situații.
+
+Instrucțiunea if
+Instrucțiunea if este cea mai utilizată structură alternativă.
+
+Sintaxa
+Instrucțiunea if are două forme:
+
+Varianta 1
+
+ if ( Expresie )
+    Instrucțiune1
+ else
+    Instrucțiune2
+
+Varianta 2
+
+ if ( Expresie )
+    Instrucțiune1
+
+Mod de execuție
+Expresia trebuie să fie de tip bool sau să poată fi convertită la bool. Conversia se face astfel:
+
+dacă expresia este nenulă se va obține valoarea true;
+dacă expresia este nulă se va obține valoarea false.
+Varianta 2 (fără clauza else) a instrucțiunii if este echivalentă cu următoarea, în care Instructiune2 este o instrucțiune vidă:
+ if ( Expresie )
+    Instrucțiune1
+ else
+    ;
+
+Instrucțiune1 se execută numai dacă Expresie este adevărată. Instrucțiune2 se execută numai dacă Expresie este falsă. În nicio situație nu se execută ambele instrucțiuni!
+Instrucțiune1 și Instrucțiune2 pot fi orice fel de instrucțiuni, inclusiv instrucțiunea vidă și inclusiv o altă instrucțiune if.
+Dacă logica programului o cere, Instrucțiune1 și/sau Instrucțiune2 pot fi instrucțiuni compuse, care să conțină mai multe instrucțiuni.
+Datorită eventualelor conversii, pentru a stabili dacă o expresie este nenulă sau nulă nu trebuie neapărat să folosim operatorii relaționali == și !=. Astfel, secvențele de mai jos sunt echivalente:
+if(Expresie) …
+
+if(Expresie != 0) …
+
+De asemenea, următoarele secvențe sunt echivalente:
+if(! Expresie) …
+
+if(Expresie == 0) …
+Erori frecvente
+Scriem ; la finalul liniei if(Expresie).
+
+Avem mai multe instrucțiuni care trebuie executate într-o anumita situație și nu le scriem între acolade.
+
+Scriem ; după acolada închisă }.
+
+Exemple
+Următoarea secvență stabilește dacă un număr întreg citit este par sau impar și afișează un mesaj corespunzător:
+
+int x;
+cin >> x;
+if(x % 2 == 0)
+    cout << x << " este par";
+else
+    cout << x << " este impar";
+Următoarea secvență citește două numere n m și stabilește dacă m este divizor al lui n, tratând cazul m=0. Este un exemplu de instrucțiuni if imbricate (una în alta).
+
+int n , m;
+cin >> n >> m;
+if(m == 0)
+    cout <<"nu putem imparti la zero!";
+else
+    if(n % m == 0)
+        cout << m << " divide pe " << n << endl;
+    else
+        cout << m << " nu divide pe " << n << endl;
+Următoarea secvență testează egalitatea cu 0 a unei expresii în forma scurtă, fără a folosi operatorii de egalitate:
+
+if( n )
+    cout << n << " nenul";
+else
+    cout << n << " este nul";
+Instrucțiunea switch
+Instrucțiunea switch permite executarea unor instrucțiuni, în funcție de egalitatea unei expresii cu anumite valori numerice constante:
+
+Sintaxa
+ switch ( Expresie )
+ {
+    case Constanta_1:
+          Grup_Instructiuni_1
+          break;
+    case Constanta_2:
+          Grup_Instructiuni_2
+          break;
+    …
+    case Constanta_N:
+          Grup_Instructiuni_N
+          break;
+    default:
+          Grup_Instructiuni_default
+          break;
+ }
+
+Mod de execuție
+se evaluează Expresie
+dacă valoarea expresiei este egală cu una dintre valorile constante din clauzele case, se execută instrucțiunile din grupul de instrucțiuni corespunzător, apoi se trece la instrucțiunea de după switch
+dacă valoarea expresiei nu este egală cu niciuna dintre valorile constante din clauzele case, se verifică existența clausei default;
+dacă există clauza default, se execută instrucțiunile din grupul de instrucțiuni corespunzător clauzei default, apoi se trece la instrucțiunea de după switch
+dacă nu există clauza default, se trece la instrucțiunea de după switch
+Observații
+Valorile din clauzele case trebuie să fie constante întregi.
+În fiecare grup de instrucțiuni pot să apară oricâte instrucțiuni, de orice tip, eventual niciuna. Nu este necesară utilizarea instrucțiunii compuse.
+Prezența instrucțiunii break; nu este obligatorie, dar lipsa ei modifică modul de execuție al instrucțiunii. În exemplul de mai jos:
+switch(n)
+{
+    case 1:
+        cout << "n = 1\n";
+    case 2:
+        cout << "n = 2\n";
+        break;
+    case 3:
+        cout << "n = 3\n";
+        break;
+}
+dacă valoarea lui n este 1, se va afișa:
+
+n = 1
+n = 2
+Mai exact, se execută toate instrucțiunile de la clauza case corespunzătoare valorii expresiei până la prima instrucțiune break; întâlnită.
+
+Exemple
+În exemplul de mai jos se afișează (aproximativ) numele zilei din săptămână în funcție de numărul ei.
+
+#include <iostream>
+using namespace std;
+int main(){
+    int zi;
+    cin >> zi;
+    switch(zi)
+    {
+        case 1:
+            cout << "Luni\n"; break;
+        case 2:
+            cout << "Marti\n"; break;
+        case 3:
+            cout << "Miercuri\n"; break;
+        case 4:
+            cout << "Joi\n"; break;
+        case 5:
+            cout << "Vineri\n"; break;
+        case 6:
+        case 7:
+            cout << "WEEKEND!!!\n"; break;
+        default:
+            cout << "Numarul zilei este incorect\n"; break;
+    }
+    return 0;
+}
+Observați mai sus că în clauza case 6: nu avem instrucțiuni. Dacă variabila zi are valoarea 6 sau 7 se va afișa:
+
+WEEKEND!!!

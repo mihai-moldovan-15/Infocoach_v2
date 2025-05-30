@@ -1,0 +1,88 @@
+Tipul char este folosit pentru lucrul cu caractere. O dată de acest tip va reprezenta un singur caracter. Pentru a stoca mai multe caractere vom folosi un tablou cu elemente char sau un string.
+
+Variabile de tip char
+O variabilă de tip char se declară astfel:
+
+char C;
+Valoarea unei variabile de tip char (sau signed char) este un număr natural cuprins între -128 și 127. Valorile cuprinse între 0 și 127 corespund caracterelor din codul ASCII.
+
+Similar, datele de tip unsigned char au valori între 0 și 255. Observăm că ambele tipuri conțin valorile care corespund caracterelor din codul ASCII.
+
+Literali
+Un literal (valoare) de tip char este un caracter din codul ASCII, delimitat de caractere apostrof ‘.
+
+Putem inițializa o variabilă de tip char atribuindu-i un literal de tip char sau o valoare numerică. Dacă valoarea numerică nu aparține intervalului de valori corespunzător, aceasta va fi trunchiată.
+
+char C;
+C = 'A';
+C = 65;
+Atenție! “ – ghilimele delimitează șiruri de caractere. Un șir de caractere format dintr-un singur caracter nu este același lucru cu un caracter.
+“A” ≠ ‘A’!
+
+Afișarea și citirea
+Deși datele de tip char memorează numere întregi, la citirea și afișarea lor se va lucra cu caractere.
+
+Afișarea
+char C = 'A';
+cout << C; // A
+C = 65;
+cout << C; // A
+Afișarea unei date de tip char se face astfel:
+
+dacă valoarea este din codul ASCII, se va afișa caracterul corespunzător. Pentru caracterele neimprimabile efectul depinde de caracter și de mediul în care se lucrează (este posibil să nu se afișeze nimic sau să se afișeze diverse simboluri).
+dacă valoarea este din afara codului ASCII, efectul depinde de mediul în care se lucrează.
+Citirea
+char C;
+cin >> C;
+...
+În urma citirii de la tastatură unei variabile de tip char, aceasta va reprezenta caracterul introdus. Dacă se introduc mai multe caractere, se va citi doar primul dintre ele.
+
+Exemple
+char x;
+cin >> x; // introducem A
+cout << x; // A
+char x;
+cin >> x; // introducem 145
+cout << x; // 1
+char x, y;
+cin >> x >> y; // introducem A B
+cout << x << endl; // A
+cout << y << endl; // B
+char x, y;
+cin >> x >> y; // introducem AB
+cout << x << endl; // A
+cout << y << endl; // B
+char x, y;
+cin >> x >> y; // introducem ABC
+cout << x << endl; // A
+cout << y << endl; // B
+char x, y;
+cin >> x >> y; // introducem 65 66
+cout << x << endl; // 6
+cout << y << endl; // 5
+Operații. Conversii de tip
+Valorile de tip char pot fi convertite la alte tipuri.
+
+char x;
+x = 65; // conversie implicită de la int la char
+cout << x; // A
+cout << (int) x; // 65
+int n = 65;
+cout << (char) n; //A
+Cu datele de tip char se pot face toate operațiile uzuale cu numere. Valoarea de tip char va fi convertită implicit la int, apoi se vor face operațiile.
+
+char x = 'A';
+cout << x + 1; // 66
+cout << (char)(x + 1); // B
+char x = 'A';
+x ++;
+cout << x; // B
+Transformarea între litere mari și mici
+O problemă frecventă este determinarea, pentru o literă mare, a literei mici corespunzătoare, sau invers. Rezolvarea se bazează pe faptul că, în codul ASCII, literele mari sunt poziționate înaintea celor mici, iar diferența dintre codul ASCII a unei litere mici și codul ASCII a literei mari corespunzătoare este aceeași pentru toate literele (32).
+
+Transformarea se va face scăzând această valoare din litera mică, sau adunând-o la litere mare:
+
+int dif = 'a' - 'A'; // 32
+char x = 'k';
+x = x - dif;
+cout << x; // K

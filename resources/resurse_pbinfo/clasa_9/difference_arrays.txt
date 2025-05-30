@@ -1,0 +1,36 @@
+Șmenul lui Mars în vector
+Să presupunem că avem un vector A[] cu n elemente, indexate de la 1 la n, inițial nule, în care se fac mai multe operații Adună(s,d,X) prin care toate elementele din secvența delimitată de indicii s d cresc cu valoarea X. Se cere afișarea elementelor din A după efectuarea acestor operații.
+
+Metoda descrisă în continuare este cunoscută în lumea olimpicilor la informatică sub numele de “Șmenul lui Mars”, atribuită fostului olimpic Marius Andrei. De asemenea, se regăsește sub numele “Difference Array”.
+
+Operațiile pot fi efectuate eficient construind un vector suplimentar B[], cu n+1 elemente, astfel încât A[i]=B[1]+B[2]+...+B[i]. Vectorul A[] este vector de sume parțiale pentru vectorul B[].
+
+Operația Adună(s,d,X) devine:
+
+B[s] += X;
+B[d+1] -= X;
+La final, elementele lui A se reconstituie astfel: A[i]=B[1]+B[2]+...+B[i]
+
+A[1] = B[1];
+for(int i = 2 ; i <= n ; i ++)
+    A[i] = A[i-1] + B[i];
+Șmenul lui Mars în matrice
+Cunoscută și sub denumirea de Șmenul lui Mars 2D, această tehnica se aplică în rezolvarea problemelor la care se cere, pentru o matrice dată A[][] mărirea cu o valoare dată X a tuturor elementelor din submatricea determinată de colțul stânga-sus (i1,j1) și colțul dreapta-jos (i2,j2). Această operație se aplică de mai multe ori, pentru diverse submatrice și diverse valori ale lui X și se cere determinarea elementelor din A[][] după aceste operații.
+
+Putem proceda similar ca în cazul unidimensional, construind o matrice suplimentară M[][], astfel incât matricea A[][] reprezintă matrice de sume parțiale pentru M[][].
+
+Operațiile date devin:
+
+M[i1][j1] += x;
+M[i1][j2+1] -= x;
+M[i2+1][j1] -= x;
+M[i2+1][j2+1] += x;
+Observații:
+
+Matricea M[][] are cu o linie și o coloană mai mult decât matricea A[][].
+Fiecare operație prin care se măresc elementele dintr-o submatrice are complexitate constantă.
+Refacerea matricei A[][] se face ținnând cont de faptul că este matrice de sume parțiale pentru M[][]:
+
+for(int i = 1 ; i <= n ; i ++)
+    for(int j = 1; j <= m ; j ++)
+        A[i][j] = M[i][j] + A[i-1][j] + A[i][j-1] - A[i-1][j-1];

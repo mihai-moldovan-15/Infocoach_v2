@@ -1,0 +1,45 @@
+Un numar natural p > 1 se numeste prim dacă:
+ p|ab => p|a sau p|b
+Un număr natural p > 1 se numește indecompozabil (sau ireductibil) dacă:
+d|p => d = 1 sau d = p
+Observații
+Pentru orice număr natural p > 1, p este prim dacă și numai dacă este indecompozabil.
+Cei doi divizori ai unui număr indecompozabil (prim)sunt 1 și însuși numărul.
+Conform definiției, numerele 0 și 1 nu sunt prime!
+Un număr natural mai mare decât 1 care nu este prim se numește compus sau decompozabil sau reductibil.
+Verificarea primalității
+Pentru a stabili dacă un număr p este prim:
+
+numărăm divizorii săi. Dacă sunt 2 divizori, p este prim.
+determinăm suma divizorilor. Dacă suma este p + 1, numărul este prim.
+căutăm divizori ai săi diferiți de 1 și de el însuși. Dacă nu găsim, numărul este prim.
+Cum verificăm algoritmic dacă un număr natural n este prim?
+
+presupunem că numărul este prim;
+verificăm cazurile particulare; dacă n este 0 sau 1, schimbăm presupunerea
+căutăm un divizor în intervalul 2, radical din n, parcurgând numerele din interval
+dacă îl găsim, schimbăm presupunerea
+Observație: Deoarece divizorii unui număr n sunt în pereche, dacă nu găsim divizor în intervalul
+2 , radical din n, nu vom găsi nici în intervalul radical din n, n;
+
+Program C ++:
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    bool prim = true; // presupunem ca n este prim
+    if(n < 2)
+        prim = false; // 0 si 1 nu sunt prime
+    for(int d =2 ; d * d <= n ; d ++)
+        if(n % d == 0)
+            prim = false;
+    if(prim)
+        cout << n << " este prim";
+    else
+        cout << n << " nu este prim";
+    return 0;
+}

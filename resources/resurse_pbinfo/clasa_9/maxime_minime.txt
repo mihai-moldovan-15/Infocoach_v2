@@ -1,0 +1,184 @@
+Pentru a determina maximul a două valori trebuie să facem o comparație. Pentru a determina maximului a trei, patru sau mai multe valori va trebui să realizăm mai multe comparații. Scopul acestui articol este să clarifice modul de determinare a maximului/minimului unui număr fix de valori cu cât mai puține comparații.
+
+Să presupunem că dorim să determinăm maximul valorilor a trei variabile: n, m și p. Evident, o singură comparație nu este suficientă! Putem scrie mai multe variante de program C++ care să determine maximul lor. Iată una dintre ele:
+
+#include <iostream>
+using namespace std;
+int main(){
+    int n , m, p;
+    cin >> n >> m >> p;
+    if(m > n)
+        if(m > p)
+            cout << m;
+        else
+            cout << p;
+    else
+        if(n > p)
+            cout << n;
+        else
+            cout << p;
+    return 0;
+}
+Programul de mai sus rezolvă problema dată, dar face 3 comparații. Nu pare mult, dar pentru a determina cu aceeași idee maximul a patru valori vom avea nevoie de 7 comparații, iar pentru 5 valori vom face 15 comparații, ceea ce devine complicat, iar riscul de a greși editarea programului este foarte mare!
+
+Secretul stă în faptul că nu trebuie să știm care dintre cele trei variabile (m, n sau p) este maximul, ci doar valoarea maximului. Putem folosi următoarea variantă:
+
+#include <iostream>
+using namespace std;
+int main(){
+    int m , n , p;
+    cin >> m >> n >> p;
+    int max;
+    max = m;
+    if(n > max)
+        max = n;
+    if(p > max)
+        max = p;
+    cout << max;
+    return 0;
+}
+În programul de mai sus s-au făcut numai două comparații. Dezavantajul, nesemnificativ de altfel, este că nu mai știm care dintre cele trei variabile are valoarea mai mare.
+
+Calculul maximului/minimului a 4 variabile devine banal. Pur și simplu mai facem o comparație, cu a patra valoare.
+
+Programul următor determină minimul a patru numere naturale. Mai mult, evită folosirea a patru variabile. Procedăm astfel:
+
+citim prima valoarea pentru x
+inițializăm max cu valoarea lui x
+de trei ori:
+citim valoarea lui x
+comparăm pe x cu max, și, dacă este cazul, actualizăm valoarea lui max.
+#include <iostream>
+using namespace std;
+int main(){
+    int max;
+    int x;
+    cin >> x;
+    max = x;
+    cin >> x;
+    if(x > max)
+        max = x;
+    cin >> x;
+    if(x > max)
+        max = x;
+    cin >> x;
+    if(x > max)
+        max = x;
+    cout << max;
+    return 0;
+}
+Programul de mai sus este echivalent cu următorul, mai scurt:
+
+#include <iostream>
+using namespace std;
+int main(){
+    int max;
+    int x;
+    cin >> x; max = x;
+    for(int i =1 ; i <= 3 ; i ++)
+    {
+        cin >> x;
+        if(x > max)
+            max = x;
+    }
+    cout << max;
+    return 0;
+}
+
+
+Dacă numărul de valori nu este constant, pentru a determina maximul sau minimul lor trebuie să folosim o structură repetitivă. Alegerea ei se face după cum este cunoscut sau nu numărul de valori care se prelucrează (cunoscut, nu constant !!):
+
+dacă se cunoaște numărul de valori de la început, putem folosi instrucțiunea for: vezi problemele #n_maxim , #n_minim , #SumMaxMin , etc
+dacă numărul de valori nu se cunoaște de la început, putem folosi instrucțiunea while: vezi #Maxim
+Determinarea minimului
+Să rezolvăm următoarea problemă: Se dau n numere întregi. Calculaţi cel mai mic dintre cele n numere date.
+
+Numărul de valori se cunoaște de la început. Algoritmul de rezolvare va fi:
+
+inițializăm variabila min corespunzător
+citim cele n numere
+fiecare număr se compară cu min și dacă este cazul se actualizează min
+Cu ce valoare putem inițializa min? Distingem două posibilități:
+
+inițializăm min cu prima dintre cele n valori; celelalalte n-1 valori se vor compara cu min
+inițializăm min cu o valoare foarte mare; fiecare dintre cele n valori citite se va compara cu min. Alegerea valorii inițiale a lui min depinde de restricțiile problemei; pentru problema #n_minim poate fi 1.000.000.000.
+În secvențele care urmează, n este numărul de valori citite, în x se citesc pe rând valorile iar în min vom determina valoarea minimă:
+
+Inițializare cu prima valoare
+
+cin >> n >> x;
+min = x;
+for(int i =1 ; i < n ; i ++)
+{
+    cin >> x;
+    if(x < min)
+        min = x;
+}
+Inițializare cu o valoare mare
+
+cin >> n;
+min = 1<<30; //2^30 > 1000000000
+for(int i =1 ; i <= n ; i ++)
+{
+    cin >> x;
+    if(x < min)
+        min = x;
+}
+Determinarea maximului
+Să rezolvăm următoarea problemă: Se citesc numere întregi până la apariția lui 0, care nu se ia în considerare. Calculaţi maximul lor.
+
+Numărul de valori nu se cunoaște de la început. Algoritmul de rezolvare va fi:
+
+inițializăm variabila max corespunzător
+citim un număr în x
+cât timp x este nenul
+x se compară cu max și dacă este cazul se actualizează max
+citim altă valoare pentru x
+Și aici este semnificativă inițializarea variabilei max. Secvențele de mai jos surprind ambele situații:
+
+Inițializare cu prima valoare
+
+cin >> x;
+max = x;
+cin >> x;
+while(x != 0)
+{
+    if(x > max)
+        max = x;
+    cin >> x;
+}
+Inițializare cu o valoare mică
+
+max = - (1<<30); //2^30 > 1000000000
+cin >> x;
+while(x != 0)
+{
+    if(x > max)
+        max = x;
+    cin >> x;
+}
+Alte probleme
+Minimul și numărul de apariții
+Problemă: Se dau n numere întregi. Să se determine valoarea minimă și de câte ori apare printre cele n numere.
+
+Rezolvare:
+
+fie min valoarea minimă și nr_min numărul de apariții ale valorii minime
+citim n și primul dintre cele n numere, x
+inițializăm min cu x și nr_min cu 1 – minimul a apărut o singură dată până acum
+citim pe rând cele n-1 valori rămase în variabila x
+dacă x < min, actuatalizăm min cu x și nr_min cu 1
+dacă nu, verificăm dacă x == min. În caz afirmativ, îl incrementăm pe nr_min.
+Cele mai mici două valori
+Problemă: Se citesc numere întregi, mai mici decât 1.000.000.000 până la apariția lui 0, care nu se ia în considerare. Să se determine cele mai mici două numere dintre ele.
+
+Rezolvare:
+
+fie min1 cel mai mic număr și min2 următorul cel mai mic număr
+inițializăm min1 și min2 cu două valori mari, astfel: min1 = 1000000001, min2 = 1000000002
+citim un număr x
+cât timp x != 0
+prelucrăm pe x; se disting cazurile:
+x < min1: se actualizează ambele minime, astfel: min2 devine min1, iar min1 devine x
+x >= min1, dar x < min2: se actualizează numai min2, min2 = x
+citim următoarea valoare pentru x

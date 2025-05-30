@@ -1,0 +1,75 @@
+<div class="message assistant">
+    <b>InfoCoach:</b>
+    <div class="message-content">{{ output|safe }}</div>
+    <div class="feedback-form">
+        <span>Acest răspuns a fost util?</span>
+        <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
+        <button onclick="submitFeedback(this, 'nu')" class="feedback-btn">Nu</button>
+        <span id="feedback-message"></span>
+    </div>
+</div>
+
+<script>
+function submitFeedback(button, feedback) {
+    // Ascunde butoanele de feedback
+    button.parentElement.style.display = 'none';
+    
+    // Afișează mesajul de mulțumire
+    document.getElementById('feedback-message').textContent = 'Mulțumim pentru feedback!';
+    
+    const userInput = '{{ user_input|tojson|safe }}';
+    const aiResponse = '{{ output|tojson|safe }}';
+    const clasa = '{{ clasa }}';
+    
+    // Trimite feedback-ul
+    fetch('/feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'user_input': userInput,
+            'ai_response': aiResponse,
+            'clasa': clasa,
+            'feedback': feedback,
+            'feedback_text': ''
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+            alert('Eroare la salvarea feedback-ului. Te rugăm să încerci din nou.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Eroare la salvarea feedback-ului. Te rugăm să încerci din nou.');
+    });
+}
+</script>
+
+<style>
+.feedback-form {
+    margin-top: 10px;
+}
+
+.feedback-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 5px 15px;
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.feedback-btn:hover {
+    background-color: #e0e0e0;
+}
+
+#feedback-message {
+    color: #666;
+    font-style: italic;
+    margin-left: 10px;
+}
+</style> 

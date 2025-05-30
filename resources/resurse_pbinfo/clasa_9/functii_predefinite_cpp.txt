@@ -1,0 +1,125 @@
+O funcție este un ansamblu de instrucțiuni care prelucrează un set de date de intrare, numite parametri sau argumente și obține un rezultat. Când folosim funcțiile, acestea apar în expresii ca operand, valoarea operandului fiind de fapt rezultatul funcției, obținut în urma prelucrării valorilor curente ale parametrilor.
+
+De exemplu, în C++ nu există nicio operație prin care să calculăm rădăcina pătrată a unui număr real, de exemplu
+. Acest lucru poate fi realizat folosind funcția sqrt, prin apelul sqrt(5); acesta trebuie realizat într-o expresie, de exemplu o afișare:
+
+cout << sqrt(5);
+Forma unei funcții
+Despre funcția sqrt (și de fapt despre orice funcții), trebuie cunoscute niște informații specifice, pentru a ști cum și când o putem folosi:
+
+numele funcției
+numărul parametrilor
+tipul parametrilor
+tipul rezultatului
+Aceste informații sunt precizate printr-un mecanism de declarare a funcției, numit prototip. De exemplu funcția sqrt determină rădăcina pătrată dintr-un număr real (nenegativ) iar rezultatul său este de asemenea număr real. Prototipul său este:
+
+double sqrt(double);
+Prototipurile funcțiilor din aceeași categorie sunt grupate într-un fișier header. Acesta trebuie inclus în programul nostru, prin directiva #include. De exemplu, dacă folosim operațiile de de citire/scriere vom include header-ul iostream, iar dacă folosim funcțiile matematice vom include header-ul cmath.
+
+Funcții cu caracter matematic
+Denumire	Header	Prototip	Rezultat
+abs	cstdlib	int abs(int x)	Valoarea absolută a argumentului,
+, număr întreg
+abs, fabs	cmath	double abs(double x), double fabs(double x)	Valoarea absolută a argumentului,
+, număr real
+sqrt	cmath	double sqrt(double x)	Rădăcina pătrată a argumentului,
+pow	cmath	double pow(double x, double y)	Ridicarea la putere,
+sin	cmath	double sin(double x)	Funcția trigonometrică sinus,
+cos	cmath	double cos(double x)	Funcția trigonometrică cosinus,
+tan	cmath	double tan(double x)	Funcția trigonometrică tangentă,
+floor	cmath	double floor(double x)	Cel mai mare întreg mai mic sau egal cu x
+ceil	cmath	double ceil(double x)	Cel mai mic întreg mai mare sau egal cu x
+O listă mai detaliată cu funcții matematice uzuale poate fi consultată – în limba engleză.
+
+Funcții pentru numere pseudoaleatorii
+Numerele generate într-un limbaj de programare, prin intermediul unui algoritm, nu sunt numere aleatorii. Ele se numesc pesudoaleatorii (fals aleatorii, aparent aleatorii).
+
+Limbajul C++ pune la dispoziție mecanisme pentru generarea de asemenea numere:
+
+int rand();
+Generează un număr din intervalul închis [0,RAND_MAX], unde RAND_MAX depinde de compilator, dar, conform standardului, nu este mai mic decât 32767 (215-1).
+
+Functia este declarată în fișierul cstdlib, deci trebuie inclusă linia:
+
+#include <cstdlib>
+Următorul program generează și afișează trei numere pseudoaleatorii:
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main()
+{
+    int n;
+
+    n = rand();
+    cout << n << endl;
+
+    n = rand();
+    cout << n << endl;
+
+    n = rand();
+    cout << n << endl;
+
+    return 0;
+}
+Din păcate, de fiecare dată programul va genera și afișa aceleași numere. De ce? La fiecare dată când apelăm (folosim) funcția rand(), valoarea generată se calculează pe baza unei valori anterioare. La fiecare apel, odată cu generarea rezultatului, se pregătește și valoarea de folosit pentru apelul următor. Valoarea folosită la primul apel al funcției rand() – numită seed, sămânță, poate fi precizată prin intermediul funcției void srand(int s);, unde s este valoarea sămânței.
+
+Următorul program va genera trei numere. Ele vor fi diferite de cele generate de programul anterior, dar, deoarece se foloește aceeași sămânță, vor fi la fel de fiecare dată.
+
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main()
+{
+    srand(10); // initializare seed
+
+    int n;
+
+    n = rand();
+    cout << n << endl;
+
+    n = rand();
+    cout << n << endl;
+
+    n = rand();
+    cout << n << endl;
+
+    return 0;
+}
+Pentru a rezolva problema repetării valorilor generate, trebui să folosim o sămânță diferită la fiecare rulare a programului. Aceasta poate fi timpul curent al calculatorului, obținut astfel: time(0), funcția time() fiind declarată in fișierul ctime:
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main()
+{
+    srand(time(0)); // initializare seed valida
+
+    int n;
+
+    n = rand();
+    cout << n << endl;
+
+    n = rand();
+    cout << n << endl;
+
+    n = rand();
+    cout << n << endl;
+
+    return 0;
+}
+Generarea numerelor dintr-un interval dat
+Ne propunem să generăm numere din intervalul [0,a). O soluție simplă este să generăm un număr oarecare, apoi să determinăm restul împărțirii sale la a, acesta fiind cu siguranța din intervalul dat.
+
+n = rand() % a;
+Pentru a genera numere din intervalul [a,b), vom genera un număr din intervalul [0,b-a), apoi vom aduna la el valoarea a:
+
+n = rand() % (b-a) + a;
+
