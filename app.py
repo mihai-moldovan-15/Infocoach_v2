@@ -558,6 +558,40 @@ def view_feedback():
                          current_clasa=clasa_filter,
                          current_feedback=feedback_filter)
 
+# === Route for profile ===
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        new_clasa = request.form.get('clasa')
+        if new_clasa in ['9', '10', '11-12']:
+            current_user.clasa = new_clasa
+            db.session.commit()
+            flash('Clasa a fost actualizată cu succes!', 'success')
+        return redirect(url_for('profile'))
+    return render_template('profile.html')
+
+# === Route for changing password ===
+@app.route('/change-password', methods=['POST'])
+@login_required
+def change_password():
+    current_password = request.form.get('current_password')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+    
+    if not current_user.check_password(current_password):
+        flash('Parola actuală este incorectă.', 'danger')
+        return redirect(url_for('profile'))
+    
+    if new_password != confirm_password:
+        flash('Parolele noi nu coincid.', 'danger')
+        return redirect(url_for('profile'))
+    
+    current_user.set_password(new_password)
+    db.session.commit()
+    flash('Parola a fost schimbată cu succes!', 'success')
+    return redirect(url_for('profile'))
+
 # === Start application ===
 if __name__ == '__main__':
     with app.app_context():

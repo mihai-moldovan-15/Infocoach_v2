@@ -8,4 +8,3 @@ flask
 flask-sqlalchemy
 flask-login
 flask-wtf
-email-validator

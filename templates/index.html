@@ -24,11 +24,6 @@
         <div id="wait-message"></div>
         <form id="chat-form" onsubmit="return submitForm(event)" autocomplete="off">
             <div class="chat-input-row">
-                <select name="clasa" id="clasa">
-                    <option value="9" {% if clasa=='9' %}selected{% endif %}>Clasa a 9-a</option>
-                    <option value="10" {% if clasa=='10' %}selected{% endif %}>Clasa a 10-a</option>
-                    <option value="11-12" {% if clasa=='11-12' %}selected{% endif %}>Clasa a 11-a / a 12-a</option>
-                </select>
                 <textarea name="user_input" id="user-input" rows="2" placeholder="Scrie întrebarea aici..."></textarea>
                 <input type="submit" value="Trimite">
             </div>
@@ -92,12 +87,6 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     resize: none;
-}
-
-select {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
 }
 
 input[type="submit"] {

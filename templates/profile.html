@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Profil - InfoCoach{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>Profilul meu</h1>
+    
+    <div class="profile-section">
+        <h2>Informații personale</h2>
+        <div class="info-group">
+            <label>Nume utilizator:</label>
+            <span>{{ current_user.username }}</span>
+        </div>
+        <div class="info-group">
+            <label>Email:</label>
+            <span>{{ current_user.email }}</span>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2>Setări</h2>
+        <form method="POST" action="{{ url_for('profile') }}" class="settings-form">
+            <div class="form-group">
+                <label for="clasa">Clasa:</label>
+                <select name="clasa" id="clasa" class="form-control">
+                    <option value="9" {% if current_user.clasa == '9' %}selected{% endif %}>Clasa a 9-a</option>
+                    <option value="10" {% if current_user.clasa == '10' %}selected{% endif %}>Clasa a 10-a</option>
+                    <option value="11-12" {% if current_user.clasa == '11-12' %}selected{% endif %}>Clasele 11-12</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="profile-section">
+        <h2>Schimbă parola</h2>
+        <form method="POST" action="{{ url_for('change_password') }}" class="password-form">
+            <div class="form-group">
+                <label for="current_password">Parola actuală:</label>
+                <input type="password" name="current_password" id="current_password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="new_password">Parola nouă:</label>
+                <input type="password" name="new_password" id="new_password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirmă parola nouă:</label>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Schimbă parola</button>
+        </form>
+    </div>
+
+    <div style="text-align:center; margin-top: 2rem;">
+        <form method="POST" action="{{ url_for('profile') }}">
+            <input type="hidden" name="clasa" value="{{ current_user.clasa }}">
+            <button type="submit" class="save-profile-btn">Salvează modificările</button>
+        </form>
+    </div>
+</div>
+{% endblock %} 
