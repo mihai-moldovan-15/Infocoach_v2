@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție șirul Fibonacci",
+    "content": "Șirul Fibonacci: fiecare număr e suma celor două precedente. Ex. 1,1,2,3,5,8,... sau 0,1,1,2,3,... Relație: Fn=Fn-1+Fn-2.",
+    "tags": ["fibonacci", "șir", "recurență", "matematică"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritm calcul primii N termeni",
+    "content": "Folosim a (Fn-1), b (Fn-2), c (Fn). Cod: a=1; b=1; cout<<a<<' '<<b; for(int i=3;i<=n;i++) { c=a+b; cout<<c<<' '; a=b; b=c; }",
+    "tags": ["fibonacci", "algoritm", "c++", "calcul"]
+  }
+]

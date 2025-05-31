@@ -35,7 +35,7 @@ A Flask-based web application that provides an AI assistant specialized in compu
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/<user>/InfoCoach.git
+git clone https://github.com/<mihai-moldovan-15>/InfoCoach.git
 cd InfoCoach
 ```
 
@@ -130,5 +130,5 @@ This project is licensed under [MIT License](LICENSE).
 
 For support or questions:
 
-- Open an [issue on GitHub](https://github.com/<user>/InfoCoach/issues)
+- Open an [issue on GitHub](https://github.com/<mihai-moldovan-15>/InfoCoach/issues)
 - Send an email to: `mihai.moldovan152007@gmail.com`

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere sume parțiale vectori",
+    "content": "Sumele parțiale calculează rapid sume de secvențe, reducând complexitatea de la O(n) la O(1).",
+    "tags": ["sume parțiale", "vector", "optimizare", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Definiție secvență vector",
+    "content": "Secvență e succesiune consecutivă din vector. Ex. X[4] la X[7].",
+    "tags": ["secvență", "vector", "indici", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Construire sume parțiale",
+    "content": "S[i] = sumă X[1] la X[i]. Relație: S[i] = 0 (i=0), S[i] = S[i-1] + X[i] (i>0).",
+    "tags": ["construire", "sume parțiale", "recursivitate", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Calcul sumă secvență",
+    "content": "Suma [i,j] = S[j] - S[i-1]. Ex. S[7] - S[3] = 12.",
+    "tags": ["sumă secvență", "formulă", "complexitate O(1)", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Implementare C++",
+    "content": "int n,X[100001],S[100001]; S[0]=0; for(int i=1;i<=n;i++) S[i]=S[i-1]+X[i]; int st,dr; cout<<S[dr]-S[st-1];",
+    "tags": ["implementare", "c++", "sume parțiale", "vector"]
+  },
+  {
+    "id": "6",
+    "title": "Overflow considerații",
+    "content": "Suma poate depăși int, folosind long long int pentru S[].",
+    "tags": ["overflow", "tipuri date", "long long int", "c++"]
+  }
+]

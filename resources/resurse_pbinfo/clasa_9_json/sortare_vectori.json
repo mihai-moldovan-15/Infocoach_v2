@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție sortare vectori",
+    "content": "Sortarea rearanjează elementele vectorului în ordine crescătoare sau descrescătoare.",
+    "tags": ["sortare", "vector", "ordine", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritmi neeficienți",
+    "content": "O(n^2): Bubble Sort, Selection Sort, Insertion Sort, Gnome Sort.",
+    "tags": ["neeficient", "o(n^2)", "algoritmi", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Algoritmi eficienți",
+    "content": "O(n*log n): QuickSort, MergeSort, HeapSort. Excepție O(n) pentru structuri speciale.",
+    "tags": ["eficient", "o(n log n)", "quick sort", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Algoritmi nepractici",
+    "content": "O(n!) algoritmi, fără utilitate practică.",
+    "tags": ["nepractic", "o(n!)", "complexitate", "c++"]
+  }
+]

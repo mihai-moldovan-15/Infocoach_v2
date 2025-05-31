@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "title": "Definiția tipului char",
+    "content": "Tipul char este folosit pentru a reprezenta un singur caracter. Pentru mai multe caractere, se utilizează tablouri de char sau string-uri.",
+    "tags": ["char", "tip de date", "caractere", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Declararea și domeniul de valori",
+    "content": "char C; // Valori între -128 și 127 pentru char, respectiv 0–255 pentru unsigned char. Valorile 0–127 corespund codului ASCII.",
+    "tags": ["char", "declarație", "ASCII", "domeniu", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Inițializare cu literali și valori numerice",
+    "content": "Un literal char este un caracter între apostrofuri, ex: 'A'. Se poate folosi și o valoare numerică, ex: C = 65; // 'A'. \"A\" (string) ≠ 'A' (char).",
+    "tags": ["char", "literal", "ASCII", "inițializare", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Afișare variabilă char",
+    "content": "Exemplu: char C = 'A'; cout << C; // A. C = 65; cout << C; // A. Se afișează caracterul din codul ASCII.",
+    "tags": ["char", "afișare", "cout", "ASCII", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Citirea caracterelor de la tastatură",
+    "content": "char x; cin >> x; // citește un singur caracter. Dacă se introduc mai multe, se păstrează doar primul.",
+    "tags": ["char", "citire", "cin", "caractere", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Citirea multiplă și comportament",
+    "content": "char x, y; cin >> x >> y; // pentru 'A B', rezultatul va fi x='A', y='B'. Pentru '65 66', x='6', y='5'.",
+    "tags": ["char", "citire", "comportament", "c++"]
+  },
+  {
+    "id": "7",
+    "title": "Conversii între char și int",
+    "content": "char x = 65; // echivalent cu 'A'. cout << (int)x; // 65. int n = 65; cout << (char)n; // 'A'.",
+    "tags": ["char", "int", "conversie", "ASCII", "c++"]
+  },
+  {
+    "id": "8",
+    "title": "Operații cu char și conversii implicite",
+    "content": "Operațiile cu char implică conversii la int. Ex: char x = 'A'; cout << x + 1; // 66. cout << (char)(x + 1); // 'B'.",
+    "tags": ["char", "operații", "int", "conversie", "c++"]
+  },
+  {
+    "id": "9",
+    "title": "Transformare litere mari ↔ mici",
+    "content": "Diferența între 'a' și 'A' este 32. Se poate adăuga/scădea această valoare pentru conversie. Ex: char x = 'k'; x = x - ('a' - 'A'); // 'K'.",
+    "tags": ["char", "transformare", "majuscule", "minuscule", "ASCII", "c++"]
+  }
+]

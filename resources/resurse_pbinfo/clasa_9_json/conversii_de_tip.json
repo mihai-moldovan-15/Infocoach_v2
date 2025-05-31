@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în conversii de tip",
+    "content": "Conversia de tip schimbă tipul unei valori. Tipuri: implicită (automată) și explicită (manuală). Ex. int la double e promovare; double la int e retrogradare (pierde zecimale).",
+    "tags": ["conversii de tip", "implicită", "explicită", "promovare", "retrogradare"]
+  },
+  {
+    "id": "2",
+    "title": "Conversie implicită",
+    "content": "Se face automat la operanzi diferiți. Ex. int n=5; double x=n; → x=5.0. Promovare (int→double) nu pierde date; retrogradare (double→int) taie zecimale. Ex. double x=5.75; int n=x; → n=5.",
+    "tags": ["conversii de tip", "implicită", "promovare", "retrogradare"]
+  },
+  {
+    "id": "3",
+    "title": "Conversie explicită (type casting)",
+    "content": "Manuală cu (TIP)expresie sau TIP(expresie). Ex. char c='A'; cout<<(int)c; → 65; cout<<char(97); → 'a'. Operatori: static_cast, dynamic_cast, const_cast, reinterpret_cast.",
+    "tags": ["conversii de tip", "explicită", "type casting", "static_cast"]
+  },
+  {
+    "id": "4",
+    "title": "Reguli de conversie",
+    "content": "Int negativ la unsigned → complement baza 2. Numeric la bool: nenul=true, 0=false. Float/double la int: trunchiere, posibile overflow. Ex. -1→max unsigned.",
+    "tags": ["conversii de tip", "reguli", "overflow", "bool"]
+  },
+  {
+    "id": "5",
+    "title": "Media aritmetică cu conversii",
+    "content": "Ex. int a,b,c; int S=a+b+c; cout<<S/3.0; → conversie implicită la double. Ex. cout<<1.0*S/3; sau cout<<(double)S/3; → explicită. Evită împărțire întreagă.",
+    "tags": ["conversii de tip", "media aritmetică", "implicită", "explicită"]
+  },
+  {
+    "id": "6",
+    "title": "Evitarea overflow",
+    "content": "Ex. int n=1000000; cout<<n*n; → overflow. Soluție: cout<<1LL*n*n; sau cout<<(long long)n*n; → 1000000000000. Atenție la precedența operatorilor.",
+    "tags": ["conversii de tip", "overflow", "long long", "precedenta"]
+  }
+]

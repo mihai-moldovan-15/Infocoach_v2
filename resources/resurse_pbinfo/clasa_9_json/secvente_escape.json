@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție secvențe escape",
+    "content": "Secvențele escape (începute cu \\) dau alt înțeles caracterelor în literals. Ex. \\n = newline. Folosite în C++, Java, C#, PHP.",
+    "tags": ["secvențe escape", "caractere speciale", "c++", "sintaxă"]
+  },
+  {
+    "id": "2",
+    "title": "De ce sunt necesare",
+    "content": "Ex. 'Hamlet a spus \\\"A fi\\\"' necesită \\\" pentru ghilimele în șir. Fără \\, compilatorul greșește.",
+    "tags": ["necesitate", "ghilimele", "c++", "escape"]
+  },
+  {
+    "id": "3",
+    "title": "Lista secvențelor escape",
+    "content": "Ex. \\a=7 (beep), \\n=10 (newline), \\r=13 (carriage return), \\\"=34 (ghilimele), \\0=0 (nul), \\nnn (octal), \\xhh (hex).",
+    "tags": ["lista escape", "coduri ascii", "caractere", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Exemplu cu ghilimele",
+    "content": "Cod: cout<<\"Hamlet a spus \\\\\\\"A fi\\\\\\\".\"; Afișează: Hamlet a spus \"A fi\".",
+    "tags": ["exemplu", "ghilimele", "c++", "escape"]
+  },
+  {
+    "id": "5",
+    "title": "Exemplu cu newline",
+    "content": "Cod: cout<<\"Vrei 10?\\nHai pe pbinfo\"; Afișează: Vrei 10? [nouă linie] Hai pe pbinfo.",
+    "tags": ["newline", "exemplu", "c++", "escape"]
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție secvență vector",
+    "content": "O secvență a vectorului X[] cu n elemente e o succesiune de elemente consecutive. Definită de indicii st ≤ dr. Ex. (10,20,30) din (10,20,30,40).",
+    "tags": ["secvență", "vector", "indici", "definiție"]
+  },
+  {
+    "id": "2",
+    "title": "Lungimea secvenței",
+    "content": "Lungimea unei secvențe [st,dr] e dr-st+1. Ex. [1,4] în (10,20,30,40) are lungimea 4.",
+    "tags": ["lungime", "secvență", "indici", "calcul"]
+  },
+  {
+    "id": "3",
+    "title": "Numărul de secvențe",
+    "content": "Un vector cu n elemente are n+(n-1)+...+1 = n*(n+1)/2 secvențe. Ex. n=3: 6 secvențe.",
+    "tags": ["număr secvențe", "formulă", "vector", "matematică"]
+  },
+  {
+    "id": "4",
+    "title": "Secvență de lungime maximă - O(n^3)",
+    "content": "Găsim cea mai lungă secvență cu proprietate (ex. impare). Verificăm toate [i,j]. Cod: smax=1, dmax=0; for(int i=0;i<n;i++) for(int j=i;j<n;j++) { bool pp=true; for(int k=i;k<=j;k++) if(X[k]%2!=1) pp=false; if(pp&&j-i+1>dmax-smax+1) smax=i, dmax=j; }",
+    "tags": ["secvență maximă", "o(n^3)", "impare", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Secvență de lungime maximă - O(n^2)",
+    "content": "Parcurgem cu i, extindem j dacă proprietatea e respectată. Cod: smax=1, dmax=0; for(int i=0;i<n;i++) if(X[i]%2==1) { int j=i; while(j+1<n&&X[j+1]%2==1) j++; if(j-i+1>dmax-smax+1) smax=i, dmax=j; }",
+    "tags": ["secvență maximă", "o(n^2)", "impare", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Secvență de lungime maximă - O(n)",
+    "content": "Optimizăm ignorând secvențe mai scurte. Cod: smax=1, dmax=0; for(int i=0;i<n;i++) if(X[i]%2==1) { int j=i; while(j+1<n&&X[j+1]%2==1) j++; if(j-i+1>dmax-smax+1) smax=i, dmax=j; i=j; }",
+    "tags": ["secvență maximă", "o(n)", "impare", "c++"]
+  },
+  {
+    "id": "7",
+    "title": "Observație terminologică",
+    "content": "La UBB, secvența e numită și subsecvență. Nu confunda cu subșir (ordinea poate varia).",
+    "tags": ["subsecvență", "terminologie", "ubb", "diferențe"]
+  }
+]

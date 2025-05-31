@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în determinarea divizorilor",
+    "content": "Divizorii lui n sunt numerele între 1 și n care împart n exact. Se pot afișa, însuma sau număra. Algoritm naiv: parcurge de la 1 la n, verifică n%d==0.",
+    "tags": ["divizori", "determinare", "algoritm naiv", "număr natural"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritm naiv pentru divizori",
+    "content": "Parcurge de la 1 la n, afișează dacă n%d==0. Cod: int n; cin>>n; for(int d=1;d<=n;d++) if(n%d==0) cout<<d<<' '; Ex. n=24 → 1 2 3 4 6 8 12 24. Ineficient pentru n mare (ex. n=10^9).",
+    "tags": ["divizori", "algoritm naiv", "afisare", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Optimizare: limitare la n/2",
+    "content": "Divizori peste n/2 nu există (excluzând n). Reducem intervalul la [1, n/2], dar tot ineficient pentru n mare.",
+    "tags": ["divizori", "optimizare", "interval", "n/2"]
+  },
+  {
+    "id": "4",
+    "title": "Algoritm eficient pentru divizori",
+    "content": "Divizorii vin în perechi: dacă d divide n, atunci n/d e divizor. Parcurge de la 1 la sqrt(n). Cod: int n; cin>>n; for(int d=1;d*d<=n;d++) if(n%d==0) { cout<<d<<' '; if(d*d<n) cout<<n/d<<' '; } Ex. n=75 → 1 75 3 25 5 15. Pentru pătrate perfecte (ex. 36), evită duplicarea sqrt(n).",
+    "tags": ["divizori", "algoritm eficient", "sqrt(n)", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Observații despre divizori",
+    "content": "Numerele non-pătrate perfecte au număr par de divizori. Pătratele perfecte au număr impar de divizori (ex. 36: 1 2 3 4 6 9 12 18 36). Cel mai mic divizor propriu (≠1, ≠n) e prim.",
+    "tags": ["divizori", "observații", "pătrat perfect", "număr impar"]
+  }
+]

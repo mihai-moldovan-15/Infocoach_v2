@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "title": "Definirea unui tablou unidimensional",
+    "content": "Un tablou unidimensional în C++ se declară astfel: tipDeBaza nume[dimensiune]. Exemplu: int X[10]; Indicii sunt de la 0 la dimensiune-1.",
+    "tags": ["tablouri", "unidimensional", "declarație", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Inițializarea unui tablou unidimensional",
+    "content": "Elementele unui tablou global sunt inițializate implicit cu 0. Cele locale au valori aleatorii. Ex: int A[10] = {1}; // doar A[0] = 1, restul 0.",
+    "tags": ["tablouri", "inițializare", "memorie", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Referirea unui element din tablou",
+    "content": "Accesul se face cu operatorul de indexare: []. Exemplu: X[0], X[i]. Indicele trebuie să fie în intervalul [0, dim-1].",
+    "tags": ["tablouri", "referire", "index", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Citirea și afișarea elementelor dintr-un vector",
+    "content": "Citirea: for (int i = 0; i < n; i++) cin >> X[i]; Afișarea: for (int i = 0; i < n; i++) cout << X[i] << ' ';",
+    "tags": ["tablouri", "citire", "afișare", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Parcurgerea unui tablou unidimensional",
+    "content": "Se face cu ajutorul unui for de la 0 la n-1 (sau invers pentru parcurgere descrescătoare). Ex: for (int i = 0; i < n; i++) X[i] = 1;",
+    "tags": ["tablouri", "parcurgere", "for", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Dimensiunea logică și fizică a unui tablou",
+    "content": "Dimensiunea fizică este capacitatea maximă. Dimensiunea logică este numărul efectiv de elemente folosite. Ex: int X[100]; n = număr elemente folosite.",
+    "tags": ["tablouri", "dimensiune", "logică", "fizică"]
+  },
+  {
+    "id": "7",
+    "title": "Indexare de la 0 vs 1",
+    "content": "Implicit, indexarea este de la 0. Dacă vrem indexare de la 1, ignorăm poziția 0 și declarăm o dimensiune mai mare. Ex: int V[101]; pentru n ≤ 100.",
+    "tags": ["tablouri", "indexare", "c++"]
+  },
+  {
+    "id": "8",
+    "title": "Inițializare la declarare",
+    "content": "Exemple: int A[] = {10, 20}; int B[10] = {10, 20}; int C[10] = {0}; Greșit: A = {0}; // nu e permisă reinițializarea după declarare.",
+    "tags": ["tablouri", "inițializare", "c++"]
+  }
+]

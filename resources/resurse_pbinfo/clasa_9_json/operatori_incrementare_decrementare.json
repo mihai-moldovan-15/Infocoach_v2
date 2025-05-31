@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție incrementare/decrementare",
+    "content": "Incrementarea mărește valoarea cu 1, decrementarea o micșorează. Folosite frecvent în C++, Java, etc.",
+    "tags": ["incrementare", "decrementare", "operatori", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Operatorii ++ și --",
+    "content": "++ (incrementare), -- (decrementare) sunt unari, aplicați pe lvalue (variabile). Ex. ++x crește x cu 1.",
+    "tags": ["operator ++", "operator --", "lvalue", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Preincrementare",
+    "content": "++x mărește x cu 1, rezultatul e x nou. Ex. int x=5, y=++x; cout<<x<<' '<<y; // 6 6",
+    "tags": ["preincrementare", "++x", "c++", "exemplu"]
+  },
+  {
+    "id": "4",
+    "title": "Postincrementare",
+    "content": "x++ mărește x cu 1, rezultatul e valoarea inițială. Ex. int x=5, y=x++; cout<<x<<' '<<y; // 6 5",
+    "tags": ["postincrementare", "x++", "c++", "exemplu"]
+  },
+  {
+    "id": "5",
+    "title": "Predecrementare",
+    "content": "--x micșorează x cu 1, rezultatul e x nou. Similar ++x.",
+    "tags": ["predecrementare", "--x", "c++", "logică"]
+  },
+  {
+    "id": "6",
+    "title": "Postdecrementare",
+    "content": "x-- micșorează x cu 1, rezultatul e valoarea inițială. Similar x++.",
+    "tags": ["postdecrementare", "x--", "c++", "logică"]
+  },
+  {
+    "id": "7",
+    "title": "Observații și erori",
+    "content": "Preincrementare returnează lvalue, postincrementare valoare. Eroare: y=++x++ (x++ nu e lvalue).",
+    "tags": ["eroare", "lvalue", "prioritate", "c++"]
+  }
+]

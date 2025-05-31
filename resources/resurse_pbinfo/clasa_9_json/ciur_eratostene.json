@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în Ciurul lui Eratostene",
+    "content": "Metodă de determinare a numerelor prime ≤ n. Ex. n=30: taie 1, apoi multipli 2, 3, 5, 7 (7^2>30). Rămân 2, 3, 5, 7, 11, 13, 17, 19, 23, 29.",
+    "tags": ["ciur eratostene", "numere prime", "algoritm", "determinare"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritm Ciur Eratostene",
+    "content": "Vector v[]: v[x]=0 (prim), v[x]=1 (neprim). Pseudocod: v[0]=1, v[1]=1; for i=2 to sqrt(n) if v[i]=0 for j=2 to [n/i] v[i*j]=1. Cod: int v[31]; for(int i=0;i<=30;i++)v[i]=0;v[0]=1;v[1]=1;for(int i=2;i*i<=30;i++)if(!v[i])for(int j=2;i*j<=30;j++)v[i*j]=1;",
+    "tags": ["ciur eratostene", "pseudocod", "vector caracteristic", "numere prime"]
+  },
+  {
+    "id": "3",
+    "title": "Număr de divizori",
+    "content": "Vector Nr[]: Nr[x]=nr divizori. Cod: int Nr[31]; for(int i=1;i<=30;i++)Nr[i]=0;for(int i=1;i<=30;i++)for(int j=1;i*j<=30;j++)Nr[i*j]++; Ex. Nr[12]=6.",
+    "tags": ["ciur eratostene", "număr divizori", "vector", "calcul"]
+  },
+  {
+    "id": "4",
+    "title": "Sumă divizori",
+    "content": "Vector S[]: S[x]=sumă divizori. Cod: int S[31]; for(int i=1;i<=30;i++)S[i]=0;for(int i=1;i<=30;i++)for(int j=1;i*j<=30;j++)S[i*j]+=i; Ex. S[12]=28.",
+    "tags": ["ciur eratostene", "sumă divizori", "vector", "calcul"]
+  },
+  {
+    "id": "5",
+    "title": "Cel mai mic/mare divizor prim",
+    "content": "Vector M[]: M[x]=cel mai mic/maxim divizor prim. Cod: int M[31]; for(int i=1;i<=30;i++)M[i]=i;for(int i=2;i<=30;i++)if(M[i]==i)for(int j=2;i*j<=30;j++)if(M[i*j]==i*j)M[i*j]=i; Ex. M[12]=2.",
+    "tags": ["ciur eratostene", "divizor prim", "vector", "minim"]
+  },
+  {
+    "id": "6",
+    "title": "Indicatorul lui Euler",
+    "content": "Vector F[]: F[x]=φ(x). Cod: int F[31]; for(int i=1;i<=30;i++)F[i]=i;for(int i=2;i<=30;i++)if(F[i]==i)for(int j=1;i*j<=30;j++)F[i*j]=F[i*j]/i*(i-1); Ex. F[12]=4.",
+    "tags": ["ciur eratostene", "indicator euler", "vector", "φ(n)"]
+  }
+]

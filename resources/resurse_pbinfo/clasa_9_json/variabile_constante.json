@@ -1,0 +1,75 @@
+[
+    {
+      "id": "1",
+      "title": "Datele în program – variabile și constante",
+      "content": "Orice program prelucrează date aflate în memoria RAM. Acestea pot fi variabile (cu valoare modificabilă) sau constante (cu valoare fixă).",
+      "tags": ["date", "variabile", "constante", "memorie"]
+    },
+    {
+      "id": "2",
+      "title": "Ce este o variabilă",
+      "content": "O variabilă este o locație de memorie caracterizată prin: adresă, identificator, tip, domeniu de vizibilitate. Poate fi globală (vizibilă în tot programul, inițializată cu 0) sau locală (vizibilă doar în blocul curent, valori aleatorii).",
+      "tags": ["variabile", "memorie", "c++", "local", "global"]
+    },
+    {
+      "id": "3",
+      "title": "Identificatorii în C++",
+      "content": "Identificatorii pot conține litere (mari/mici), cifre, caracterul '_' și trebuie să înceapă cu literă sau '_'. Nu pot fi cuvinte rezervate. Primele 31 de caractere sunt semnificative.",
+      "tags": ["identificatori", "nume variabilă", "reguli", "c++"]
+    },
+    {
+      "id": "4",
+      "title": "Declararea variabilelor",
+      "content": "Sintaxă: Tip_de_date Lista_identificatori; Ex: int a, x; Inițializarea se face opțional la declarare: int a = 1;",
+      "tags": ["declarație", "variabilă", "sintaxă", "inițializare", "c++"]
+    },
+    {
+      "id": "5",
+      "title": "Exemple identificatori corecți și greșiți",
+      "content": "Corecți: a, numar, alt_numar, a2b, _suma. Incorecți: 2a, alt numar, un-numar, număr (diacritice interzise).",
+      "tags": ["identificatori", "corect", "greșit", "c++"]
+    },
+    {
+      "id": "6",
+      "title": "Constante în C++",
+      "content": "Date cu valoare neschimbabilă în timpul execuției. Pot fi simbolice (cu nume) sau literale. Exemple: #define MAX 101 sau const int MAX = 101;",
+      "tags": ["constante", "define", "const", "valori fixe", "c++"]
+    },
+    {
+      "id": "7",
+      "title": "Literali – constante întregi",
+      "content": "Tipuri: zecimale (ex: 176), octale (ex: 062), hexazecimale (ex: 0x6f). Octalele încep cu 0, hexazecimalele cu 0x.",
+      "tags": ["constante", "literali", "întregi", "baze", "c++"]
+    },
+    {
+      "id": "8",
+      "title": "Literali – constante reale",
+      "content": "Numere în virgulă mobilă: formă fixă (-1.5) sau științifică (-0.567E+2). Separatorul zecimal este punctul '.'",
+      "tags": ["constante", "reale", "floating point", "c++"]
+    },
+    {
+      "id": "9",
+      "title": "Literali – constante de tip char",
+      "content": "Sunt caractere între apostroafe. Exemple: 'A', '7', '?'. Pot include secvențe escape ca '\\n' (newline), '\\t' (tab), '\\0' (nul).",
+      "tags": ["constante", "char", "caractere", "escape", "c++"]
+    },
+    {
+      "id": "10",
+      "title": "Secvențe escape în C++",
+      "content": "Caractere speciale reprezentate prin '\\'. Exemple: '\\n' (newline), '\\t' (tab), '\\\\' (backslash), '\\'' (apostrof), '\"' (ghilimele), '\\0' (nul).",
+      "tags": ["escape", "caractere speciale", "c++", "char"]
+    },
+    {
+      "id": "11",
+      "title": "Literali – constante șiruri de caractere",
+      "content": "Sunt delimitate de ghilimele. Exemple: \"n = \", \"Am terminat.\\n\". 'A' ≠ \"A\" (caracter vs șir).",
+      "tags": ["șiruri", "constante", "caractere", "c++"]
+    },
+    {
+      "id": "12",
+      "title": "Cuvinte rezervate în C++",
+      "content": "Identificatorii nu pot fi cuvinte rezervate precum: int, char, for, while, if, else, return, void, break, const etc.",
+      "tags": ["cuvinte rezervate", "keywords", "c++", "interdicții"]
+    }
+  ]
+  

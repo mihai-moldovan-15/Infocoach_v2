@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere sortare prin selecție",
+    "content": "Sortare prin selecție plasează minimul succesiv în pozițiile inițiale ale vectorului.",
+    "tags": ["sortare", "selecție", "algoritm", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Idee principală",
+    "content": "Plasează în X[i] minimul din [i,n-1], interschimbând dacă necesar.",
+    "tags": ["selecție", "minim", "interschimbare", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Implementare C++ (varianta 1)",
+    "content": "int n,X[100]; for(int i=0;i<n-1;i++) for(int j=i+1;j<n;j++) if(X[i]>X[j]) {int aux=X[i];X[i]=X[j];X[j]=aux;}",
+    "tags": ["implementare", "c++", "selecție generală", "algoritm"]
+  },
+  {
+    "id": "4",
+    "title": "Implementare C++ (varianta 2)",
+    "content": "int n,X[100]; for(int i=0;i<n-1;i++) {int p=i; for(int j=i+1;j<n;j++) if(X[j]<X[p]) p=j; int aux=X[i];X[i]=X[p];X[p]=aux;}",
+    "tags": ["implementare", "c++", "minim explicit", "algoritm"]
+  },
+  {
+    "id": "5",
+    "title": "Complexitate",
+    "content": "Complexitate O(n^2), eficient pentru vectori mici.",
+    "tags": ["complexitate", "o(n^2)", "eficiență", "c++"]
+  }
+]

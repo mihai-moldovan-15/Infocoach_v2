@@ -1,0 +1,92 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în operatorii C++",
+    "content": "Computerele prelucrează date prin operații cu operanzi (variabile, constante) și operatori (simboluri care definesc operația). Operațiile sunt unare (1 operand), binare (2 operanzi) sau ternare (3 operanzi). Ex. unară: -7, binară: 2+5, ternară: condiționalul ?.",
+    "tags": ["operatori", "c++", "operanzi", "operații"]
+  },
+  {
+    "id": "2",
+    "title": "Operatorii aritmetici unari",
+    "content": "+ returnează valoarea operandului, - schimbă semnul. Ex. +11=11, -(-3.5)=3.5, -11=-11 cu N=11, X=11, Y=-3.5 (int, double).",
+    "tags": ["operatori aritmetici", "unari", "+-", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Operatorii aritmetici binari",
+    "content": "+ (adunare), - (scădere), * (înmulțire), / (împărțire), % (modulo). Ex. N=11, M=3: N+M=14, N/M=3 (întreagă), X/Y=-3.14 (zecimală). Nu există operator pentru putere.",
+    "tags": ["operatori aritmetici", "binari", "+-*/%", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Împărțirea și modulo",
+    "content": "Împărțirea /: întreagă dacă operanzii sunt int (ex. 11/3=3), zecimală dacă sunt double (ex. 11/3.0=3.67). Modulo %: doar pentru int, ex. 11%3=2. Atenție la împărțirea la 0!",
+    "tags": ["împărțire", "modulo", "tipuri date", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Operatorii relaționali",
+    "content": "<, >, <=, >=, ==, != compară numere, returnând 0 (fals) sau 1 (adevărat). Ex. N=11, M=3: N>M=1, N==M=0. Eroare frecventă: = în loc de ==.",
+    "tags": ["operatori relaționali", "comparare", "==!=", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Operatorii logici",
+    "content": "! (negare), && (și), || (sau). Ex. !0=1, 1&&1=1, 0||1=1. Folosiți cu valori bool sau numerice, rezultatul e 0/1.",
+    "tags": ["operatori logici", "!&&||", "valori adevăr", "c++"]
+  },
+  {
+    "id": "7",
+    "title": "Operatorul de atribuire",
+    "content": "= atribuie o valoare unei variabile. Ex. n=5, m=n+2 (m=7). Rezultatul e variabila. Atribuiri multiple: a=b=c=10. Nu confunda cu ==.",
+    "tags": ["atribuire", "=", "variabile", "c++"]
+  },
+  {
+    "id": "8",
+    "title": "Atribuire compusă",
+    "content": "+=, -=, *=, /=, %= etc. Ex. x*=5 echivalent cu x=x*5. Simplifică operații frecvente.",
+    "tags": ["atribuire compusă", "+=-=*", "optimizare", "c++"]
+  },
+  {
+    "id": "9",
+    "title": "Interschimbarea valorilor",
+    "content": "Schimbă valorile a două variabile folosind o variabilă auxiliară. Ex. int A=5, B=7, aux=A; A=B; B=aux; cout<<A<<' '<<B; // 7 5",
+    "tags": ["interschimbare", "variabile", "auxiliar", "c++"]
+  },
+  {
+    "id": "10",
+    "title": "Operatorii ++ și --",
+    "content": "++ (incrementare), -- (decrementare) schimbă valoarea cu 1. Pre: ++x (rezultat x+1), post: x++ (rezultat x inițial). Ex. y=++x; // y=6, x=6",
+    "tags": ["incrementare", "decrementare", "++--", "c++"]
+  },
+  {
+    "id": "11",
+    "title": "Operatorul condițional ?",
+    "content": "Ternar: expresie ? val1 : val2. Ex. x%2==0 ? \"par\" : \"impar\". Dacă expresia e true, returnează val1, altfel val2.",
+    "tags": ["operator condițional", "ternar", "?:", "c++"]
+  },
+  {
+    "id": "12",
+    "title": "Operatorul virgulă ,",
+    "content": "Evaluează mai multe expresii, returnând rezultatul ultimei. Ex. x=1, y=2, z=3; // z=3. Folosit pentru gruparea operațiilor.",
+    "tags": ["operator virgulă", ",", "expresii", "c++"]
+  },
+  {
+    "id": "13",
+    "title": "Operatorii pe biți",
+    "content": "& (și), | (sau), ^ (xor), ~ (negare), << (shift stânga), >> (shift dreapta) manipulează biții datelor.",
+    "tags": ["operatori biți", "&|~^", "shift", "c++"]
+  },
+  {
+    "id": "14",
+    "title": "Operatorul de conversie explicită",
+    "content": "(tip)expresie schimbă tipul. Ex. (double)7/2=3.5, (int)'a'=97. Folosit pentru conversii manuale.",
+    "tags": ["conversie", "casting", "tipuri date", "c++"]
+  },
+  {
+    "id": "15",
+    "title": "Operatorul sizeof",
+    "content": "Returnează dimensiunea în octeți a unui tip sau expresie. Ex. sizeof(double)=8, sizeof(3+5)=4.",
+    "tags": ["sizeof", "dimensiune", "tipuri date", "c++"]
+  }
+]

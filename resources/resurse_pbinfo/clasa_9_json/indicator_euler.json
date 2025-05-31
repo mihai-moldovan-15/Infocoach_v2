@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție indicator Euler",
+    "content": "φ(n) (totient): numărul de numere ≤n prime cu n. Ex. n=12, numere prime cu 12: 1,5,7,11 → φ(12)=4.",
+    "tags": ["indicator euler", "φ(n)", "totient", "numere prime"]
+  },
+  {
+    "id": "2",
+    "title": "Formula bazată pe factori primi",
+    "content": "n=p1^k1*p2^k2*...*pr^kr → φ(n)=(p1^k1-p1^(k1-1))*(p2^k2-p2^(k2-1))*... sau φ(n)=n*(1-1/p1)*(1-1/p2)*.... Ex. 12=2^2*3^1 → φ(12)=(4-2)*(3-1)=4.",
+    "tags": ["indicator euler", "formulă", "factori primi", "calcul"]
+  },
+  {
+    "id": "3",
+    "title": "Observații și teorema Euler",
+    "content": "Dacă n e prim, φ(n)=n-1. Teorema Euler: dacă a,n prime între ele, a^φ(n)≡1 (mod n).",
+    "tags": ["indicator euler", "observații", "teorema euler", "număr prim"]
+  },
+  {
+    "id": "4",
+    "title": "Calcul φ(n) pentru un n",
+    "content": "Funcție: int phi(int n) { int r=n,d=2; while(d*d<=n) { if(n%d==0) { while(n%d==0) n/=d; r=r/d*(d-1); } d++; } if(n>1) r=r/n*(n-1); return r; } Complexitate: O(sqrt(n)).",
+    "tags": ["indicator euler", "calcul", "funcție", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Calcul φ pentru toate numerele ≤n",
+    "content": "Algoritm similar Ciur Eratostene. Cod: int F[DIM+1]; for(int i=1;i<=DIM;i++) F[i]=i; for(int i=2;i<=DIM;i++) if(F[i]==i) { F[i]--; for(int j=2;j*i<=DIM;j++) F[j*i]=F[j*i]/i*(i-1); } Ex. F[12]=4.",
+    "tags": ["indicator euler", "ciur", "toate numerele", "c++"]
+  }
+]

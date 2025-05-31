@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție structuri repetitive",
+    "content": "Structurile repetitive (bucle) execută instrucțiuni de mai multe ori.",
+    "tags": ["repetitive", "bucle", "cicluri", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Tipuri cunoscute",
+    "content": "Cu pași cunoscuți (for) sau necunoscuți (while, do...while).",
+    "tags": ["tipuri", "for", "while", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Instrucțiune while",
+    "content": "while(Expresie) Instructiune. Ex. while(i<=n) {S+=i; i++;}",
+    "tags": ["while", "test inițial", "c++", "exemplu"]
+  },
+  {
+    "id": "4",
+    "title": "Instrucțiune do...while",
+    "content": "do Instructiune while(Expresie); Ex. do {S+=i; i++;} while(i<=n);",
+    "tags": ["do while", "test final", "c++", "exemplu"]
+  },
+  {
+    "id": "5",
+    "title": "Instrucțiune for",
+    "content": "for(ini;test;cont) Instructiune. Ex. for(int i=1;i<=n;i++) S+=i;",
+    "tags": ["for", "iterație", "c++", "exemplu"]
+  },
+  {
+    "id": "6",
+    "title": "Instrucțiune break",
+    "content": "Întrerupe bucla. Ex. for(int i=1;i<=n;i++) {if(i==5) break; S+=i;}",
+    "tags": ["break", "întrerupere", "c++", "exemplu"]
+  },
+  {
+    "id": "7",
+    "title": "Instrucțiune continue",
+    "content": "Ignoră restul corpului, reia bucla. Ex. for(int i=1;i<=n;i++) if(i%2==0) continue;",
+    "tags": ["continue", "ignora", "c++", "exemplu"]
+  }
+]

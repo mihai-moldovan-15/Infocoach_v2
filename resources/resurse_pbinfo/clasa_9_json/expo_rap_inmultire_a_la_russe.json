@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "title": "Înmulțire a la russe",
+    "content": "Algoritm: R=0; cât timp a>0, dacă a impar R+=b, a=[a/2], b*=2. Ex. a=18, b=12 → R=216 (18*12). Bazat pe scrierea în baza 2 a lui a.",
+    "tags": ["înmulțire", "a la russe", "baza 2", "algoritm"]
+  },
+  {
+    "id": "2",
+    "title": "Explicație înmulțire a la russe",
+    "content": "18=2^4+2^1 → 18*12=0*2^0*12+1*2^1*12+0*2^2*12+0*2^3*12+1*2^4*12=24+192=216. Adună b dublat când a e impar.",
+    "tags": ["înmulțire", "a la russe", "explicație", "baza 2"]
+  },
+  {
+    "id": "3",
+    "title": "Ridicarea la putere rapidă",
+    "content": "A^n, n în baza 2. Ex. 25=1+8+16 → A^25=A^1*A^8*A^16. Algoritm: P=1; cât timp n≠0, c=n%2, dacă c=1 P*=A, n=[n/2], A*=A. Complexitate: O(log n).",
+    "tags": ["ridicare putere", "rapidă", "baza 2", "algoritm"]
+  }
+]

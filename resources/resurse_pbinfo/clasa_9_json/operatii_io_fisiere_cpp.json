@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în I/O cu fișiere",
+    "content": "Operațiile I/O cu fișiere text permit citirea/scrierea în fișiere, similar cu tastatura/ecranul, folosind fluxuri de date.",
+    "tags": ["io fișiere", "citire", "scriere", "fluxuri"]
+  },
+  {
+    "id": "2",
+    "title": "Etapele lucrului cu fișiere",
+    "content": "1. Deschide fișierul (asociază cu flux). 2. Citește/scrie. 3. Închide fișierul. Fluxuri: ifstream (citire), ofstream (scriere).",
+    "tags": ["io fișiere", "etape", "fluxuri", "ifstream"]
+  },
+  {
+    "id": "3",
+    "title": "Deschiderea fișierelor",
+    "content": "Declara fluxuri: ifstream fin('fisier.in'); ofstream fout('fisier.out');. Sau: ifstream fin; fin.open('fisier.in');. Extensiile .in/.out sunt convenții.",
+    "tags": ["io fișiere", "deschidere", "ifstream", "ofstream"]
+  },
+  {
+    "id": "4",
+    "title": "Citire/scriere în fișiere",
+    "content": "Folosește >> pentru citire, << pentru scriere. Ex. int x; fin>>x; fout<<2*x;",
+    "tags": ["io fișiere", "citire", "scriere", "operatori"]
+  },
+  {
+    "id": "5",
+    "title": "Închiderea fișierelor",
+    "content": "Închide fluxurile: fin.close(); fout.close();",
+    "tags": ["io fișiere", "închidere", "fluxuri", "close"]
+  },
+  {
+    "id": "6",
+    "title": "Exemplu program I/O fișiere",
+    "content": "Cod: ifstream fin('sum.in'); ofstream fout('sum.out'); int a,b,s; fin>>a>>b; fin.close(); s=a+b; fout<<s; fout.close(); Calculează suma a+b.",
+    "tags": ["io fișiere", "exemplu", "c++", "suma"]
+  },
+  {
+    "id": "7",
+    "title": "Observații I/O fișiere",
+    "content": "Fișierul de intrare trebuie să existe, altfel citirea eșuează. Fișierul de ieșire e creat; dacă există, e înlocuit.",
+    "tags": ["io fișiere", "observații", "comportament", "eroare"]
+  }
+]

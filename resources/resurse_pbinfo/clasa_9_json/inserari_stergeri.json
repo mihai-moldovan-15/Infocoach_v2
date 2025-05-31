@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Ștergere element din vector",
+    "content": "Șterge elementul de pe poziția p. Mută elementele din dreapta spre stânga. Cod: for(int i=p;i<n-1;i++) X[i]=X[i+1]; n--; Ex. X[4]=34, p=4, n=10 → X=[..., 45, ...], n=9.",
+    "tags": ["ștergere", "vector", "mutare", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Ștergere valori pare din vector",
+    "content": "Parcurge invers, șterge dacă par. Cod: for(int p=n-1;p>=0;p--) if(X[p]%2==0) { for(int i=p;i<n-1;i++) X[i]=X[i+1]; n--; } Evită parcurgerea de la stânga (ratări).",
+    "tags": ["ștergere", "vector", "numere pare", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Adăugare element în vector",
+    "content": "Adaugă la final. Index de la 0: X[n]=val; n++; sau X[n++]=val. Index de la 1: n++; X[n]=val; sau X[++n]=val.",
+    "tags": ["adǎugare", "vector", "final", "indexare"]
+  },
+  {
+    "id": "4",
+    "title": "Inserare element în vector",
+    "content": "Inserează val pe poziția p. Mută elementele spre dreapta. Cod: for(int i=n-1;i>=p;i--) X[i+1]=X[i]; X[p]=val; n++;",
+    "tags": ["inserare", "vector", "mutare", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Inserare după elemente pare",
+    "content": "Inserează X[p]/2 după elementele pare. Parcurge invers. Cod: for(int p=n;p>=1;p--) if(a[p]%2==0) { for(int i=n;i>=p;i--) a[i+1]=a[i]; n++; a[p+1]=a[p]/2; } Evită inserări greșite.",
+    "tags": ["inserare", "vector", "numere pare", "c++"]
+  }
+]

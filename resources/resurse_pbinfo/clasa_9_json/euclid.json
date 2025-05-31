@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "title": "Definiții cmmdc",
+    "content": "Cmmdc(a,b) (gcd): d divide a și b, și orice alt divizor comun e divizor al lui d. Dacă cmmdc(a,b)=1, a și b sunt prime între ele. Notare: (a,b) sau gcd(a,b).",
+    "tags": ["cmmdc", "definiție", "prime între ele", "gcd"]
+  },
+  {
+    "id": "2",
+    "title": "Proprietăți cmmdc",
+    "content": "1. ((a,b),c)=(a,(b,c)). 2. (a,b)=1, (a,c)=1 => (a,bc)=1. 3. a|bc, (a,b)=1 => a|c. 4. a|c, b|c, (a,b)=1 => ab|c.",
+    "tags": ["cmmdc", "proprietăți", "divizibilitate", "numere naturale"]
+  },
+  {
+    "id": "3",
+    "title": "Euclid cu scăderi",
+    "content": "Cmmdc divide diferența numerelor. Algoritm: cât timp n≠m, scade minim din maxim. Cod: int n,m; cin>>n>>m; while(n!=m) if(n>m) n-=m; else m-=n; cout<<n; Ex. n=32, m=24 → 8. Nu funcționează dacă un număr e 0.",
+    "tags": ["cmmdc", "euclid scăderi", "algoritm", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Euclid cu împărțiri",
+    "content": "Cmmdc divide restul. Algoritm: cât timp m≠0, r=n%m, n=m, m=r. Cod: int n,m; cin>>n>>m; while(m!=0) { int r=n%m; n=m; m=r; } cout<<n; Ex. n=32, m=24 → 8.",
+    "tags": ["cmmdc", "euclid împărțiri", "algoritm", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Cmmdc pentru mai multe numere",
+    "content": "Calculează cmmdc iterativ: cmmdc(cmmdc(a,b),c), apoi cmmdc(anterior,d), etc.",
+    "tags": ["cmmdc", "mai multe numere", "iterativ", "calcul"]
+  },
+  {
+    "id": "6",
+    "title": "Definiție cmmmc",
+    "content": "Cmmmc(a,b) (lcm): cel mai mic număr nenul divizibil cu a și b. Notare: [a,b] sau lcm(a,b).",
+    "tags": ["cmmmc", "definiție", "lcm", "multiplu"]
+  },
+  {
+    "id": "7",
+    "title": "Cmmmc folosind cmmdc",
+    "content": "a*b=cmmdc(a,b)*cmmmc(a,b). Formula: cmmmc(a,b)=a*b/cmmdc(a,b).",
+    "tags": ["cmmmc", "cmmdc", "formulă", "calcul"]
+  },
+  {
+    "id": "8",
+    "title": "Cmmmc cu algoritm Euclid",
+    "content": "Algoritm: n=a, m=b; cât timp n≠m, dacă n<m, n+=a, dacă n>m, m+=b. Valoarea finală e cmmmc. Aplicabil și pentru ≥3 numere.",
+    "tags": ["cmmmc", "euclid", "algoritm", "calcul"]
+  },
+  {
+    "id": "9",
+    "title": "Aplicații cmmmc: Roți dințate",
+    "content": "Două roți cu n și m dinți. După câte rotații se aliniază? Răspuns: cmmmc(n,m) rotații pentru prima roată, cmmmc(n,m)/m pentru a doua.",
+    "tags": ["cmmmc", "aplicații", "roți dințate", "aliniare"]
+  },
+  {
+    "id": "10",
+    "title": "Aplicații cmmmc: Alinierea planetelor",
+    "content": "Trei planete cu rotații a, b, c ani. Timp până la aliniere: cmmmc(a,b,c) ani. Rotații: cmmmc/a, cmmmc/b, cmmmc/c.",
+    "tags": ["cmmmc", "aplicații", "aliniere planete", "rotații"]
+  }
+]

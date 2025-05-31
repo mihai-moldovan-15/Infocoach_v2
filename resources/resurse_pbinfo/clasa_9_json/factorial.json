@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție factorial",
+    "content": "n! = produsul numerelor de la 1 la n. 0!=1. Iterativ: n!=1*2*...*n. Recursiv: n!=n*(n-1)!, 0!=1. Reprezintă numărul de permutări a n elemente.",
+    "tags": ["factorial", "definiție", "permutări", "recursiv"]
+  },
+  {
+    "id": "2",
+    "title": "Creștere rapidă factorial",
+    "content": "Factorialul crește rapid: 10!=3628800, 13!=6227020800 (depășește int), 21!=51090942171709440000 (depășește long long).",
+    "tags": ["factorial", "creștere", "depășire tip", "valori"]
+  },
+  {
+    "id": "3",
+    "title": "Zerouri la finalul factorialului",
+    "content": "Zerouri la finalul n! date de exponentul lui 5: [n/5]+[n/25]+[n/125]+.... Cod: int n,p=5,s=0; cin>>n; while(p<=n) { s+=n/p; p*=5; } cout<<s; Ex. n≥5 → ultima cifră 0.",
+    "tags": ["factorial", "zerouri", "exponent 5", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Formula lui Legendre",
+    "content": "Exponentul lui p (prim) în n!: [n/p]+[n/p^2]+[n/p^3]+.... Alternativ: (n-s_p(n))/(p-1), unde s_p(n)=suma cifrelor lui n în baza p.",
+    "tags": ["factorial", "legendre", "exponent prim", "calcul"]
+  }
+]

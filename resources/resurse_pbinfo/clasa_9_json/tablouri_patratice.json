@@ -1,0 +1,80 @@
+[
+  {
+    "id": "1",
+    "title": "Definirea unei matrice pătratice",
+    "content": "O matrice pătratică are același număr de linii și coloane. Exemplu: int A[100][100]; pentru o matrice de dimensiune n x n.",
+    "tags": ["matrice", "pătratică", "definiție", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Parcurgerea elementelor de pe diagonala principală",
+    "content": "Se face cu un singur for: for (int i = 0; i < n; i++) cout << A[i][i];",
+    "tags": ["matrice", "diagonală principală", "parcurgere", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Parcurgerea elementelor de pe diagonala secundară",
+    "content": "Fie n dimensiunea matricei. Se parcurge cu: for (int i = 0; i < n; i++) cout << A[i][n-1-i];",
+    "tags": ["matrice", "diagonală secundară", "parcurgere", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Elemente strict deasupra și sub diagonala principală",
+    "content": "Deasupra: for (int i = 0; i < n-1; i++) for (int j = i+1; j < n; j++) cout << A[i][j]; Sub: for (int i = 1; i < n; i++) for (int j = 0; j < i; j++) cout << A[i][j];",
+    "tags": ["matrice", "diagonală", "sub", "deasupra", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Elemente de pe marginea matricei pătratice",
+    "content": "Linii extreme: 0 și n-1. Coloane extreme: 0 și n-1. Se verifică dacă i == 0 || i == n-1 || j == 0 || j == n-1.",
+    "tags": ["matrice", "margine", "condiție", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Zona Nord (indexare de la 1)",
+    "content": "Zona de deasupra ambelor diagonale. Condiție: i < j și i + j < n + 1.",
+    "tags": ["matrice", "zonă", "nord", "indexare 1", "c++"]
+  },
+  {
+    "id": "7",
+    "title": "Zona Sud (indexare de la 1)",
+    "content": "Zona de sub ambele diagonale. Condiție: i > j și i + j > n + 1.",
+    "tags": ["matrice", "zonă", "sud", "indexare 1", "c++"]
+  },
+  {
+    "id": "8",
+    "title": "Zona Vest (indexare de la 1)",
+    "content": "Zona din stânga ambelor diagonale. Condiție: i > j și i + j < n + 1.",
+    "tags": ["matrice", "zonă", "vest", "indexare 1", "c++"]
+  },
+  {
+    "id": "9",
+    "title": "Zona Est (indexare de la 1)",
+    "content": "Zona din dreapta ambelor diagonale. Condiție: i < j și i + j > n + 1.",
+    "tags": ["matrice", "zonă", "est", "indexare 1", "c++"]
+  },
+  {
+    "id": "10",
+    "title": "Zona Nord (indexare de la 0)",
+    "content": "Zona de deasupra ambelor diagonale. Condiție: i < j și i + j < n - 1.",
+    "tags": ["matrice", "zonă", "nord", "indexare 0", "c++"]
+  },
+  {
+    "id": "11",
+    "title": "Zona Sud (indexare de la 0)",
+    "content": "Zona de sub ambele diagonale. Condiție: i > j și i + j > n - 1.",
+    "tags": ["matrice", "zonă", "sud", "indexare 0", "c++"]
+  },
+  {
+    "id": "12",
+    "title": "Zona Vest (indexare de la 0)",
+    "content": "Zona din stânga ambelor diagonale. Condiție: i > j și i + j < n - 1.",
+    "tags": ["matrice", "zonă", "vest", "indexare 0", "c++"]
+  },
+  {
+    "id": "13",
+    "title": "Zona Est (indexare de la 0)",
+    "content": "Zona din dreapta ambelor diagonale. Condiție: i < j și i + j > n - 1.",
+    "tags": ["matrice", "zonă", "est", "indexare 0", "c++"]
+  }
+]

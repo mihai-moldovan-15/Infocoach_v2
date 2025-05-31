@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere STL sort",
+    "content": "Funcția sort din STL sortează eficient vectori/tablouri cu complexitate O(n*log n).",
+    "tags": ["stl", "sort", "algoritm", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Sortare crescătoare",
+    "content": "sort(A+s,A+d+1) sortează secvența [s,d]. Ex. sort(A,A+n) pentru [0,n-1].",
+    "tags": ["crescător", "sort", "indici", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Sortare descrescătoare",
+    "content": "sort(A+s,A+d+1,greater<int>()) sortează descrescător. Ex. pentru double: greater<double>().",
+    "tags": ["descrescător", "greater", "tipuri date", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Sortare custom",
+    "content": "bool fcmp(int x,int y){return x>y;} sort(A+1,A+n+1,fcmp) permite criterii personalizate.",
+    "tags": ["custom", "funcție comparare", "sort", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Exemplu sortare vector",
+    "content": "int A[]={3,1,4,1,5,9}; sort(A,A+6); // A devine {1,1,3,4,5,9}",
+    "tags": ["exemplu", "vector", "sortare", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Complexitate STL sort",
+    "content": "Complexitate O(n*log n), eficient pentru vectori mari.",
+    "tags": ["complexitate", "o(n*log n)", "eficiență", "c++"]
+  }
+]

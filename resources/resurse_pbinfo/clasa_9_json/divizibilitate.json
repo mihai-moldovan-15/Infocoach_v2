@@ -1,0 +1,8 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție divizibilitate",
+    "content": "n divide m dacă ∃p: n*p=m (m%n==0). n e divizor al lui m, m e multiplu al lui n.",
+    "tags": ["divizibilitate", "definiție", "divizor", "multiplu"]
+  }
+]

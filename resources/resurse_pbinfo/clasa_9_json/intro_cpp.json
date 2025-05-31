@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "title": "Istoria limbajului C++",
+    "content": "C++ a fost creat de Bjarne Stroustrup în 1979, ca extindere a limbajului C (Dennis Ritchie, 1969-1973, pentru Unix). Programele C sunt în mare parte compatibile cu C++.",
+    "tags": ["c++", "istorie", "bjarne stroustrup", "dennis ritchie"]
+  },
+  {
+    "id": "2",
+    "title": "Limbaje de programare",
+    "content": "Limbajele de programare (C++, Java, Python, etc.) sunt asemănătoare limbajului uman, cu cuvinte, semne și reguli. Programul sursă e tradus în cod mașină (compilare pentru C++, interpretare pentru Python).",
+    "tags": ["limbaje programare", "compilare", "interpretare", "cod mașină"]
+  },
+  {
+    "id": "3",
+    "title": "Etapele unui program C++",
+    "content": "1. Editare (fișier .cpp). 2. Compilare (verifică sintaxa, creează .o/.obj). 3. Editare legături (leagă fișiere obiect, creează .exe). 4. Execuție (rulează programul).",
+    "tags": ["c++", "etape", "compilare", "execuție"]
+  },
+  {
+    "id": "4",
+    "title": "Primul program C++",
+    "content": "Cod: // primul program C++ #include <iostream> int main() { std::cout<<'Hello world'; return 0; } Afișează: Hello world. Folosește Code::Blocks cu MinGW pentru editare și compilare.",
+    "tags": ["c++", "primul program", "hello world", "code blocks"]
+  },
+  {
+    "id": "5",
+    "title": "Analiza primului program",
+    "content": "// e comentariu. #include <iostream> include biblioteca pentru afișare. int main() e funcția principală. std::cout<<'Hello world'; afișează textul. ; încheie instrucțiunea. return 0; încheie programul.",
+    "tags": ["c++", "analiză", "comentarii", "main"]
+  },
+  {
+    "id": "6",
+    "title": "Afișare pe linii diferite",
+    "content": "Cod: std::cout<<'Hello world!'<<std::endl; std::cout<<'Primul program C++!'; Afișează: Hello world!\\nPrimul program C++!. endl adaugă linie nouă.",
+    "tags": ["c++", "afișare", "endl", "linie nouă"]
+  },
+  {
+    "id": "7",
+    "title": "Namespace std",
+    "content": "std conține identificatori ca cout, endl. Folosește std::cout sau adaugă using namespace std; pentru a omite std::. Cod: using namespace std; cout<<'Hello world!';",
+    "tags": ["c++", "namespace", "std", "using"]
+  },
+  {
+    "id": "8",
+    "title": "Comentarii în C++",
+    "content": "Comentarii: // pe o linie, /* */ pe mai multe linii. Nu afectează programul, ajută programatorii să înțeleagă codul.",
+    "tags": ["c++", "comentarii", "explicatii", "cod"]
+  }
+]

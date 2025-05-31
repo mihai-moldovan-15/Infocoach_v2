@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție operator condițional",
+    "content": "Operator ternar: expresie ? val1 : val2. Evaluează expresia, dacă e true returnează val1, altfel val2. Convertit implicit la bool.",
+    "tags": ["operator condițional", "ternar", "?:", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Exemplu operator condițional",
+    "content": "Ex. int x; cin>>x; cout<<(x%2==0?\"par\":\"impar\"); Afișează 'par' dacă x e par, 'impar' dacă e impar.",
+    "tags": ["exemplu", "par/impar", "c++", "?:"]
+  },
+  {
+    "id": "3",
+    "title": "Înlocuire cu if",
+    "content": "x%2==0?\"par\":\"impar\" echivalent cu: if(x%2==0) cout<<\"par\"; else cout<<\"impar\";.",
+    "tags": ["if-else", "operație condițională", "c++", "?:"]
+  },
+  {
+    "id": "4",
+    "title": "Îmbinare condițională",
+    "content": "Posibilă îmbinare: cout<<(x>0?\"pozitiv\":x==0?\"nul\":\"negativ\");. Tipurile val1 și val2 trebuie să fie compatibile.",
+    "tags": ["îmbinare", "tipuri compatibile", "c++", "?:"]
+  },
+  {
+    "id": "5",
+    "title": "Eroare frecventă",
+    "content": "Ex. (x==1?1:\"diferit\") e eroare dacă tipurile diferă (int vs string). Rezultatul trebuie să fie lvalue compatibil.",
+    "tags": ["eroare", "tipuri", "lvalue", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Atribuire cu condițional",
+    "content": "Ex. int x=1, y=2, a=10; ((a%2==0)?x:y)=5; cout<<x<<' '<<y; // 5 2. Rezultatul e lvalue.",
+    "tags": ["atribuire", "lvalue", "c++", "?:"]
+  },
+  {
+    "id": "7",
+    "title": "Prioritate scăzută",
+    "content": "Operatorul ? are prioritate scăzută. Folosiți paranteze pentru claritate (ex. (cond)?x:y).",
+    "tags": ["prioritate", "paranteze", "c++", "?:"]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în BubbleSort",
+    "content": "BubbleSort (metoda bulelor) sortează un vector comparând și interschimbând elementele învecinate dacă nu sunt în ordine, până când nu mai sunt interschimbări.",
+    "tags": ["bubblesort", "sortare", "metoda bulelor", "interschimbare"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritm BubbleSort",
+    "content": "Cod: int n,v[100]; bool sortat; do { sortat=true; for(int i=0;i<n-1;i++) if(v[i]>v[i+1]) { int aux=v[i]; v[i]=v[i+1]; v[i+1]=aux; sortat=false; } } while(!sortat);",
+    "tags": ["bubblesort", "algoritm", "c++", "parcurgere"]
+  },
+  {
+    "id": "3",
+    "title": "Optimizare BubbleSort",
+    "content": "La fiecare parcurgere, un element ajunge la poziția finală. Optimizează parcurgerea: Cod: int m=n; do { sortat=true; int p=m; for(int i=0;i<p-1;i++) if(v[i]>v[i+1]) { int aux=v[i]; v[i]=v[i+1]; v[i+1]=aux; sortat=false; m=i+1; } } while(!sortat);",
+    "tags": ["bubblesort", "optimizare", "c++", "parcurgere"]
+  }
+]

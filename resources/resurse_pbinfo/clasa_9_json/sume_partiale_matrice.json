@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere sume parțiale matrice",
+    "content": "Se determină rapid suma elementelor din submatrice folosind sume parțiale, evitând parcurgerea O(n*m). Necesită matrice auxiliară S[][].",
+    "tags": ["sume parțiale", "matrice", "optimizare", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Definiție secvență matrice",
+    "content": "Secvența e o succesiune consecutivă de elemente. Ex. submatrice (2,3) la (3,5) din matrice indexată de la 1.",
+    "tags": ["secvență", "submatrice", "indici", "matrice"]
+  },
+  {
+    "id": "3",
+    "title": "Construire sume parțiale",
+    "content": "S[i][j] = suma submatricei (1,1) la (i,j). S[0][j] = S[i][0] = 0. Formula: S[i][j] = S[i-1][j] + S[i][j-1] - S[i-1][j-1] + A[i][j].",
+    "tags": ["sume parțiale", "construire", "formulă", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Calcul sumă submatrice",
+    "content": "Suma (is,js) la (ij,jj) = S[ij][jj] - S[is-1][jj] - S[ij][js-1] + S[is-1][js-1]. Complexitate constantă.",
+    "tags": ["sumă submatrice", "formulă", "complexitate O(1)", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Implementare C++",
+    "content": "int n,m,A[1001][1001],S[1001][1001]; for(int i=0;i<=n;i++) S[i][0]=0; for(int j=0;j<=m;j++) S[0][j]=0; for(int i=1;i<=n;i++) for(int j=1;j<=m;j++) S[i][j]=S[i-1][j]+S[i][j-1]-S[i-1][j-1]+A[i][j]; int is,js,ij,jj; cout<<S[ij][jj]-S[is-1][jj]-S[ij][js-1]+S[is-1][js-1];",
+    "tags": ["implementare", "c++", "sume parțiale", "matrice"]
+  },
+  {
+    "id": "6",
+    "title": "Overflow considerații",
+    "content": "Suma poate depăși limita int, provocând overflow. Folosiți long long int pentru S[][].",
+    "tags": ["overflow", "tipuri date", "long long int", "c++"]
+  }
+]

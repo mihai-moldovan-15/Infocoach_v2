@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Ce este un vector de frecvență",
+    "content": "Vectorul de frecvență numără câte apariții are fiecare valoare într-un vector de date. Exemplu: pentru valori între 0 și 100, declarăm int fr[101];",
+    "tags": ["vector", "frecvență", "numărare", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Inițializarea vectorului de frecvență",
+    "content": "Înainte de utilizare, vectorul de frecvență trebuie inițializat cu 0: for (int i = 0; i <= 100; i++) fr[i] = 0;",
+    "tags": ["vector", "inițializare", "frecvență", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Construirea vectorului de frecvență",
+    "content": "Se parcurge vectorul de date și se incrementează frecvențele: for (int i = 0; i < n; i++) fr[x[i]]++;",
+    "tags": ["vector", "frecvență", "parcurgere", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Verificarea prezenței unei valori",
+    "content": "Dacă fr[v] > 0 înseamnă că valoarea v apare în vector.",
+    "tags": ["vector", "frecvență", "verificare", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Afișarea valorilor distincte",
+    "content": "Se parcurge vectorul de frecvență: for (int i = 0; i <= 100; i++) if (fr[i] > 0) cout << i;",
+    "tags": ["vector", "frecvență", "distincte", "afișare", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Numărul valorilor distincte",
+    "content": "Se numără câte poziții au frecvența > 0. Exemplu: int cnt = 0; for (int i = 0; i <= 100; i++) if (fr[i] > 0) cnt++;",
+    "tags": ["vector", "frecvență", "număr", "distincte", "c++"]
+  }
+]

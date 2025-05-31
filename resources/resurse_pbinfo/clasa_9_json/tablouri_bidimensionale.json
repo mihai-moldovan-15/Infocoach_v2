@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție tablouri bidimensionale",
+    "content": "Matrice cu elemente organizate pe linii și coloane, indexate cu doi indici.",
+    "tags": ["matrice", "bidimensional", "indici", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Declarare matrice",
+    "content": "tip A[NumarLinii][NumarColoane]. Ex. int A[5][10];",
+    "tags": ["declarare", "dimensiuni", "sintaxă", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Memorie ocupată",
+    "content": "Ex. int A[1000][1000] ocupă 4MB (4B/element * 1000000).",
+    "tags": ["memorie", "dimensiune", "calcul", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Parcurgere matrice",
+    "content": "Pe linii: for(int i=1;i<=n;i++) for(int j=1;j<=m;j++) //A[i][j]. Pe coloane: invers.",
+    "tags": ["parcurgere", "linii", "coloane", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Indexare",
+    "content": "Implicit de la 0. Pentru 1, declarați A[101][101], n,m curente.",
+    "tags": ["indexare", "0-1", "dimensiuni", "c++"]
+  }
+]

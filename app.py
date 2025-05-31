@@ -40,7 +40,7 @@ def load_user(user_id):
 
 # === Already created vector-stores (replace with actual IDs obtained at upload) ===
 vector_stores = {
-    "9": client.vector_stores.retrieve("vs_68336c8213308191949fbb3b53d20e67"),
+    "9": client.vector_stores.retrieve("vs_683acc055d98819186a2cd0fbf7c6ed4"),
     "10": client.vector_stores.retrieve("vs_68336c5facbc8191becf60fe5b02fa8e"),
     "11-12": client.vector_stores.retrieve("vs_68336c5f54748191bc3a4e9e632103a4")
 }

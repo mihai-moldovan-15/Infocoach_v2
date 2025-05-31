@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în bazele de numerație",
+    "content": "Există 10 categorii de oameni: cei care înțeleg binarul și cei care nu! Bazele de numerație folosesc cifre de la 0 la b-1. Ex. baza 10: 0-9; baza 2: 0-1; baza 8: 0-7; baza 16: 0-9, A-F (A=10, F=15). Ex. 112(16) are cifrele 1, 1, 2; B2(16) are 11, 2.",
+    "tags": ["bazele de numerație", "sistem binar", "hexazecimal", "cifre"]
+  },
+  {
+    "id": "2",
+    "title": "Transformarea din baza 10 în baza b",
+    "content": "Împărțim n la b succesiv, obținem resturile, le scriem invers. Ex. 24(10) → 11000(2). Cod: int cmax=0; cin>>n>>b; while(n) { int cif=n%b; if(cif>cmax) cmax=cif; n/=b; } // cea mai mare cifră.",
+    "tags": ["bazele de numerație", "transformare", "baza 10", "baza b"]
+  },
+  {
+    "id": "3",
+    "title": "Transformarea din baza b în baza 10",
+    "content": "Folosim formula: c_k*b^k + ... + c_0*b^0. Ex. 11000(8) = 1*8^4 + 1*8^3 = 24(10). Cod: cin>>b; int rez=0, x; for(int i=1; i<=n; i++) { cin>>x; rez=rez*b+x; } cout<<rez;",
+    "tags": ["bazele de numerație", "transformare", "baza b", "baza 10"]
+  },
+  {
+    "id": "4",
+    "title": "Transformarea din baza b în baza d",
+    "content": "Transformăm din baza b în 10, apoi din 10 în d. Ex. x(b) → y(10) → z(d).",
+    "tags": ["bazele de numerație", "transformare", "baza b", "baza d"]
+  },
+  {
+    "id": "5",
+    "title": "Transformări între baze puteri ale lui 2",
+    "content": "Baza 2 ↔ 16 (2^4): din 2 în 16, grupăm câte 4 biți; din 16 în 2, transformăm fiecare cifră. Ex. 2018(10) = 1111100010(2) = 7E2(16). Din 7E2(16) → 11111000010(2).",
+    "tags": ["bazele de numerație", "transformare", "puteri ale lui 2", "baza 2", "baza 16"]
+  }
+]

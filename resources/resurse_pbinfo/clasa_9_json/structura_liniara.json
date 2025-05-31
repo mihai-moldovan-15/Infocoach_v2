@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție structură liniară",
+    "content": "Structura liniară execută instrucțiuni identic la fiecare rulare, indiferent de valori variabile.",
+    "tags": ["structură liniară", "execuție", "instrucțiuni", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Instrucțiune expresie",
+    "content": "Expresia urmată de ; devine instrucțiune. Ex. x=2; x++; cout<<x;",
+    "tags": ["instrucțiune expresie", "sintaxă", "c++", "exemplu"]
+  },
+  {
+    "id": "3",
+    "title": "Instrucțiune declarativă",
+    "content": "Declară identificatori. Ex. int x,y,z; double a;",
+    "tags": ["declarativă", "tipuri date", "identificatori", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Instrucțiune compusă",
+    "content": "Bloc între {} echivalent cu o instrucțiune. Ex. {int x=7; cout<<x;}",
+    "tags": ["compusă", "bloc", "vizibilitate", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Instrucțiune return",
+    "content": "Ieșire din funcție. Ex. return; sau return expresie;",
+    "tags": ["return", "funcție", "sintaxă", "c++"]
+  },
+  {
+    "id": "6",
+    "title": "Instrucțiune vidă",
+    "content": "Fără acțiune, marcată cu ;. Folosită când sintaxa cere instrucțiune.",
+    "tags": ["vidă", "sintaxă", "utilizare", "c++"]
+  }
+]

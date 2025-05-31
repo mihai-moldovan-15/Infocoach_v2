@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție numere prime",
+    "content": "Un număr natural p>1 e prim dacă p|ab implică p|a sau p|b. E indecompozabil dacă are doar divizorii 1 și p. Un p>1 e prim dacă și numai dacă e indecompozabil.",
+    "tags": ["numere prime", "definiție", "indecompozabil", "divizori"]
+  },
+  {
+    "id": "2",
+    "title": "Observații despre numere prime",
+    "content": "Divizorii unui număr prim sunt 1 și el însuși. 0 și 1 nu sunt prime. Numerele >1 care nu sunt prime sunt compuse (decompozabile).",
+    "tags": ["numere prime", "observații", "compuse", "divizori"]
+  },
+  {
+    "id": "3",
+    "title": "Verificare primalitate",
+    "content": "Metode: 1. Numără divizorii (2 → prim). 2. Suma divizorilor = p+1 → prim. 3. Caută divizori ≠1, ≠p; dacă nu există, e prim. Algoritm: presupune prim, verifică n<2, caută divizori în [2, sqrt(n)].",
+    "tags": ["primalitate", "verificare", "algoritm", "divizori"]
+  },
+  {
+    "id": "4",
+    "title": "Program verificare primalitate",
+    "content": "Cod: int n; cin>>n; bool prim=true; if(n<2) prim=false; for(int d=2;d*d<=n;d++) if(n%d==0) prim=false; if(prim) cout<<n<<' este prim'; else cout<<n<<' nu este prim';",
+    "tags": ["primalitate", "program", "c++", "sqrt"]
+  }
+]

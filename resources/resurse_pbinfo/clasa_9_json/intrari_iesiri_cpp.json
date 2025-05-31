@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în operațiunile de intrare/ieșire",
+    "content": "Operațiunile de intrare/ieșire permit programului să citească date (intrare) sau să afișeze rezultate (ieșire). Datele sunt șiruri de caractere. C++ folosește stream-uri (fluxuri) pentru a gestiona aceste operațiuni.",
+    "tags": ["intrare", "ieșire", "stream", "flux"]
+  },
+  {
+    "id": "2",
+    "title": "Stream-uri standard în C++",
+    "content": "Stream-uri pentru consolă: cin (intrare, tastatură), cout (ieșire, ecran), cerr (ieșire erori), clog (ieșire evenimente). De obicei, cerr și clog afișează pe ecran ca și cout, dar pot fi redirectate.",
+    "tags": ["stream", "cin", "cout", "cerr", "clog"]
+  },
+  {
+    "id": "3",
+    "title": "Stream-ul de ieșire cout",
+    "content": "cout afișează pe ecran folosind operatorul <<. Ex. cout<<'Salut'; // afișează Salut. cout<<17; // afișează 17. cout<<n; // afișează valoarea variabilei n. Textul între ghilimele se afișează ca atare, fără ghilimele afișează valoarea variabilei.",
+    "tags": ["cout", "ieșire", "operator <<", "afișare"]
+  },
+  {
+    "id": "4",
+    "title": "Afișare multiplă cu cout",
+    "content": "Se pot afișa mai multe valori: cout<<'Ana '<<'are '<<nr_mere<<' mere.'; // Ana are 17 mere. Fără spații implicite sau sfârșit de linie. Adaugă spațiu explicit: cout<<'o '; sau folosește endl sau \\n pentru linie nouă: cout<<'o'<<endl;",
+    "tags": ["cout", "afișare multiplă", "endl", "linie nouă"]
+  },
+  {
+    "id": "5",
+    "title": "Stream-ul de intrare cin",
+    "content": "cin citește de la tastatură folosind operatorul >>. Ex. int n; cin>>n; Așteaptă introducerea unei valori și Enter. Dacă tipul nu corespunde (ex. 'salut' pentru int), din C++11 variabila devine 0 și se setează failbit.",
+    "tags": ["cin", "intrare", "operator >>", "citire"]
+  },
+  {
+    "id": "6",
+    "title": "Citire multiplă cu cin",
+    "content": "Se pot citi mai multe valori: cin>>x>>y; echivalent cu cin>>x; cin>>y;. Valorile pot fi separate de spații, tab-uri sau linii noi.",
+    "tags": ["cin", "citire multiplă", "valori", "separatori"]
+  },
+  {
+    "id": "7",
+    "title": "Exemplu program cu cin și cout",
+    "content": "Cod: int n=7; cout<<'n = '; cin>>n; cout<<'n este '<<n<<endl; cout<<'patratul lui n este '<<n*n<<endl; Ex. introdus 25 → n=25, n este 25, patratul lui n este 625. Introdus 'salut' → n=0, patratul 0.",
+    "tags": ["cin", "cout", "exemplu", "c++"]
+  },
+  {
+    "id": "8",
+    "title": "Erori frecvente cu cin și cout",
+    "content": "Nu inversa operatorii: cout>>'Salut'; // greșit, cin<<n; // greșit, cin>>'Salut'; // greșit (constante nu se citesc).",
+    "tags": ["cin", "cout", "erori", "operatori"]
+  }
+]

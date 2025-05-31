@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Valori de adevăr",
+    "content": "Operațiile logice lucrează cu valori TRUE/FALSE. Ex. 'Sibiu este în România' → ADEVĂRAT, '10%3==0' → FALS, 'x>3' → depinde de x.",
+    "tags": ["operatii logice", "valori adevar", "propozitii", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Negarea logică",
+    "content": "Negarea (!) inversează valoarea: !TRUE=FALS, !FALSE=TRUE. În C++: !0=1, !(nenul)=0. Ex. cout<<!(x==10); // 0, cout<<!(x<5); // 1.",
+    "tags": ["negare", "operator !", "c++", "logică"]
+  },
+  {
+    "id": "3",
+    "title": "Conjuncția logică",
+    "content": "Conjuncția (&&) e ADEVĂRAT doar dacă ambele propoziții sunt ADEVĂRATE. Ex. (1<2&&2==1+1) → 1, (1<2&&2!=1+1) → 0.",
+    "tags": ["conjuncție", "operator &&", "c++", "logică"]
+  },
+  {
+    "id": "4",
+    "title": "Disjuncția logică",
+    "content": "Disjuncția (||) e ADEVĂRAT dacă cel puțin o propoziție e ADEVĂRATĂ. Ex. (1<2||2==1+1) → 1, (1==2||2!=1+1) → 0.",
+    "tags": ["disjuncție", "operator ||", "c++", "logică"]
+  },
+  {
+    "id": "5",
+    "title": "Legile lui De Morgan",
+    "content": "!(p&&q) ↔ !p||!q, !(p||q) ↔ !p&&q. Ex. n are 2 cifre: n>=10&&n<100. Negat: n<10||n>=100 (nu are 2 cifre).",
+    "tags": ["de morgan", "negare", "logică", "condiții"]
+  }
+]

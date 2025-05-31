@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în numere mari",
+    "content": "Numerele mari stochează valori cu multe cifre, folosind un vector. Ex. 15207: v[0]=5 (lungime), v[1]=7, v[2]=0, v[3]=2, v[4]=5, v[5]=1. Zerourile nesemnificative sunt ignorate. Definim: typedef int NrMare[1010];",
+    "tags": ["numere mari", "structuri de date", "vector", "memorare"]
+  },
+  {
+    "id": "2",
+    "title": "Inițializarea numerelor mari",
+    "content": "Inițializare cu AtribMic(x, n) pentru int n sau AtribMare(Dest, Sursa) pentru numere mari. Ex. AtribMic(x, 5) → x[0]=1, x[1]=5. Cod: void AtribMic(NrMare x, int n) { x[0]=0; if(n==0) x[(x[0]=1)]=0; else for(;n;n/=10) x[++x[0]]=n%10; } void AtribMare(NrMare Dest, NrMare Sursa) { int i; for(i=0;i<=Sursa[0];i++) Dest[i]=Sursa[i]; }",
+    "tags": ["numere mari", "inițializare", "atribuire"]
+  },
+  {
+    "id": "3",
+    "title": "Compararea numerelor mari",
+    "content": "Compara(x, y) returnează 0 (egal), -1 (x<y), 1 (x>y) bazat pe lungime și cifre. Cod: int Compara(NrMare x, NrMare y) { while(x[0]>1 && x[x[0]]==0) x[0]--; while(y[0]>1 && y[y[0]]==0) y[0]--; if(x[0]!=y[0]) return (x[0]<y[0]?-1:1); int i=x[0]; while(x[i]==y[i] && i>0) i--; if(i==0) return 0; return (x[i]<y[i]?-1:1); }",
+    "tags": ["numere mari", "comparare", "verificare"]
+  },
+  {
+    "id": "4",
+    "title": "Adunarea numerelor mari",
+    "content": "Adunare(x, y) adaugă y la x, ca pe hârtie, cu transport. Ex. x=123, y=456 → x=579. Cod: void Adunare(NrMare x, NrMare y) { int i,t=0; if(x[0]<y[0]) x[0]=y[0]; for(i=1;i<=x[0];i++,t/=10) { t=x[i]+y[i]+t; x[i]=t%10; } if(t) x[++x[0]]=t; }",
+    "tags": ["numere mari", "adunare", "operații aritmetice"]
+  },
+  {
+    "id": "5",
+    "title": "Scăderea numerelor mari",
+    "content": "Scadere(x, y) scade y din x (x≥y), cu împrumut. Ex. x=579, y=456 → x=123. Cod: void Scadere(NrMare x, NrMare y) { int i,j,t=0; for(i=1;i<=x[0];i++) if(x[i]>=y[i]) x[i]-=y[i]; else { j=i+1; while(x[j]==0) x[j++]=9; x[j]--; x[i]=10+x[i]-y[i]; } for(;x[0]>1 && !x[x[0]];x[0]--); }",
+    "tags": ["numere mari", "scădere", "operații aritmetice"]
+  },
+  {
+    "id": "6",
+    "title": "Înmulțirea cu un număr mic",
+    "content": "ProdusMic(x, n) înmulțește x cu int n. Ex. x=123, n=2 → x=246. Cod: void ProdusMic(NrMare x, int n) { int i,t=0; for(i=1;i<=x[0];i++,t/=10) { t+=x[i]*n; x[i]=t%10; } for(;t;t/=10) x[++x[0]]=t%10; }",
+    "tags": ["numere mari", "înmulțire", "număr mic", "operații aritmetice"]
+  },
+  {
+    "id": "7",
+    "title": "Înmulțirea numerelor mari",
+    "content": "ProdusMare(x, y) înmulțește x cu y, ca pe hârtie, cu vector auxiliar. Ex. x=312, y=87 → x=27144. Cod: void ProdusMare(NrMare x, NrMare y) { int i,j,t=0; NrMare z; z[0]=x[0]+y[0]-1; for(i=1;i<=x[0]+y[0];i++) z[i]=0; for(i=1;i<=x[0];i++) for(j=1;j<=y[0];j++) z[i+j-1]+=x[i]*y[j]; for(i=1;i<=z[0];i++) { t+=z[i]; z[i]=t%10; t/=10; } if(t) z[++z[0]]=t; for(i=0;i<=z[0];i++) x[i]=z[i]; }",
+    "tags": ["numere mari", "înmulțire", "operații aritmetice"]
+  },
+  {
+    "id": "8",
+    "title": "Împărțirea la un număr mic",
+    "content": "Divide(x, n) împarte x la int n, returnează restul, transformă x în cât. Ex. x=10, n=3 → x=3, rest=1. Cod: int Divide(NrMare x, int n) { int i,r=0; for(i=x[0];i>0;i--) { r=10*r+x[i]; x[i]=r/n; r%=n; } for(;x[x[0]]==0 && x[0]>1;) x[0]--; return r; }",
+    "tags": ["numere mari", "împărțire", "număr mic", "operații aritmetice"]
+  },
+  {
+    "id": "9",
+    "title": "Folosirea altor baze de numerație",
+    "content": "Numerele mari pot folosi baze mari (ex. 10^6) pentru eficiență. Ex. 123456789012 → 123456 789012. Atenție: evita overflow la operații.",
+    "tags": ["numere mari", "bazele de numerație", "optimizare", "overflow"]
+  }
+]

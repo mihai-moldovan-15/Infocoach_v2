@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în funcții predefinite",
+    "content": "Funcțiile prelucrează parametri și returnează un rezultat. Ex. cout<<sqrt(5);. Prototip: nume, nr parametri, tip parametri, tip rezultat. Ex. double sqrt(double);.",
+    "tags": ["funcții predefinite", "prototip", "cmath", "iostream"]
+  },
+  {
+    "id": "2",
+    "title": "Funcții matematice",
+    "content": "Header cmath: abs(double x), fabs(double x) → val absolută; sqrt(double x) → rădăcină pătrată; pow(double x, double y) → x^y; sin/cos/tan(double x); floor(double x) → ⌊x⌋; ceil(double x) → ⌈x⌉.",
+    "tags": ["funcții matematice", "cmath", "abs", "sqrt"]
+  },
+  {
+    "id": "3",
+    "title": "Numere pseudoaleatorii",
+    "content": "rand() → [0,RAND_MAX] (≥32767). Include <cstdlib>. Fără seed, repetă aceleași numere. srand(int s) setează seed. Ex. srand(10); cout<<rand();",
+    "tags": ["pseudoaleator", "rand", "srand", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Seed dinamic cu time",
+    "content": "Seed dinamic: srand(time(0)); (include <ctime>). Generează numere diferite la fiecare rulare. Cod: srand(time(0)); int n; n=rand(); cout<<n;",
+    "tags": ["pseudoaleator", "seed", "time", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Generare numere în interval",
+    "content": "[0,a): n=rand()%a. [a,b): n=rand()%(b-a)+a. Ex. [5,10) → n=rand()%5+5;",
+    "tags": ["pseudoaleator", "interval", "generare", "rand"]
+  }
+]

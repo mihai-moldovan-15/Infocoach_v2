@@ -1,0 +1,50 @@
+[
+    {
+      "id": "1",
+      "title": "Înmulțirea și împărțirea cu puteri ale lui 2",
+      "content": "Operații eficiente cu deplasări pe biți: a * 2^k = a << k, a / 2^k = a >> k. Exemplu: int a = 5; int rezultat = a << 2; // 5 * 4 = 20. Atenție: overflow posibil dacă depășește tipul de date.",
+      "tags": ["operații pe biți", "optimizare", "înmulțire", "împărțire"]
+    },
+    {
+      "id": "2",
+      "title": "Verificarea parității unui număr",
+      "content": "Paritate verificată cu ultimul bit: n & 1 = 0 (par), 1 (impar). Exemplu: if (n & 1) cout << \"Impar\"; else cout << \"Par\";",
+      "tags": ["operații pe biți", "paritate", "verificare"]
+    },
+    {
+      "id": "3",
+      "title": "Test dacă un număr este putere a lui 2",
+      "content": "n este putere a lui 2 dacă are un singur bit 1: (n > 0) && ((n & (n - 1)) == 0). Exemplu: n = 4, 4 & 3 = 0.",
+      "tags": ["operații pe biți", "putere a lui 2", "test"]
+    },
+    {
+      "id": "4",
+      "title": "Cea mai mare putere a lui 2 care divide un număr",
+      "content": "Extrage cea mai mare putere a lui 2 cu n & -n (cel mai mic bit 1). Exemplu: n = 12, 12 & -12 = 4.",
+      "tags": ["operații pe biți", "împărțire", "putere a lui 2"]
+    },
+    {
+      "id": "5",
+      "title": "Setarea unui bit",
+      "content": "Setează bitul k la 1: n = n | (1 << k). Exemplu: n = 5 (101), k = 1, n | (1 << 1) = 7 (111).",
+      "tags": ["operații pe biți", "setare bit"]
+    },
+    {
+      "id": "6",
+      "title": "Resetarea unui bit",
+      "content": "Resetează bitul k la 0: n = n & ~(1 << k). Exemplu: n = 7 (111), k = 1, n & ~(1 << 1) = 5 (101).",
+      "tags": ["operații pe biți", "resetare bit"]
+    },
+    {
+      "id": "7",
+      "title": "Citirea valorii unui bit",
+      "content": "Metode: (n >> k) & 1 extrage bitul k; n & (1 << k) verifică bitul k. Exemplu: n = 5 (101), k = 2, (n >> 2) & 1 = 1.",
+      "tags": ["operații pe biți", "citire bit"]
+    },
+    {
+      "id": "8",
+      "title": "Disjuncția exclusivă (XOR) și aplicații",
+      "content": "Proprietăți: n ^ n = 0, a ^ b ^ b = a. Aplicații: criptare (c = n ^ k), interschimbare (a = a ^ b; b = a ^ b; a = a ^ b), element impar (s = 0; for(i=1; i<=n; i++) s ^= x[i]).",
+      "tags": ["operații pe biți", "xor", "criptare", "interschimbare", "număr impar"]
+    }
+]

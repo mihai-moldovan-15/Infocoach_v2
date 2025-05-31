@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "title": "Șmenul lui Mars în vector",
+    "content": "Vector A[n], operații Adună(s,d,X): crește A[s..d] cu X. Folosește B[n+1]: A[i]=B[1]+...+B[i]. Adună(s,d,X): B[s]+=X; B[d+1]-=X. Refacere: A[1]=B[1]; for(int i=2;i<=n;i++) A[i]=A[i-1]+B[i];",
+    "tags": ["șmenul lui mars", "vector", "suma parțială", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Șmenul lui Mars în matrice",
+    "content": "Matrice A[n][m], crește submatrice (i1,j1)-(i2,j2) cu X. Folosește M[n+1][m+1]: M[i1][j1]+=x; M[i1][j2+1]-=x; M[i2+1][j1]-=x; M[i2+1][j2+1]+=x. Refacere: for(int i=1;i<=n;i++) for(int j=1;j<=m;j++) A[i][j]=M[i][j]+A[i-1][j]+A[i][j-1]-A[i-1][j-1];",
+    "tags": ["șmenul lui mars", "matrice", "suma parțială", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Observații șmenul lui Mars",
+    "content": "M[n+1][m+1] are o linie și o coloană în plus. Operațiile au complexitate constantă.",
+    "tags": ["șmenul lui mars", "observații", "complexitate", "matrice"]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în descompunerea în factori primi",
+    "content": "Teorema: n = p1^e1 * p2^e2 * ... * pk^ek (p prime, e>0). Ex. 140 = 2^2 * 5^1 * 7^1.",
+    "tags": ["factori primi", "teorema aritmetică", "descompunere", "numere prime"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritm descompunere",
+    "content": "Parcurge divizori de la 2 la n, calculează puteri. Cod: int n; cin>>n; int d=2,p; while(n>1) { if(n%d==0) { p=0; while(n%d==0) { p++; n/=d; } cout<<d<<' '<<p; } d++; if(n>1&&d*d>n) d=n; }",
+    "tags": ["factori primi", "algoritm", "puteri", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Număr de divizori",
+    "content": "Formula: (e1+1)*(e2+1)*...*(ek+1). Ex. 12=2^2*3^1 → (2+1)*(1+1)=6 divizori.",
+    "tags": ["factori primi", "număr divizori", "formulă", "calcul"]
+  },
+  {
+    "id": "4",
+    "title": "Sumă divizori",
+    "content": "Formula: (p1^(e1+1)-1)/(p1-1)*...*(pk^(ek+1)-1)/(pk-1). Ex. 12=2^2*3^1 → (8-1)/1*(9-1)/2=28.",
+    "tags": ["factori primi", "sumă divizori", "formulă", "calcul"]
+  },
+  {
+    "id": "5",
+    "title": "Indicatorul lui Euler",
+    "content": "φ(n)=(p1-1)*p1^(e1-1)*...*(pk-1)*pk^(ek-1). Ex. 12=2^2*3^1 → (2-1)*2^(2-1)*(3-1)*3^0=4.",
+    "tags": ["factori primi", "indicator euler", "φ(n)", "calcul"]
+  }
+]

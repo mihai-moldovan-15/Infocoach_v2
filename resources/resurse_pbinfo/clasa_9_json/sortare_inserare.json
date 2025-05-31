@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere sortare prin inserție",
+    "content": "Sortare prin inserție ordonează un vector inserând elemente succesive într-o secvență sortată din stânga.",
+    "tags": ["sortare", "inserție", "algoritm", "c++"]
+  },
+  {
+    "id": "2",
+    "title": "Idee principală",
+    "content": "Dacă [0,i-1] e sortat, inserează X[i] să mențină [0,i] sortat. Iterăm până la n-1.",
+    "tags": ["inserție", "secvență sortată", "iterație", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Implementare C++ (varianta 1)",
+    "content": "int n,X[100]; for(int i=1;i<n;i++) { int x=X[i],p=i-1; while(p>=0&&X[p]>x) X[p+1]=X[p],p--; X[p+1]=x; }",
+    "tags": ["implementare", "c++", "inserție", "algoritm"]
+  },
+  {
+    "id": "4",
+    "title": "Implementare C++ (varianta 2)",
+    "content": "int n,X[100]; for(int i=1;i<n;i++) { int p=i; while(p>0&&X[p]<X[p-1]) { int aux=X[p]; X[p]=X[p-1]; X[p-1]=aux; p--; } }",
+    "tags": ["implementare", "c++", "interschimbare", "algoritm"]
+  },
+  {
+    "id": "5",
+    "title": "Complexitate",
+    "content": "Complexitate O(n^2), eficient pentru vectori mici.",
+    "tags": ["complexitate", "o(n^2)", "eficiență", "c++"]
+  }
+]

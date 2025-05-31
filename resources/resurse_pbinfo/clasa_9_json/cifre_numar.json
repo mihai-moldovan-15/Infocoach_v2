@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în determinarea cifrelor",
+    "content": "Cifrele unui număr (ex. 274) se determină cu %10 (ultima cifră) și /10 (trunchiere). Ex. 274%10=4, 274/10=27.",
+    "tags": ["cifre număr", "determinare", "trunchiere", "aritmetică"]
+  },
+  {
+    "id": "2",
+    "title": "Algoritm determinare cifre",
+    "content": "Parcurge cu while(n!=0): uc=n%10, afișează uc, n/=10. Cod: int n; cin>>n; while(n!=0) { int uc=n%10; cout<<uc<<' '; n/=10; } Ex. 274 → 4 7 2.",
+    "tags": ["cifre număr", "algoritm", "trunchiere", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Construirea unui număr",
+    "content": "Adaugă cifre la sfârșit: R=10*R+c. Ex. 2,8,5,3 → 2853. La început: R+=p*c, p*=10. Ex. → 3582.",
+    "tags": ["cifre număr", "construire", "sfârșit", "început"]
+  },
+  {
+    "id": "4",
+    "title": "Oglinditul unui număr",
+    "content": "Inversează cifrele. Cod: int n; cin>>n; int ogl=0; while(n) { ogl=10*ogl+n%10; n/=10; } cout<<ogl; Ex. 274 → 472.",
+    "tags": ["cifre număr", "oglindit", "invers", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Modificare cifre impare",
+    "content": "Micșorează cifre impare cu 1. Cod: int n,R=0,p=1; cin>>n; while(n) { int uc=n%10; if(uc%2==0) R+=p*uc; else R+=p*(uc-1); p*=10; n/=10; } cout<<R; Ex. 275 → 264.",
+    "tags": ["cifre număr", "modificare", "impar", "c++"]
+  }
+]

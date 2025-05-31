@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Determinarea maximului a 3 valori",
+    "content": "Cod: int m,n,p; cin>>m>>n>>p; int max=m; if(n>max) max=n; if(p>max) max=p; cout<<max; Face 2 comparații, nu identifică variabila maximă.",
+    "tags": ["maxim", "comparații", "c++", "valori"]
+  },
+  {
+    "id": "2",
+    "title": "Maximul a 4 valori",
+    "content": "Cod: int max,x; cin>>x; max=x; for(int i=1;i<=3;i++) { cin>>x; if(x>max) max=x; } cout<<max; Face 3 comparații.",
+    "tags": ["maxim", "4 valori", "c++", "buclă"]
+  },
+  {
+    "id": "3",
+    "title": "Minimul a n valori",
+    "content": "Cod (prima valoare): cin>>n>>x; min=x; for(int i=1;i<n;i++) { cin>>x; if(x<min) min=x; } Sau (valoare mare): min=1<<30; for(int i=1;i<=n;i++) { cin>>x; if(x<min) min=x; }",
+    "tags": ["minim", "n valori", "c++", "inițializare"]
+  },
+  {
+    "id": "4",
+    "title": "Maximul până la 0",
+    "content": "Cod (prima valoare): cin>>x; max=x; cin>>x; while(x!=0) { if(x>max) max=x; cin>>x; } Sau (valoare mică): max=-(1<<30); while(x!=0) { if(x>max) max=x; cin>>x; }",
+    "tags": ["maxim", "până la 0", "c++", "while"]
+  },
+  {
+    "id": "5",
+    "title": "Minimul și numărul de apariții",
+    "content": "Algoritm: citește n și x, min=x, nr_min=1; pentru n-1 valori: dacă x<min, min=x, nr_min=1; dacă x==min, nr_min++.",
+    "tags": ["minim", "apariții", "algoritm", "numărare"]
+  },
+  {
+    "id": "6",
+    "title": "Cele mai mici două valori",
+    "content": "Algoritm: min1=1000000001, min2=1000000002; cât timp x!=0: dacă x<min1, min2=min1, min1=x; dacă min1<=x<min2, min2=x; citește x.",
+    "tags": ["minim", "două valori", "algoritm", "comparații"]
+  }
+]

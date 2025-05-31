@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în formatarea citirilor și afișărilor",
+    "content": "Formatarea se face cu manipulatori (iostream, fstream, iomanip). Afișare: lungime, aliniere, umplere, precizie, bază, format. Citire: bază, skipws/noskipws.",
+    "tags": ["citire", "afișare", "manipulatori", "formatare"]
+  },
+  {
+    "id": "2",
+    "title": "Formatare lungime și aliniere",
+    "content": "setw(n) setează lungimea (n caractere). Aliniere: left, right, internal. Ex. cout<<'|'<<setw(10)<<2019<<'|'; cu right: |      2019|. Cu setfill('#'): |######2019|.",
+    "tags": ["citire", "afișare", "lungime", "aliniere", "setfill"]
+  },
+  {
+    "id": "3",
+    "title": "Afișare date întregi",
+    "content": "Baze: dec (10), oct (8), hex (16). Ex. int n=2019; cout<<dec<<n; → 2019; cout<<hex<<n; → 7e3. showbase adaugă prefix (0x pentru hex).",
+    "tags": ["citire", "afișare", "bază numerație", "dec", "hex"]
+  },
+  {
+    "id": "4",
+    "title": "Afișare valori reale",
+    "content": "Precizie: setprecision(n). Formate: fixed (n zecimale), scientific (n zecimale mantisă). Ex. double pi=3.14159; cout<<fixed<<setprecision(2)<<pi; → 3.14.",
+    "tags": ["citire", "afișare", "valori reale", "precizie", "fixed"]
+  },
+  {
+    "id": "5",
+    "title": "Afișare valori bool",
+    "content": "Implicit: true=1, false=0. Cu boolalpha: true='true', false='false'. Ex. cout<<boolalpha<<true; → true; cout<<noboolalpha<<true; → 1.",
+    "tags": ["citire", "afișare", "bool", "boolalpha", "noboolalpha"]
+  },
+  {
+    "id": "6",
+    "title": "Formatare citire",
+    "content": "Baze: dec, oct, hex. skipws sare peste spații (implicit); noskipws citește spații. Ex. cin>>noskipws>>x; cu ' A' → x=' '.",
+    "tags": ["citire", "formatare", "skipws", "noskipws", "bază"]
+  }
+]

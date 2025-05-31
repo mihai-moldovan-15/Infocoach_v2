@@ -1,0 +1,32 @@
+  [
+    {
+      "id": "1",
+      "title": "Introducere structuri alternative",
+      "content": "Structurile alternative execută instrucțiuni condiționate (if, switch).",
+      "tags": ["structuri alternative", "decizie", "condiții", "c++"]
+    },
+    {
+      "id": "2",
+      "title": "Instrucțiune if (varianta 1)",
+      "content": "if(Expresie) Instrucțiune1 else Instrucțiune2. Ex. if(x%2==0) cout<<\"par\";",
+      "tags": ["if", "condiție", "else", "c++"]
+    },
+    {
+      "id": "3",
+      "title": "Instrucțiune if (varianta 2)",
+      "content": "if(Expresie) Instrucțiune1. Echivalent cu else vidă.",
+      "tags": ["if", "simplu", "condiție", "c++"]
+    },
+    {
+      "id": "4",
+      "title": "Instrucțiune switch",
+      "content": "switch(Expresie){case 1:Instrucțiuni;break;} Ex. switch(zi){case 1:cout<<\"Luni\";break;}",
+      "tags": ["switch", "cazuri", "break", "c++"]
+    },
+    {
+      "id": "5",
+      "title": "Eroare frecventă if",
+      "content": "Scrierea ; după if(Expresie); sau lipsa acoladelor pentru mai multe instrucțiuni.",
+      "tags": ["eroare", "if", "sintaxă", "c++"]
+    }
+  ]

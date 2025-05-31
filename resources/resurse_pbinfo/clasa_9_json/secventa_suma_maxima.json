@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "Introducere în problema secvenței cu suma maximă",
+    "content": "Se dă un tablou A cu n elemente întregi. Trebuie să determinăm o secvență (subsecvență continuă) a cărei sumă a elementelor este maximă. Dacă toate elementele sunt pozitive, secvența maximă este întreg tabloul. O secvență candidat este o secvență care ar putea fi soluția.",
+    "tags": ["secvență", "suma maximă", "tablou", "algoritm"]
+  },
+  {
+    "id": "2",
+    "title": "Soluția 1: Complexitate O(n^3)",
+    "content": "Verificăm toate secvențele posibile delimitate de indicii i și j (1 ≤ i ≤ j ≤ n). Calculăm suma fiecărei secvențe și reținem secvența cu suma maximă. Potrivită pentru n ≈ 100. Cod: int st = 0, dr = 1, Smax = -2000000000, S; for(int i = 1; i <= n; ++i) for(int j = i; j <= n; ++j) { S = 0; for(int k = i; k <= j; ++k) S += A[k]; if(S > Smax) Smax = S, st = i, dr = j; } cout << Smax << endl; cout << st << ' ' << dr;",
+    "tags": ["secvență", "suma maximă", "o(n^3)", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Soluția 2: Complexitate O(n^2) cu sume parțiale",
+    "content": "Îmbunătățim soluția anterioară folosind sume parțiale: SP[i] = suma primelor i elemente. Suma secvenței [i,j] este SP[j] - SP[i-1]. Complexitate O(n^2), potrivită pentru n ≈ 1000. Cod: SP[0] = 0; for(int i = 1; i <= n; i++) SP[i] = SP[i-1] + A[i]; int st = 0, dr = 1, Smax = -2000000000, S; for(int i = 1; i <= n; ++i) for(int j = i; j <= n; ++j) { S = SP[j] - SP[i-1]; if(S > Smax) Smax = S, st = i, dr = j; } cout << Smax << endl; cout << st << ' ' << dr;",
+    "tags": ["secvență", "suma maximă", "o(n^2)", "sume parțiale", "c++"]
+  },
+  {
+    "id": "4",
+    "title": "Soluția 3: Complexitate O(n) - Algoritmul lui Kadane",
+    "content": "Parcurgem tabloul, adunăm elementele la o sumă S și reinițializăm S la 0 dacă devine negativă (sumă negativă nu contribuie la maxim). Actualizăm suma maximă și indicii secvenței. Complexitate O(n), pentru n mare (ex. 1000000). Cod: int st, dr, Smax = -2000000000, S = -1, start; for(int i = 1; i <= n; ++i) { if(S < 0) S = 0, start = i; S += A[i]; if(S > Smax) Smax = S, st = start, dr = i; } cout << Smax << endl; cout << st << ' ' << dr;",
+    "tags": ["secvență", "suma maximă", "o(n)", "kadane", "c++"]
+  },
+  {
+    "id": "5",
+    "title": "Observații despre Algoritmul lui Kadane",
+    "content": "Algoritmul lui Kadane poate fi modificat pentru a evita folosirea tabloului, citind direct valorile, reducând complexitatea spațială la O(1). Eficient pentru valori mari ale lui n.",
+    "tags": ["secvență", "suma maximă", "kadane", "optimizare"]
+  }
+]
