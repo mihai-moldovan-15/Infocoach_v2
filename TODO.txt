@@ -16,3 +16,7 @@ pentru a formata liniile care încep cu ### ca tag-uri <h3>.
 
 modifica butonul de feedback pentru a disparea dupa ce este apasat
 caseta text pentru feedback negativ
+
+
+
+trebuie specificata clasa pentru a se putea trimite feedbackul. 

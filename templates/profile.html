@@ -19,8 +19,7 @@
     </div>
 
     <div class="profile-section">
-        <h2>Setări</h2>
-        <form method="POST" action="{{ url_for('profile') }}" class="settings-form">
+        <form method="POST" action="{{ url_for('profile') }}" class="settings-form" id="classForm">
             <div class="form-group">
                 <label for="clasa">Clasa:</label>
                 <select name="clasa" id="clasa" class="form-control">
@@ -30,11 +29,14 @@
                 </select>
             </div>
         </form>
+        <div style="text-align:center; margin-top: 2rem;">
+            <button type="submit" form="classForm" class="save-profile-btn">Salvează modificările</button>
+        </div>
     </div>
 
     <div class="profile-section">
         <h2>Schimbă parola</h2>
-        <form method="POST" action="{{ url_for('change_password') }}" class="password-form">
+        <form method="POST" action="{{ url_for('change_password') }}" class="password-form" id="passwordForm">
             <div class="form-group">
                 <label for="current_password">Parola actuală:</label>
                 <input type="password" name="current_password" id="current_password" class="form-control" required>
@@ -47,15 +49,11 @@
                 <label for="confirm_password">Confirmă parola nouă:</label>
                 <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary">Schimbă parola</button>
         </form>
     </div>
 
     <div style="text-align:center; margin-top: 2rem;">
-        <form method="POST" action="{{ url_for('profile') }}">
-            <input type="hidden" name="clasa" value="{{ current_user.clasa }}">
-            <button type="submit" class="save-profile-btn">Salvează modificările</button>
-        </form>
+        <button type="submit" form="passwordForm" class="save-profile-btn">Modifică parola</button>
     </div>
 </div>
 {% endblock %} 

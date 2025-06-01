@@ -122,43 +122,31 @@ function submitForm(event) {
 // Feedback handling
 function submitFeedback(button, feedback) {
     const messageDiv = button.closest('.message.assistant');
-    const messageContent = messageDiv.querySelector('.message-content').innerHTML;
-    const feedbackMessage = messageDiv.querySelector('#feedback-message');
-    
-    // Get the user input from the previous message
-    const userMessage = messageDiv.previousElementSibling;
-    let userInput = '';
-    if (userMessage && userMessage.classList.contains('user')) {
-        // Extract text after "Tu:" and any <br> tags
-        const content = userMessage.innerHTML;
-        const match = content.match(/<b>Tu:<\/b><br>(.*)/);
-        if (match) {
-            userInput = match[1].trim();
-        }
+    const messageContentDiv = messageDiv.querySelector('.message-content');
+    // Get AI response ONLY from data attribute
+    let messageContent = messageContentDiv.getAttribute('data-ai-response');
+    if (messageContent && messageContent.startsWith('"') && messageContent.endsWith('"')) {
+        try { messageContent = JSON.parse(messageContent); } catch (e) {}
     }
-    
-    // Get the class from the select element
-    const clasa = document.getElementById('clasa').value;
-    
+    // Get user input from hidden input
+    const userInputHidden = messageDiv.querySelector('.user-input-hidden');
+    let userInput = userInputHidden ? userInputHidden.value : '';
+    if (userInput && userInput.startsWith('"') && userInput.endsWith('"')) {
+        try { userInput = JSON.parse(userInput); } catch (e) {}
+    }
+    // Get clasa from hidden input
+    const clasaHidden = messageDiv.querySelector('.clasa-hidden');
+    let clasa = clasaHidden ? clasaHidden.value : (document.getElementById('clasa') ? document.getElementById('clasa').value : '9');
+    const feedbackMessage = messageDiv.querySelector('#feedback-message');
     // Disable feedback buttons
     const buttons = messageDiv.querySelectorAll('.feedback-btn');
     buttons.forEach(btn => btn.disabled = true);
-    
     // Prepare the data
     const formData = new URLSearchParams();
     formData.append('user_input', userInput);
     formData.append('ai_response', messageContent);
     formData.append('clasa', clasa);
     formData.append('feedback', feedback);
-    
-    // Log the data being sent
-    console.log('Sending feedback data:', {
-        userInput,
-        clasa,
-        feedback,
-        messageContentLength: messageContent.length
-    });
-    
     // Send feedback to server
     fetch('/feedback', {
         method: 'POST',
@@ -175,7 +163,6 @@ function submitFeedback(button, feedback) {
     })
     .then(data => {
         if (data.error) {
-            console.error('Server error:', data.error);
             feedbackMessage.textContent = 'Eroare la salvarea feedback-ului: ' + data.error;
             feedbackMessage.style.color = '#dc3545';
             // Re-enable buttons on error
@@ -186,10 +173,8 @@ function submitFeedback(button, feedback) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        feedbackMessage.textContent = 'Eroare la salvarea feedback-ului. Te rugăm să încerci din nou.';
+        feedbackMessage.textContent = 'Eroare la trimiterea feedback-ului: ' + error.message;
         feedbackMessage.style.color = '#dc3545';
-        // Re-enable buttons on error
         buttons.forEach(btn => btn.disabled = false);
     });
 }
@@ -202,4 +187,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // hljs.highlightAll();
 
     // Removed feedback form submission logic
-}); 
+});

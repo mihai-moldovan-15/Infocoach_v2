@@ -1,52 +1,81 @@
 <div class="message assistant">
     <b>InfoCoach:</b>
-    <div class="message-content">{{ output|safe }}</div>
+    <div class="message-content" data-ai-response="{{ output|tojson|safe }}">{{ output|safe }}</div>
+    <input type="hidden" class="user-input-hidden" value="{{ user_input|tojson|safe }}">
+    <input type="hidden" class="clasa-hidden" value="{{ clasa }}">
     <div class="feedback-form">
+        {% if not user_input %}
+          <span style="color: red;">Eroare: Nu se poate trimite feedback pentru acest răspuns.</span>
+        {% endif %}
         <span>Acest răspuns a fost util?</span>
-        <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
-        <button onclick="submitFeedback(this, 'nu')" class="feedback-btn">Nu</button>
+        <button onclick="submitFeedback(this, 'da')" class="feedback-btn" {% if not user_input %}disabled{% endif %}>Da</button>
+        <button onclick="submitFeedback(this, 'nu')" class="feedback-btn" {% if not user_input %}disabled{% endif %}>Nu</button>
         <span id="feedback-message"></span>
     </div>
 </div>
 
 <script>
-function submitFeedback(button, feedback) {
-    // Ascunde butoanele de feedback
-    button.parentElement.style.display = 'none';
-    
-    // Afișează mesajul de mulțumire
-    document.getElementById('feedback-message').textContent = 'Mulțumim pentru feedback!';
-    
-    const userInput = '{{ user_input|tojson|safe }}';
-    const aiResponse = '{{ output|tojson|safe }}';
-    const clasa = '{{ clasa }}';
-    
-    // Trimite feedback-ul
-    fetch('/feedback', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            'user_input': userInput,
-            'ai_response': aiResponse,
-            'clasa': clasa,
-            'feedback': feedback,
-            'feedback_text': ''
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            console.error('Error:', data.error);
-            alert('Eroare la salvarea feedback-ului. Te rugăm să încerci din nou.');
+    function submitFeedback(button, feedback) {
+        if (button.disabled) return;
+        button.disabled = true;
+        if (button.nextElementSibling) {
+            button.nextElementSibling.disabled = true;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Eroare la salvarea feedback-ului. Te rugăm să încerci din nou.');
-    });
-}
+    
+        const feedbackForm = button.parentElement;
+        const feedbackMsg = feedbackForm.querySelector('#feedback-message');
+        feedbackMsg.textContent = 'Se trimite feedback-ul...';
+    
+        // Get values directly from DOM elements
+        const userInput = document.querySelector('.user-input-hidden').value;
+        const aiResponse = document.querySelector('.message-content').innerHTML;
+        const clasa = document.querySelector('.clasa-hidden').value;
+    
+        if (!userInput || !aiResponse) {
+            feedbackMsg.textContent = 'Eroare: Date incomplete pentru feedback.';
+            button.disabled = false;
+            if (button.nextElementSibling) {
+                button.nextElementSibling.disabled = false;
+            }
+            return;
+        }
+    
+        // Create form data
+        const formData = new FormData();
+        formData.append('user_input', userInput);
+        formData.append('ai_response', aiResponse);
+        formData.append('clasa', clasa);
+        formData.append('feedback', feedback);
+        formData.append('feedback_text', '');
+    
+        fetch('/feedback', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            feedbackForm.querySelectorAll('button').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            feedbackMsg.textContent = 'Mulțumim pentru feedback!';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            feedbackMsg.textContent = `Eroare: ${error.message}`;
+            button.disabled = false;
+            if (button.nextElementSibling) {
+                button.nextElementSibling.disabled = false;
+            }
+        });
+    }
 </script>
 
 <style>
@@ -72,4 +101,4 @@ function submitFeedback(button, feedback) {
     font-style: italic;
     margin-left: 10px;
 }
-</style> 
+</style>

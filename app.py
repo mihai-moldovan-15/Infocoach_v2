@@ -308,6 +308,10 @@ def index():
         user_input = request.form.get('user_input', '')
         clasa = request.form.get('clasa', '9')
 
+        # Fallback: if user_input is empty, try to get it from session or another source
+        if not user_input:
+            user_input = getattr(current_user, 'last_user_input', '')
+
         # Do not escape HTML for user input
         prompt_content = (
             f"{user_input}\n"
@@ -337,6 +341,9 @@ def index():
                     # Format the output for HTML display
                     formatted_output = format_code_blocks(output)
                     formatted_output = format_steps_and_paragraphs(formatted_output)
+
+                    # Save last user_input for fallback
+                    setattr(current_user, 'last_user_input', user_input)
 
                     # Render the assistant message fragment and return it
                     return render_template('assistant_message.html', 
@@ -405,13 +412,18 @@ def chat_api():
 @login_required
 def feedback():
     try:
+        # Get data based on content type
+        if request.content_type == 'application/x-www-form-urlencoded':
+            data = request.form
+        else:
+            data = request.get_json() or request.form
+
         # Get and validate required fields
-        user_input = request.form.get('user_input', '').strip()
-        ai_response = request.form.get('ai_response', '').strip()
-        clasa = request.form.get('clasa', '').strip()
-        fb = request.form.get('feedback', '').strip()
-        feedback_text = request.form.get('feedback_text', '').strip()
-        
+        user_input = data.get('user_input', '').strip()
+        ai_response = data.get('ai_response', '').strip()
+        clasa = data.get('clasa', '').strip()
+        fb = data.get('feedback', '').strip()
+        feedback_text = data.get('feedback_text', '').strip()        
         app.logger.info(f"Received feedback request - Clasa: {clasa}, Feedback: {fb}, Text: {feedback_text}")
         
         # Validate inputs
@@ -421,9 +433,6 @@ def feedback():
         if not ai_response:
             app.logger.warning("Missing AI response")
             return jsonify({'error': 'Lipsește răspunsul asistentului'}), 400
-        if not clasa:
-            app.logger.warning("Missing class")
-            return jsonify({'error': 'Lipsește clasa'}), 400
         if not fb:
             app.logger.warning("Missing feedback")
             return jsonify({'error': 'Lipsește feedback-ul'}), 400

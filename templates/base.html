@@ -14,9 +14,9 @@
         </div>
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                <span class="text-gray-600">Bună, {{ current_user.username }}!</span>
-                <a href="{{ url_for('profile') }}" class="text-primary hover:text-primary-dark">Profil</a>
-                <a href="{{ url_for('logout') }}" class="text-primary hover:text-primary-dark">Deconectare</a>
+                <span class="welcome-text">Bună, {{ current_user.username }}!</span>
+                <a href="{{ url_for('profile') }}" class="nav-link">Profil</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Deconectare</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="nav-link">Autentificare</a>
                 <a href="{{ url_for('register') }}" class="nav-link">Înregistrare</a>
