@@ -5,11 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}InfoCoach{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+    .nav-brand {
+        transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+        margin-left: 64px; /* Always offset for collapsed sidebar */
+    }
+    .nav-brand.shifted {
+        margin-left: 270px;
+    }
+    @media (max-width: 900px) {
+        .nav-brand { margin-left: 64px; }
+        .nav-brand.shifted { margin-left: 190px; }
+    }
+    @media (max-width: 700px) {
+        .nav-brand { margin-left: 0; }
+        .nav-brand.shifted { margin-left: 0; }
+    }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">
+        <div class="nav-brand" id="nav-brand">
             <a href="{{ url_for('index') }}">InfoCoach</a>
         </div>
         <div class="nav-links">
