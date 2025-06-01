@@ -308,10 +308,6 @@ def index():
         user_input = request.form.get('user_input', '')
         clasa = request.form.get('clasa', '9')
 
-        # Fallback: if user_input is empty, try to get it from session or another source
-        if not user_input:
-            user_input = getattr(current_user, 'last_user_input', '')
-
         # Do not escape HTML for user input
         prompt_content = (
             f"{user_input}\n"
@@ -341,9 +337,6 @@ def index():
                     # Format the output for HTML display
                     formatted_output = format_code_blocks(output)
                     formatted_output = format_steps_and_paragraphs(formatted_output)
-
-                    # Save last user_input for fallback
-                    setattr(current_user, 'last_user_input', user_input)
 
                     # Render the assistant message fragment and return it
                     return render_template('assistant_message.html', 

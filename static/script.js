@@ -27,7 +27,7 @@ function startWaitMessages() {
 }
 
 // Function to add a message to the chat interface
-function addMessage(content, isUser = false) {
+function addMessage(content, isUser = false, userInput = '') {
     const chatMessages = document.getElementById("chat-messages");
     const messageDiv = document.createElement("div");
     messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
@@ -39,6 +39,7 @@ function addMessage(content, isUser = false) {
         messageDiv.innerHTML = `
             <b>InfoCoach:</b>
             <div class="message-content">${content}</div>
+            <input type="hidden" class="user-input-hidden" value="${userInput.replace(/"/g, '&quot;')}">
             <div class="feedback-form">
                 <span>Acest răspuns a fost util?</span>
                 <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
@@ -99,7 +100,7 @@ function submitForm(event) {
             const assistantMessageContentHTML = assistantMessageContentDiv.innerHTML;
             
             // Add the assistant message to the chat using the extracted content
-            addMessage(assistantMessageContentHTML, false);
+            addMessage(assistantMessageContentHTML, false, userInput);
         } else {
              console.error("Could not find assistant message content in response.");
              // Optionally add a generic error message to the chat
@@ -123,11 +124,8 @@ function submitForm(event) {
 function submitFeedback(button, feedback) {
     const messageDiv = button.closest('.message.assistant');
     const messageContentDiv = messageDiv.querySelector('.message-content');
-    // Get AI response ONLY from data attribute
-    let messageContent = messageContentDiv.getAttribute('data-ai-response');
-    if (messageContent && messageContent.startsWith('"') && messageContent.endsWith('"')) {
-        try { messageContent = JSON.parse(messageContent); } catch (e) {}
-    }
+    // Get AI response from innerHTML
+    let messageContent = messageContentDiv.innerHTML;
     // Get user input from hidden input
     const userInputHidden = messageDiv.querySelector('.user-input-hidden');
     let userInput = userInputHidden ? userInputHidden.value : '';

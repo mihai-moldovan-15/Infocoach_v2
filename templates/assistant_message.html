@@ -1,88 +1,85 @@
 <div class="message assistant">
     <b>InfoCoach:</b>
-    <div class="message-content" data-ai-response="{{ output|tojson|safe }}">{{ output|safe }}</div>
-    <input type="hidden" class="user-input-hidden" value="{{ user_input|tojson|safe }}">
+    <div class="message-content">{{ output|safe }}</div>
+    {% if user_input %}
+    <input type="hidden" class="user-input-hidden" value="{{ user_input }}">
+    <input type="hidden" class="ai-response-hidden" value="{{ output }}">
     <input type="hidden" class="clasa-hidden" value="{{ clasa }}">
     <div class="feedback-form">
-        {% if not user_input %}
-          <span style="color: red;">Eroare: Nu se poate trimite feedback pentru acest răspuns.</span>
-        {% endif %}
         <span>Acest răspuns a fost util?</span>
-        <button onclick="submitFeedback(this, 'da')" class="feedback-btn" {% if not user_input %}disabled{% endif %}>Da</button>
-        <button onclick="submitFeedback(this, 'nu')" class="feedback-btn" {% if not user_input %}disabled{% endif %}>Nu</button>
+        <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
+        <button onclick="submitFeedback(this, 'nu')" class="feedback-btn">Nu</button>
         <span id="feedback-message"></span>
     </div>
+    {% else %}
+    <div class="feedback-form">
+        <span style="color: red;">Eroare: Nu se poate trimite feedback pentru acest răspuns.</span>
+        <button class="feedback-btn" disabled>Da</button>
+        <button class="feedback-btn" disabled>Nu</button>
+    </div>
+    {% endif %}
 </div>
 
 <script>
-    function submitFeedback(button, feedback) {
-        if (button.disabled) return;
-        button.disabled = true;
-        if (button.nextElementSibling) {
-            button.nextElementSibling.disabled = true;
-        }
-    
-        const feedbackForm = button.parentElement;
-        const feedbackMsg = feedbackForm.querySelector('#feedback-message');
-        feedbackMsg.textContent = 'Se trimite feedback-ul...';
-    
-        // Get values directly from DOM elements
-        const userInput = document.querySelector('.user-input-hidden').value;
-        const aiResponse = document.querySelector('.message-content').innerHTML;
-        const clasa = document.querySelector('.clasa-hidden').value;
-    
-        if (!userInput || !aiResponse) {
-            feedbackMsg.textContent = 'Eroare: Date incomplete pentru feedback.';
-            button.disabled = false;
-            if (button.nextElementSibling) {
-                button.nextElementSibling.disabled = false;
-            }
-            return;
-        }
-    
-        // Create form data
-        const formData = new FormData();
-        formData.append('user_input', userInput);
-        formData.append('ai_response', aiResponse);
-        formData.append('clasa', clasa);
-        formData.append('feedback', feedback);
-        formData.append('feedback_text', '');
-    
-        fetch('/feedback', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            feedbackForm.querySelectorAll('button').forEach(btn => {
-                btn.style.display = 'none';
-            });
-            feedbackMsg.textContent = 'Mulțumim pentru feedback!';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            feedbackMsg.textContent = `Eroare: ${error.message}`;
-            button.disabled = false;
-            if (button.nextElementSibling) {
-                button.nextElementSibling.disabled = false;
-            }
-        });
+function submitFeedback(button, feedback) {
+    if (button.disabled) return;
+    if (button.nextElementSibling) {
+        button.nextElementSibling.disabled = true;
     }
+    const feedbackForm = button.parentElement;
+    const feedbackMsg = feedbackForm.querySelector('#feedback-message');
+    feedbackMsg.textContent = 'Se trimite feedback-ul...';
+    const userInput = document.querySelector('.user-input-hidden')?.value;
+    const aiResponse = document.querySelector('.ai-response-hidden')?.value;
+    const clasa = document.querySelector('.clasa-hidden')?.value;
+    if (!userInput || !aiResponse) {
+        feedbackMsg.textContent = 'Eroare: Date incomplete pentru feedback.';
+        button.disabled = false;
+        if (button.nextElementSibling) {
+            button.nextElementSibling.disabled = false;
+        }
+        return;
+    }
+    const formData = new FormData();
+    formData.append('user_input', userInput);
+    formData.append('ai_response', aiResponse);
+    formData.append('clasa', clasa);
+    formData.append('feedback', feedback);
+    formData.append('feedback_text', '');
+    fetch('/feedback', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        feedbackForm.querySelectorAll('button').forEach(btn => {
+            btn.style.display = 'none';
+        });
+        feedbackMsg.textContent = 'Mulțumim pentru feedback!';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        feedbackMsg.textContent = `Eroare: ${error.message}`;
+        button.disabled = false;
+        if (button.nextElementSibling) {
+            button.nextElementSibling.disabled = false;
+        }
+    });
+}
 </script>
 
 <style>
 .feedback-form {
     margin-top: 10px;
 }
-
 .feedback-btn {
     background-color: #f0f0f0;
     border: 1px solid #ddd;
@@ -91,11 +88,9 @@
     border-radius: 4px;
     cursor: pointer;
 }
-
 .feedback-btn:hover {
     background-color: #e0e0e0;
 }
-
 #feedback-message {
     color: #666;
     font-style: italic;
