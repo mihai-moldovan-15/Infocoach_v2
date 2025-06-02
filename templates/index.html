@@ -181,6 +181,43 @@
         margin-right: 0;
     }
 }
+.chat-messages {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 85%;
+}
+
+.message.user {
+    background: #e3f2fd;
+    margin-left: auto;
+    border: 1px solid #bbdefb;
+}
+
+.message.assistant {
+    background: white;
+    margin-right: auto;
+    border: 1px solid #e0e0e0;
+}
+
+.message strong {
+    color: #1976d2;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.conversation-btn.active {
+    background: #0074d9;
+    color: #fff;
+    border-color: #0074d9;
+}
 </style>
 {% endblock %}
 
@@ -194,9 +231,16 @@
         </button>
     </div>
     <div class="sidebar-conversations">
-        <button class="conversation-btn">Conversație 1</button>
-        <button class="conversation-btn">Conversație 2</button>
-        <button class="conversation-btn">Conversație 3</button>
+        {% for conv in conversations %}
+            <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none;">
+                <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}">
+                    Conversație {{ loop.index }}<br>
+                    <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
+                </button>
+            </a>
+        {% else %}
+            <span style="color: #888; padding: 1em;">Nicio conversație</span>
+        {% endfor %}
     </div>
 </div>
 <div class="container">
@@ -205,12 +249,16 @@
             <h2>InfoCoach Chat</h2>
         </div>
         <div class="chat-messages" id="chat-messages">
-            {% if user_input %}
-                <div class="message user">
-                    <b>Tu:</b><br>
-                    <pre style="margin: 0; white-space: pre-wrap;">{{ user_input }}</pre>
+            {% for message in chat_history %}
+                <div class="message {{ message.role }}">
+                    <strong>{{ 'Tu' if message.role == 'user' else 'InfoCoach' }}:</strong>
+                    {% if message.role == 'user' %}
+                        <pre style="margin: 0; white-space: pre-wrap;">{{ message.content }}</pre>
+                    {% else %}
+                        {{ message.content | safe }}
+                    {% endif %}
                 </div>
-            {% endif %}
+            {% endfor %}
         </div>
         <div class="chat-input-area">
             <div id="wait-message"></div>
@@ -234,6 +282,16 @@ function submitForm(event) {
     const form = event.target;
     const submitButton = form.querySelector('input[type="submit"]');
     const waitMessage = document.getElementById('wait-message');
+    const chatMessages = document.getElementById('chat-messages');
+    
+    // Add user message immediately
+    const userMessageDiv = document.createElement('div');
+    userMessageDiv.className = 'message user';
+    userMessageDiv.innerHTML = `
+        <strong>Tu:</strong>
+        <pre style="margin: 0; white-space: pre-wrap;">${userInput}</pre>
+    `;
+    chatMessages.appendChild(userMessageDiv);
     
     submitButton.disabled = true;
     waitMessage.style.display = 'block';
@@ -250,9 +308,9 @@ function submitForm(event) {
         const newMessage = doc.querySelector('.message.assistant');
         
         if (newMessage) {
-            document.getElementById('chat-messages').appendChild(newMessage);
+            chatMessages.appendChild(newMessage);
             document.getElementById('user-input').value = '';
-            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     })
     .catch(error => {

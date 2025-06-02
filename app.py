@@ -65,8 +65,10 @@ for clasa in vector_stores:
 # === Initialize SQLite database (Feedback) ===
 def init_db():
     os.makedirs('feedback', exist_ok=True)
-    conn = sqlite3.connect('feedback/feedback.db')
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
+    
+    # Feedback table
     c.execute('''
         CREATE TABLE IF NOT EXISTS feedback (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -78,83 +80,95 @@ def init_db():
             feedback_text TEXT
         )
     ''')
+    
+    # Conversations table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            clasa TEXT,
+            start_time TEXT,
+            is_active INTEGER DEFAULT 1,
+            message_count INTEGER DEFAULT 0
+        )
+    ''')
+
+    # Messages table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            conversation_id INTEGER,
+            role TEXT,
+            content TEXT,
+            timestamp TEXT
+        )
+    ''')
+    
     conn.commit()
     conn.close()
 
 # Initialize feedback database
 init_db()
 
-# === Function for managing conversations ===
-def get_active_conversation(user_id, clasa):
-    conn = sqlite3.connect('feedback/feedback.db')
+# === Update: Add role and content to messages table if not present ===
+def ensure_messages_schema():
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
-    
-    # Check if there is an active conversation
-    c.execute('''
-        SELECT id, message_count 
-        FROM conversations 
-        WHERE user_id = ? AND clasa = ? AND is_active = 1
-    ''', (user_id, clasa))
-    
-    conversation = c.fetchone()
-    
-    if conversation:
-        # If the conversation has reached the limit, close it
-        if conversation[1] >= 10:
-            c.execute('UPDATE conversations SET is_active = 0 WHERE id = ?', (conversation[0],))
-            conn.commit()
-            conn.close()
-            return None
-        return conversation[0]
-    
-    # Create a new conversation
-    c.execute('''
-        INSERT INTO conversations (user_id, clasa, start_time, message_count)
-        VALUES (?, ?, ?, 0)
-    ''', (user_id, clasa, datetime.now().isoformat()))
-    
-    conn.commit()
-    conversation_id = c.lastrowid
+    c.execute("PRAGMA table_info(messages)")
+    columns = [col[1] for col in c.fetchall()]
+    if 'role' not in columns or 'content' not in columns:
+        try:
+            c.execute('ALTER TABLE messages ADD COLUMN role TEXT')
+        except Exception:
+            pass
+        try:
+            c.execute('ALTER TABLE messages ADD COLUMN content TEXT')
+        except Exception:
+            pass
+        conn.commit()
     conn.close()
-    
-    return conversation_id
 
-# === Function for saving messages ===
+ensure_messages_schema()
+
+# === Save user and assistant messages as separate rows ===
 def save_message(conversation_id, user_input, ai_response):
-    conn = sqlite3.connect('feedback/feedback.db')
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
-    
-    # Save message
+    timestamp = datetime.now().isoformat()
+    # Save user message
     c.execute('''
-        INSERT INTO messages (conversation_id, user_input, ai_response, timestamp)
+        INSERT INTO messages (conversation_id, role, content, timestamp)
         VALUES (?, ?, ?, ?)
-    ''', (conversation_id, user_input, ai_response, datetime.now().isoformat()))
-    
+    ''', (conversation_id, 'user', user_input, timestamp))
+    # Save assistant message
+    c.execute('''
+        INSERT INTO messages (conversation_id, role, content, timestamp)
+        VALUES (?, ?, ?, ?)
+    ''', (conversation_id, 'assistant', ai_response, timestamp))
     # Increment message count
     c.execute('''
         UPDATE conversations 
         SET message_count = message_count + 1 
         WHERE id = ?
     ''', (conversation_id,))
-    
     conn.commit()
     conn.close()
 
-# === Function for getting conversation history ===
+# === Get conversation history as a list of dicts with role/content ===
 def get_conversation_history(conversation_id):
-    conn = sqlite3.connect('feedback/feedback.db')
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
-    
     c.execute('''
-        SELECT user_input, ai_response, timestamp
+        SELECT role, content, timestamp
         FROM messages
         WHERE conversation_id = ?
-        ORDER BY timestamp ASC
+        ORDER BY timestamp ASC, id ASC
     ''', (conversation_id,))
-    
-    messages = c.fetchall()
+    messages = [
+        {'role': row[0], 'content': row[1], 'timestamp': row[2]}
+        for row in c.fetchall()
+    ]
     conn.close()
-    
     return messages
 
 # === Function for formatting C++ code blocks ===
@@ -296,6 +310,20 @@ def logout():
     flash('Ai fost deconectat cu succes.', 'info')
     return redirect(url_for('index'))
 
+# === Helper: Get all conversations for a user ===
+def get_user_conversations(user_id):
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    c.execute('''
+        SELECT id, clasa, start_time, is_active, message_count
+        FROM conversations
+        WHERE user_id = ?
+        ORDER BY start_time DESC
+    ''', (user_id,))
+    conversations = c.fetchall()
+    conn.close()
+    return conversations
+
 # === Main route ===
 @app.route('/', methods=['GET', 'POST'])
 @login_required
@@ -303,10 +331,33 @@ def index():
     user_input = ''
     output = ''
     clasa = '9'
+    chat_history = []
+
+    # Get all conversations for sidebar
+    conversations = get_user_conversations(current_user.id)
+
+    # Determine selected conversation
+    conversation_id = request.args.get('conversation_id')
+    if not conversation_id and conversations:
+        conversation_id = conversations[0][0]  # Default to most recent
+    elif conversation_id:
+        conversation_id = int(conversation_id)
+    else:
+        conversation_id = None
+
+    # Get chat history for selected conversation
+    if conversation_id:
+        chat_history = get_conversation_history(conversation_id)
+    else:
+        chat_history = []
 
     if request.method == 'POST':
         user_input = request.form.get('user_input', '')
         clasa = request.form.get('clasa', '9')
+
+        # Use selected or create new conversation
+        if not conversation_id:
+            conversation_id = get_or_create_conversation(current_user.id, clasa)
 
         # Do not escape HTML for user input
         prompt_content = (
@@ -338,6 +389,12 @@ def index():
                     formatted_output = format_code_blocks(output)
                     formatted_output = format_steps_and_paragraphs(formatted_output)
 
+                    # Save message to database
+                    save_message(conversation_id, user_input, output)
+
+                    # Get updated chat history
+                    chat_history = get_conversation_history(conversation_id)
+
                     # Render the assistant message fragment and return it
                     return render_template('assistant_message.html', 
                                         output=formatted_output,
@@ -348,7 +405,13 @@ def index():
         return "A apărut o problemă la generarea răspunsului asistentului.", 500
 
     # For GET requests, render the full index page with initial (or last) data
-    return render_template('index.html', user_input=user_input, output=output, clasa=clasa)
+    return render_template('index.html', 
+                         user_input=user_input, 
+                         output=output, 
+                         clasa=clasa,
+                         chat_history=chat_history,
+                         conversations=conversations,
+                         selected_conversation_id=conversation_id)
 
 # === Route for chat API ===
 @app.route('/api/chat', methods=['POST'])
@@ -359,6 +422,21 @@ def chat_api():
 
     if not user_input:
         return jsonify({'error': 'Lipsește input-ul utilizatorului'}), 400
+
+    # Get or create conversation for current user
+    conversation_id = get_or_create_conversation(current_user.id, clasa)
+
+    # Get existing messages (chat history)
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    c.execute('''
+        SELECT role, content, timestamp 
+        FROM messages 
+        WHERE conversation_id = ? 
+        ORDER BY timestamp ASC
+    ''', (conversation_id,))
+    history = c.fetchall()
+    conn.close()
 
     # Do not escape HTML for user input
     prompt_content = (
@@ -390,9 +468,36 @@ def chat_api():
                 formatted_output = format_code_blocks(output)
                 formatted_output = format_steps_and_paragraphs(formatted_output)
 
+                # Save both user message and assistant reply
+                conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+                c = conn.cursor()
+                
+                # Save user message
+                c.execute('''
+                    INSERT INTO messages (conversation_id, role, content, timestamp)
+                    VALUES (?, ?, ?, ?)
+                ''', (conversation_id, 'user', user_input, datetime.now().isoformat()))
+                
+                # Save assistant message
+                c.execute('''
+                    INSERT INTO messages (conversation_id, role, content, timestamp)
+                    VALUES (?, ?, ?, ?)
+                ''', (conversation_id, 'assistant', output, datetime.now().isoformat()))
+                
+                # Increment message count in conversation
+                c.execute('''
+                    UPDATE conversations 
+                    SET message_count = message_count + 1 
+                    WHERE id = ?
+                ''', (conversation_id,))
+                
+                conn.commit()
+                conn.close()
+
                 return jsonify({
                     'success': True,
-                    'response': formatted_output
+                    'response': formatted_output,
+                    'conversation_id': conversation_id
                 })
 
     return jsonify({
@@ -447,7 +552,7 @@ def feedback():
         app.logger.info(f"Database path: {db_path}")
         
         # Save to database
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
         c = conn.cursor()
         
         try:
@@ -508,7 +613,7 @@ def view_feedback():
     feedback_filter = request.args.get('feedback', '')
     
     # Connect to database
-    conn = sqlite3.connect('feedback/feedback.db')
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
     
     # Build SQL query with filters
