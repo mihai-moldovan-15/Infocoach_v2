@@ -135,24 +135,37 @@ def save_message(conversation_id, user_input, ai_response):
     conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
     timestamp = datetime.now().isoformat()
+    
+    # If conversation_id is None, create a new conversation
+    if conversation_id is None:
+        c.execute('''
+            INSERT INTO conversations (user_id, clasa, start_time, is_active, message_count)
+            VALUES (?, ?, ?, 1, 0)
+        ''', (current_user.id, request.form.get('clasa', '9'), timestamp))
+        conversation_id = c.lastrowid
+    
     # Save user message
     c.execute('''
         INSERT INTO messages (conversation_id, role, content, timestamp)
         VALUES (?, ?, ?, ?)
     ''', (conversation_id, 'user', user_input, timestamp))
+    
     # Save assistant message
     c.execute('''
         INSERT INTO messages (conversation_id, role, content, timestamp)
         VALUES (?, ?, ?, ?)
     ''', (conversation_id, 'assistant', ai_response, timestamp))
+    
     # Increment message count
     c.execute('''
         UPDATE conversations 
         SET message_count = message_count + 1 
         WHERE id = ?
     ''', (conversation_id,))
+    
     conn.commit()
     conn.close()
+    return conversation_id
 
 # === Get conversation history as a list of dicts with role/content ===
 def get_conversation_history(conversation_id):
@@ -326,18 +339,8 @@ def get_user_conversations(user_id):
 
 # === Helper: Get or create a new conversation for a user and class ===
 def get_or_create_conversation(user_id, clasa):
-    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
-    c = conn.cursor()
-    # Create a new conversation
-    now = datetime.now().isoformat()
-    c.execute('''
-        INSERT INTO conversations (user_id, clasa, start_time, is_active, message_count)
-        VALUES (?, ?, ?, 1, 0)
-    ''', (user_id, clasa, now))
-    conversation_id = c.lastrowid
-    conn.commit()
-    conn.close()
-    return conversation_id
+    # Return None to indicate no conversation exists yet
+    return None
 
 # === Route for creating a new conversation ===
 @app.route('/new_conversation')
@@ -361,17 +364,11 @@ def index():
 
     # Determine selected conversation
     conversation_id = request.args.get('conversation_id')
-    if not conversation_id and conversations:
-        conversation_id = conversations[0][0]  # Default to most recent
-    elif conversation_id:
-        conversation_id = int(conversation_id)
-    else:
-        conversation_id = None
-
-    # Get chat history for selected conversation
     if conversation_id:
+        conversation_id = int(conversation_id)
         chat_history = get_conversation_history(conversation_id)
     else:
+        conversation_id = None
         chat_history = []
 
     if chat_history:
@@ -388,9 +385,6 @@ def index():
         form_conversation_id = request.form.get('conversation_id')
         if form_conversation_id:
             conversation_id = int(form_conversation_id)
-        # Use selected or create new conversation
-        if not conversation_id:
-            conversation_id = get_or_create_conversation(current_user.id, clasa)
 
         # Do not escape HTML for user input
         prompt_content = (
@@ -422,8 +416,8 @@ def index():
                     formatted_output = format_code_blocks(output)
                     formatted_output = format_steps_and_paragraphs(formatted_output)
 
-                    # Save message to database
-                    save_message(conversation_id, user_input, output)
+                    # Save message to database and get the conversation_id
+                    conversation_id = save_message(conversation_id, user_input, output)
 
                     # Get updated chat history
                     chat_history = get_conversation_history(conversation_id)
@@ -432,7 +426,8 @@ def index():
                     return render_template('assistant_message.html', 
                                         output=formatted_output,
                                         user_input=user_input, 
-                                        clasa=clasa)
+                                        clasa=clasa,
+                                        conversation_id=conversation_id)
 
         # If the run failed or no assistant message was found
         return "A apărut o problemă la generarea răspunsului asistentului.", 500
@@ -452,24 +447,12 @@ def index():
 def chat_api():
     user_input = request.form.get('user_input', '')
     clasa = request.form.get('clasa', '9')
+    conversation_id = request.form.get('conversation_id')
+    if conversation_id:
+        conversation_id = int(conversation_id)
 
     if not user_input:
         return jsonify({'error': 'Lipsește input-ul utilizatorului'}), 400
-
-    # Get or create conversation for current user
-    conversation_id = get_or_create_conversation(current_user.id, clasa)
-
-    # Get existing messages (chat history)
-    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
-    c = conn.cursor()
-    c.execute('''
-        SELECT role, content, timestamp 
-        FROM messages 
-        WHERE conversation_id = ? 
-        ORDER BY timestamp ASC
-    ''', (conversation_id,))
-    history = c.fetchall()
-    conn.close()
 
     # Do not escape HTML for user input
     prompt_content = (
@@ -501,31 +484,8 @@ def chat_api():
                 formatted_output = format_code_blocks(output)
                 formatted_output = format_steps_and_paragraphs(formatted_output)
 
-                # Save both user message and assistant reply
-                conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
-                c = conn.cursor()
-                
-                # Save user message
-                c.execute('''
-                    INSERT INTO messages (conversation_id, role, content, timestamp)
-                    VALUES (?, ?, ?, ?)
-                ''', (conversation_id, 'user', user_input, datetime.now().isoformat()))
-                
-                # Save assistant message
-                c.execute('''
-                    INSERT INTO messages (conversation_id, role, content, timestamp)
-                    VALUES (?, ?, ?, ?)
-                ''', (conversation_id, 'assistant', output, datetime.now().isoformat()))
-                
-                # Increment message count in conversation
-                c.execute('''
-                    UPDATE conversations 
-                    SET message_count = message_count + 1 
-                    WHERE id = ?
-                ''', (conversation_id,))
-                
-                conn.commit()
-                conn.close()
+                # Save message to database and get the conversation_id
+                conversation_id = save_message(conversation_id, user_input, output)
 
                 return jsonify({
                     'success': True,
@@ -533,10 +493,7 @@ def chat_api():
                     'conversation_id': conversation_id
                 })
 
-    return jsonify({
-        'success': False,
-        'error': 'A apărut o problemă la generarea răspunsului asistentului.'
-    }), 500
+    return jsonify({'error': 'A apărut o problemă la generarea răspunsului asistentului.'}), 500
 
 # === Route for saving feedback ===
 @app.route('/feedback', methods=['POST'])

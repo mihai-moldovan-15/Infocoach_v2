@@ -59,62 +59,63 @@ function addMessage(content, isUser = false, userInput = '') {
 
 function submitForm(event) {
     event.preventDefault();
+    const form = event.target;
+    const userInput = form.querySelector('textarea[name="user_input"]').value;
+    const conversationId = form.querySelector('input[name="conversation_id"]').value;
+    const clasa = form.querySelector('select[name="clasa"]')?.value || '9';
     
-    const form = document.getElementById('chat-form');
-    const formData = new FormData(form);
+    if (!userInput.trim()) return false;
     
-    // Add user message to chat immediately
-    const userInput = document.getElementById('user-input').value;
+    // Add user message to chat
     addMessage(userInput, true);
     
-    // Clear input field
-    document.getElementById('user-input').value = '';
-    
     // Show waiting message
-    startWaitMessages();
+    const waitMessage = document.getElementById('wait-message');
+    waitMessage.textContent = 'InfoCoach scrie...';
+    waitMessage.style.display = 'block';
+    
+    // Disable form while waiting
+    form.querySelector('textarea').disabled = true;
+    form.querySelector('input[type="submit"]').disabled = true;
+    
+    // Prepare form data
+    const formData = new FormData();
+    formData.append('user_input', userInput);
+    formData.append('clasa', clasa);
+    if (conversationId) {
+        formData.append('conversation_id', conversationId);
+    }
     
     // Send request
-    fetch('/', {
+    fetch('/api/chat', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())
-    .then(html => {
-        // Hide waiting message regardless of success/failure
-        document.getElementById('wait-message').style.display = 'none';
-        if (window.intervalId) {
-            clearInterval(window.intervalId);
-            window.intervalId = null;
-        }
-
-        // Create a temporary div to parse the HTML response
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        
-        // Find the assistant's message content div in the parsed HTML response
-        // This should contain the formatted response including code blocks
-        const assistantMessageContentDiv = doc.querySelector('.message.assistant .message-content');
-        
-        if (assistantMessageContentDiv) {
-            // Get ONLY the innerHTML of the message content div from the response
-            const assistantMessageContentHTML = assistantMessageContentDiv.innerHTML;
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add assistant message to chat
+            addMessage(data.response, false, userInput);
             
-            // Add the assistant message to the chat using the extracted content
-            addMessage(assistantMessageContentHTML, false, userInput);
+            // Update conversation ID in form if it's a new conversation
+            if (data.conversation_id) {
+                form.querySelector('input[name="conversation_id"]').value = data.conversation_id;
+            }
         } else {
-             console.error("Could not find assistant message content in response.");
-             // Optionally add a generic error message to the chat
-             addMessage("A apărut o problemă la preluarea răspunsului.", false);
+            addMessage('A apărut o problemă la generarea răspunsului asistentului.', false);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('A apărut o eroare la trimiterea mesajului. Te rugăm să încerci din nou.');
-        document.getElementById('wait-message').style.display = 'none';
-        if (window.intervalId) {
-            clearInterval(window.intervalId);
-            window.intervalId = null;
-        }
+        addMessage('A apărut o problemă la comunicarea cu serverul.', false);
+    })
+    .finally(() => {
+        // Clear and enable form
+        form.querySelector('textarea').value = '';
+        form.querySelector('textarea').disabled = false;
+        form.querySelector('input[type="submit"]').disabled = false;
+        waitMessage.style.display = 'none';
+        scrollToBottom();
     });
     
     return false;
@@ -135,17 +136,14 @@ function submitFeedback(button, feedback) {
     // Get clasa from hidden input
     const clasaHidden = messageDiv.querySelector('.clasa-hidden');
     let clasa = clasaHidden ? clasaHidden.value : (document.getElementById('clasa') ? document.getElementById('clasa').value : '9');
-    const feedbackMessage = messageDiv.querySelector('#feedback-message');
-    // Disable feedback buttons
-    const buttons = messageDiv.querySelectorAll('.feedback-btn');
-    buttons.forEach(btn => btn.disabled = true);
-    // Prepare the data
+    const feedbackForm = messageDiv.querySelector('.feedback-form');
+    // Pregătește datele
     const formData = new URLSearchParams();
     formData.append('user_input', userInput);
     formData.append('ai_response', messageContent);
     formData.append('clasa', clasa);
     formData.append('feedback', feedback);
-    // Send feedback to server
+    // Trimite feedback la server
     fetch('/feedback', {
         method: 'POST',
         headers: {
@@ -160,20 +158,18 @@ function submitFeedback(button, feedback) {
         return response.json();
     })
     .then(data => {
-        if (data.error) {
-            feedbackMessage.textContent = 'Eroare la salvarea feedback-ului: ' + data.error;
-            feedbackMessage.style.color = '#dc3545';
-            // Re-enable buttons on error
-            buttons.forEach(btn => btn.disabled = false);
-        } else {
-            feedbackMessage.textContent = 'Mulțumim pentru feedback!';
-            feedbackMessage.style.color = '#28a745';
+        if (feedbackForm) {
+            if (data.error) {
+                feedbackForm.innerHTML = '<span class="feedback-thankyou" style="color:#dc3545;">Eroare la salvarea feedback-ului: ' + data.error + '</span>';
+            } else {
+                feedbackForm.innerHTML = '<span class="feedback-thankyou" style="color:#28a745;">Mulțumim pentru feedback!</span>';
+            }
         }
     })
     .catch(error => {
-        feedbackMessage.textContent = 'Eroare la trimiterea feedback-ului: ' + error.message;
-        feedbackMessage.style.color = '#dc3545';
-        buttons.forEach(btn => btn.disabled = false);
+        if (feedbackForm) {
+            feedbackForm.innerHTML = '<span class="feedback-thankyou" style="color:#dc3545;">Eroare la trimiterea feedback-ului: ' + error.message + '</span>';
+        }
     });
 }
 
