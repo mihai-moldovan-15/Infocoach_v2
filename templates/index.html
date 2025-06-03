@@ -230,6 +230,13 @@
             <span></span>
         </button>
     </div>
+    <!-- New Conversation Button -->
+    <div class="sidebar-new-conversation">
+        <button class="new-conversation-btn" onclick="window.location.href='/new_conversation'">
+            <span class="plus-icon">+</span>
+            Conversație nouă
+        </button>
+    </div>
     <div class="sidebar-conversations">
         {% for conv in conversations %}
             <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none;">

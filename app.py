@@ -324,6 +324,29 @@ def get_user_conversations(user_id):
     conn.close()
     return conversations
 
+# === Helper: Get or create a new conversation for a user and class ===
+def get_or_create_conversation(user_id, clasa):
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Create a new conversation
+    now = datetime.now().isoformat()
+    c.execute('''
+        INSERT INTO conversations (user_id, clasa, start_time, is_active, message_count)
+        VALUES (?, ?, ?, 1, 0)
+    ''', (user_id, clasa, now))
+    conversation_id = c.lastrowid
+    conn.commit()
+    conn.close()
+    return conversation_id
+
+# === Route for creating a new conversation ===
+@app.route('/new_conversation')
+@login_required
+def new_conversation():
+    clasa = request.args.get('clasa', '9')
+    conversation_id = get_or_create_conversation(current_user.id, clasa)
+    return redirect(url_for('index', conversation_id=conversation_id))
+
 # === Main route ===
 @app.route('/', methods=['GET', 'POST'])
 @login_required
