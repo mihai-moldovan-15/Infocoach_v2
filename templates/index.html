@@ -239,12 +239,24 @@
     </div>
     <div class="sidebar-conversations">
         {% for conv in conversations %}
-            <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none;">
-                <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}">
-                    Conversație {{ loop.index }}<br>
-                    <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
+            <div class="conversation-item-wrapper">
+                <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none; width: 100%; display: block;">
+                    <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}">
+                        Conversație {{ loop.index }}<br>
+                        <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
+                    </button>
+                </a>
+                <button class="conversation-menu-btn" tabindex="0">
+                    <span class="menu-dots">&#8226;&#8226;&#8226;</span>
                 </button>
-            </a>
+                <div class="conversation-menu">
+                    <button class="menu-item">Creare Quiz</button>
+                    <button class="menu-item">Rezumat</button>
+                    <form method="POST" action="/delete_conversation/{{ conv[0] }}" style="margin:0; padding:0; display:inline;">
+                        <button type="submit" class="menu-item delete" onclick="return confirm('Sigur vrei să ștergi această conversație?');">Ștergere</button>
+                    </form>
+                </div>
+            </div>
         {% else %}
             <span style="color: #888; padding: 1em;">Nicio conversație</span>
         {% endfor %}
@@ -270,6 +282,7 @@
         <div class="chat-input-area">
             <div id="wait-message"></div>
             <form id="chat-form" onsubmit="return submitForm(event)" autocomplete="off">
+                <input type="hidden" name="conversation_id" value="{{ selected_conversation_id }}">
                 <div class="chat-input-row">
                     <textarea name="user_input" id="user-input" rows="2" placeholder="Scrie întrebarea aici..."></textarea>
                     <input type="submit" value="Trimite">
@@ -344,6 +357,29 @@ document.getElementById('sidebar-toggle-btn').onclick = function() {
         navBrand.classList.add('shifted');
     }
 };
+
+// Conversation menu toggle logic
+function closeAllMenus() {
+    document.querySelectorAll('.conversation-menu').forEach(menu => menu.classList.remove('show'));
+}
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.conversation-menu-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // Close all other menus
+            closeAllMenus();
+            // Toggle this menu
+            const menu = btn.nextElementSibling;
+            if (menu && menu.classList.contains('conversation-menu')) {
+                menu.classList.toggle('show');
+            }
+        });
+    });
+    // Close menus when clicking outside
+    document.addEventListener('click', function() {
+        closeAllMenus();
+    });
+});
 </script>
 {% endblock %}
 
@@ -351,4 +387,11 @@ document.getElementById('sidebar-toggle-btn').onclick = function() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+    });
+});
+</script>
 {% endblock %}

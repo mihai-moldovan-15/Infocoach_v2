@@ -374,10 +374,20 @@ def index():
     else:
         chat_history = []
 
+    if chat_history:
+        for msg in chat_history:
+            if msg['role'] == 'assistant':
+                formatted = format_code_blocks(msg['content'])
+                formatted = format_steps_and_paragraphs(formatted)
+                msg['content'] = formatted
+
     if request.method == 'POST':
         user_input = request.form.get('user_input', '')
         clasa = request.form.get('clasa', '9')
-
+        # Use conversation_id from form if present
+        form_conversation_id = request.form.get('conversation_id')
+        if form_conversation_id:
+            conversation_id = int(form_conversation_id)
         # Use selected or create new conversation
         if not conversation_id:
             conversation_id = get_or_create_conversation(current_user.id, clasa)
@@ -721,6 +731,26 @@ def change_password():
     db.session.commit()
     flash('Parola a fost schimbată cu succes!', 'success')
     return redirect(url_for('profile'))
+
+# === Route for deleting a conversation ===
+@app.route('/delete_conversation/<int:conversation_id>', methods=['POST'])
+@login_required
+def delete_conversation(conversation_id):
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Ensure the conversation belongs to the current user
+    c.execute('SELECT user_id FROM conversations WHERE id = ?', (conversation_id,))
+    row = c.fetchone()
+    if not row or row[0] != current_user.id:
+        conn.close()
+        return 'Forbidden', 403
+    # Delete messages
+    c.execute('DELETE FROM messages WHERE conversation_id = ?', (conversation_id,))
+    # Delete conversation
+    c.execute('DELETE FROM conversations WHERE id = ?', (conversation_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('index'))
 
 # === Start application ===
 if __name__ == '__main__':
