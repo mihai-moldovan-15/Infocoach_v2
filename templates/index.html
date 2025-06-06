@@ -325,55 +325,128 @@
 }
 /* Modal Quiz stil modern */
 .modal-quiz {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  left: 0; top: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.25);
-  align-items: center;
-  justify-content: center;
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.25);
+    align-items: center;
+    justify-content: center;
 }
+
 .modal-quiz[style*="display: flex"] {
-  display: flex !important;
+    display: flex !important;
 }
+
 .modal-quiz-content {
-  background: #fff;
-  border-radius: 16px;
-  max-width: 520px;
-  width: 95vw;
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
-  position: relative;
-  animation: modalIn 0.25s cubic-bezier(.4,0,.2,1);
+    background: #fff;
+    border-radius: 16px;
+    max-width: 520px;
+    width: 95vw;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+    position: relative;
+    animation: modalIn 0.25s cubic-bezier(.4,0,.2,1);
 }
+
 .modal-quiz-title {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.3rem;
-  color: #0074d9;
-  text-align: center;
-  font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: #0074d9;
+    text-align: center;
+    font-weight: 600;
 }
+
 .modal-quiz-body {
-  font-size: 1.08rem;
-  color: #222;
-  line-height: 1.6;
-  max-height: 50vh;
-  overflow-y: auto;
-  white-space: pre-line;
+    font-size: 1.08rem;
+    color: #222;
+    line-height: 1.6;
+    max-height: 50vh;
+    overflow-y: auto;
+    white-space: pre-line;
 }
+
 .modal-quiz-close {
-  position: absolute;
-  top: 1.1rem;
-  right: 1.2rem;
-  font-size: 1.7rem;
-  color: #0074d9;
-  cursor: pointer;
-  font-weight: bold;
-  transition: color 0.2s;
+    position: absolute;
+    top: 1.1rem;
+    right: 1.2rem;
+    font-size: 1.7rem;
+    color: #0074d9;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s;
 }
+
 .modal-quiz-close:hover {
-  color: #e11d48;
+    color: #e11d48;
+}
+
+.quiz-question-block {
+    margin-bottom: 2em;
+}
+
+.quiz-question {
+    font-weight: 600;
+    color: #0074d9;
+    margin-bottom: 0.7em;
+    font-size: 1.08em;
+}
+
+.quiz-variants {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.quiz-variant-btn {
+    background: #f6f8fa;
+    color: #0074d9;
+    border: 1px solid #bcdffb;
+    border-radius: 8px;
+    padding: 0.7em 1em;
+    font-size: 1em;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.quiz-variant-btn:hover:not(:disabled) {
+    background: #e6f0fa;
+    border-color: #0074d9;
+}
+
+.quiz-variant-btn:disabled {
+    cursor: default;
+    opacity: 0.95;
+}
+
+.quiz-correct {
+    background: #e6fae6 !important;
+    color: #1a7f1a !important;
+    border-color: #1a7f1a !important;
+    font-weight: 600;
+}
+
+.quiz-wrong {
+    background: #ffeaea !important;
+    color: #e11d48 !important;
+    border-color: #e11d48 !important;
+    font-weight: 600;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 /* Stil modern pentru heading-uri și liste în rezumat */
 #rezumat-content h3, #rezumat-content h4 {
@@ -408,91 +481,37 @@
   flex-direction: column;
   gap: 0.5em;
 }
-.quiz-variant-btn {
-  background: #f6f8fa;
-  color: #0074d9;
-  border: 1px solid #bcdffb;
-  border-radius: 8px;
-  padding: 0.7em 1em;
-  font-size: 1em;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.quiz-variant-btn:hover:not(:disabled) {
-  background: #e6f0fa;
-  border-color: #0074d9;
-}
-.quiz-variant-btn:disabled {
-  cursor: default;
-  opacity: 0.95;
-}
-.quiz-correct {
-  background: #e6fae6 !important;
-  color: #1a7f1a !important;
-  border-color: #1a7f1a !important;
-  font-weight: 600;
-}
-.quiz-wrong {
-  background: #ffeaea !important;
-  color: #e11d48 !important;
-  border-color: #e11d48 !important;
-  font-weight: 600;
-}
-.quiz-report-btn {
-  margin-top: 1.5em;
-  background: #fff0f0;
-  color: #e11d48;
-  border: 1px solid #e11d48;
-  border-radius: 8px;
-  padding: 0.5em 1.2em;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.quiz-report-btn:hover {
-  background: #ffeaea;
-}
-.quiz-report-form {
-  margin-top: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7em;
-}
-.quiz-report-form textarea {
-  min-height: 60px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  padding: 0.5em;
-  font-size: 1em;
-  resize: vertical;
-}
-.quiz-report-form button[type="submit"] {
-  background: #0074d9;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.5em 1.2em;
-  font-size: 1em;
-  cursor: pointer;
-}
-.quiz-report-form button[type="submit"]:hover {
-  background: #005fa3;
-}
-.quiz-report-form button#quiz-report-cancel {
-  background: #eee;
-  color: #333;
-  border: none;
-  border-radius: 6px;
-  padding: 0.5em 1.2em;
-  font-size: 1em;
-  cursor: pointer;
-}
 .quiz-report-confirm {
-  margin-top: 1em;
-  color: #0074d9;
-  font-weight: 500;
-  text-align: center;
+    margin-top: 1.5em;
+    padding: 1em;
+    background: #e6f0fa;
+    border: 1px solid #0074d9;
+    border-radius: 8px;
+    color: #0074d9;
+    font-weight: 500;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.quiz-report-confirm::before {
+    content: "✓";
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 {% endblock %}
@@ -833,14 +852,96 @@ document.addEventListener('DOMContentLoaded', attachRezumatHandlers);
 function showQuizModal(quizContent) {
     const modal = document.getElementById('quiz-modal');
     const content = document.getElementById('quiz-content');
-    content.innerHTML = marked.parse(quizContent);
-    modal.style.display = 'block';
-    attachQuizHandlers();
+    
+    // Parsează quiz-ul Markdown și generează HTML interactiv
+    const questions = [];
+    let currentQ = null;
+    quizContent.split(/\r?\n/).forEach(line => {
+        if (line.startsWith('### ')) {
+            if (currentQ) questions.push(currentQ);
+            currentQ = { q: line.replace(/^### /, '').trim(), variants: [] };
+        } else if (line.match(/^\s*[-*] /)) {
+            let text = line.replace(/^\s*[-*] /, '').trim();
+            let isCorrect = false;
+            if (text.endsWith('(corect)')) {
+                isCorrect = true;
+                text = text.replace(/\s*\(corect\)$/, '').trim();
+            }
+            if (currentQ) currentQ.variants.push({ text, isCorrect });
+        }
+    });
+    if (currentQ) questions.push(currentQ);
+
+    // Generează HTML
+    let html = '';
+    questions.forEach((q, idx) => {
+        html += `<div class="quiz-question-block"><div class="quiz-question">${q.q}</div><div class="quiz-variants">`;
+        q.variants.forEach((v, vidx) => {
+            html += `<button type="button" class="quiz-variant-btn" data-q="${idx}" data-v="${vidx}">${v.text}</button>`;
+        });
+        html += '</div></div>';
+    });
+    
+    content.innerHTML = html;
+    modal.style.display = 'flex';
+    
+    // Adaugă logica de selectare și scor
+    let correctCount = 0;
+    let answered = Array(questions.length).fill(false);
+    questions.forEach((q, idx) => {
+        const btns = document.querySelectorAll(`.quiz-variant-btn[data-q="${idx}"]`);
+        btns.forEach((btn, vidx) => {
+            btn.onclick = function() {
+                if (answered[idx]) return;
+                answered[idx] = true;
+                // Dezactivează toate butoanele pentru această întrebare
+                btns.forEach(b => b.disabled = true);
+                // Evidențiază corect/greșit
+                q.variants.forEach((v, i) => {
+                    if (v.isCorrect) btns[i].classList.add('quiz-correct');
+                });
+                if (!q.variants[vidx].isCorrect) {
+                    btn.classList.add('quiz-wrong');
+                } else {
+                    correctCount++;
+                }
+                // Dacă toate întrebările au fost răspunse, salvează scorul
+                if (answered.every(Boolean)) {
+                    // Găsește id conversație activă
+                    let convId = null;
+                    document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
+                        if (wrapper.querySelector('.conversation-btn.active')) {
+                            convId = wrapper.querySelector('a').getAttribute('href').split('conversation_id=')[1];
+                        }
+                    });
+                    if (convId) {
+                        localStorage.setItem('quizScore_' + convId, correctCount);
+                        localStorage.setItem('quizTotal_' + convId, questions.length);
+                        updateQuizScoresInSidebar();
+                    }
+                }
+            };
+        });
+    });
+
     // Resetăm starea butonului de raportare la afișarea unui nou quiz
     quizReportBtn.style.display = 'inline-block';
     quizReportForm.style.display = 'none';
     quizReportConfirm.style.display = 'none';
 }
+
+// Adaugă event listener pentru butonul de închidere
+document.getElementById('quiz-close').onclick = function() {
+    document.getElementById('quiz-modal').style.display = 'none';
+};
+
+// Adaugă event listener pentru click în afara modalului
+window.addEventListener('click', function(event) {
+    var modal = document.getElementById('quiz-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
 
 // Raportează problemă la quiz
 const quizReportBtn = document.getElementById('quiz-report-btn');
