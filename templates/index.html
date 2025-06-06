@@ -137,7 +137,14 @@
     .sidebar.collapsed { width: 54px; }
 }
 @media (max-width: 700px) {
-    .sidebar { display: none; }
+    .sidebar {
+        display: flex;
+        position: fixed;
+        z-index: 1100;
+    }
+    .sidebar.collapsed {
+        display: none;
+    }
 }
 .container {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
@@ -222,7 +229,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="sidebar" class="sidebar collapsed">
+<div id="sidebar" class="sidebar">
     <div class="sidebar-header">
         <span class="sidebar-title">Conversații</span>
         <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Extinde/Restrânge bara">
@@ -242,7 +249,7 @@
             <div class="conversation-item-wrapper">
                 <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none; width: 100%; display: block;">
                     <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}">
-                        Conversație {{ loop.index }}<br>
+                        {{ conv[6] if conv[6] else 'Conversație ' ~ loop.index }}<br>
                         <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
                     </button>
                 </a>

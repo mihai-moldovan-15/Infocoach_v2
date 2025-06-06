@@ -92,7 +92,8 @@ def init_db():
             message_count INTEGER DEFAULT 0,
             context_window_size INTEGER DEFAULT 10,
             total_tokens INTEGER DEFAULT 0,
-            last_context_update TEXT
+            last_context_update TEXT,
+            title TEXT
         )
     ''')
 
@@ -816,8 +817,40 @@ def delete_conversation(conversation_id):
     conn.close()
     return redirect(url_for('index'))
 
+def migrate_set_titles_for_old_conversations():
+    """Setează titlul pentru toate conversațiile care nu au titlu, folosind primul mesaj al utilizatorului."""
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Selectează conversațiile fără titlu sau cu titlu NULL/vid
+    c.execute('''
+        SELECT id FROM conversations WHERE title IS NULL OR title = ''
+    ''')
+    convs = c.fetchall()
+    for (conv_id,) in convs:
+        # Ia primul mesaj al utilizatorului
+        c.execute('''
+            SELECT content FROM messages WHERE conversation_id = ? AND role = 'user' ORDER BY timestamp ASC, id ASC LIMIT 1
+        ''', (conv_id,))
+        row = c.fetchone()
+        if row and row[0]:
+            title = row[0][:50] + "..." if len(row[0]) > 50 else row[0]
+            c.execute('''
+                UPDATE conversations SET title = ? WHERE id = ?
+            ''', (title, conv_id))
+    conn.commit()
+    conn.close()
+
+# === Route for debugging conversations ===
+@app.route('/api/debug_conversations')
+def debug_conversations():
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    c.execute('SELECT id, title FROM conversations ORDER BY start_time DESC')
+    data = c.fetchall()
+    conn.close()
+    return jsonify([{'id': row[0], 'title': row[1]} for row in data])
+
 # === Start application ===
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Create database tables
+    migrate_set_titles_for_old_conversations()
     app.run(debug=True)
