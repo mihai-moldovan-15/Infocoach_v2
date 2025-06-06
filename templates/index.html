@@ -394,7 +394,106 @@
 #rezumat-content p {
   margin-bottom: 0.7em;
 }
-
+.quiz-question-block {
+  margin-bottom: 2em;
+}
+.quiz-question {
+  font-weight: 600;
+  color: #0074d9;
+  margin-bottom: 0.7em;
+  font-size: 1.08em;
+}
+.quiz-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.quiz-variant-btn {
+  background: #f6f8fa;
+  color: #0074d9;
+  border: 1px solid #bcdffb;
+  border-radius: 8px;
+  padding: 0.7em 1em;
+  font-size: 1em;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.quiz-variant-btn:hover:not(:disabled) {
+  background: #e6f0fa;
+  border-color: #0074d9;
+}
+.quiz-variant-btn:disabled {
+  cursor: default;
+  opacity: 0.95;
+}
+.quiz-correct {
+  background: #e6fae6 !important;
+  color: #1a7f1a !important;
+  border-color: #1a7f1a !important;
+  font-weight: 600;
+}
+.quiz-wrong {
+  background: #ffeaea !important;
+  color: #e11d48 !important;
+  border-color: #e11d48 !important;
+  font-weight: 600;
+}
+.quiz-report-btn {
+  margin-top: 1.5em;
+  background: #fff0f0;
+  color: #e11d48;
+  border: 1px solid #e11d48;
+  border-radius: 8px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.quiz-report-btn:hover {
+  background: #ffeaea;
+}
+.quiz-report-form {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+.quiz-report-form textarea {
+  min-height: 60px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  font-size: 1em;
+  resize: vertical;
+}
+.quiz-report-form button[type="submit"] {
+  background: #0074d9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  cursor: pointer;
+}
+.quiz-report-form button[type="submit"]:hover {
+  background: #005fa3;
+}
+.quiz-report-form button#quiz-report-cancel {
+  background: #eee;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  cursor: pointer;
+}
+.quiz-report-confirm {
+  margin-top: 1em;
+  color: #0074d9;
+  font-weight: 500;
+  text-align: center;
+}
 </style>
 {% endblock %}
 
@@ -630,7 +729,30 @@ document.addEventListener('DOMContentLoaded', updateStats);
 </script>
 
 <script>
-// Eliminat scriptul de pre-aplicare collapsed pe sidebar
+// Afișează scorul quiz-ului lângă fiecare conversație
+function updateQuizScoresInSidebar() {
+    document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
+        const a = wrapper.querySelector('a');
+        if (!a) return;
+        const convId = a.getAttribute('href').split('conversation_id=')[1];
+        if (!convId) return;
+        let score = localStorage.getItem('quizScore_' + convId);
+        let total = localStorage.getItem('quizTotal_' + convId);
+        let scoreSpan = wrapper.querySelector('.quiz-score-span');
+        if (!scoreSpan) {
+            scoreSpan = document.createElement('span');
+            scoreSpan.className = 'quiz-score-span';
+            scoreSpan.style.cssText = 'float:right; color:#0074d9; font-size:0.95em; font-weight:500; margin-left:8px;';
+            wrapper.querySelector('.conversation-btn').appendChild(scoreSpan);
+        }
+        if (score && total) {
+            scoreSpan.textContent = `${score}/${total} corecte`;
+        } else {
+            scoreSpan.textContent = '';
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', updateQuizScoresInSidebar);
 </script>
 
 <!-- Modal Rezumat -->
@@ -696,25 +818,80 @@ document.addEventListener('DOMContentLoaded', attachRezumatHandlers);
     <span class="modal-quiz-close" id="quiz-close">&times;</span>
     <h3 class="modal-quiz-title">Quiz conversație</h3>
     <div id="quiz-content" class="modal-quiz-body"></div>
+    <button id="quiz-report-btn" class="quiz-report-btn">Raportează problemă la quiz</button>
+    <form id="quiz-report-form" class="quiz-report-form" style="display:none;">
+      <textarea id="quiz-report-text" placeholder="Descrie problema..." required></textarea>
+      <button type="submit">Trimite raport</button>
+      <button type="button" id="quiz-report-cancel">Anulează</button>
+    </form>
+    <div id="quiz-report-confirm" class="quiz-report-confirm" style="display:none;"></div>
   </div>
 </div>
 
 <script>
-// Quiz modal logic cu Markdown
-function showQuizModal(content) {
-    let html = marked.parse(content);
-    document.getElementById('quiz-content').innerHTML = html;
-    document.getElementById('quiz-modal').style.display = 'flex';
+// Quiz modal logic cu interactivitate
+function showQuizModal(quizContent) {
+    const modal = document.getElementById('quiz-modal');
+    const content = document.getElementById('quiz-content');
+    content.innerHTML = marked.parse(quizContent);
+    modal.style.display = 'block';
+    attachQuizHandlers();
+    // Resetăm starea butonului de raportare la afișarea unui nou quiz
+    quizReportBtn.style.display = 'inline-block';
+    quizReportForm.style.display = 'none';
+    quizReportConfirm.style.display = 'none';
 }
-document.getElementById('quiz-close').onclick = function() {
-    document.getElementById('quiz-modal').style.display = 'none';
+
+// Raportează problemă la quiz
+const quizReportBtn = document.getElementById('quiz-report-btn');
+const quizReportForm = document.getElementById('quiz-report-form');
+const quizReportText = document.getElementById('quiz-report-text');
+const quizReportCancel = document.getElementById('quiz-report-cancel');
+const quizReportConfirm = document.getElementById('quiz-report-confirm');
+
+quizReportBtn.onclick = function() {
+    quizReportBtn.style.display = 'none';
+    quizReportForm.style.display = 'block';
+    quizReportConfirm.style.display = 'none';
+    quizReportText.value = '';
+    quizReportText.focus();
 };
-window.addEventListener('click', function(event) {
-    var modal = document.getElementById('quiz-modal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-});
+
+quizReportCancel.onclick = function() {
+    quizReportForm.style.display = 'none';
+    quizReportBtn.style.display = 'inline-block';
+    quizReportConfirm.style.display = 'none';
+};
+
+quizReportForm.onsubmit = function(e) {
+    e.preventDefault();
+    const text = quizReportText.value.trim();
+    if (!text) return;
+    
+    // Găsește id conversație activă
+    let convId = null;
+    document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
+        if (wrapper.querySelector('.conversation-btn.active')) {
+            convId = wrapper.querySelector('a').getAttribute('href').split('conversation_id=')[1];
+        }
+    });
+    if (!convId) return;
+    
+    fetch(`/api/quiz_report/${convId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+    })
+    .then(r => r.json())
+    .then(data => {
+        quizReportForm.style.display = 'none';
+        quizReportBtn.style.display = 'none'; // Ascundem butonul după trimitere
+        quizReportConfirm.style.display = 'block';
+        quizReportConfirm.textContent = data.success ? 'Raport trimis! Mulțumim.' : (data.error || 'Eroare la trimiterea raportului.');
+        // Nu mai resetăm starea după timeout, butonul rămâne ascuns
+    });
+};
+
 // Attach event to all Quiz buttons
 function attachQuizHandlers() {
     document.querySelectorAll('.conversation-menu .menu-item').forEach(function(btn) {
@@ -730,12 +907,7 @@ function attachQuizHandlers() {
                     .then(r => r.json())
                     .then(data => {
                         if (data.success) {
-                            // Formatare: bold pe întrebări, spațiere între întrebări
-                            let html = data.quiz
-                                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-                                .replace(/\n\n/g, '<br><br>')
-                                .replace(/\n/g, '<br>');
-                            showQuizModal(html);
+                            showQuizModal(data.quiz);
                         } else {
                             showQuizModal('<span style="color:red">' + (data.error || 'Eroare la generarea quiz-ului') + '</span>');
                         }

@@ -970,16 +970,26 @@ def quiz_conversatie(conversation_id):
     conn.close()
     if not messages:
         return jsonify({'error': 'Conversația nu are mesaje'}), 400
+    # Determină volumul conversației
+    total_chars = sum(len(m[1]) for m in messages)
+    if total_chars < 600:
+        n_questions = 2
+    elif total_chars < 1200:
+        n_questions = 3
+    elif total_chars < 2000:
+        n_questions = 4
+    else:
+        n_questions = 5
     # Construiește contextul pentru OpenAI
     conv_text = "\n".join([
         ("Utilizator: " if m[0]=='user' else "InfoCoach: ") + m[1] for m in messages
     ])
-    prompt = f"""Generează un quiz scurt (3-5 întrebări) pe baza conversației de mai jos. Pentru fiecare întrebare, folosește exact formatul:
+    prompt = f"""Generează un quiz cu {n_questions} întrebări pe baza conversației de mai jos. Pentru fiecare întrebare, folosește exact formatul:
 ### Întrebarea aici
 - variantă 1
 - variantă 2 (corect)
 - variantă 3
-Nu folosi bold sau alte marcaje, doar (corect) la varianta corectă. Folosește Markdown pentru structură, ca la exemplu.\n\n{conv_text}\n\nQuiz structurat în Markdown:"""
+IMPORTANT: Marchează cu (corect) doar o singură variantă la fiecare întrebare, și doar dacă ești 100% sigur că este corectă conform informațiilor din conversație. Nu marca nicio variantă ca fiind corectă dacă nu ești sigur. Nu folosi bold sau alte marcaje, doar (corect) la varianta corectă. Folosește Markdown pentru structură, ca la exemplu.\n\n{conv_text}\n\nQuiz structurat în Markdown:"""
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -987,13 +997,27 @@ Nu folosi bold sau alte marcaje, doar (corect) la varianta corectă. Folosește 
                 {"role": "system", "content": "Ești un asistent care generează quiz-uri clare, structurate și concise pentru conversații educaționale. Păstrează formatarea Markdown în răspuns, fără bold, doar cu (corect) la varianta corectă."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=500,
+            max_tokens=600,
             temperature=0.4
         )
         quiz = response.choices[0].message.content.strip()
         return jsonify({'success': True, 'quiz': quiz})
     except Exception as e:
         return jsonify({'error': f'Eroare la generarea quiz-ului: {e}'})
+
+# === Route for quiz report ===
+@app.route('/api/quiz_report/<int:conversation_id>', methods=['POST'])
+def quiz_report(conversation_id):
+    data = request.get_json()
+    text = data.get('text', '').strip()
+    if not text:
+        return jsonify({'error': 'Textul raportului este gol.'}), 400
+    try:
+        with open('quiz_reports.log', 'a', encoding='utf-8') as f:
+            f.write(f"{datetime.now().isoformat()} | conv_id={conversation_id} | {text}\n")
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # === Start application ===
 if __name__ == '__main__':
