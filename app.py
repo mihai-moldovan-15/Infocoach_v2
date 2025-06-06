@@ -850,6 +850,151 @@ def debug_conversations():
     conn.close()
     return jsonify([{'id': row[0], 'title': row[1]} for row in data])
 
+# === Route for getting conversation stats ===
+@app.route('/api/conversation_stats/<int:conversation_id>')
+@login_required
+def get_conversation_stats(conversation_id):
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Get conversation stats
+    c.execute('''
+        SELECT context_window_size, total_tokens, message_count, last_context_update, title
+        FROM conversations
+        WHERE id = ? AND user_id = ?
+    ''', (conversation_id, current_user.id))
+    row = c.fetchone()
+    if not row:
+        conn.close()
+        return jsonify({'error': 'Conversation not found'}), 404
+    context_window_size, total_tokens, message_count, last_update, title = row
+    # Get messages in context
+    c.execute('''
+        SELECT COUNT(*) FROM messages 
+        WHERE conversation_id = ? AND in_context = 1
+    ''', (conversation_id,))
+    messages_in_context = c.fetchone()[0]
+    conn.close()
+    return jsonify({
+        'context_window_size': context_window_size,
+        'total_tokens': total_tokens,
+        'message_count': message_count,
+        'messages_in_context': messages_in_context,
+        'last_update': last_update,
+        'title': title
+    })
+
+# === Route for updating context window size ===
+@app.route('/api/update_context_window/<int:conversation_id>', methods=['POST'])
+@login_required
+def update_context_window_size(conversation_id):
+    new_size = request.json.get('size')
+    if not new_size or not isinstance(new_size, int) or new_size < 1:
+        return jsonify({'error': 'Invalid window size'}), 400
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Verify conversation belongs to user
+    c.execute('SELECT user_id FROM conversations WHERE id = ?', (conversation_id,))
+    row = c.fetchone()
+    if not row or row[0] != current_user.id:
+        conn.close()
+        return jsonify({'error': 'Conversation not found'}), 404
+    # Update window size
+    c.execute('''
+        UPDATE conversations 
+        SET context_window_size = ?
+        WHERE id = ?
+    ''', (new_size, conversation_id))
+    conn.commit()
+    conn.close()
+    # Update context window with new size
+    update_context_window(conversation_id)
+    return jsonify({'success': True, 'new_size': new_size})
+
+# === Route for rezumat conversatie ===
+@app.route('/api/rezumat_conversatie/<int:conversation_id>')
+@login_required
+def rezumat_conversatie(conversation_id):
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Verifică dacă conversația aparține userului
+    c.execute('SELECT user_id FROM conversations WHERE id = ?', (conversation_id,))
+    row = c.fetchone()
+    if not row or row[0] != current_user.id:
+        conn.close()
+        return jsonify({'error': 'Conversație inexistentă sau acces interzis'}), 404
+    # Ia mesajele din conversație (max 20 pentru context)
+    c.execute('''
+        SELECT role, content FROM messages WHERE conversation_id = ? ORDER BY timestamp ASC, id ASC LIMIT 20
+    ''', (conversation_id,))
+    messages = c.fetchall()
+    conn.close()
+    if not messages:
+        return jsonify({'error': 'Conversația nu are mesaje'}), 400
+    # Construiește contextul pentru OpenAI
+    conv_text = "\n".join([
+        ("Utilizator: " if m[0]=='user' else "InfoCoach: ") + m[1] for m in messages
+    ])
+    prompt = f"""Rezumă conversația de mai jos într-un mod clar, structurat și pe scurt (maxim 5-7 propoziții). Folosește titluri de secțiuni dacă e relevant.\n\n{conv_text}\n\nRezumat structurat:"""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Ești un asistent care face rezumate clare, structurate și concise pentru conversații educaționale."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=350,
+            temperature=0.4
+        )
+        rezumat = response.choices[0].message.content.strip()
+        return jsonify({'success': True, 'rezumat': rezumat})
+    except Exception as e:
+        return jsonify({'error': f'Eroare la generarea rezumatului: {e}'})
+
+# === Route for quiz conversatie ===
+@app.route('/api/quiz_conversatie/<int:conversation_id>')
+@login_required
+def quiz_conversatie(conversation_id):
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    # Verifică dacă conversația aparține userului
+    c.execute('SELECT user_id FROM conversations WHERE id = ?', (conversation_id,))
+    row = c.fetchone()
+    if not row or row[0] != current_user.id:
+        conn.close()
+        return jsonify({'error': 'Conversație inexistentă sau acces interzis'}), 404
+    # Ia mesajele din conversație (max 20 pentru context)
+    c.execute('''
+        SELECT role, content FROM messages WHERE conversation_id = ? ORDER BY timestamp ASC, id ASC LIMIT 20
+    ''', (conversation_id,))
+    messages = c.fetchall()
+    conn.close()
+    if not messages:
+        return jsonify({'error': 'Conversația nu are mesaje'}), 400
+    # Construiește contextul pentru OpenAI
+    conv_text = "\n".join([
+        ("Utilizator: " if m[0]=='user' else "InfoCoach: ") + m[1] for m in messages
+    ])
+    prompt = f"""Generează un quiz scurt (3-5 întrebări) pe baza conversației de mai jos. Pentru fiecare întrebare, folosește exact formatul:
+### Întrebarea aici
+- variantă 1
+- variantă 2 (corect)
+- variantă 3
+Nu folosi bold sau alte marcaje, doar (corect) la varianta corectă. Folosește Markdown pentru structură, ca la exemplu.\n\n{conv_text}\n\nQuiz structurat în Markdown:"""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Ești un asistent care generează quiz-uri clare, structurate și concise pentru conversații educaționale. Păstrează formatarea Markdown în răspuns, fără bold, doar cu (corect) la varianta corectă."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=500,
+            temperature=0.4
+        )
+        quiz = response.choices[0].message.content.strip()
+        return jsonify({'success': True, 'quiz': quiz})
+    except Exception as e:
+        return jsonify({'error': f'Eroare la generarea quiz-ului: {e}'})
+
 # === Start application ===
 if __name__ == '__main__':
     migrate_set_titles_for_old_conversations()

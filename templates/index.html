@@ -225,6 +225,176 @@
     color: #fff;
     border-color: #0074d9;
 }
+
+.conversation-stats {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+.stats-panel {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.stat-label {
+    color: #666;
+    font-size: 0.9em;
+}
+.stat-value {
+    font-weight: 500;
+    color: #0074d9;
+}
+.context-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.context-controls input[type="number"] {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.context-controls button {
+    padding: 4px 8px;
+    font-size: 0.9em;
+}
+/* Modal Rezumat stil modern */
+.modal-rezumat {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.25);
+  align-items: center;
+  justify-content: center;
+}
+.modal-rezumat[style*="display: flex"] {
+  display: flex !important;
+}
+.modal-rezumat-content {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 90vw;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+  position: relative;
+  animation: modalIn 0.25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes modalIn {
+  from { transform: translateY(40px) scale(0.98); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.modal-rezumat-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: #0074d9;
+  text-align: center;
+  font-weight: 600;
+}
+.modal-rezumat-body {
+  font-size: 1.08rem;
+  color: #222;
+  line-height: 1.6;
+  max-height: 50vh;
+  overflow-y: auto;
+  white-space: pre-line;
+}
+.modal-rezumat-close {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.2rem;
+  font-size: 1.7rem;
+  color: #0074d9;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.modal-rezumat-close:hover {
+  color: #e11d48;
+}
+/* Modal Quiz stil modern */
+.modal-quiz {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.25);
+  align-items: center;
+  justify-content: center;
+}
+.modal-quiz[style*="display: flex"] {
+  display: flex !important;
+}
+.modal-quiz-content {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 520px;
+  width: 95vw;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+  position: relative;
+  animation: modalIn 0.25s cubic-bezier(.4,0,.2,1);
+}
+.modal-quiz-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: #0074d9;
+  text-align: center;
+  font-weight: 600;
+}
+.modal-quiz-body {
+  font-size: 1.08rem;
+  color: #222;
+  line-height: 1.6;
+  max-height: 50vh;
+  overflow-y: auto;
+  white-space: pre-line;
+}
+.modal-quiz-close {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.2rem;
+  font-size: 1.7rem;
+  color: #0074d9;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.modal-quiz-close:hover {
+  color: #e11d48;
+}
+/* Stil modern pentru heading-uri și liste în rezumat */
+#rezumat-content h3, #rezumat-content h4 {
+  color: #0074d9;
+  font-size: 1.1em;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+#rezumat-content ul, #rezumat-content ol {
+  margin-left: 1.2em;
+  margin-bottom: 1em;
+}
+#rezumat-content li {
+  margin-bottom: 0.3em;
+  line-height: 1.5;
+}
+#rezumat-content p {
+  margin-bottom: 0.7em;
+}
+
 </style>
 {% endblock %}
 
@@ -273,6 +443,27 @@
     <div class="chat-container">
         <div class="chat-header">
             <h2>InfoCoach Chat</h2>
+            {% if selected_conversation_id %}
+            <div class="conversation-stats">
+                <div class="stats-panel">
+                    <div class="stat-item">
+                        <span class="stat-label">Tokeni:</span>
+                        <span class="stat-value" id="token-count">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Mesaje în context:</span>
+                        <span class="stat-value" id="context-count">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Fereastră context:</span>
+                        <div class="context-controls">
+                            <input type="number" id="context-window-size" min="1" max="20" value="10">
+                            <button onclick="updateContextWindow()">Actualizare</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
         <div class="chat-messages" id="chat-messages">
             {% for message in chat_history %}
@@ -352,18 +543,20 @@ function submitForm(event) {
     return false;
 }
 
-document.getElementById('sidebar-toggle-btn').onclick = function() {
+document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
-    var navBrand = document.getElementById('nav-brand');
-    var container = document.querySelector('.container');
-    sidebar.classList.toggle('collapsed');
-    // Move container accordingly (CSS now handles width/margin)
-    if (sidebar.classList.contains('collapsed')) {
-        navBrand.classList.remove('shifted');
-    } else {
-        navBrand.classList.add('shifted');
-    }
-};
+    var toggleBtn = document.getElementById('sidebar-toggle-btn');
+    toggleBtn.onclick = function() {
+        sidebar.classList.toggle('collapsed');
+        var navBrand = document.getElementById('nav-brand');
+        var container = document.querySelector('.container');
+        if (sidebar.classList.contains('collapsed')) {
+            navBrand.classList.remove('shifted');
+        } else {
+            navBrand.classList.add('shifted');
+        }
+    };
+});
 
 // Conversation menu toggle logic
 function closeAllMenus() {
@@ -387,7 +580,179 @@ document.addEventListener('DOMContentLoaded', function() {
         closeAllMenus();
     });
 });
+
+// Functie pentru actualizare statistici
+function updateStats() {
+    const conversationId = document.querySelector('input[name="conversation_id"]').value;
+    if (!conversationId) return;
+    fetch(`/api/conversation_stats/${conversationId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) return;
+            document.getElementById('token-count').textContent = data.total_tokens;
+            document.getElementById('context-count').textContent = data.messages_in_context;
+            document.getElementById('context-window-size').value = data.context_window_size;
+        });
+}
+// Functie pentru actualizare fereastra context
+function updateContextWindow() {
+    const conversationId = document.querySelector('input[name="conversation_id"]').value;
+    if (!conversationId) return;
+    const newSize = parseInt(document.getElementById('context-window-size').value);
+    if (isNaN(newSize) || newSize < 1 || newSize > 20) {
+        alert('Dimensiunea ferestrei de context trebuie să fie între 1 și 20.');
+        return;
+    }
+    fetch(`/api/update_context_window/${conversationId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ size: newSize })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Eroare la actualizarea ferestrei de context: ' + data.error);
+            return;
+        }
+        updateStats();
+    });
+}
+// Actualizează statistici la încărcare și după fiecare mesaj
+if (typeof submitForm === 'function') {
+    const originalSubmitForm = submitForm;
+    submitForm = function(event) {
+        const result = originalSubmitForm(event);
+        setTimeout(updateStats, 1000);
+        return result;
+    };
+}
+document.addEventListener('DOMContentLoaded', updateStats);
 </script>
+
+<script>
+// Eliminat scriptul de pre-aplicare collapsed pe sidebar
+</script>
+
+<!-- Modal Rezumat -->
+<div id="rezumat-modal" class="modal-rezumat" style="display:none;">
+  <div class="modal-rezumat-content">
+    <span class="modal-rezumat-close" id="rezumat-close">&times;</span>
+    <h3 class="modal-rezumat-title">Rezumat conversație</h3>
+    <div id="rezumat-content" class="modal-rezumat-body"></div>
+  </div>
+</div>
+
+<script>
+// Rezumat modal logic cu Markdown
+function showRezumatModal(content) {
+    // Folosește marked.js pentru a converti Markdown în HTML
+    let html = marked.parse(content);
+    document.getElementById('rezumat-content').innerHTML = html;
+    document.getElementById('rezumat-modal').style.display = 'flex';
+}
+document.getElementById('rezumat-close').onclick = function() {
+    document.getElementById('rezumat-modal').style.display = 'none';
+};
+window.onclick = function(event) {
+    var modal = document.getElementById('rezumat-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+// Attach event to all Rezumat buttons
+function attachRezumatHandlers() {
+    document.querySelectorAll('.conversation-menu .menu-item').forEach(function(btn) {
+        if (btn.textContent.trim() === 'Rezumat') {
+            btn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var convId = this.closest('.conversation-item-wrapper').querySelector('a').getAttribute('href').split('conversation_id=')[1];
+                if (!convId) return;
+                btn.textContent = 'Se generează...';
+                btn.disabled = true;
+                fetch(`/api/rezumat_conversatie/${convId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            showRezumatModal(data.rezumat.replace(/\n/g, '<br>'));
+                        } else {
+                            showRezumatModal('<span style="color:red">' + (data.error || 'Eroare la generarea rezumatului') + '</span>');
+                        }
+                    })
+                    .finally(() => {
+                        btn.textContent = 'Rezumat';
+                        btn.disabled = false;
+                    });
+            };
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', attachRezumatHandlers);
+</script>
+
+<!-- Modal Quiz -->
+<div id="quiz-modal" class="modal-quiz" style="display:none;">
+  <div class="modal-quiz-content">
+    <span class="modal-quiz-close" id="quiz-close">&times;</span>
+    <h3 class="modal-quiz-title">Quiz conversație</h3>
+    <div id="quiz-content" class="modal-quiz-body"></div>
+  </div>
+</div>
+
+<script>
+// Quiz modal logic cu Markdown
+function showQuizModal(content) {
+    let html = marked.parse(content);
+    document.getElementById('quiz-content').innerHTML = html;
+    document.getElementById('quiz-modal').style.display = 'flex';
+}
+document.getElementById('quiz-close').onclick = function() {
+    document.getElementById('quiz-modal').style.display = 'none';
+};
+window.addEventListener('click', function(event) {
+    var modal = document.getElementById('quiz-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+// Attach event to all Quiz buttons
+function attachQuizHandlers() {
+    document.querySelectorAll('.conversation-menu .menu-item').forEach(function(btn) {
+        if (btn.textContent.trim() === 'Creare Quiz') {
+            btn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var convId = this.closest('.conversation-item-wrapper').querySelector('a').getAttribute('href').split('conversation_id=')[1];
+                if (!convId) return;
+                btn.textContent = 'Se generează...';
+                btn.disabled = true;
+                fetch(`/api/quiz_conversatie/${convId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Formatare: bold pe întrebări, spațiere între întrebări
+                            let html = data.quiz
+                                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                                .replace(/\n\n/g, '<br><br>')
+                                .replace(/\n/g, '<br>');
+                            showQuizModal(html);
+                        } else {
+                            showQuizModal('<span style="color:red">' + (data.error || 'Eroare la generarea quiz-ului') + '</span>');
+                        }
+                    })
+                    .finally(() => {
+                        btn.textContent = 'Creare Quiz';
+                        btn.disabled = false;
+                    });
+            };
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', function() {
+    attachQuizHandlers();
+});
+</script>
+
 {% endblock %}
 
 {% block scripts %}
@@ -401,4 +766,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<!-- Marked.js pentru randare Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 {% endblock %}
