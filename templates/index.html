@@ -335,10 +335,17 @@
     background: rgba(0,0,0,0.25);
     align-items: center;
     justify-content: center;
+    transition: opacity 0.9s ease;
+    opacity: 1;
 }
 
 .modal-quiz[style*="display: flex"] {
     display: flex !important;
+}
+
+.modal-quiz.fade-out {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .modal-quiz-content {
@@ -512,6 +519,98 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+.quiz-score-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3em 0.6em;
+    border-radius: 6px;
+    font-size: 0.85em;
+    margin-left: 0.5em;
+    font-weight: 500;
+    gap: 0.5em;
+}
+
+.quiz-score-message {
+    font-weight: 600;
+}
+
+.quiz-score-numbers {
+    opacity: 0.9;
+}
+
+.quiz-score-excellent {
+    background: rgba(34, 197, 94, 0.1);
+    color: #166534;
+}
+
+.quiz-score-good {
+    background: rgba(234, 179, 8, 0.1);
+    color: #854d0e;
+}
+
+.quiz-score-poor {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+}
+
+.quiz-result {
+    margin-top: 2em;
+    padding: 1.5em;
+    border-radius: 12px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.quiz-result-title {
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+
+.quiz-result-score {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.quiz-result-excellent {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #166534;
+}
+
+.quiz-result-good {
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    color: #854d0e;
+}
+
+.quiz-result-poor {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #991b1b;
+}
+
+.quiz-save-btn {
+    background: #0074d9;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7em 2em;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+}
+.quiz-save-btn:hover {
+    background: #005fa3;
+}
+.quiz-save-confirm {
+    color: #22c55e;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-top: 0.5em;
 }
 </style>
 {% endblock %}
@@ -751,27 +850,53 @@ document.addEventListener('DOMContentLoaded', updateStats);
 // Afișează scorul quiz-ului lângă fiecare conversație
 function updateQuizScoresInSidebar() {
     document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
-        const a = wrapper.querySelector('a');
-        if (!a) return;
-        const convId = a.getAttribute('href').split('conversation_id=')[1];
-        if (!convId) return;
-        let score = localStorage.getItem('quizScore_' + convId);
-        let total = localStorage.getItem('quizTotal_' + convId);
-        let scoreSpan = wrapper.querySelector('.quiz-score-span');
-        if (!scoreSpan) {
-            scoreSpan = document.createElement('span');
-            scoreSpan.className = 'quiz-score-span';
-            scoreSpan.style.cssText = 'float:right; color:#0074d9; font-size:0.95em; font-weight:500; margin-left:8px;';
-            wrapper.querySelector('.conversation-btn').appendChild(scoreSpan);
+        const convId = wrapper.querySelector('a').getAttribute('href').split('conversation_id=')[1];
+        const score = localStorage.getItem('quizScore_' + convId);
+        const total = localStorage.getItem('quizTotal_' + convId);
+        
+        // Șterge indicatorul vechi dacă există
+        const oldIndicator = wrapper.querySelector('.quiz-score-indicator');
+        if (oldIndicator) {
+            oldIndicator.remove();
         }
-        if (score && total) {
-            scoreSpan.textContent = `${score}/${total} corecte`;
-        } else {
-            scoreSpan.textContent = '';
+        
+        if (score !== null && total !== null) {
+            const percentage = (parseInt(score) / parseInt(total)) * 100;
+            let scoreClass = '';
+            let resultMessage = '';
+            
+            if (percentage >= 80) {
+                scoreClass = 'quiz-score-excellent';
+                resultMessage = 'Excelent!';
+            } else if (percentage >= 50) {
+                scoreClass = 'quiz-score-good';
+                resultMessage = 'Bun!';
+            } else {
+                scoreClass = 'quiz-score-poor';
+                resultMessage = 'Mai poți face progres!';
+            }
+            
+            const indicator = document.createElement('span');
+            indicator.className = `quiz-score-indicator ${scoreClass}`;
+            indicator.innerHTML = `
+                <span class="quiz-score-message">${resultMessage}</span>
+                <span class="quiz-score-numbers">${score}/${total}</span>
+            `;
+            
+            // Adaugă indicatorul după titlul conversației
+            const title = wrapper.querySelector('.conversation-title');
+            if (title) {
+                title.appendChild(indicator);
+            }
         }
     });
 }
-document.addEventListener('DOMContentLoaded', updateQuizScoresInSidebar);
+
+// Apelează funcția la încărcarea paginii
+document.addEventListener('DOMContentLoaded', function() {
+    attachQuizHandlers();
+    updateQuizScoresInSidebar();
+});
 </script>
 
 <!-- Modal Rezumat -->
@@ -881,6 +1006,8 @@ function showQuizModal(quizContent) {
         });
         html += '</div></div>';
     });
+    // Adaugă container pentru butonul de salvare și mesajul de confirmare
+    html += '<div id="quiz-save-container" style="display:none; text-align:center; margin-top:2em;"><button id="quiz-save-btn" class="quiz-save-btn">Salvează quiz</button><div id="quiz-save-confirm" class="quiz-save-confirm" style="display:none; margin-top:1em;"></div></div>';
     
     content.innerHTML = html;
     modal.style.display = 'flex';
@@ -905,24 +1032,47 @@ function showQuizModal(quizContent) {
                 } else {
                     correctCount++;
                 }
-                // Dacă toate întrebările au fost răspunse, salvează scorul
+                // Dacă toate întrebările au fost răspunse, arată butonul de salvare
                 if (answered.every(Boolean)) {
-                    // Găsește id conversație activă
-                    let convId = null;
-                    document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
-                        if (wrapper.querySelector('.conversation-btn.active')) {
-                            convId = wrapper.querySelector('a').getAttribute('href').split('conversation_id=')[1];
-                        }
-                    });
-                    if (convId) {
-                        localStorage.setItem('quizScore_' + convId, correctCount);
-                        localStorage.setItem('quizTotal_' + convId, questions.length);
-                        updateQuizScoresInSidebar();
-                    }
+                    document.getElementById('quiz-save-container').style.display = 'block';
                 }
             };
         });
     });
+
+    // Logica pentru butonul de salvare
+    setTimeout(() => {
+        const saveBtn = document.getElementById('quiz-save-btn');
+        const saveConfirm = document.getElementById('quiz-save-confirm');
+        if (saveBtn) {
+            saveBtn.onclick = function() {
+                // Găsește id conversație activă
+                let convId = null;
+                document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
+                    if (wrapper.querySelector('.conversation-btn.active')) {
+                        convId = wrapper.querySelector('a').getAttribute('href').split('conversation_id=')[1];
+                    }
+                });
+                if (convId) {
+                    localStorage.setItem('quizScore_' + convId, correctCount);
+                    localStorage.setItem('quizTotal_' + convId, questions.length);
+                    updateQuizScoresInSidebar();
+                    saveBtn.style.display = 'none';
+                    saveConfirm.style.display = 'block';
+                    saveConfirm.textContent = 'Rezultatul a fost salvat!';
+                    // Afișează mesajul 1.5s, apoi fade-out 0.9s
+                    const modal = document.getElementById('quiz-modal');
+                    setTimeout(() => {
+                        modal.classList.add('fade-out');
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            modal.classList.remove('fade-out');
+                        }, 900);
+                    }, 1200);
+                }
+            };
+        }
+    }, 0);
 
     // Resetăm starea butonului de raportare la afișarea unui nou quiz
     quizReportBtn.style.display = 'inline-block';
