@@ -89,7 +89,10 @@ def init_db():
             clasa TEXT,
             start_time TEXT,
             is_active INTEGER DEFAULT 1,
-            message_count INTEGER DEFAULT 0
+            message_count INTEGER DEFAULT 0,
+            context_window_size INTEGER DEFAULT 10,
+            total_tokens INTEGER DEFAULT 0,
+            last_context_update TEXT
         )
     ''')
 
@@ -100,7 +103,9 @@ def init_db():
             conversation_id INTEGER,
             role TEXT,
             content TEXT,
-            timestamp TEXT
+            timestamp TEXT,
+            token_count INTEGER DEFAULT 0,
+            in_context INTEGER DEFAULT 1
         )
     ''')
     
@@ -110,27 +115,122 @@ def init_db():
 # Initialize feedback database
 init_db()
 
-# === Update: Add role and content to messages table if not present ===
-def ensure_messages_schema():
+# === Update: Add new fields to tables if not present ===
+def ensure_schema_updates():
     conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
+    
+    # Check and add new columns to conversations table
+    c.execute("PRAGMA table_info(conversations)")
+    conv_columns = [col[1] for col in c.fetchall()]
+    
+    new_conv_columns = {
+        'context_window_size': 'INTEGER DEFAULT 10',
+        'total_tokens': 'INTEGER DEFAULT 0',
+        'last_context_update': 'TEXT'
+    }
+    
+    for col_name, col_type in new_conv_columns.items():
+        if col_name not in conv_columns:
+            try:
+                c.execute(f'ALTER TABLE conversations ADD COLUMN {col_name} {col_type}')
+            except Exception as e:
+                print(f"Error adding {col_name} to conversations: {e}")
+    
+    # Check and add new columns to messages table
     c.execute("PRAGMA table_info(messages)")
-    columns = [col[1] for col in c.fetchall()]
-    if 'role' not in columns or 'content' not in columns:
-        try:
-            c.execute('ALTER TABLE messages ADD COLUMN role TEXT')
-        except Exception:
-            pass
-        try:
-            c.execute('ALTER TABLE messages ADD COLUMN content TEXT')
-        except Exception:
-            pass
-        conn.commit()
+    msg_columns = [col[1] for col in c.fetchall()]
+    
+    new_msg_columns = {
+        'token_count': 'INTEGER DEFAULT 0',
+        'in_context': 'INTEGER DEFAULT 1'
+    }
+    
+    for col_name, col_type in new_msg_columns.items():
+        if col_name not in msg_columns:
+            try:
+                c.execute(f'ALTER TABLE messages ADD COLUMN {col_name} {col_type}')
+            except Exception as e:
+                print(f"Error adding {col_name} to messages: {e}")
+    
+    conn.commit()
     conn.close()
 
-ensure_messages_schema()
+# Run schema updates
+ensure_schema_updates()
 
-# === Save user and assistant messages as separate rows ===
+# === Helper functions for context management ===
+def estimate_tokens(text):
+    """Estimate the number of tokens in a text string."""
+    # Rough estimation: 1 token ≈ 4 characters for English/Romanian text
+    return len(text) // 4
+
+def update_context_window(conversation_id):
+    """Update the context window for a conversation."""
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    
+    # Get conversation's context window size
+    c.execute('SELECT context_window_size FROM conversations WHERE id = ?', (conversation_id,))
+    window_size = c.fetchone()[0]
+    
+    # Get all messages for this conversation
+    c.execute('''
+        SELECT id, role, content, token_count
+        FROM messages
+        WHERE conversation_id = ?
+        ORDER BY timestamp DESC, id DESC
+    ''', (conversation_id,))
+    messages = c.fetchall()
+    
+    # Calculate total tokens and update context
+    total_tokens = 0
+    messages_in_context = []
+    
+    for msg_id, role, content, token_count in messages:
+        if not token_count:
+            token_count = estimate_tokens(content)
+            c.execute('UPDATE messages SET token_count = ? WHERE id = ?', (token_count, msg_id))
+        
+        if len(messages_in_context) < window_size:
+            messages_in_context.append(msg_id)
+            total_tokens += token_count
+            c.execute('UPDATE messages SET in_context = 1 WHERE id = ?', (msg_id,))
+        else:
+            c.execute('UPDATE messages SET in_context = 0 WHERE id = ?', (msg_id,))
+    
+    # Update conversation's total tokens and last context update
+    c.execute('''
+        UPDATE conversations 
+        SET total_tokens = ?, last_context_update = ?
+        WHERE id = ?
+    ''', (total_tokens, datetime.now().isoformat(), conversation_id))
+    
+    conn.commit()
+    conn.close()
+    return total_tokens
+
+def get_context_messages(conversation_id):
+    """Get messages that are currently in the context window."""
+    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
+    c = conn.cursor()
+    
+    c.execute('''
+        SELECT role, content, timestamp
+        FROM messages
+        WHERE conversation_id = ? AND in_context = 1
+        ORDER BY timestamp ASC, id ASC
+    ''', (conversation_id,))
+    
+    messages = [
+        {'role': row[0], 'content': row[1], 'timestamp': row[2]}
+        for row in c.fetchall()
+    ]
+    
+    conn.close()
+    return messages
+
+# === Update save_message function to handle context ===
 def save_message(conversation_id, user_input, ai_response):
     conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
     c = conn.cursor()
@@ -139,22 +239,26 @@ def save_message(conversation_id, user_input, ai_response):
     # If conversation_id is None, create a new conversation
     if conversation_id is None:
         c.execute('''
-            INSERT INTO conversations (user_id, clasa, start_time, is_active, message_count)
-            VALUES (?, ?, ?, 1, 0)
+            INSERT INTO conversations (user_id, clasa, start_time, is_active, message_count, context_window_size)
+            VALUES (?, ?, ?, 1, 0, 10)
         ''', (current_user.id, request.form.get('clasa', '9'), timestamp))
         conversation_id = c.lastrowid
     
+    # Calculate token counts
+    user_tokens = estimate_tokens(user_input)
+    ai_tokens = estimate_tokens(ai_response)
+    
     # Save user message
     c.execute('''
-        INSERT INTO messages (conversation_id, role, content, timestamp)
-        VALUES (?, ?, ?, ?)
-    ''', (conversation_id, 'user', user_input, timestamp))
+        INSERT INTO messages (conversation_id, role, content, timestamp, token_count, in_context)
+        VALUES (?, ?, ?, ?, ?, 1)
+    ''', (conversation_id, 'user', user_input, timestamp, user_tokens))
     
     # Save assistant message
     c.execute('''
-        INSERT INTO messages (conversation_id, role, content, timestamp)
-        VALUES (?, ?, ?, ?)
-    ''', (conversation_id, 'assistant', ai_response, timestamp))
+        INSERT INTO messages (conversation_id, role, content, timestamp, token_count, in_context)
+        VALUES (?, ?, ?, ?, ?, 1)
+    ''', (conversation_id, 'assistant', ai_response, timestamp, ai_tokens))
     
     # Increment message count
     c.execute('''
@@ -165,24 +269,16 @@ def save_message(conversation_id, user_input, ai_response):
     
     conn.commit()
     conn.close()
+    
+    # Update context window
+    update_context_window(conversation_id)
+    
     return conversation_id
 
-# === Get conversation history as a list of dicts with role/content ===
+# === Update get_conversation_history to use context window ===
 def get_conversation_history(conversation_id):
-    conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
-    c = conn.cursor()
-    c.execute('''
-        SELECT role, content, timestamp
-        FROM messages
-        WHERE conversation_id = ?
-        ORDER BY timestamp ASC, id ASC
-    ''', (conversation_id,))
-    messages = [
-        {'role': row[0], 'content': row[1], 'timestamp': row[2]}
-        for row in c.fetchall()
-    ]
-    conn.close()
-    return messages
+    """Get conversation history, respecting the context window."""
+    return get_context_messages(conversation_id)
 
 # === Function for formatting C++ code blocks ===
 def format_code_blocks(text):
@@ -454,11 +550,22 @@ def chat_api():
     if not user_input:
         return jsonify({'error': 'Lipsește input-ul utilizatorului'}), 400
 
-    # Do not escape HTML for user input
-    prompt_content = (
-        f"{user_input}\n"
-        "Te rog să folosești cât mai mult informațiile din resursele disponibile."
-    )
+    # Get context messages if in a conversation
+    context_messages = []
+    if conversation_id:
+        context_messages = get_context_messages(conversation_id)
+    
+    # Prepare the prompt with context
+    prompt_content = user_input
+    if context_messages:
+        # Add context from previous messages
+        context_text = "\n".join([
+            f"{'User' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
+            for msg in context_messages[-5:]  # Only use last 5 messages for context
+        ])
+        prompt_content = f"Previous conversation:\n{context_text}\n\nCurrent question: {user_input}"
+    
+    prompt_content += "\nTe rog să folosești cât mai mult informațiile din resursele disponibile."
 
     assistant = assistants[clasa]
 
