@@ -126,11 +126,27 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateX(0);
     opacity: 1;
+    position: relative;
 }
 .conversation-btn:hover {
     background: #e6f0fa;
     border-color: #0074d9;
     transform: translateX(5px);
+}
+.quiz-score-indicator {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e6f0fa;
+    color: #0074d9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 500;
+    min-width: 28px;
+    text-align: center;
+    display: inline-block;
 }
 @media (max-width: 900px) {
     .sidebar { width: 180px; }
@@ -638,6 +654,7 @@
                     <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}">
                         {{ conv[6] if conv[6] else 'Conversație ' ~ loop.index }}<br>
                         <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
+                        <span class="quiz-score-indicator" id="quiz-score-{{ conv[0] }}"></span>
                     </button>
                 </a>
                 <button class="conversation-menu-btn" tabindex="0">
@@ -854,45 +871,17 @@ function updateQuizScoresInSidebar() {
         const score = localStorage.getItem('quizScore_' + convId);
         const total = localStorage.getItem('quizTotal_' + convId);
         
-        // Șterge indicatorul vechi dacă există
-        const oldIndicator = wrapper.querySelector('.quiz-score-indicator');
-        if (oldIndicator) {
-            oldIndicator.remove();
-        }
-        
+        const scoreIndicator = document.getElementById('quiz-score-' + convId);
         if (score !== null && total !== null) {
-            const percentage = (parseInt(score) / parseInt(total)) * 100;
-            let scoreClass = '';
-            let resultMessage = '';
-            
-            if (percentage >= 80) {
-                scoreClass = 'quiz-score-excellent';
-                resultMessage = 'Excelent!';
-            } else if (percentage >= 50) {
-                scoreClass = 'quiz-score-good';
-                resultMessage = 'Bun!';
-            } else {
-                scoreClass = 'quiz-score-poor';
-                resultMessage = 'Mai poți face progres!';
-            }
-            
-            const indicator = document.createElement('span');
-            indicator.className = `quiz-score-indicator ${scoreClass}`;
-            indicator.innerHTML = `
-                <span class="quiz-score-message">${resultMessage}</span>
-                <span class="quiz-score-numbers">${score}/${total}</span>
-            `;
-            
-            // Adaugă indicatorul după titlul conversației
-            const title = wrapper.querySelector('.conversation-title');
-            if (title) {
-                title.appendChild(indicator);
-            }
+            scoreIndicator.textContent = `${score}/${total}`;
+            scoreIndicator.style.display = 'inline-block';
+        } else {
+            scoreIndicator.style.display = 'none';
         }
     });
 }
 
-// Apelează funcția la încărcarea paginii
+// Apelează funcția la încărcarea paginii și după salvare
 document.addEventListener('DOMContentLoaded', function() {
     attachQuizHandlers();
     updateQuizScoresInSidebar();
@@ -973,6 +962,37 @@ document.addEventListener('DOMContentLoaded', attachRezumatHandlers);
 </div>
 
 <script>
+// Attach event to all Quiz buttons
+function attachQuizHandlers() {
+    document.querySelectorAll('.conversation-menu .menu-item').forEach(function(btn) {
+        if (btn.textContent.trim() === 'Creare Quiz') {
+            btn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var convId = this.closest('.conversation-item-wrapper').querySelector('a').getAttribute('href').split('conversation_id=')[1];
+                if (!convId) return;
+                btn.textContent = 'Se generează...';
+                btn.disabled = true;
+                fetch(`/api/quiz_conversatie/${convId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Store the conversation ID in the modal for later use
+                            document.getElementById('quiz-modal').setAttribute('data-conversation-id', convId);
+                            showQuizModal(data.quiz);
+                        } else {
+                            showQuizModal('<span style="color:red">' + (data.error || 'Eroare la generarea quiz-ului') + '</span>');
+                        }
+                    })
+                    .finally(() => {
+                        btn.textContent = 'Creare Quiz';
+                        btn.disabled = false;
+                    });
+            };
+        }
+    });
+}
+
 // Quiz modal logic cu interactivitate
 function showQuizModal(quizContent) {
     const modal = document.getElementById('quiz-modal');
@@ -1046,13 +1066,8 @@ function showQuizModal(quizContent) {
         const saveConfirm = document.getElementById('quiz-save-confirm');
         if (saveBtn) {
             saveBtn.onclick = function() {
-                // Găsește id conversație activă
-                let convId = null;
-                document.querySelectorAll('.conversation-item-wrapper').forEach(function(wrapper) {
-                    if (wrapper.querySelector('.conversation-btn.active')) {
-                        convId = wrapper.querySelector('a').getAttribute('href').split('conversation_id=')[1];
-                    }
-                });
+                // Get the conversation ID from the modal's data attribute
+                const convId = modal.getAttribute('data-conversation-id');
                 if (convId) {
                     localStorage.setItem('quizScore_' + convId, correctCount);
                     localStorage.setItem('quizTotal_' + convId, questions.length);
@@ -1061,12 +1076,13 @@ function showQuizModal(quizContent) {
                     saveConfirm.style.display = 'block';
                     saveConfirm.textContent = 'Rezultatul a fost salvat!';
                     // Afișează mesajul 1.5s, apoi fade-out 0.9s
-                    const modal = document.getElementById('quiz-modal');
                     setTimeout(() => {
                         modal.classList.add('fade-out');
                         setTimeout(() => {
                             modal.style.display = 'none';
                             modal.classList.remove('fade-out');
+                            // Clear the conversation ID from the modal
+                            modal.removeAttribute('data-conversation-id');
                         }, 900);
                     }, 1200);
                 }
@@ -1142,38 +1158,6 @@ quizReportForm.onsubmit = function(e) {
         // Nu mai resetăm starea după timeout, butonul rămâne ascuns
     });
 };
-
-// Attach event to all Quiz buttons
-function attachQuizHandlers() {
-    document.querySelectorAll('.conversation-menu .menu-item').forEach(function(btn) {
-        if (btn.textContent.trim() === 'Creare Quiz') {
-            btn.onclick = function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var convId = this.closest('.conversation-item-wrapper').querySelector('a').getAttribute('href').split('conversation_id=')[1];
-                if (!convId) return;
-                btn.textContent = 'Se generează...';
-                btn.disabled = true;
-                fetch(`/api/quiz_conversatie/${convId}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.success) {
-                            showQuizModal(data.quiz);
-                        } else {
-                            showQuizModal('<span style="color:red">' + (data.error || 'Eroare la generarea quiz-ului') + '</span>');
-                        }
-                    })
-                    .finally(() => {
-                        btn.textContent = 'Creare Quiz';
-                        btn.disabled = false;
-                    });
-            };
-        }
-    });
-}
-document.addEventListener('DOMContentLoaded', function() {
-    attachQuizHandlers();
-});
 </script>
 
 {% endblock %}
