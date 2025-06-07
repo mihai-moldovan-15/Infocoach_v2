@@ -659,7 +659,7 @@
 {% block content %}
 <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
-        <span class="sidebar-title">Conversații</span>
+        <span class="sidebar-title" id="nav-brand">InfoCoach</span>
         <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Extinde/Restrânge bara">
             <span></span>
             <span></span>
@@ -1051,6 +1051,15 @@ function showQuizModal(quizContent) {
         }
     });
     if (currentQ) questions.push(currentQ);
+
+    // Shuffle answer order for each question
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    questions.forEach(q => shuffleArray(q.variants));
 
     // Generează HTML
     let html = '';

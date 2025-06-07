@@ -970,34 +970,47 @@ def quiz_conversatie(conversation_id):
     conn.close()
     if not messages:
         return jsonify({'error': 'Conversația nu are mesaje'}), 400
-    # Determină volumul conversației
+    # Determină volumul conversației și crește numărul de întrebări
     total_chars = sum(len(m[1]) for m in messages)
     if total_chars < 600:
-        n_questions = 2
-    elif total_chars < 1200:
-        n_questions = 3
-    elif total_chars < 2000:
         n_questions = 4
+    elif total_chars < 1200:
+        n_questions = 6
+    elif total_chars < 2000:
+        n_questions = 8
     else:
-        n_questions = 5
+        n_questions = 10
     # Construiește contextul pentru OpenAI
     conv_text = "\n".join([
         ("Utilizator: " if m[0]=='user' else "InfoCoach: ") + m[1] for m in messages
     ])
-    prompt = f"""Generează un quiz cu {n_questions} întrebări pe baza conversației de mai jos. Pentru fiecare întrebare, folosește exact formatul:
+    prompt = f"""Generează un quiz cu {n_questions} întrebări pe baza conversației de mai jos.
+Fiecare întrebare trebuie să fie clară, fără ambiguități, provocatoare (nu doar de memorare, ci să implice raționament sau aplicare), și să poată fi răspunsă folosind conceptele și explicațiile din conversație (NU din cunoștințe generale).
+Concentrează-te pe conceptele de bază, principiile și raționamentele explicate în conversație, nu pe detalii superficiale sau specifice (de exemplu, nu întreba despre nume de variabile, valori exacte sau alte detalii triviale).
+Nu folosi întrebări cu răspunsuri ambigue sau interpretabile. Nu genera întrebări la care răspunsul nu se găsește explicit sau implicit în explicațiile din conversație.
+Pentru fiecare întrebare, folosește exact formatul:
 ### Întrebarea aici
 - variantă 1
-- variantă 2 (corect)
+- variantă 2
 - variantă 3
-IMPORTANT: Marchează cu (corect) doar o singură variantă la fiecare întrebare, și doar dacă ești 100% sigur că este corectă conform informațiilor din conversație. Nu marca nicio variantă ca fiind corectă dacă nu ești sigur. Nu folosi bold sau alte marcaje, doar (corect) la varianta corectă. Folosește Markdown pentru structură, ca la exemplu.\n\n{conv_text}\n\nQuiz structurat în Markdown:"""
+IMPORTANT: Marchează cu (corect) doar o singură variantă la fiecare întrebare, și doar dacă ești 100% sigur că este corectă conform explicațiilor din conversație. Poziția răspunsului corect trebuie să fie complet aleatorie și să varieze de la o întrebare la alta (nu urma niciun tipar, nu pune mereu pe a doua poziție). Nu marca nicio variantă ca fiind corectă dacă nu ești sigur. Nu folosi bold sau alte marcaje, doar (corect) la varianta corectă. Folosește Markdown pentru structură, ca la exemplu.
+
+{conv_text}
+
+Quiz structurat în Markdown:"""
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Ești un asistent care generează quiz-uri clare, structurate și concise pentru conversații educaționale. Păstrează formatarea Markdown în răspuns, fără bold, doar cu (corect) la varianta corectă."},
+                {"role": "system", "content": (
+                    "Ești un asistent care generează quiz-uri clare, structurate și concise pentru conversații educaționale. "
+                    "Fiecare întrebare trebuie să aibă EXACT 3 variante de răspuns, doar una marcată cu (corect), fără bold sau alte marcaje. "
+                    "Nu genera întrebări ambigue, interpretabile sau la care răspunsul nu se găsește explicit sau implicit în conversație. "
+                    "Nu folosi cunoștințe generale, doar informații din conversație."
+                )},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=600,
+            max_tokens=1200,
             temperature=0.4
         )
         quiz = response.choices[0].message.content.strip()
