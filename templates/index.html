@@ -134,19 +134,29 @@
     transform: translateX(5px);
 }
 .quiz-score-indicator {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
     background: #e6f0fa;
     color: #0074d9;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.85em;
     font-weight: 500;
     min-width: 28px;
     text-align: center;
     display: inline-block;
+    height: 18px;
+    line-height: 15px;
+    align-self: flex-start;
+    margin-left: 0.5em;
+    margin-top: -0.8em;
+}
+.conversation-menu-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    z-index: 2;
 }
 @media (max-width: 900px) {
     .sidebar { width: 180px; }
@@ -649,15 +659,15 @@
     </div>
     <div class="sidebar-conversations">
         {% for conv in conversations %}
-            <div class="conversation-item-wrapper">
-                <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none; width: 100%; display: block;">
-                    <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}">
+            <div class="conversation-item-wrapper" style="display: flex; align-items: center; gap: 0.5em; position: relative;">
+                <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none; flex: 1 1 auto; display: block;">
+                    <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}" style="width: 100%; text-align: left; position: relative;">
                         {{ conv[6] if conv[6] else 'Conversație ' ~ loop.index }}<br>
                         <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
                         <span class="quiz-score-indicator" id="quiz-score-{{ conv[0] }}"></span>
                     </button>
                 </a>
-                <button class="conversation-menu-btn" tabindex="0">
+                <button class="conversation-menu-btn" tabindex="0" style="margin-left: 0.5em;">
                     <span class="menu-dots">&#8226;&#8226;&#8226;</span>
                 </button>
                 <div class="conversation-menu">
@@ -1176,3 +1186,55 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Marked.js pentru randare Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 {% endblock %}
+
+<script>
+// --- AJAX Conversation Switching ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Intercept conversation button clicks (not the menu)
+    document.querySelectorAll('.conversation-item-wrapper .conversation-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Find the conversation id from the parent link
+            const wrapper = btn.closest('.conversation-item-wrapper');
+            const link = wrapper.querySelector('a');
+            const url = link.getAttribute('href');
+            const convId = url.split('conversation_id=')[1];
+            if (!convId) return;
+            // Remove active class from all
+            document.querySelectorAll('.conversation-btn').forEach(b => b.classList.remove('active'));
+            // Add active class to this
+            btn.classList.add('active');
+            // Update hidden input
+            const convInput = document.querySelector('input[name="conversation_id"]');
+            if (convInput) convInput.value = convId;
+            // Fetch messages via AJAX
+            fetch(`/?conversation_id=${convId}`)
+                .then(response => response.text())
+                .then(html => {
+                    // Parse and update chat-messages
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newMessages = doc.getElementById('chat-messages');
+                    if (newMessages) {
+                        document.getElementById('chat-messages').innerHTML = newMessages.innerHTML;
+                    }
+                    // Optionally update stats
+                    if (typeof updateStats === 'function') setTimeout(updateStats, 500);
+                });
+        });
+    });
+
+    // --- Fix three dots menu ---
+    document.querySelectorAll('.conversation-menu-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            // Close all other menus
+            closeAllMenus();
+            // Toggle this menu
+            const menu = btn.closest('.conversation-item-wrapper').querySelector('.conversation-menu');
+            if (menu) menu.classList.toggle('show');
+        });
+    });
+});
+</script>
