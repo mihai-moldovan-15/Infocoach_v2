@@ -20,13 +20,10 @@
 
     <div class="profile-section">
         <form method="POST" action="{{ url_for('profile') }}" class="settings-form" id="classForm">
+            {{ form.csrf_token }}
             <div class="form-group">
-                <label for="clasa">Clasa:</label>
-                <select name="clasa" id="clasa" class="form-control">
-                    <option value="9" {% if current_user.clasa == '9' %}selected{% endif %}>Clasa a 9-a</option>
-                    <option value="10" {% if current_user.clasa == '10' %}selected{% endif %}>Clasa a 10-a</option>
-                    <option value="11-12" {% if current_user.clasa == '11-12' %}selected{% endif %}>Clasele 11-12</option>
-                </select>
+                {{ form.clasa.label }}
+                {{ form.clasa(class="form-control") }}
             </div>
         </form>
         <div style="text-align:center; margin-top: 2rem;">
@@ -37,6 +34,7 @@
     <div class="profile-section">
         <h2>Schimbă parola</h2>
         <form method="POST" action="{{ url_for('change_password') }}" class="password-form" id="passwordForm">
+            {{ form.csrf_token }}
             <div class="form-group">
                 <label for="current_password">Parola actuală:</label>
                 <input type="password" name="current_password" id="current_password" class="form-control" required>

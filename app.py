@@ -9,7 +9,7 @@ import time
 import re
 import html
 from models import db, User
-from forms import LoginForm, RegistrationForm
+from forms import LoginForm, RegistrationForm, ProfileForm
 
 # Load API key
 load_dotenv()
@@ -767,14 +767,16 @@ def view_feedback():
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    form = ProfileForm()
     if request.method == 'POST':
-        new_clasa = request.form.get('clasa')
-        if new_clasa in ['9', '10', '11-12']:
-            current_user.clasa = new_clasa
+        if form.validate_on_submit():
+            current_user.clasa = form.clasa.data
             db.session.commit()
             flash('Clasa a fost actualizată cu succes!', 'success')
         return redirect(url_for('profile'))
-    return render_template('profile.html')
+    # Pre-populate the form with current user's class
+    form.clasa.data = current_user.clasa
+    return render_template('profile.html', form=form)
 
 # === Route for changing password ===
 @app.route('/change-password', methods=['POST'])

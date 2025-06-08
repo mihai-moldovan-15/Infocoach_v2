@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
+    clasa = db.Column(db.String(10), default='9')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

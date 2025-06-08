@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from models import User
 
@@ -35,4 +35,11 @@ class RegistrationForm(FlaskForm):
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
-            raise ValidationError('Această adresă de email este deja înregistrată. Te rugăm să folosești alta.') 
+            raise ValidationError('Această adresă de email este deja înregistrată. Te rugăm să folosești alta.')
+
+class ProfileForm(FlaskForm):
+    clasa = SelectField('Clasa', choices=[
+        ('9', 'Clasa a 9-a'),
+        ('10', 'Clasa a 10-a'),
+        ('11-12', 'Clasele 11-12')
+    ]) 
