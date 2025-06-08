@@ -569,6 +569,11 @@ strong {
     display: flex;
 }
 
+.conversation-menu.menu-up {
+    top: auto !important;
+    bottom: 100%;
+}
+
 .menu-item {
     background: none;
     border: none;

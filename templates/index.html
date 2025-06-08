@@ -825,12 +825,33 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.conversation-menu-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
-            // Close all other menus
-            closeAllMenus();
-            // Toggle this menu
             const menu = btn.nextElementSibling;
             if (menu && menu.classList.contains('conversation-menu')) {
-                menu.classList.toggle('show');
+                const isOpen = menu.classList.contains('show');
+                // Close all menus first
+                closeAllMenus();
+                if (!isOpen) {
+                    menu.classList.add('show');
+                    // --- Direction logic ---
+                    menu.classList.remove('menu-up');
+                    // Temporarily show menu to measure height if hidden
+                    const wasHidden = menu.style.display === 'none' || getComputedStyle(menu).display === 'none';
+                    if (wasHidden) {
+                        menu.style.visibility = 'hidden';
+                        menu.style.display = 'flex';
+                    }
+                    const menuHeight = menu.offsetHeight;
+                    const btnRect = btn.getBoundingClientRect();
+                    const spaceBelow = window.innerHeight - btnRect.bottom;
+                    const spaceAbove = btnRect.top;
+                    if (spaceBelow < menuHeight && spaceAbove > menuHeight) {
+                        menu.classList.add('menu-up');
+                    }
+                    if (wasHidden) {
+                        menu.style.display = '';
+                        menu.style.visibility = '';
+                    }
+                }
             }
         });
     });
