@@ -1,30 +1,39 @@
 {% extends "base.html" %}
 
+{% block title %}Autentificare - InfoCoach{% endblock %}
+
 {% block content %}
 <div class="auth-container">
-    <h2>Autentificare</h2>
-    <form method="POST" action="{{ url_for('login') }}">
+    <div class="auth-header">
+        <h2>Bine ai revenit!</h2>
+        <p class="auth-subtitle">Autentifică-te pentru a continua</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('login') }}" class="auth-form">
         {{ form.hidden_tag() }}
         <div class="form-group">
-            {{ form.username.label }}
-            {{ form.username(class="form-control") }}
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control", placeholder="Introdu numele tău de utilizator") }}
             {% for error in form.username.errors %}
             <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.password.label }}
-            {{ form.password(class="form-control") }}
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", placeholder="Introdu parola ta") }}
             {% for error in form.password.errors %}
             <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary btn-block") }}
         </div>
     </form>
-    <p class="auth-link">
-        Nu ai cont? <a href="{{ url_for('register') }}">Înregistrează-te aici</a>
-    </p>
+    
+    <div class="auth-footer">
+        <p class="auth-link">
+            Nu ai cont? <a href="{{ url_for('register') }}">Înregistrează-te aici</a>
+        </p>
+    </div>
 </div>
 {% endblock %} 
