@@ -689,7 +689,7 @@
                     <button class="menu-item">Creare Quiz</button>
                     <button class="menu-item">Rezumat</button>
                     <form method="POST" action="/delete_conversation/{{ conv[0] }}" style="margin:0; padding:0; display:inline;">
-                        <button type="submit" class="menu-item delete" onclick="return confirm('Sigur vrei să ștergi această conversație?');">Ștergere</button>
+                        <button type="submit" class="menu-item delete">Ștergere</button>
                     </form>
                 </div>
             </div>
@@ -857,7 +857,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     // Close menus when clicking outside
     document.addEventListener('click', function() {
-        closeAllMenus();
+        if (!window.menuLoading) {
+            closeAllMenus();
+        }
     });
 });
 
@@ -979,11 +981,23 @@ function attachRezumatHandlers() {
                 e.stopPropagation();
                 var convId = this.closest('.conversation-item-wrapper').querySelector('a').getAttribute('href').split('conversation_id=')[1];
                 if (!convId) return;
-                btn.textContent = 'Se generează...';
-                btn.disabled = true;
+                window.menuLoading = true;
+                // Hide all other Creare Quiz, Rezumat, and Ștergere buttons
+                document.querySelectorAll('.conversation-menu .menu-item').forEach(function(b) {
+                    if ((b.textContent.trim() === 'Creare Quiz' || b.textContent.trim() === 'Rezumat' || b.textContent.trim() === 'Ștergere') && b !== btn) {
+                        b.style.display = 'none';
+                    }
+                    if (b.textContent.trim() === 'Creare Quiz' || b.textContent.trim() === 'Rezumat' || b.textContent.trim() === 'Ștergere') {
+                        b.disabled = true;
+                    }
+                });
+                // Add loading spinner to this button
+                var originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner"></span>Se generează...';
                 fetch(`/api/rezumat_conversatie/${convId}`)
                     .then(r => r.json())
                     .then(data => {
+                        closeAllMenus();
                         if (data.success) {
                             showRezumatModal(data.rezumat.replace(/\n/g, '<br>'));
                         } else {
@@ -991,8 +1005,16 @@ function attachRezumatHandlers() {
                         }
                     })
                     .finally(() => {
-                        btn.textContent = 'Rezumat';
-                        btn.disabled = false;
+                        window.menuLoading = false;
+                        // Restore all buttons
+                        document.querySelectorAll('.conversation-menu .menu-item').forEach(function(b) {
+                            if (b.textContent.trim() === 'Creare Quiz' || b.textContent.trim() === 'Rezumat' || b.textContent.trim() === 'Ștergere') {
+                                b.disabled = false;
+                                b.style.display = '';
+                            }
+                        });
+                        // Restore this button's text
+                        btn.innerHTML = originalText;
                     });
             };
         }
@@ -1027,13 +1049,24 @@ function attachQuizHandlers() {
                 e.stopPropagation();
                 var convId = this.closest('.conversation-item-wrapper').querySelector('a').getAttribute('href').split('conversation_id=')[1];
                 if (!convId) return;
-                btn.textContent = 'Se generează...';
-                btn.disabled = true;
+                window.menuLoading = true;
+                // Hide all other Creare Quiz, Rezumat, and Ștergere buttons
+                document.querySelectorAll('.conversation-menu .menu-item').forEach(function(b) {
+                    if ((b.textContent.trim() === 'Creare Quiz' || b.textContent.trim() === 'Rezumat' || b.textContent.trim() === 'Ștergere') && b !== btn) {
+                        b.style.display = 'none';
+                    }
+                    if (b.textContent.trim() === 'Creare Quiz' || b.textContent.trim() === 'Rezumat' || b.textContent.trim() === 'Ștergere') {
+                        b.disabled = true;
+                    }
+                });
+                // Add loading spinner to this button
+                var originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner"></span>Se generează...';
                 fetch(`/api/quiz_conversatie/${convId}`)
                     .then(r => r.json())
                     .then(data => {
+                        closeAllMenus();
                         if (data.success) {
-                            // Store the conversation ID in the modal for later use
                             document.getElementById('quiz-modal').setAttribute('data-conversation-id', convId);
                             showQuizModal(data.quiz);
                         } else {
@@ -1041,8 +1074,16 @@ function attachQuizHandlers() {
                         }
                     })
                     .finally(() => {
-                        btn.textContent = 'Creare Quiz';
-                        btn.disabled = false;
+                        window.menuLoading = false;
+                        // Restore all buttons
+                        document.querySelectorAll('.conversation-menu .menu-item').forEach(function(b) {
+                            if (b.textContent.trim() === 'Creare Quiz' || b.textContent.trim() === 'Rezumat' || b.textContent.trim() === 'Ștergere') {
+                                b.disabled = false;
+                                b.style.display = '';
+                            }
+                        });
+                        // Restore this button's text
+                        btn.innerHTML = originalText;
                     });
             };
         }
@@ -1223,6 +1264,48 @@ quizReportForm.onsubmit = function(e) {
         // Nu mai resetăm starea după timeout, butonul rămâne ascuns
     });
 };
+</script>
+
+<!-- Custom Delete Modal -->
+<div id="delete-modal" class="custom-modal" style="display:none;">
+  <div class="custom-modal-content">
+    <span class="custom-modal-title">Ștergere conversație</span>
+    <div class="custom-modal-message">Sigur vrei să ștergi această conversație?</div>
+    <div class="custom-modal-actions">
+      <button id="delete-modal-ok" class="custom-modal-ok">OK</button>
+      <button id="delete-modal-cancel" class="custom-modal-cancel">Anulează</button>
+    </div>
+  </div>
+</div>
+<script>
+// Custom delete modal logic
+let deleteFormToSubmit = null;
+document.querySelectorAll('.menu-item.delete').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    deleteFormToSubmit = btn.closest('form');
+    document.getElementById('delete-modal').style.display = 'flex';
+  });
+});
+document.getElementById('delete-modal-ok').onclick = function() {
+  if (deleteFormToSubmit) {
+    deleteFormToSubmit.submit();
+    deleteFormToSubmit = null;
+  }
+  document.getElementById('delete-modal').style.display = 'none';
+};
+document.getElementById('delete-modal-cancel').onclick = function() {
+  document.getElementById('delete-modal').style.display = 'none';
+  deleteFormToSubmit = null;
+};
+window.addEventListener('click', function(e) {
+  const modal = document.getElementById('delete-modal');
+  if (e.target === modal) {
+    modal.style.display = 'none';
+    deleteFormToSubmit = null;
+  }
+});
 </script>
 
 {% endblock %}
