@@ -282,13 +282,13 @@ strong {
     margin-bottom: 0.5rem;
     color: #444;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 }
 
 .form-control {
     width: 100%;
     padding: 0.75rem 1rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
     border: 1.5px solid #e1e4e8;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -304,6 +304,7 @@ strong {
 
 .form-control::placeholder {
     color: #999;
+    font-size: 1.1rem;
 }
 
 .btn-block {
@@ -756,4 +757,26 @@ strong {
 }
 .custom-modal-cancel:hover {
     background: #e0e7ff;
+}
+
+select.form-control {
+    background: #0074d9;
+    color: #fff;
+    border: 1.5px solid #0074d9;
+    font-weight: 500;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='16' height='16' viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'><path d='M4 6L8 10L12 6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em;
+    padding-right: 2.5em;
+}
+
+select.form-control:focus {
+    background: #005fa3;
+    border-color: #005fa3;
+    color: #fff;
+    outline: none;
 } 
