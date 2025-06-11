@@ -21,10 +21,19 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 0;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
     overflow: hidden;
     min-width: 54px;
 }
+
+.sidebar.transitioning {
+    pointer-events: none;
+}
+
+.sidebar.transitioning * {
+    pointer-events: none;
+}
+
 .sidebar.collapsed {
     width: 54px;
     min-width: 54px;
@@ -102,6 +111,9 @@
     opacity: 1;
     transform: translateX(0);
     visibility: visible;
+    height: auto;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
 }
 .sidebar.collapsed .sidebar-conversations {
     opacity: 0;
@@ -110,6 +122,7 @@
     height: 0;
     padding: 0;
     margin: 0;
+    max-height: 0;
 }
 .conversation-btn {
     width: 100%;
@@ -809,15 +822,27 @@ function submitForm(event) {
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var toggleBtn = document.getElementById('sidebar-toggle-btn');
+    var navBrand = document.getElementById('nav-brand');
+    var container = document.querySelector('.container');
+    
     toggleBtn.onclick = function() {
+        // Add transition class to prevent content jumps
+        sidebar.classList.add('transitioning');
+        
+        // Toggle collapsed state
         sidebar.classList.toggle('collapsed');
-        var navBrand = document.getElementById('nav-brand');
-        var container = document.querySelector('.container');
+        
+        // Update nav brand position
         if (sidebar.classList.contains('collapsed')) {
             navBrand.classList.remove('shifted');
         } else {
             navBrand.classList.add('shifted');
         }
+        
+        // Remove transition class after animation completes
+        setTimeout(() => {
+            sidebar.classList.remove('transitioning');
+        }, 400); // Match this with the CSS transition duration
     };
 });
 
