@@ -666,11 +666,15 @@
         </button>
     </div>
     <!-- New Conversation Button -->
-    <div class="sidebar-new-conversation">
-        <button class="new-conversation-btn" onclick="window.location.href='/new_conversation'">
+    <div class="sidebar-new-conversation" id="new-conv-container">
+        <button class="new-conversation-btn" id="main-new-conv-btn" type="button">
             <span class="plus-icon">+</span>
             Conversație nouă
         </button>
+        <div id="conv-type-btns">
+            <button class="conv-type-btn code-btn" type="button" title="Chat de cod">💻 Cod</button>
+            <button class="conv-type-btn theory-btn" type="button" title="Chat de teorie" id="teorie-btn">📚 Teorie</button>
+        </div>
     </div>
     <div class="sidebar-conversations">
         {% for conv in conversations %}
@@ -1314,6 +1318,53 @@ window.addEventListener('click', function(e) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mainBtn = document.getElementById('main-new-conv-btn');
+    const typeBtns = document.getElementById('conv-type-btns');
+    if (mainBtn && typeBtns) {
+        mainBtn.addEventListener('click', function() {
+            mainBtn.classList.add('fade-out');
+            setTimeout(function() {
+                mainBtn.style.display = 'none';
+                typeBtns.classList.add('active');
+            }, 250);
+        });
+    }
+    // Smoothly open new chat for Teorie
+    const teorieBtn = document.getElementById('teorie-btn');
+    if (teorieBtn) {
+        teorieBtn.addEventListener('click', function() {
+            fetch('/new_conversation')
+                .then(response => response.redirected ? window.location.href = response.url : response.text())
+                .then(html => {
+                    if (typeof html === 'string') {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        // Update chat messages
+                        const newMessages = doc.getElementById('chat-messages');
+                        if (newMessages) {
+                            document.getElementById('chat-messages').innerHTML = newMessages.innerHTML;
+                        }
+                        // Update sidebar conversations
+                        const newSidebar = doc.querySelector('.sidebar-conversations');
+                        if (newSidebar) {
+                            document.querySelector('.sidebar-conversations').innerHTML = newSidebar.innerHTML;
+                        }
+                    }
+                    // Close sidebar if open
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar && !sidebar.classList.contains('collapsed')) {
+                        sidebar.classList.add('collapsed');
+                        console.log('Sidebar collapsed!');
+                    } else {
+                        console.log('Sidebar not found or already collapsed.', sidebar);
+                    }
+                });
+        });
+    }
+});
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('pre code').forEach((block) => {
