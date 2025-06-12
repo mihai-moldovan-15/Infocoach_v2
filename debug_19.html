@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ro" data-bs-theme="light">
+	<head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJDLSW078N"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-ZJDLSW078N');
+        </script>
+        <meta name="ga" value="1">
+		<meta name="google-site-verification" content="WLW8ZYDRPFs96Kh7XlFW8t6Sg_82gqYIqHQyogsheZg" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Problema BFS | www.pbinfo.ro</title>
+		<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+								<meta property="og:title" content="Problema BFS">
+												<meta property="og:type" content="article">
+												<meta property="og:site_name" content="www.pbinfo.ro">
+												<meta property="og:url" content="https://www.pbinfo.ro/probleme/19/bfs">
+												<meta property="og:image" content="https://www.pbinfo.ro/css/copil-color.png">
+												<meta property="og:image:width" content="180">
+												<meta property="og:image:height" content="170">
+												<meta property="og:description" content="Se consideră un graf neorientat cu n v&acirc;rfuri și m muchii și un v&acirc;rf cunoscut X. Să se afişeze v&acirc;rfurile vizitate &icirc;n urma parcurgerii &icirc;n lățime a grafului pornind din v&acirc;rful X.">
+												<meta property="og:locale" content="ro_RO">
+										<link type="text/css" rel="stylesheet" href="/css-ext/extensii.php">
+						<link type="text/css" rel="stylesheet" href="/css/normalize.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+		<!-- jQuery, jQuery UI -->
+					<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+			<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+			<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js"></script>
+				<!--	Bootstrap	-->
+					    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+				<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+					<link type="text/css" rel="stylesheet" href="/css/322d0d15a59fd3adf72ac35e063fc7e0653ce0a9/stil.css" />
+		<link type="text/css" rel="stylesheet" href="/css/204b3e8c1b67138a8e1fdeb5c2c663361447bad9/ui-custom.css" />
+		<link type="text/css" rel="stylesheet" href="/css/204b3e8c1b67138a8e1fdeb5c2c663361447bad9/bootstrap-ext.css" />
+
+		<!-- table Sorter -->
+		<link type="text/css" rel="stylesheet" href="/css/tablesorter/style.css" />
+		<script src="/js/jquery.tablesorter.js?1" type="application/javascript"></script>
+		
+        <script src="/js/pbinfo/scripts-pbinfo.2c04e3e209e4b02c206ddf2c5aa63bda7d5c48aa1.js" type="application/javascript"></script>
+
+
+					<script src="/js/knockout.js"></script>
+				<script>
+					DEBUG = false;
+					console.log = function(){};
+				</script>
+			
+		<script>
+			MathJax = {
+				tex: {
+					inlineMath: [ ["\\(","\\)"] ],
+					displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+				},
+				svg: {
+					fontCache: 'global'
+				},
+				loader: {load: ['ui/safe']},
+				options: {
+					safeOptions: {
+						allow: {
+							URLs:    'none',  
+							classes: 'none',
+							cssIDs:  'none',
+							styles:  'none'
+						},
+					}
+				}
+			};
+		</script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		
+					<!-- jqplot -->
+			<!--[if lt IE 9]>
+			<script language="javascript" type="application/javascript" src="/js/jqplot/excanvas.js?v=1"></script>
+			<![endif]-->
+			<script language="javascript" type="application/javascript" src="/js/jqplot/jquery.jqplot.min.js?v=1"></script>
+			<link rel="stylesheet" type="text/css" href="/js/jqplot/jquery.jqplot.css?v=1" />
+			
+				<script type="text/javascript">
+			user_autentificat = {"id":0,"este_admin":0,"este_super_admin":0,"este_propunator":0,"este_profesor":0,"este_profesor_real":0,"propunator":0,"este_elev":0};
+			afisezGoogleAds = true;
+
+			setari_aplicatie = {
+				lista_judete: [{"id":"1","denumire":"Alba"},{"id":"2","denumire":"Arad"},{"id":"3","denumire":"Arges"},{"id":"4","denumire":"Bacau"},{"id":"5","denumire":"Bihor"},{"id":"6","denumire":"Bistrita Nasaud"},{"id":"7","denumire":"Botosani"},{"id":"8","denumire":"Braila"},{"id":"9","denumire":"Brasov"},{"id":"10","denumire":"Bucuresti"},{"id":"11","denumire":"Buzau"},{"id":"14","denumire":"Calarasi"},{"id":"13","denumire":"Caras Severin"},{"id":"15","denumire":"Cluj"},{"id":"16","denumire":"Constanta"},{"id":"17","denumire":"Covasna"},{"id":"18","denumire":"Dambovita"},{"id":"19","denumire":"Dolj"},{"id":"20","denumire":"Galati"},{"id":"21","denumire":"Giurgiu"},{"id":"22","denumire":"Gorj"},{"id":"23","denumire":"Harghita"},{"id":"24","denumire":"Hunedoara"},{"id":"25","denumire":"Ialomita"},{"id":"26","denumire":"Iasi"},{"id":"27","denumire":"Ilfov"},{"id":"28","denumire":"Maramures"},{"id":"29","denumire":"Mehedinti"},{"id":"30","denumire":"Mures"},{"id":"31","denumire":"Neamt"},{"id":"32","denumire":"Olt"},{"id":"33","denumire":"Prahova"},{"id":"44","denumire":"Republica Moldova"},{"id":"34","denumire":"Salaj"},{"id":"35","denumire":"Satu Mare"},{"id":"36","denumire":"Sibiu"},{"id":"37","denumire":"Suceava"},{"id":"38","denumire":"Teleorman"},{"id":"39","denumire":"Timis"},{"id":"40","denumire":"Tulcea"},{"id":"41","denumire":"Valcea"},{"id":"42","denumire":"Vaslui"},{"id":"43","denumire":"Vrancea"}],
+				limbaje_de_programare: [{"index":"toate","denumire":"Toate"},{"index":"cpp","denumire":"C++"},{"index":"c","denumire":"C"},{"index":"pas","denumire":"Pascal"},{"index":"cs","denumire":"C#"},{"index":"php","denumire":"PHP"},{"index":"py","denumire":"Python 2.7"},{"index":"py3","denumire":"Python 3.4"},{"index":"java","denumire":"Java"}],
+				nrpp: 100,
+				lungime_minima_parola: 8,
+				parola_tare: Number(0),
+				numar_schimbari_utilizator: 3,
+				nume_site: 'www.pbinfo.ro',
+				force_reload: 0,
+				favicon: {"normal":"\/favicon.png","notificari":"\/favicon-notificari.png"},
+			};
+			//console.log(user_autentificat);
+		</script>
+		<style>
+			@media print {
+				a[href]:after {
+					content: none
+				}
+			}
+			.link-favorit:hover{text-decoration:none;}
+			.MathJax { color: #c7254e; }
+		</style>
+        <link href="/js/fancybox/jquery.fancybox.min.css" rel="stylesheet" />
+        <script type="text/javascript" src="/js/jquery-timepicker/jquery.timepicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="/js/jquery-timepicker/jquery.timepicker.css" />
+        
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7152921241438800" crossorigin="anonymous"></script>
+                		<script src="/js/jquery.countdown.min.js"></script>
+	</head>
+	<body>
+	<div style="position: relative;">
+		<a id="pagina-index-sus"></a>
+		<a name="top"></a>
+<nav class="navbar navbar-expand-lg bg-dark bg-gradient fixed-top d-print-none" id="bara_navigare" data-bs-theme="dark">
+	<div class="container">
+		<a class="navbar-brand" href="/">pbInfo.ro</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPrincipal" aria-controls="navbarPrincipal" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div id="navbarPrincipal" class="navbar-collapse collapse">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							<li class="nav-item">
+					<form action="/search.php" method="GET" onsubmit="return this.search_box.value!='';" class="me-2" role="search" id="search_box_form">
+						<div class="">
+							<div class="input-group">
+								<button class="btn btn-secondary" type="submit">
+									<i class="fas fa-search"></i>
+								</button>
+								<input type="search" name="search_box" id="search_box" class="width100 form-control">
+							</div>
+						</div>
+					</form>
+				</li>
+							<li class="dropdown nav-item" id="navigare-li-probleme">
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+					Probleme <span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="/probleme-categorii/9" class="dropdown-item">Probleme - clasa a IX-a</a></li>
+					<li><a href="/probleme-categorii/10" class="dropdown-item">Probleme - clasa a X-a</a></li>
+					<li><a href="/probleme-categorii/11" class="dropdown-item">Probleme - clasa a XI-a</a></li>
+					<li><a href="/?pagina=concursuri-lista" class="dropdown-item">Probleme din concursuri</a></li>
+					<li class="dropdown-divider"></li>
+					<li>
+						<a href="#cautare problema" class="link-cautare-problema dropdown-item">
+							<i class="fas fa-search"></i>
+							Căutare problemă
+						</a>
+					</li>
+										<li class="dropdown-divider"></li>
+					<li>
+						<a href="/?pagina=itemi-evaluare-lista" class="dropdown-item">Exerciții</a>
+					</li>
+					<li class="dropdown-divider"></li>
+					<li>
+						<a href="/blockly" class="dropdown-item">Programează cu Blockly</a>
+					</li>
+					<li>
+						<a href="/?pagina=processing" class="dropdown-item">Desenează cu Processing</a>
+					</li>
+					<li>
+						<a href="/?pagina=sql" class="dropdown-item">Exersează SQL</a>
+					</li>
+				</ul>
+			</li>
+			<li id="navigare-li-solutii" class="nav-item">
+				<a href="/solutii" class="nav-link">Soluţii</a>
+			</li>
+			<li class="dropdown nav-item" id="navigare-li-resurse">
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+					Resurse <span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="/articole/5547/informatica-clasa-a-ix-a" class="dropdown-item">Resurse pentru clasa a IX-a</a></li>
+					<li><a href="/articole/5548/informatica-clasa-a-x-a" class="dropdown-item">Resurse pentru clasa a X-a</a></li>
+					<li><a href="/articole/5549/informatica-clasa-a-xi-a" class="dropdown-item">Resurse pentru clasa a XI-a</a></li>
+					<li class="divider"></li>
+					<li><a href="/articole/16/subiecte-de-la-examene" class="dropdown-item">Subiecte bacalaureat</a></li>
+					<li class="dropdown-divider"></li>
+					<li>
+						<a href="/ajutor" class="dropdown-item">Ajutor</a>
+					</li>
+				</ul>
+			</li>
+					</ul>
+		<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+					<a href="#" data-bs-toggle="modal" data-bs-target="#modal_login"  class="nav-link">
+						<i class="fas fa-sign-in-alt"></i>
+						Autentificare
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="/?pagina=creare-cont" class="nav-link">
+						<i class="fas fa-user"></i>
+						Înregistrare
+					</a>
+				</li>
+					</ul>
+		</div>
+	</div>
+</nav>
+			<div class="modal fade" id="modal_login" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="dialog">
+					<div class="modal-content">
+						<form action="/login.php" method="post" id="form-login-modal">
+							<input type="hidden" name="local_ip" id="local_ip_header">
+							<div class="modal-header">
+								<h4 class="modal-title" id="modal_login_label">Autentificare</h4>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<input type="hidden" name="form_token" value="eb24640daeec2a6ea8453aa7bfb1b028a93dbed2">
+																			<input type="hidden" name="GET_pagina" value= "probleme" />
+																					<input type="hidden" name="GET_id" value= "19" />
+																		<div class="mb-3">
+									<label for="user_login" class="form-label">Utilizator sau email</label>
+									<div>
+										<input type="text" name="user" id="user_login" class="form-control">
+									</div>
+								</div>
+								<div class="mb-3">
+									<label for="parola_login" class="form-label">Parola</label>
+									<div class="">
+										<input type="password" name="parola" id="parola_login" class="form-control">
+									</div>
+								</div>
+								<div class="mb-3">
+									<div class="form-login-raspuns"></div>
+								</div>
+							</div>
+							<div class="modal-footer justify-content-start">
+								<div class="flex-fill">
+									<div class="mb-3 d-flex justify-content-end">
+										<button type="button" class="btn btn-secondary me-3" data-bs-dismiss="modal">Închidere</button>
+										<button type="submit" class="btn btn-primary">Autentificare</button>
+									</div>
+									<div class="d-flex justify-content-start">
+										<a href="/?pagina=creare-cont" class="me-3">
+											<i class="fas fa-user"></i> Creare cont nou
+										</a>
+										<a href="/?pagina=recuperare-parola">
+											<i class="fas fa-lock-open"></i>
+											Recuperare parolă
+										</a>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		<div class="modal fade" id="modalCautareProblema" tabindex="-1" role="dialog"></div><!-- /.modal -->
+<div class="modal fade" id="modalDialogPrincipal" tabindex="-1" role="dialog"></div> <!-- continutul se incarca asincron -->
+		<div class="text-bg-info d-flex justify-content-center align-items-center py-1" id="cookie-warning">
+			<span>Acest site foloseşte cookies. Navigând în continuare, vă exprimaţi acordul asupra folosirii cookie-urilor.</span>
+			<button class="ms-3 btn-close btn-acceptare-cookies" title="Închide acest mesaj!"></button>
+		</div>
+				<div id="adbw" style="display: none;">
+			<div class="text-bg-warning text-center p-2">
+				<i class="fas fa-shapes"></i><span class="separator"></span>
+				Îti place pbInfo? Atunci acceptă-l cu totul! Dezactivează modulul de blocare a reclamelor!
+			</div>
+		</div>
+					<div id="zona-mijloc">
+			<div class="container">
+								<div id="div-afisare-mesaj-global" style="z-index:255; padding: 10px; border:solid 1px gray; width: 400px; position:fixed; top: 65px; left: 50%; transform: translateX(-50%); display:none; margin:auto; text-align:center;">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="continut-mesaj" style="line-height:16pt;"></div>
+						<button type="button" class="btn-close" onclick="$('#div-afisare-mesaj-global').hide().fadeOut('slow')"></button>
+					</div>
+				</div>
+				<div id="div-continut-pagina"></div>
+				<div class="separator"></div>
+		<a name="section-restrictii"></a>
+		<table class="table table-bordered">
+	<tr>
+				<th>Postată de</th>
+		<th>Clasa</th>
+		<th>Intrare/ieșire</th>
+		<th>Limită timp</th>
+		<th>Limită memorie</th>
+		<th>Sursa problemei</th>
+		<th>Autor</th>
+		<th>Dificultate</th>
+			</tr>
+	<tr>
+				<td>
+						<span class="pbi-widget-user pbi-widget-user-span">
+								<a href="/profil/Vasilut" class="text-decoration-none">
+								<img src="https://www.gravatar.com/avatar/ab1c81bd4906bbe948b12b14087955ec?d=wavatar&s=32" style="border-radius:3px;margin-right:2px;vertical-align: middle;" />
+				Vasilut Lucian (Vasilut)								</a>
+							</span>
+					</td>
+		<td class="center">
+			11		</td>
+		<td>
+			<span style="background: url('/img/32-fisier.png') no-repeat 3px center;background-size:16px;padding-left:34px;"> BFS.in / BFS.out </span> 		</td>
+		<td>
+			1 secunde
+		</td>
+		<td>
+			<span title="Memorie totală">128 MB</span> / <span  title="Dimensiunea stivei">8 MB</span>
+		</td>
+		<td>
+			<div class="center">-</div>		</td>
+		<td>
+			Lucian Vasilut		</td>
+		<td class="center">
+			ușoară		</td>
+			</tr>
+</table>
+<div class="mb-3">
+	<h1 class="text-primary">
+				<span class="badge bg-primary">#19</span>
+		<a href="/probleme/19/bfs" class="text-decoration-none me-3">
+			BFS		</a>
+			</h1>
+	</div>
+<div class="border rounded p-2 mb-3">
+					<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<a href="/?pagina=probleme-lista&clasa=11">
+															Clasa a 11-a
+														</a>
+					</li>
+					<li class="breadcrumb-item">
+						<a href="/?pagina=probleme-lista&tag=16">
+							Teoria Grafurilor						</a>
+					</li>
+					<li class="breadcrumb-item">
+						<a href="/?pagina=probleme-lista&tag=17">
+							Parcurgerea grafurilor neorientate						</a>
+					</li>
+					<li  class="breadcrumb-item active">
+						BFS					</li>
+				</ol>
+					<div class="padding10">
+			Etichete:
+			<span id="container-etichete">
+									<span class="text-muted">nicio etichetă</span>
+								</span>
+					</div>
+		</div>
+		<div class="">
+			<div class="">
+				<div class="row">
+									</div>
+					<script>
+				$(document).ready(function(){
+					function ResetWrapper(){
+						$("#problema-wrapper").html('<div class="text-center padding10"><img src="/img/loading3.gif"></div>');
+					}
+
+					$("#meniu-problema-enunt a").click(function(event){
+						ResetWrapper();
+						var id = $(event.target).data("id");
+						$("#problema-wrapper").load("/ajx-module/ajx-problema-afisare-enunt.php?id=" + id, {}, function(){
+							MathJax.typesetPromise([document.getElementById('problema-wrapper')])
+							ColorareSintaxa();
+							$('#problema-wrapper pre').attr('contenteditable', true);
+							$('#problema-wrapper pre').attr('editable', true);
+						});
+						window.history.pushState({}, "", $(event.target).attr('href'));
+						$("#meniu-problema-enunt a").removeClass("active");
+						$("#meniu-problema-indicatii_de_rezolvare a").removeClass("active");
+						$("#meniu-problema-teste a").removeClass("active");
+						$("#meniu-problema-clasa a").removeClass("active");
+						$("#meniu-problema-clasa ul li a").removeClass("active");
+
+						$("#meniu-problema-enunt a").addClass("active");
+
+						return false;
+					});
+
+					$("#meniu-problema-indicatii_de_rezolvare a").click(function(event){
+						ResetWrapper();
+						var id = $(event.target).data("id");
+						$("#problema-wrapper").load("/ajx-module/ajx-problema-afisare-solutie.php?id=" + id, {}, function(){
+							MathJax.typesetPromise([document.getElementById('problema-wrapper')])
+							ColorareSintaxa();
+							$('#problema-wrapper pre').attr('contenteditable', true);
+							$('#problema-wrapper pre').attr('editable', true);
+						});
+						window.history.pushState({}, "", $(event.target).attr('href'));
+						$("#meniu-problema-enunt a").removeClass("active");
+						$("#meniu-problema-indicatii_de_rezolvare a").removeClass("active");
+						$("#meniu-problema-teste a").removeClass("active");
+						$("#meniu-problema-clasa a").removeClass("active");
+						$("#meniu-problema-clasa ul li a").removeClass("active");
+
+						$("#meniu-problema-indicatii_de_rezolvare a").addClass("active");
+
+						return false;
+					});
+
+					$("#meniu-problema-teste a").click(function(event){
+						ResetWrapper();
+						var id = $(event.target).data("id");
+						$("#problema-wrapper").load("/ajx-module/ajx-problema-afisare-teste.php?id=" + id)
+						window.history.pushState({}, "", $(event.target).attr('href'));
+						$("#meniu-problema-enunt a").removeClass("active");
+						$("#meniu-problema-indicatii_de_rezolvare a").removeClass("active");
+						$("#meniu-problema-teste a").removeClass("active");
+						$("#meniu-problema-clasa a").removeClass("active");
+						$("#meniu-problema-clasa ul li a").removeClass("active");
+
+						$("#meniu-problema-teste a").addClass("active");
+						return false;
+					});
+
+					$("#meniu-problema-clasa ul li a").click(function(event){
+						event.preventDefault()
+						ResetWrapper();
+						var id = $(event.target).data("id");
+						var id_clasa = $(event.target).data("id_clasa");
+						$("#problema-wrapper").load("/ajx-module/ajx-problema-afisare-clasa.php?id=" + id + "&id_clasa=" + id_clasa);
+						window.history.pushState({}, "", $(event.target).attr('href'));
+						$("#meniu-problema-enunt a").removeClass("active");
+						$("#meniu-problema-indicatii_de_rezolvare a").removeClass("active");
+						$("#meniu-problema-teste a").removeClass("active");
+						$("#meniu-problema-clasa a").removeClass("active");
+						$("#meniu-problema-clasa ul li a").removeClass("active");
+						$(event.target).addClass('active');
+						$("#meniu-problema-clasa >a").addClass("active");
+						$("#meniu-problema-clasa").removeClass("open");
+
+					});
+				});
+			</script>
+
+			
+			<ul class="nav nav-tabs">
+				<li id="meniu-problema-enunt" class="nav-item">
+					<a href="/probleme/19/bfs" title="Vezi enunțul problemei" data-id="19"  class="nav-link active">
+						Enunț
+					</a>
+				</li>
+									<li class="nav-item">
+						<a class="nav-link" href="/solutii/problema/19/bfs">
+							Vezi soluții <span class="badge bg-secondary">59203</span>
+						</a>
+					</li>
+									</ul>
+			<div class="nav-content mb-3">
+								<div id="problema-wrapper">
+											<article class="" id="enunt">
+
+							<p>Se consideră un graf neorientat cu <code>n</code> vârfuri și <code>m</code> muchii și de asemenea un vârf <code>X</code>.</p>
+
+<h1>Cerinţa</h1>
+
+<p>Să se afișeze vârfurile vizitate în urma parcurgerii în lățime <strong>(Breadth First Search)</strong> a grafului, pornind din vârful <code>X</code>.</p>
+
+<h1>Date de intrare</h1>
+
+<p>Fişierul de intrare <code>BFS.in</code> conţine pe prima linie trei numere naturale <code>n m X</code>, având următoarea semnificație: <code>n</code> este numărul de noduri, <code>m</code> este numărul de muchii din graf, iar <code>X</code> este vârful din care se începe parcurgerea. Următoarele <code>m</code> linii conțin câte două numere <code>x y</code> cu semnificația că există muchie între <code>x</code> și <code>y</code> .</p>
+
+<h1>Date de ieşire</h1>
+
+<p>Fişierul de ieşire <code>BFS.out</code> va conţine pe prima linie vârfurile vizitate în urma parcurgerii în lățime a grafului, aceasta începând din vârful <code>X</code>.</p>
+
+<h1>Restricţii şi precizări</h1>
+
+<ul>
+	<li><code>2 ≤ n ≤ 100</code></li>
+	<li><code>1 ≤ m ≤ n*(n-1)/2</code></li>
+	<li><strong>Graful poate sa nu fie conex!!!</strong></li>
+	<li>dacă în timpul parcurgerii, la un moment dat vârful curent al grafului este <code>Y</code>, vecinii nevizitați ai lui <code>Y</code> se vor analiza în ordine crescătoare.</li>
+</ul>
+
+<h1>Exemplu:</h1>
+
+<p><code>BFS.in</code></p>
+
+<pre>5 7 2
+1 2
+3 2
+1 5
+2 4
+3 1
+4 5
+5 3 </pre>
+
+<p><code>BFS.out</code></p>
+
+<pre>2 1 3 4 5 </pre>						</article>
+										</div>
+			</div>
+						</div>
+		</div>
+					<div class="separator"></div>
+			</div>
+		</div>
+
+		
+		<a href="#pagina-index-sus" style="position: fixed;bottom:60px; right:20px;font-size:3em;" title="Du-te la începutul paginii" class="d-none d-md-inline  d-print-none btn-go-top">
+			<i class="fas fa-arrow-alt-circle-up"></i>
+		</a>
+        		<div class="d-md-none  d-print-none py-3">
+			<a href="#pagina-index-sus" title="Du-te la începutul paginii" class="btn btn-secondary btn-block btn-go-top">
+				<i class="fas fa-arrow-alt-circle-up"></i>
+				Du-te sus!
+			</a>
+		</div>
+		<div id="footer" style="border-top: solid 2px #529ed2;" class="d-print-none bg-secondary-subtle">
+	<div class="container">
+		<div class="center">
+		<ul>
+					</ul>
+		<div class="d-flex justify-content-center align-items-center">
+		<div class="mx-1">
+			<a href="/?pagina=contact-form" class="text-decoration-none badge bg-danger">
+				<i class="far fa-envelope"></i>
+				Contact
+			</a>
+		</div>
+							<div class="mx-1">
+						<a href="#reload" style="margin-right:5px;" title="Reîncarcă pagina" class="text-decoration-none badge bg-danger btn-force-reload">
+							<i class="fas fa-sync-alt"></i>
+							Reîncarcă
+						</a>
+					</div>
+											<div class="mx-1">
+						<span class="text-decoration-none badge bg-secondary" title="Adresa ta IP">
+							89.123.127.42						</span>
+					</div>
+					<div class="mx-1 d-flex align-items-center">
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" role="switch" id="darkThemeSwitch">
+		</div>
+		<label class="form-check-label" for="darkThemeSwitch">Temă Dark</label>
+	</div>
+		</div>
+	</div>
+	</div>
+</div>
+<script>
+	(() => {
+        'use strict'
+
+        const storedTheme = localStorage.getItem('theme')
+
+        const getPreferredTheme = () => {
+            if (storedTheme)
+                return storedTheme
+            return 'light'
+        }
+
+        const setTheme = function (theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = theme => {
+            if(theme == 'dark')
+                document.getElementById('darkThemeSwitch').checked = true
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (storedTheme !== 'light' || storedTheme !== 'dark') {
+                setTheme(getPreferredTheme())
+            }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+            showActiveTheme(getPreferredTheme())
+            document.getElementById('darkThemeSwitch').addEventListener('change', () => {
+                const theme = document.getElementById('darkThemeSwitch').checked ? 'dark' : 'light'
+                localStorage.setItem('theme', theme)
+                setTheme(theme)
+                showActiveTheme(theme)
+
+				const colorModeEvent = new CustomEvent('bootstrapColorModeChanged', {
+					detail: {
+						mode: document.getElementById('darkThemeSwitch').checked ? 'dark' : 'light'
+					}
+				});
+
+				window.dispatchEvent(colorModeEvent);
+            })
+        })
+    })()
+</script>
+</div>
+		<script src="/ads.js" type="text/javascript"></script>
+		<a name="pagina-index-jos"></a>
+		<script src="/codemirror/lib/codemirror.js"></script>
+		<script src="/codemirror/addon/runmode/runmode.js"></script>
+		<script src="/codemirror/addon/runmode/colorize.js"></script>
+		<link rel="stylesheet" href="/codemirror/lib/codemirror.css">
+		<link rel="stylesheet" href="/codemirror/theme/elegant.css">
+		<link rel="stylesheet" href="/codemirror/theme/custom.css">
+		<script src="/codemirror/mode/clike/clike.js"></script>
+		<script src="/codemirror/mode/pascal/pascal.js"></script>
+		<script src="/codemirror/mode/pseudocod/pseudocod.js"></script>
+		<script src="/codemirror/mode/php/php.js"></script>
+		<script src="/codemirror/mode/python/python.js"></script>
+		<script src="/codemirror/mode/sql/sql.js"></script>
+		<script src="/codemirror/mode/xml/xml.js"></script>
+		<script src="/codemirror/mode/css/css.js"></script>
+		<script src="/codemirror/mode/javascript/javascript.js"></script>
+		<script src="/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="/js/fancybox/jquery.fancybox.min.js"></script>
+		<script src="/js/pbinfo/index.8f748f9f.js"></script>
+        	</body>
+</html>
+<!-- 2 queries, 0.01684  secunde -->

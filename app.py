@@ -1040,6 +1040,70 @@ def quiz_report(conversation_id):
 def problem_solver():
     return render_template('problem_solver.html')
 
+# === Route for viewing problems ===
+@app.route('/problems')
+@login_required
+def view_problems():
+    page = request.args.get('page', 1, type=int)
+    grade = request.args.get('grade', type=int)
+    category = request.args.get('category', '')
+    difficulty = request.args.get('difficulty', '')
+    search = request.args.get('search', '')
+    
+    # Construim query-ul de bază
+    query = "SELECT * FROM problems WHERE 1=1"
+    params = []
+    
+    if grade:
+        query += " AND grade = ?"
+        params.append(grade)
+    if category:
+        query += " AND category = ?"
+        params.append(category)
+    if difficulty:
+        query += " AND difficulty = ?"
+        params.append(difficulty)
+    if search:
+        query += " AND (name LIKE ? OR id LIKE ?)"
+        search_term = f"%{search}%"
+        params.extend([search_term, search_term])
+    
+    # Adăugăm paginarea
+    per_page = 10
+    offset = (page - 1) * per_page
+    
+    # Obținem totalul de probleme pentru paginare
+    count_query = f"SELECT COUNT(*) FROM ({query})"
+    total = get_db().execute(count_query, params).fetchone()[0]
+    
+    # Adăugăm LIMIT și OFFSET la query-ul principal
+    query += " ORDER BY id LIMIT ? OFFSET ?"
+    params.extend([per_page, offset])
+    
+    # Obținem problemele pentru pagina curentă
+    problems = get_db().execute(query, params).fetchall()
+    
+    # Obținem toate categoriile și dificultățile pentru filtre
+    categories = [row[0] for row in get_db().execute("SELECT DISTINCT category FROM problems WHERE category != '' ORDER BY category").fetchall()]
+    difficulties = [row[0] for row in get_db().execute("SELECT DISTINCT difficulty FROM problems WHERE difficulty != '' ORDER BY difficulty").fetchall()]
+    
+    has_next = (page * per_page) < total
+    
+    return render_template('view_problems.html',
+                         problems=problems,
+                         page=page,
+                         grade=grade,
+                         category=category,
+                         difficulty=difficulty,
+                         search=search,
+                         categories=categories,
+                         difficulties=difficulties,
+                         has_next=has_next)
+
+def get_db():
+    import sqlite3
+    return sqlite3.connect('problems.db', check_same_thread=False)
+
 # === Start application ===
 if __name__ == '__main__':
     migrate_set_titles_for_old_conversations()
