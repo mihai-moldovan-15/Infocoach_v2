@@ -685,7 +685,9 @@
             Conversație nouă
         </button>
         <div id="conv-type-btns">
-            <button class="conv-type-btn code-btn" type="button" title="Chat de cod">💻 Cod</button>
+            <a href="/problem_solver" id="code-link-fallback" style="flex:1 1 0; text-decoration:none;">
+                <button class="conv-type-btn code-btn" type="button" title="Chat de cod">💻 Cod</button>
+            </a>
             <button class="conv-type-btn theory-btn" type="button" title="Chat de teorie" id="teorie-btn">📚 Teorie</button>
         </div>
     </div>
@@ -1460,5 +1462,17 @@ document.addEventListener('DOMContentLoaded', function() {
             if (menu) menu.classList.toggle('show');
         });
     });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var codeBtn = document.querySelector('.code-btn');
+    if (codeBtn) {
+        codeBtn.addEventListener('click', function() {
+            alert('Redirect!');
+            window.location.href = '/problem_solver';
+        });
+    }
 });
 </script>

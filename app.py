@@ -1034,6 +1034,12 @@ def quiz_report(conversation_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# === Route for problem solver page ===
+@app.route('/problem_solver')
+@login_required
+def problem_solver():
+    return render_template('problem_solver.html')
+
 # === Start application ===
 if __name__ == '__main__':
     migrate_set_titles_for_old_conversations()
