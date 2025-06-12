@@ -5,7 +5,7 @@ body {
   background: #f7f9fb;
 }
 .ide-container {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   padding: 0;
   margin: 0;
@@ -18,10 +18,10 @@ body {
   flex-direction: row;
   width: 100%;
   max-width: 1400px;
-  margin: 32px 0 0 32px;
   min-height: 600px;
   align-items: flex-start;
   transition: width 0.3s;
+  margin: 32px 0 0 0;
 }
 .ide-editor-section {
   flex: 1 1 0;
@@ -244,47 +244,207 @@ body {
     max-width: 98vw;
   }
 }
+.container {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
+  margin-left: 270px;
+  width: calc(100% - 270px);
+  min-width: 0;
+}
+.sidebar.collapsed ~ .container {
+  margin-left: 64px;
+  width: calc(100% - 64px);
+}
+@media (max-width: 900px) {
+  .container { margin-left: 190px; width: calc(100% - 190px); }
+  .sidebar.collapsed ~ .container { margin-left: 64px; width: calc(100% - 64px); }
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 260px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
+    overflow: hidden;
+    min-width: 54px;
+}
+.sidebar.collapsed {
+    width: 54px;
+    min-width: 54px;
+    padding-right: 0;
+}
+.sidebar-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1.2rem 1rem 1.2rem;
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    min-height: 64px;
+}
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: 0;
+    min-height: 100vh;
+}
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #222;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
+    white-space: nowrap;
+    opacity: 1;
+    transform: translateX(0);
+    display: inline-block;
+}
+.sidebar.collapsed .sidebar-title {
+    opacity: 0;
+    transform: translateX(-20px);
+    width: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-toggle-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    margin-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1200;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+}
+.sidebar.collapsed .sidebar-toggle-btn {
+    margin-left: 0;
+}
+.sidebar-toggle-btn span {
+    display: block;
+    width: 22px;
+    height: 3px;
+    background: #0074d9;
+    border-radius: 2px;
+}
+.sidebar-new-conversation {
+    width: 100%;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+.conv-type-btn {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    background: #f6f8fa;
+    border: 1px solid #bcdffb;
+    border-radius: 8px;
+    color: #0074d9;
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(0);
+    opacity: 1;
+    position: relative;
+}
+.conv-type-btn:hover {
+    background: #e6f0fa;
+    border-color: #0074d9;
+    transform: translateX(5px);
+}
+@media (max-width: 900px) {
+    .sidebar { width: 180px; }
+    .sidebar.collapsed { width: 54px; }
+}
+@media (max-width: 700px) {
+    .sidebar {
+        display: flex;
+        position: fixed;
+        z-index: 1100;
+    }
+    .sidebar.collapsed {
+        display: none;
+    }
+}
 </style>
-<div class="ide-container">
-  <div class="ide-main">
-    <div class="ide-editor-section">
-      <form class="ide-search-bar">
-        <input type="text" class="ide-search-input" placeholder="Caută problemă după #ID sau nume...">
-        <button type="submit" class="ide-search-btn">Caută</button>
-      </form>
-      <div class="ide-problem-card">
-        <div class="ide-tabs">
-          <button class="ide-tab active">Enunț</button>
-          <button class="ide-tab">Date</button>
-          <button class="ide-tab">Restricții</button>
-          <button class="ide-tab">Exemple</button>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="sidebar-title" id="nav-brand">InfoCoach</span>
+    <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Extinde/Restrânge bara">
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="sidebar-new-conversation" id="new-conv-container">
+    <a href="/problem_solver" id="code-link-fallback" style="flex:1 1 0; text-decoration:none;">
+      <button class="conv-type-btn code-btn" type="button" title="Chat de cod">💻 Cod</button>
+    </a>
+    <button class="conv-type-btn theory-btn" type="button" title="Chat de teorie" id="teorie-btn">📚 Teorie</button>
+  </div>
+  <!-- Poți adăuga aici și alte elemente de meniu dacă vrei -->
+</div>
+<div class="container">
+  <div class="ide-container">
+    <div class="ide-main">
+      <div class="ide-editor-section">
+        <form class="ide-search-bar">
+          <input type="text" class="ide-search-input" placeholder="Caută problemă după #ID sau nume...">
+          <button type="submit" class="ide-search-btn">Caută</button>
+        </form>
+        <div class="ide-problem-card">
+          <div class="ide-tabs">
+            <button class="ide-tab active">Enunț</button>
+            <button class="ide-tab">Date</button>
+            <button class="ide-tab">Restricții</button>
+            <button class="ide-tab">Exemple</button>
+          </div>
+          <div class="ide-tab-content">
+            Aici va fi enunțul problemei...
+          </div>
         </div>
-        <div class="ide-tab-content">
-          Aici va fi enunțul problemei...
+        <div id="ide-code-editor"></div>
+        <textarea class="ide-custom-test" placeholder="Input de test personalizat..."></textarea>
+        <div class="ide-editor-buttons">
+          <button id="ide-run-code" class="ide-btn-run">Rulează</button>
+          <button id="ide-reset-code" class="ide-btn-reset">Resetează</button>
+        </div>
+        <div class="ide-error-log" id="ide-error-log">
+          <!-- Aici vor apărea erorile de compilare sau outputul programului... -->
         </div>
       </div>
-      <div id="ide-code-editor"></div>
-      <textarea class="ide-custom-test" placeholder="Input de test personalizat..."></textarea>
-      <div class="ide-editor-buttons">
-        <button id="ide-run-code" class="ide-btn-run">Rulează</button>
-        <button id="ide-reset-code" class="ide-btn-reset">Resetează</button>
+      <div class="ide-chat-sidebar" id="ide-chat-sidebar">
+        <div class="ide-chat-header">
+          Asistent AI
+          <button class="ide-close-chat" id="ide-close-chat-btn">&times;</button>
+        </div>
+        <div class="ide-chat-messages" id="ide-chat-messages"></div>
+        <form class="ide-chat-input-area" id="ide-chat-form">
+          <textarea id="ide-chat-input" rows="1" placeholder="Scrie o întrebare sau cere ajutor..."></textarea>
+          <input type="submit" value="Trimite">
+        </form>
       </div>
-      <div class="ide-error-log" id="ide-error-log">
-        <!-- Aici vor apărea erorile de compilare sau outputul programului... -->
-      </div>
+      <button class="ide-chat-toggle-btn" id="ide-chat-toggle-btn" style="display:none;">Deschide chat</button>
     </div>
-    <div class="ide-chat-sidebar" id="ide-chat-sidebar">
-      <div class="ide-chat-header">
-        Asistent AI
-        <button class="ide-close-chat" id="ide-close-chat-btn">&times;</button>
-      </div>
-      <div class="ide-chat-messages" id="ide-chat-messages"></div>
-      <form class="ide-chat-input-area" id="ide-chat-form">
-        <textarea id="ide-chat-input" rows="1" placeholder="Scrie o întrebare sau cere ajutor..."></textarea>
-        <input type="submit" value="Trimite">
-      </form>
-    </div>
-    <button class="ide-chat-toggle-btn" id="ide-chat-toggle-btn" style="display:none;">Deschide chat</button>
   </div>
 </div>
 <script>
@@ -319,6 +479,14 @@ window.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('ide_code', cm.getValue());
   });
 });
+// Sidebar toggle logic ca pe index
+const sidebar = document.getElementById('sidebar');
+const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+if (sidebar && sidebarToggleBtn) {
+  sidebarToggleBtn.addEventListener('click', function() {
+    sidebar.classList.toggle('collapsed');
+  });
+}
 </script>
 {% endblock %}
 
