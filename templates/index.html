@@ -775,8 +775,13 @@ function submitForm(event) {
     
     const form = event.target;
     const submitButton = form.querySelector('input[type="submit"]');
+    const textarea = form.querySelector('textarea[name="user_input"]');
     const waitMessage = document.getElementById('wait-message');
     const chatMessages = document.getElementById('chat-messages');
+    
+    // Disable input and submit button
+    textarea.disabled = true;
+    submitButton.disabled = true;
     
     // Add user message immediately
     const userMessageDiv = document.createElement('div');
@@ -787,7 +792,9 @@ function submitForm(event) {
     `;
     chatMessages.appendChild(userMessageDiv);
     
-    submitButton.disabled = true;
+    // Clear input immediately after sending
+    textarea.value = '';
+    
     waitMessage.style.display = 'block';
     waitMessage.textContent = 'Se procesează răspunsul...';
     
@@ -803,7 +810,6 @@ function submitForm(event) {
         
         if (newMessage) {
             chatMessages.appendChild(newMessage);
-            document.getElementById('user-input').value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     })
@@ -812,8 +818,12 @@ function submitForm(event) {
         alert('A apărut o eroare. Te rugăm să încerci din nou.');
     })
     .finally(() => {
+        // Re-enable input and submit button
+        textarea.disabled = false;
         submitButton.disabled = false;
         waitMessage.style.display = 'none';
+        // Focus the textarea after response
+        textarea.focus();
     });
     
     return false;
