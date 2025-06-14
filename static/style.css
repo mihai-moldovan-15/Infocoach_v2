@@ -730,48 +730,33 @@ strong {
 }
 
 .custom-modal {
-    display: none;
     position: fixed;
-    z-index: 3000;
+    z-index: 9999;
     left: 0; top: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.25);
+    background: rgba(30, 42, 60, 0.45);
+    display: flex;
     align-items: center;
     justify-content: center;
-}
-.custom-modal[style*="display: flex"] {
-    display: flex !important;
 }
 .custom-modal-content {
     background: #fff;
-    border-radius: 16px;
-    max-width: 340px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    padding: 32px 28px 22px 28px;
+    max-width: 420px;
     width: 90vw;
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
-    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: modalIn 0.25s cubic-bezier(.4,0,.2,1);
-}
-.custom-modal-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #0074d9;
-    margin-bottom: 1rem;
     text-align: center;
 }
 .custom-modal-message {
+    font-size: 1.08em;
     color: #222;
-    font-size: 1.05rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    margin-bottom: 22px;
+    line-height: 1.5;
 }
 .custom-modal-actions {
     display: flex;
-    gap: 1.2em;
+    gap: 18px;
     justify-content: center;
-    width: 100%;
 }
 .custom-modal-ok {
     background: #0074d9;
@@ -869,4 +854,19 @@ select.form-control:focus {
     min-width: 54px !important;
     max-width: 54px !important;
     flex-basis: 54px !important;
+}
+
+.ide-custom-test {
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    max-height: 200px;
+    opacity: 1;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.ide-custom-test.hide {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 } 

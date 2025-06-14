@@ -1191,18 +1191,36 @@ def api_run_code():
         if has_in_file:
             # Rulează normal, cu shell și redirecturi
             proc = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=10)
-            # Citește outputul programului ca înainte (din fișier .out sau program_out.txt)
-            prog_out = ''
-            if has_out_file:
+            # După execuție, caută fișier .out
+            out_files = glob.glob(f'{tempdir}/*.out')
+            print('DEBUG: OUT files after run:', out_files)
+            if out_files:
+                try:
+                    with open(out_files[0], 'r', encoding='utf-8') as f:
+                        prog_out = f.read().strip()
+                except Exception:
+                    prog_out = ''
+                result['output'] = prog_out
+                result['error'] = proc.stderr.strip()
+                result['success'] = True
+            else:
+                # Dacă nu există .out, dar stdout nu e gol, afișează stdout
+                prog_out = ''
                 try:
                     with open(f'{tempdir}/program_out.txt', 'r', encoding='utf-8') as f:
                         prog_out = f.read().strip()
                 except Exception:
                     pass
-            runtime_err = proc.stderr.strip()
-            result['output'] = prog_out
-            result['error'] = runtime_err
-            result['success'] = True
+                if prog_out:
+                    result['output'] = prog_out
+                    result['error'] = proc.stderr.strip()
+                    result['success'] = True
+                else:
+                    result['output'] = ''
+                    result['error'] = 'Nu există niciun fișier de ieșire generat. Verifică dacă ai creat corect fișierul de ieșire în codul tău.'
+                    result['success'] = False
+            shutil.rmtree(tempdir, ignore_errors=True)
+            return jsonify(result)
         else:
             # Compilează separat cu Docker
             compile_cmd = [
@@ -1234,12 +1252,32 @@ def api_run_code():
             ]
             print('DEBUG: custom_input:', repr(custom_input))
             proc = subprocess.run(docker_cmd_no_shell, input=custom_input, capture_output=True, text=True, timeout=10)
-            # Outputul este direct pe stdout
-            prog_out = proc.stdout.strip()
-            runtime_err = proc.stderr.strip()
-            result['output'] = prog_out
-            result['error'] = runtime_err
-            result['success'] = True
+            # Debug output
+            print('DEBUG: proc.stdout:', repr(proc.stdout))
+            print('DEBUG: proc.stderr:', repr(proc.stderr))
+            prog_out = proc.stdout.strip()  # <-- asigur outputul
+            # După execuție, caută fișier .out
+            out_files = glob.glob(f'{tempdir}/*.out')
+            print('DEBUG: OUT files after run:', out_files)
+            if out_files:
+                try:
+                    with open(out_files[0], 'r', encoding='utf-8') as f:
+                        prog_out = f.read().strip()
+                except Exception:
+                    prog_out = ''
+                result['output'] = prog_out
+                result['error'] = proc.stderr.strip()
+                result['success'] = True
+            else:
+                # NU reseta prog_out aici!
+                if prog_out:
+                    result['output'] = prog_out
+                    result['error'] = proc.stderr.strip()
+                    result['success'] = True
+                else:
+                    result['output'] = ''
+                    result['error'] = ''  # Nu afișa mesajul cu fișierul de ieșire dacă nu există .in
+                    result['success'] = True
             shutil.rmtree(tempdir, ignore_errors=True)
             return jsonify(result)
     except subprocess.TimeoutExpired:

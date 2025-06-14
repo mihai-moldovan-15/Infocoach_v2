@@ -335,6 +335,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let userFiles = JSON.parse(localStorage.getItem('ide_user_files') || '[]');
     let activeFileIdx = null;
 
+    function updateCustomInputVisibility() {
+        const customInputArea = document.querySelector('.ide-custom-test');
+        if (!customInputArea) return;
+        const hasInFile = userFiles.some(f => f.name && f.name.endsWith('.in'));
+        if (hasInFile) {
+            customInputArea.classList.add('hide');
+        } else {
+            customInputArea.classList.remove('hide');
+        }
+    }
+
     function renderFilesTabs() {
         filesTabs.innerHTML = '';
         userFiles.forEach((file, idx) => {
@@ -355,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 renderFilesTabs();
                 renderFileEditor();
+                updateCustomInputVisibility();
             };
             // Buton ștergere
             const delBtn = document.createElement('span');
@@ -369,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('ide_user_files', JSON.stringify(userFiles));
                     renderFilesTabs();
                     renderFileEditor();
+                    updateCustomInputVisibility();
                 }
             };
             tab.appendChild(delBtn);
@@ -446,10 +459,12 @@ document.addEventListener('DOMContentLoaded', () => {
         activeFileIdx = userFiles.length - 1;
         renderFilesTabs();
         renderFileEditor();
+        updateCustomInputVisibility();
     };
     // Inițializare la load
     renderFilesTabs();
     renderFileEditor();
+    updateCustomInputVisibility();
 
     if (generateExampleBtn) {
         generateExampleBtn.onclick = function() {
@@ -461,17 +476,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     files.push({ name: currentProblem.example_input_name, content: currentProblem.example_input || '' });
                 }
             }
-            // Adaugă fișier de output dacă nu există deja
-            if (currentProblem.example_output_name && currentProblem.example_output_name !== 'consola') {
-                if (!files.some(f => f.name === currentProblem.example_output_name)) {
-                    files.push({ name: currentProblem.example_output_name, content: '' });
-                }
-            }
+            // NU mai adăuga fișier de output!
             localStorage.setItem('ide_user_files', JSON.stringify(files));
             userFiles = files;
             activeFileIdx = null;
             renderFilesTabs();
             renderFileEditor();
+            updateCustomInputVisibility();
         };
     }
 
@@ -495,6 +506,33 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function checkFileVsConsoleWarning(code) {
+        // Verifică dacă există fișier .in în userFiles
+        const hasInFile = userFiles.some(f => f.name && f.name.endsWith('.in'));
+        // Verifică dacă codul folosește doar cin/cout
+        const usesCinCout = /\bcin\b/.test(code) || /\bcout\b/.test(code);
+        const usesFiles = /ifstream\b/.test(code) || /ofstream\b/.test(code) ||
+            (hasInFile && code.includes('.in'));
+        if (hasInFile && usesCinCout && !usesFiles) {
+            return true;
+        }
+        return false;
+    }
+
+    // Modal custom pentru avertizare
+    function showCustomWarning(message) {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('custom-warning-modal');
+            const msg = document.getElementById('custom-warning-message');
+            const okBtn = document.getElementById('custom-modal-ok');
+            const cancelBtn = document.getElementById('custom-modal-cancel');
+            msg.innerHTML = message;
+            modal.style.display = 'flex';
+            okBtn.onclick = () => { modal.style.display = 'none'; resolve(true); };
+            cancelBtn.onclick = () => { modal.style.display = 'none'; resolve(false); };
+        });
+    }
+
     // Butonul de rulare cod (Rulează)
     const runBtn = document.getElementById('ide-run-code');
     const errorLog = document.getElementById('ide-error-log');
@@ -509,6 +547,19 @@ document.addEventListener('DOMContentLoaded', () => {
             let files = JSON.parse(localStorage.getItem('ide_user_files') || '[]');
             // Input de test personalizat
             const customInput = document.querySelector('.ide-custom-test')?.value || '';
+            // Avertizare dacă problema necesită fișiere dar codul folosește doar cin/cout
+            if (checkFileVsConsoleWarning(code)) {
+                const proceed = await showCustomWarning(
+                    `<strong>Atenție!</strong> Ai adăugat fișier(e) de input, dar codul tău folosește doar tastatura (<code>cin</code>/<code>cout</code>).<br>
+                    Problema originală probabil necesită citirea și scrierea în fișiere.<br><br>
+                    <span style='color:#1976d2;'>Vrei să continui oricum?</span>`
+                );
+                if (!proceed) {
+                    errorLog.textContent = 'Execuția a fost anulată de utilizator.';
+                    errorLog.style.color = '#d32f2f';
+                    return;
+                }
+            }
             // Trimite request la backend
             try {
                 const resp = await fetch('/api/run_code', {

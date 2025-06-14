@@ -435,7 +435,7 @@ body {
         <div id="ide-files-section" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
             <div id="ide-files-tabs" style="display:flex;gap:8px;"></div>
-            <button id="ide-generate-example-files-btn" style="display:none;background:#43a047;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;margin-right:8px;">Generează fișiere exemplu</button>
+            <button id="ide-generate-example-files-btn" style="display:none;background:#43a047;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;margin-right:8px;">Generează fișier exemplu</button>
             <button id="ide-add-file-btn" style="background:#0074d9;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;">Adaugă fișier</button>
           </div>
           <form id="ide-add-file-form" style="display:none;margin-top:10px;background:#f8f9fa;padding:12px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
@@ -467,6 +467,15 @@ body {
         </form>
       </div>
       <button class="ide-chat-toggle-btn" id="ide-chat-toggle-btn" style="display:none;">Deschide chat</button>
+    </div>
+  </div>
+</div>
+<div id="custom-warning-modal" class="custom-modal" style="display:none;">
+  <div class="custom-modal-content">
+    <div class="custom-modal-message" id="custom-warning-message"></div>
+    <div class="custom-modal-actions">
+      <button id="custom-modal-ok" class="ide-btn-run">Continuă</button>
+      <button id="custom-modal-cancel" class="ide-btn-reset">Renunță</button>
     </div>
   </div>
 </div>
