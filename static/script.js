@@ -271,11 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatToggleBtn = document.getElementById('ide-chat-toggle-btn');
     if (closeChatBtn && chatSidebar && chatToggleBtn) {
         closeChatBtn.onclick = function() {
-            chatSidebar.style.display = 'none';
-            chatToggleBtn.style.display = 'block';
+            chatSidebar.classList.add('closed');
+            setTimeout(() => { chatToggleBtn.style.display = 'block'; }, 350);
         };
         chatToggleBtn.onclick = function() {
-            chatSidebar.style.display = 'flex';
+            chatSidebar.classList.remove('closed');
             chatToggleBtn.style.display = 'none';
         };
     }

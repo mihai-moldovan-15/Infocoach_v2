@@ -1098,7 +1098,8 @@ def view_problems():
                          search=search,
                          categories=categories,
                          difficulties=difficulties,
-                         has_next=has_next)
+                         has_next=has_next
+    )
 
 def get_db():
     import sqlite3
