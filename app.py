@@ -10,6 +10,11 @@ import re
 import html
 from models import db, User
 from forms import LoginForm, RegistrationForm, ProfileForm
+import tempfile
+import shutil
+import subprocess
+import json
+import glob
 
 # Load API key
 load_dotenv()
@@ -1114,7 +1119,7 @@ def get_db():
 @app.route('/api/problem_search')
 @login_required
 def api_problem_search():
-    query = request.args.get('q', '').strip()  
+    query = request.args.get('q', '').strip()   
     db = get_db()
     problem = None
     if query.isdigit():
@@ -1126,6 +1131,122 @@ def api_problem_search():
         return jsonify(dict(problem))
     else:
         return jsonify({'error': 'Problem not found'}), 404
+
+# === Route for running code ===
+@app.route('/api/run_code', methods=['POST'])
+def api_run_code():
+    data = request.get_json()
+    code = data.get('code', '')
+    files = data.get('files', [])  # list of {name, content}
+    # Detectează automat inputul de test personalizat (dacă există)
+    custom_input = data.get('custom_input') or data.get('input') or ''
+    main_filename = 'main.cpp'
+    result = {'success': False, 'output': '', 'error': ''}
+    tempdir = tempfile.mkdtemp(prefix='cpp_run_')
+    try:
+        # Șterge toate fișierele .out din tempdir înainte de rulare
+        for out_file in glob.glob(f'{tempdir}/*.out'):
+            try:
+                os.remove(out_file)
+            except Exception:
+                pass
+        # Scrie main.cpp
+        with open(f'{tempdir}/{main_filename}', 'w', encoding='utf-8') as f:
+            f.write(code)
+        # Scrie fișiere suplimentare, dar ignoră orice .out venit de la utilizator
+        for fobj in files:
+            fname = fobj.get('name')
+            fcontent = fobj.get('content', '')
+            if fname and fname != main_filename and not fname.endswith('.out'):
+                with open(f'{tempdir}/{fname}', 'w', encoding='utf-8') as ff:
+                    ff.write(fcontent)
+        # Verifică dacă există fișier .in printre fișierele trimise
+        has_in_file = any(fobj['name'].endswith('.in') for fobj in files)
+        # Comenzi pentru Docker
+        compile_cmd = f"g++ -O2 -std=c++17 main.cpp -o main 2> compile_err.txt"
+        # Dacă există fișier .in, folosește-l ca input, altfel rulează fără redirect
+        input_file = None
+        for fobj in files:
+            if fobj['name'].endswith('.in'):
+                input_file = fobj['name']
+                break
+        # --- NOU: verifică dacă există fișier .out printre fișierele trimise ---
+        has_out_file = any(fobj['name'].endswith('.out') for fobj in files)
+        run_cmd = f"timeout 2s ./main"
+        if input_file:
+            run_cmd += f" < {input_file}"
+        if not has_out_file:
+            run_cmd += " > program_out.txt"
+        run_cmd += " 2> runtime_err.txt"
+        # Rulează în Docker
+        docker_cmd = [
+            'docker', 'run', '--rm',
+            '--network', 'none',
+            '--memory', '256m', '--cpus', '0.5',
+            '-v', f'{tempdir}:/workspace',
+            '-w', '/workspace',
+            'cpp-runner',
+            '/bin/bash', '-c', f"{compile_cmd} && {run_cmd}"
+        ]
+        if has_in_file:
+            # Rulează normal, cu shell și redirecturi
+            proc = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=10)
+            # Citește outputul programului ca înainte (din fișier .out sau program_out.txt)
+            prog_out = ''
+            if has_out_file:
+                try:
+                    with open(f'{tempdir}/program_out.txt', 'r', encoding='utf-8') as f:
+                        prog_out = f.read().strip()
+                except Exception:
+                    pass
+            runtime_err = proc.stderr.strip()
+            result['output'] = prog_out
+            result['error'] = runtime_err
+            result['success'] = True
+        else:
+            # Compilează separat cu Docker
+            compile_cmd = [
+                'docker', 'run', '--rm',
+                '--network', 'none',
+                '--memory', '256m', '--cpus', '0.5',
+                '-v', f'{tempdir}:/workspace',
+                '-w', '/workspace',
+                'cpp-runner',
+                'g++', '-O2', '-std=c++17', 'main.cpp', '-o', 'main'
+            ]
+            compile_proc = subprocess.run(compile_cmd, capture_output=True, text=True, timeout=10)
+            if compile_proc.returncode != 0:
+                result['output'] = ''
+                result['error'] = compile_proc.stderr + '\n' + compile_proc.stdout
+                result['success'] = False
+                shutil.rmtree(tempdir, ignore_errors=True)
+                return jsonify(result)
+            # Rulează direct ./main, fără shell, cu stdin din custom_input
+            docker_cmd_no_shell = [
+                'docker', 'run', '--rm',
+                '-i',  # <-- flag pentru stdin
+                '--network', 'none',
+                '--memory', '256m', '--cpus', '0.5',
+                '-v', f'{tempdir}:/workspace',
+                '-w', '/workspace',
+                'cpp-runner',
+                './main'
+            ]
+            print('DEBUG: custom_input:', repr(custom_input))
+            proc = subprocess.run(docker_cmd_no_shell, input=custom_input, capture_output=True, text=True, timeout=10)
+            # Outputul este direct pe stdout
+            prog_out = proc.stdout.strip()
+            runtime_err = proc.stderr.strip()
+            result['output'] = prog_out
+            result['error'] = runtime_err
+            result['success'] = True
+            shutil.rmtree(tempdir, ignore_errors=True)
+            return jsonify(result)
+    except subprocess.TimeoutExpired:
+        result['error'] = 'Execuția a depășit limita de timp.'
+    except Exception as e:
+        result['error'] = f'Eroare la execuție: {e}'
+    return jsonify(result)
 
 # === Start application ===
 if __name__ == '__main__':

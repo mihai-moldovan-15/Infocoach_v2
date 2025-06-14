@@ -494,4 +494,45 @@ document.addEventListener('DOMContentLoaded', () => {
             renderFileEditor();
         };
     }
+
+    // Butonul de rulare cod (Rulează)
+    const runBtn = document.getElementById('ide-run-code');
+    const errorLog = document.getElementById('ide-error-log');
+    if (runBtn && errorLog) {
+        runBtn.onclick = async function(e) {
+            e.preventDefault();
+            errorLog.textContent = 'Rulează codul...';
+            errorLog.style.color = '#1976d2';
+            // Codul principal
+            const code = window.ideMonaco ? window.ideMonaco.getValue() : '';
+            // Fișiere suplimentare
+            let files = JSON.parse(localStorage.getItem('ide_user_files') || '[]');
+            // Input de test personalizat
+            const customInput = document.querySelector('.ide-custom-test')?.value || '';
+            // Trimite request la backend
+            try {
+                const resp = await fetch('/api/run_code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, files, custom_input: customInput })
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    if (data.error) {
+                        errorLog.textContent = data.error;
+                        errorLog.style.color = '#d32f2f';
+                    } else {
+                        errorLog.textContent = data.output || '(fără output)';
+                        errorLog.style.color = '#222';
+                    }
+                } else {
+                    errorLog.textContent = data.error || 'Eroare necunoscută la execuție.';
+                    errorLog.style.color = '#d32f2f';
+                }
+            } catch (err) {
+                errorLog.textContent = 'Eroare la comunicarea cu serverul.';
+                errorLog.style.color = '#d32f2f';
+            }
+        };
+    }
 });
