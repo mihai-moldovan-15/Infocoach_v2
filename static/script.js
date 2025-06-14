@@ -340,8 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
         userFiles.forEach((file, idx) => {
             const tab = document.createElement('button');
             tab.textContent = file.name;
-            tab.className = 'ide-file-tab';
-            tab.style = 'background:#e6f0fa;color:#1976d2;border:none;border-radius:6px;padding:5px 14px;font-size:0.98em;font-weight:500;cursor:pointer;';
+            tab.className = 'ide-file-tab fade-in';
+            tab.style = 'background:#e6f0fa;color:#1976d2;border:none;border-radius:6px;padding:5px 14px;font-size:0.98em;font-weight:500;cursor:pointer;transition:opacity 0.4s,transform 0.4s;opacity:0;transform:translateY(-8px);';
             if (activeFileIdx === idx) {
                 tab.style.background = '#fff';
                 tab.style.color = '#0074d9';
@@ -373,6 +373,11 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             tab.appendChild(delBtn);
             filesTabs.appendChild(tab);
+            // Trigger fade-in
+            setTimeout(() => {
+                tab.style.opacity = '1';
+                tab.style.transform = 'translateY(0)';
+            }, 10);
         });
     }
     function renderFileEditor() {
@@ -381,9 +386,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = userFiles[activeFileIdx];
         // Monaco Editor pentru fișiere suplimentare
         const editorDiv = document.createElement('div');
-        editorDiv.style = 'width:100%;min-height:80px;height:180px;border-radius:6px;border:1px solid #bbb;background:#fff;margin-bottom:8px;';
+        editorDiv.style = 'width:100%;min-height:80px;height:180px;border-radius:6px;border:1px solid #bbb;background:#fff;margin-bottom:8px;transition:opacity 0.4s,transform 0.4s;opacity:0;transform:translateY(-10px);';
         editorDiv.id = 'ide-file-monaco-editor';
         filesEditors.appendChild(editorDiv);
+        setTimeout(() => {
+            editorDiv.style.opacity = '1';
+            editorDiv.style.transform = 'translateY(0)';
+        }, 10);
         // Determină limbajul după extensie
         let lang = 'plaintext';
         if (file.name.endsWith('.cpp') || file.name.endsWith('.cc') || file.name.endsWith('.cxx')) lang = 'cpp';
