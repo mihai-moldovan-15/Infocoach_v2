@@ -225,16 +225,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (idx === 0) {
                     tabContent.textContent = currentProblem.statement || 'Fără enunț.';
                 } else if (idx === 1) {
-                    tabContent.textContent = (currentProblem.input_description || '') + '\n' + (currentProblem.output_description || '');
+                    // Date de intrare și ieșire
+                    let date = '';
+                    if (currentProblem.input_description) date += currentProblem.input_description + '\n';
+                    if (currentProblem.output_description) date += currentProblem.output_description;
+                    tabContent.textContent = date.trim() || 'Fără date de intrare/ieșire.';
                 } else if (idx === 2) {
-                    tabContent.textContent = currentProblem.constraints || 'Fără restricții.';
+                    // Restricții ca listă neordonată (bullets), chiar și pentru una singură
+                    if (currentProblem.constraints) {
+                        const lines = currentProblem.constraints.split('\n').filter(l => l.trim());
+                        let ul = document.createElement('ul');
+                        lines.forEach(line => {
+                            let li = document.createElement('li');
+                            li.textContent = line;
+                            ul.appendChild(li);
+                        });
+                        tabContent.innerHTML = '';
+                        tabContent.appendChild(ul);
+                    } else {
+                        tabContent.textContent = 'Fără restricții.';
+                    }
                 } else if (idx === 3) {
+                    // Exemplu cu etichete colorate și font mai mic pentru fișiere/intrare/ieșire
                     let ex = '';
-                    if (currentProblem.example_input) ex += 'Intrare:\n' + currentProblem.example_input + '\n';
-                    if (currentProblem.example_output) ex += 'Ieșire:\n' + currentProblem.example_output;
-                    tabContent.textContent = ex || 'Fără exemple.';
+                    let inputLabel = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola'
+                        ? currentProblem.example_input_name : 'Intrare';
+                    let outputLabel = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola'
+                        ? currentProblem.example_output_name : 'Ieșire';
+                    const labelStyle = 'color:#1976d2;font-size:0.95em;font-weight:500;';
+                    if (currentProblem.example_input) {
+                        ex += `<span style="${labelStyle}">${inputLabel}</span><br>` + currentProblem.example_input + '<br>';
+                    }
+                    if (currentProblem.example_output) {
+                        ex += `<span style="${labelStyle}">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
+                    }
+                    tabContent.innerHTML = `<div>${ex.trim() || 'Fără exemplu.'}</div>`;
                 }
             });
+        });
+    }
+
+    // Chat sidebar toggle logic (Asistent AI)
+    const chatSidebar = document.getElementById('ide-chat-sidebar');
+    const closeChatBtn = document.getElementById('ide-close-chat-btn');
+    const chatToggleBtn = document.getElementById('ide-chat-toggle-btn');
+    if (closeChatBtn && chatSidebar && chatToggleBtn) {
+        closeChatBtn.onclick = function() {
+            chatSidebar.style.display = 'none';
+            chatToggleBtn.style.display = 'block';
+        };
+        chatToggleBtn.onclick = function() {
+            chatSidebar.style.display = 'flex';
+            chatToggleBtn.style.display = 'none';
+        };
+    }
+
+    // Sidebar toggle logic ca pe index
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+    if (sidebar && sidebarToggleBtn) {
+        sidebarToggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
         });
     }
 });

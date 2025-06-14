@@ -416,7 +416,7 @@ body {
             <button class="ide-tab active">Enunț</button>
             <button class="ide-tab">Date</button>
             <button class="ide-tab">Restricții</button>
-            <button class="ide-tab">Exemple</button>
+            <button class="ide-tab">Exemplu</button>
           </div>
           <div class="ide-tab-content">
             Aici va fi enunțul problemei...
@@ -448,19 +448,6 @@ body {
   </div>
 </div>
 <script>
-const chatSidebar = document.getElementById('ide-chat-sidebar');
-const closeChatBtn = document.getElementById('ide-close-chat-btn');
-const chatToggleBtn = document.getElementById('ide-chat-toggle-btn');
-if (closeChatBtn && chatSidebar && chatToggleBtn) {
-  closeChatBtn.onclick = function() {
-    chatSidebar.style.display = 'none';
-    chatToggleBtn.style.display = 'block';
-  };
-  chatToggleBtn.onclick = function() {
-    chatSidebar.style.display = 'flex';
-    chatToggleBtn.style.display = 'none';
-  };
-}
 // CodeMirror init
 window.addEventListener('DOMContentLoaded', function() {
   const savedCode = localStorage.getItem('ide_code');
@@ -479,14 +466,6 @@ window.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('ide_code', cm.getValue());
   });
 });
-// Sidebar toggle logic ca pe index
-const sidebar = document.getElementById('sidebar');
-const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-if (sidebar && sidebarToggleBtn) {
-  sidebarToggleBtn.addEventListener('click', function() {
-    sidebar.classList.toggle('collapsed');
-  });
-}
 </script>
 {% endblock %}
 

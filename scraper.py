@@ -5,6 +5,7 @@ import time
 import logging
 from datetime import datetime
 import re
+import unicodedata
 
 # Configurare logging
 logging.basicConfig(
@@ -40,6 +41,8 @@ class PbinfoScraper:
                 constraints TEXT,
                 example_input TEXT,
                 example_output TEXT,
+                example_input_name TEXT,
+                example_output_name TEXT,
                 grade INTEGER,
                 category VARCHAR(100),
                 difficulty VARCHAR(50),
@@ -61,6 +64,10 @@ class PbinfoScraper:
         # Elimină caracterele speciale
         text = text.replace('\xa0', ' ').strip()
         return text
+
+    def normalize_text(self, text):
+        # Normalizează diacriticele și spațiile
+        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii').lower().replace(' ', '')
 
     def extract_problem_data(self, problem_id):
         url = f"{self.base_url}/{problem_id}"
@@ -93,30 +100,37 @@ class PbinfoScraper:
             constraints = ""
             example_input = ""
             example_output = ""
+            example_input_name = ""
+            example_output_name = ""
 
             problem_content = soup.find('article', id='enunt')
             if problem_content:
                 current_section = None
                 found_intro = False
-                for tag in problem_content.find_all(['h1', 'p', 'pre']):
+                found_example_input = False
+                found_example_output = False
+                for tag in problem_content.find_all(['h1', 'p', 'pre', 'ul', 'li']):
                     text = self.clean_text(tag.text)
-                    text_lower = text.lower()
-
+                    text_norm = self.normalize_text(text)
                     if tag.name == 'h1':
-                        if "cerin" in text_lower:
+                        if "cerin" in text_norm:
                             current_section = "cerinta"
-                        elif "date de intrare" in text_lower:
+                        elif "datedeintrare" in text_norm:
                             current_section = "input"
-                        elif "date de ieșire" in text_lower or "date de iesire" in text_lower:
+                        elif "datedeiesire" in text_norm:
                             current_section = "output"
-                        elif "restric" in text_lower:
+                        elif (
+                            "restrict" in text_norm or
+                            "preciz" in text_norm or
+                            "observa" in text_norm
+                        ):
                             current_section = "constraints"
-                        elif "exemplu" in text_lower:
+                        elif "exemplu" in text_norm:
                             current_section = "example"
                         else:
                             current_section = None
-                    elif tag.name == 'p':
-                        if not found_intro:
+                    elif tag.name in ['p', 'pre']:
+                        if not found_intro and tag.name == 'p':
                             intro = text
                             found_intro = True
                         elif current_section == "cerinta":
@@ -127,13 +141,28 @@ class PbinfoScraper:
                             output_desc += text + "\n"
                         elif current_section == "constraints":
                             constraints += text + "\n"
-                    elif tag.name == 'pre':
-                        if current_section == "example":
-                            # Heuristic: primul pre e input, al doilea e output
-                            if not example_input:
-                                example_input = text
-                            else:
-                                example_output = text
+                        elif current_section == "example":
+                            if tag.name == 'p':
+                                if '.in' in text_norm:
+                                    example_input_name = text
+                                elif '.out' in text_norm:
+                                    example_output_name = text
+                            elif tag.name == 'pre':
+                                if not found_example_input:
+                                    example_input = text
+                                    found_example_input = True
+                                elif not found_example_output:
+                                    example_output = text
+                                    found_example_output = True
+                    elif tag.name == 'ul' and current_section == "constraints":
+                        for li in tag.find_all('li'):
+                            constraints += self.clean_text(li.text) + "\n"
+
+            # Fallback la "consola" dacă nu există nume de fișier
+            if not example_input_name:
+                example_input_name = "consola"
+            if not example_output_name:
+                example_output_name = "consola"
 
             # Statement = enunt + cerinta
             statement = intro.strip()
@@ -174,6 +203,8 @@ class PbinfoScraper:
                 'constraints': constraints.strip(),
                 'example_input': example_input.strip(),
                 'example_output': example_output.strip(),
+                'example_input_name': example_input_name.strip(),
+                'example_output_name': example_output_name.strip(),
                 'grade': grade,
                 'category': category,
                 'difficulty': difficulty,
@@ -197,9 +228,9 @@ class PbinfoScraper:
             cursor.execute('''
                 INSERT OR REPLACE INTO problems 
                 (id, name, statement, input_description, output_description, 
-                constraints, example_input, example_output, grade, category, 
-                difficulty, last_updated, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                constraints, example_input, example_output, example_input_name, example_output_name,
+                grade, category, difficulty, last_updated, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 problem_data['id'],
                 problem_data['name'],
@@ -209,6 +240,8 @@ class PbinfoScraper:
                 problem_data['constraints'],
                 problem_data['example_input'],
                 problem_data['example_output'],
+                problem_data['example_input_name'],
+                problem_data['example_output_name'],
                 problem_data['grade'],
                 problem_data['category'],
                 problem_data['difficulty'],
@@ -225,17 +258,27 @@ class PbinfoScraper:
             logging.error(f"Eroare la salvarea problemei {problem_data['id']}: {str(e)}")
             return False
 
+    def scrape_pbinfo(self):
+        """Scrape primele 10 probleme de pe pbinfo.ro și le adaugă în baza de date."""
+        base_url = "https://www.pbinfo.ro/probleme/"
+        for problem_id in range(1, 11):
+            url = f"{base_url}{problem_id}"
+            try:
+                response = requests.get(url)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    problem_data = self.extract_problem_data(problem_id)
+                    if problem_data:
+                        problem_data['id'] = problem_id
+                        self.save_problem(problem_data)
+                        print(f"Problema {problem_id} adăugată cu succes!")
+                    else:
+                        print(f"Nu s-au putut extrage datele pentru problema {problem_id}.")
+                else:
+                    print(f"Eroare la accesarea problemei {problem_id}: {response.status_code}")
+            except Exception as e:
+                print(f"Eroare la procesarea problemei {problem_id}: {e}")
+
 if __name__ == "__main__":
     scraper = PbinfoScraper()
-    # Adaugă problema 1 și 2
-    for problem_id in [1, 2]:
-        logging.info(f"Starting to scrape problem {problem_id}")
-        problem_data = scraper.extract_problem_data(problem_id)
-        if problem_data:
-            logging.info(f"Successfully extracted data for problem {problem_id}")
-            if scraper.save_problem(problem_data):
-                logging.info(f"Problem {problem_id} was saved to database")
-            else:
-                logging.error(f"Failed to save problem {problem_id} to database")
-        else:
-            logging.error(f"Failed to extract data for problem {problem_id}") 
+    scraper.scrape_pbinfo() 

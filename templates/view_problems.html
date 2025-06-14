@@ -242,12 +242,12 @@
                 <div class="problem-section">
                     <h4>Exemplu</h4>
                     {% if problem.example_input %}
-                    <pre>Intrare:
-{{ problem.example_input }}</pre>
+                    <span style="color:#1976d2;font-size:0.95em;font-weight:500;">{{ problem.example_input_name or 'Intrare' }}</span>
+                    <pre>{{ problem.example_input }}</pre>
                     {% endif %}
                     {% if problem.example_output %}
-                    <pre>Ieșire:
-{{ problem.example_output }}</pre>
+                    <span style="color:#1976d2;font-size:0.95em;font-weight:500;">{{ problem.example_output_name or 'Ieșire' }}</span>
+                    <pre>{{ problem.example_output }}</pre>
                     {% endif %}
                 </div>
                 {% endif %}

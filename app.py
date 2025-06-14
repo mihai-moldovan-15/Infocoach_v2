@@ -1051,7 +1051,7 @@ def view_problems():
     search = request.args.get('search', '')
     
     # Construim query-ul de bază
-    query = "SELECT id, name, statement, input_description, output_description, difficulty FROM problems WHERE 1=1"
+    query = "SELECT id, name, statement, input_description, output_description, constraints, example_input, example_output, example_input_name, example_output_name, grade, category, difficulty FROM problems WHERE 1=1"
     params = []
     
     if grade:
