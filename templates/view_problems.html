@@ -137,17 +137,30 @@
         background-color: #f8f9fa;
     }
 
-    .pagination .active {
-        background-color: #0074d9;
-        color: white;
-        border-color: #0074d9;
-    }
-
     .no-problems {
         text-align: center;
         padding: 40px;
         color: #6c757d;
         font-size: 1.1em;
+    }
+
+    .btn-filtreaza {
+        background: #0074d9;
+        color: #fff;
+        font-size: 1.1em;
+        font-weight: 600;
+        padding: 10px 28px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,116,217,0.08);
+        transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    .btn-filtreaza:hover, .btn-filtreaza:focus {
+        background: #005fa3;
+        box-shadow: 0 4px 16px rgba(0,116,217,0.18);
+        transform: translateY(-2px) scale(1.03);
     }
 </style>
 {% endblock %}
@@ -162,7 +175,7 @@
                 <label for="grade">Clasă:</label>
                 <select name="grade" id="grade">
                     <option value="">Toate</option>
-                    {% for g in range(5, 13) %}
+                    {% for g in grades %}
                     <option value="{{ g }}" {% if grade == g %}selected{% endif %}>{{ g }}</option>
                     {% endfor %}
                 </select>
@@ -193,7 +206,7 @@
                 <input type="text" name="search" id="search" value="{{ search }}" placeholder="Nume sau ID problemă">
             </div>
             
-            <button type="submit" class="btn btn-primary">Filtrează</button>
+            <button type="submit" class="btn-filtreaza">Filtrează</button>
         </form>
     </div>
 
@@ -231,6 +244,13 @@
                     <pre>{{ problem.output_description }}</pre>
                 </div>
 
+                {% if problem.time_limit or problem.memory_limit %}
+                <div class="problem-section">
+                    {% if problem.time_limit %}<div style="margin-bottom:2px;"><b>Limită timp:</b> {{ problem.time_limit }}</div>{% endif %}
+                    {% if problem.memory_limit %}<div><b>Limită memorie:</b> {{ problem.memory_limit }}</div>{% endif %}
+                </div>
+                {% endif %}
+
                 {% if problem.constraints %}
                 <div class="problem-section">
                     <h4>Restricții</h4>
@@ -256,14 +276,26 @@
         {% endfor %}
 
         <div class="pagination">
+            {% set total_pages = (total // 10) + (1 if total % 10 else 0) %}
             {% if page > 1 %}
+            <a href="{{ url_for('view_problems', page=1, grade=grade, category=category, difficulty=difficulty, search=search) }}">&laquo;&laquo;</a>
+            <a href="{{ url_for('view_problems', page=(page-3 if page-3>0 else 1), grade=grade, category=category, difficulty=difficulty, search=search) }}">&laquo; -3</a>
             <a href="{{ url_for('view_problems', page=page-1, grade=grade, category=category, difficulty=difficulty, search=search) }}">&laquo; Anterior</a>
             {% endif %}
-            
-            <span class="active">{{ page }}</span>
-            
+            <span style="font-weight:600;font-size:1.1em;min-width:32px;display:inline-block;text-align:center;">{{ page }}</span>
+            <form method="get" action="{{ url_for('view_problems') }}" style="display:inline-block;margin:0 8px;">
+                <input type="hidden" name="grade" value="{{ grade }}">
+                <input type="hidden" name="category" value="{{ category }}">
+                <input type="hidden" name="difficulty" value="{{ difficulty }}">
+                <input type="hidden" name="search" value="{{ search }}">
+                <input type="number" name="page" min="1" max="{{ total_pages }}" value="{{ page }}" style="width:60px;padding:6px 8px;border-radius:6px;border:1px solid #0074d9;font-size:1em;text-align:center;">
+                <button type="submit" style="background:#0074d9;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:600;margin-left:4px;cursor:pointer;">Mergi</button>
+            </form>
+            <span style="margin-left:8px;color:#888;font-size:0.98em;">/ {{ total_pages }} pagini</span>
             {% if has_next %}
             <a href="{{ url_for('view_problems', page=page+1, grade=grade, category=category, difficulty=difficulty, search=search) }}">Următor &raquo;</a>
+            <a href="{{ url_for('view_problems', page=(page+3 if page+3<=total_pages else total_pages), grade=grade, category=category, difficulty=difficulty, search=search) }}">+3 &raquo;</a>
+            <a href="{{ url_for('view_problems', page=total_pages, grade=grade, category=category, difficulty=difficulty, search=search) }}">&raquo;&raquo;</a>
             {% endif %}
         </div>
     {% else %}

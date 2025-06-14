@@ -1083,9 +1083,10 @@ def view_problems():
     # Obținem problemele pentru pagina curentă
     problems = get_db().execute(query, params).fetchall()
     
-    # Obținem toate categoriile și dificultățile pentru filtre
+    # Obținem toate categoriile, dificultățile și clasele pentru filtre
     categories = [row[0] for row in get_db().execute("SELECT DISTINCT category FROM problems WHERE category != '' ORDER BY category").fetchall()]
     difficulties = [row[0] for row in get_db().execute("SELECT DISTINCT difficulty FROM problems WHERE difficulty != '' ORDER BY difficulty").fetchall()]
+    grades = [row[0] for row in get_db().execute("SELECT DISTINCT grade FROM problems WHERE grade IS NOT NULL AND grade != '' ORDER BY grade").fetchall()]
     
     has_next = (page * per_page) < total
     
@@ -1098,7 +1099,9 @@ def view_problems():
                          search=search,
                          categories=categories,
                          difficulties=difficulties,
-                         has_next=has_next
+                         grades=grades,
+                         has_next=has_next,
+                         total=total
     )
 
 def get_db():
@@ -1111,7 +1114,7 @@ def get_db():
 @app.route('/api/problem_search')
 @login_required
 def api_problem_search():
-    query = request.args.get('q', '').strip()
+    query = request.args.get('q', '').strip()  
     db = get_db()
     problem = None
     if query.isdigit():

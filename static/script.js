@@ -190,6 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentProblem = null;
 
     if (searchForm && searchInput && tabButtons.length && tabContent) {
+        // Dezactivez tab-urile la început
+        tabButtons.forEach(btn => btn.disabled = true);
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const query = searchInput.value.trim();
@@ -200,9 +202,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.error) {
                         tabContent.textContent = 'Problema nu a fost găsită!';
                         currentProblem = null;
+                        // Dezactivez tab-urile dacă nu există problemă
+                        tabButtons.forEach(btn => btn.disabled = true);
                         return;
                     }
                     currentProblem = data;
+                    // Activez tab-urile când există problemă
+                    tabButtons.forEach(btn => btn.disabled = false);
                     // Show statement by default
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabButtons[0].classList.add('active');
@@ -211,11 +217,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(() => {
                     tabContent.textContent = 'Eroare la căutare!';
                     currentProblem = null;
+                    tabButtons.forEach(btn => btn.disabled = true);
                 });
         });
         // Tab switching logic
         tabButtons.forEach((btn, idx) => {
             btn.addEventListener('click', function() {
+                if (btn.disabled) return;
                 tabButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 if (!currentProblem) {
@@ -229,7 +237,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     let date = '';
                     if (currentProblem.input_description) date += currentProblem.input_description + '\n';
                     if (currentProblem.output_description) date += currentProblem.output_description;
-                    tabContent.textContent = date.trim() || 'Fără date de intrare/ieșire.';
+                    if (date.trim()) {
+                        tabContent.innerHTML = `<div style='white-space:pre-line;'>${date.trim()}</div>`;
+                    } else {
+                        tabContent.textContent = 'Fără date de intrare/ieșire.';
+                    }
                 } else if (idx === 2) {
                     // Restricții ca listă neordonată (bullets), chiar și pentru una singură
                     if (currentProblem.constraints) {
@@ -246,6 +258,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         tabContent.textContent = 'Fără restricții.';
                     }
                 } else if (idx === 3) {
+                    // Limite de timp și memorie
+                    let limHtml = '';
+                    if (currentProblem.time_limit || currentProblem.memory_limit) {
+                        if (currentProblem.time_limit) limHtml += `<div><b>Limită timp:</b> ${currentProblem.time_limit}</div>`;
+                        if (currentProblem.memory_limit) limHtml += `<div><b>Limită memorie:</b> ${currentProblem.memory_limit}</div>`;
+                    } else {
+                        limHtml = 'Nu există limite definite pentru această problemă.';
+                    }
+                    tabContent.innerHTML = limHtml;
+                } else if (idx === 4) {
                     // Exemplu cu etichete colorate și font mai mic pentru fișiere/intrare/ieșire
                     let ex = '';
                     let inputLabel = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola'

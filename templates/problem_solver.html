@@ -424,13 +424,14 @@ body {
             <button class="ide-tab active">Enunț</button>
             <button class="ide-tab">Date</button>
             <button class="ide-tab">Restricții</button>
+            <button class="ide-tab">Limite</button>
             <button class="ide-tab">Exemplu</button>
           </div>
           <div class="ide-tab-content">
             Aici va fi enunțul problemei...
           </div>
         </div>
-        <div id="ide-code-editor"></div>
+        <div id="ide-code-editor" style="height:340px;border:1.5px solid #bbb;border-radius:8px;background:#f8f9fa;margin-bottom:12px;"></div>
         <textarea class="ide-custom-test" placeholder="Input de test personalizat..."></textarea>
         <div class="ide-editor-buttons">
           <button id="ide-run-code" class="ide-btn-run">Rulează</button>
@@ -456,31 +457,35 @@ body {
   </div>
 </div>
 <script>
-// CodeMirror init
+// Monaco Editor init
 window.addEventListener('DOMContentLoaded', function() {
   const savedCode = localStorage.getItem('ide_code');
   const defaultCode = '#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}';
-  window.ideCodeMirror = CodeMirror(document.getElementById('ide-code-editor'), {
-    value: savedCode !== null ? savedCode : defaultCode,
-    mode: 'text/x-c++src',
-    theme: 'default',
-    lineNumbers: true,
-    indentUnit: 4,
-    tabSize: 4,
-    autofocus: true,
-    lineWrapping: true
-  });
-  window.ideCodeMirror.on('change', function(cm) {
-    localStorage.setItem('ide_code', cm.getValue());
+  window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+  window.require(['vs/editor/editor.main'], function() {
+    window.ideMonaco = monaco.editor.create(document.getElementById('ide-code-editor'), {
+      value: savedCode !== null ? savedCode : defaultCode,
+      language: 'cpp',
+      theme: 'vs',
+      fontSize: 15,
+      minimap: { enabled: false },
+      automaticLayout: true,
+      lineNumbers: 'on',
+      wordWrap: 'on',
+      scrollBeyondLastLine: false,
+      roundedSelection: false,
+      scrollbar: { vertical: 'auto', horizontal: 'auto' }
+    });
+    window.ideMonaco.onDidChangeModelContent(function() {
+      localStorage.setItem('ide_code', window.ideMonaco.getValue());
+    });
   });
 });
 </script>
 {% endblock %}
 
 {% block scripts %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   {{ super() }}
 {% endblock %} 

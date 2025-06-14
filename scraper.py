@@ -46,6 +46,11 @@ class PbinfoScraper:
                 grade INTEGER,
                 category VARCHAR(100),
                 difficulty VARCHAR(50),
+                subcategories TEXT,
+                time_limit TEXT,
+                memory_limit TEXT,
+                author TEXT,
+                source TEXT,
                 last_updated TIMESTAMP,
                 status VARCHAR(20)
             )
@@ -173,24 +178,24 @@ class PbinfoScraper:
             grade = None
             category = ""
             difficulty = ""
+            time_limit = ''
+            memory_limit = ''
 
             info_table = soup.find('table', class_='table')
             if info_table:
-                for row in info_table.find_all('tr'):
-                    cells = row.find_all('td')
-                    if len(cells) >= 2:
-                        key = cells[0].text.lower()
-                        value = self.clean_text(cells[1].text)
-
-                        if 'clasa' in key:
-                            try:
-                                grade = int(re.search(r'\d+', value).group())
-                            except:
-                                pass
-                        elif 'categorie' in key:
-                            category = value
-                        elif 'dificultate' in key:
-                            difficulty = value
+                rows = info_table.find_all('tr')
+                if len(rows) >= 2:
+                    cells = rows[1].find_all('td')
+                    if len(cells) >= 8:
+                        # Indexuri: 0=autor, 1=clasa, 2=input/output, 3=limită timp, 4=limită memorie, 5=sursa, 6=autor, 7=dificultate
+                        try:
+                            grade = int(re.search(r'\d+', cells[1].text).group())
+                        except:
+                            grade = None
+                        time_limit = self.clean_text(cells[3].text)
+                        memory_limit = self.clean_text(cells[4].text)
+                        difficulty = self.clean_text(cells[7].text)
+                        # category și altele pot fi extrase din breadcrumb sau altă logică
 
             logging.info(f"Grade: {grade}, Category: {category}, Difficulty: {difficulty}")
 
@@ -208,6 +213,11 @@ class PbinfoScraper:
                 'grade': grade,
                 'category': category,
                 'difficulty': difficulty,
+                'subcategories': '',
+                'time_limit': time_limit,
+                'memory_limit': memory_limit,
+                'author': '',
+                'source': '',
                 'last_updated': datetime.now().isoformat(),
                 'status': 'active'
             }
@@ -229,8 +239,8 @@ class PbinfoScraper:
                 INSERT OR REPLACE INTO problems 
                 (id, name, statement, input_description, output_description, 
                 constraints, example_input, example_output, example_input_name, example_output_name,
-                grade, category, difficulty, last_updated, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                grade, category, difficulty, subcategories, time_limit, memory_limit, author, source, last_updated, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 problem_data['id'],
                 problem_data['name'],
@@ -245,6 +255,11 @@ class PbinfoScraper:
                 problem_data['grade'],
                 problem_data['category'],
                 problem_data['difficulty'],
+                problem_data['subcategories'],
+                problem_data['time_limit'],
+                problem_data['memory_limit'],
+                problem_data['author'],
+                problem_data['source'],
                 problem_data['last_updated'],
                 problem_data['status']
             ))
