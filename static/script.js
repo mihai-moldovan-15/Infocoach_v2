@@ -188,10 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.ide-tab');
     const tabContent = document.querySelector('.ide-tab-content');
     let currentProblem = null;
+    const generateExampleBtn = document.getElementById('ide-generate-example-files-btn');
 
     if (searchForm && searchInput && tabButtons.length && tabContent) {
         // Dezactivez tab-urile la început
         tabButtons.forEach(btn => btn.disabled = true);
+        if (generateExampleBtn) generateExampleBtn.style.display = 'none';
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const query = searchInput.value.trim();
@@ -202,22 +204,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.error) {
                         tabContent.textContent = 'Problema nu a fost găsită!';
                         currentProblem = null;
-                        // Dezactivez tab-urile dacă nu există problemă
                         tabButtons.forEach(btn => btn.disabled = true);
+                        if (generateExampleBtn) generateExampleBtn.style.display = 'none';
                         return;
                     }
                     currentProblem = data;
-                    // Activez tab-urile când există problemă
                     tabButtons.forEach(btn => btn.disabled = false);
-                    // Show statement by default
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabButtons[0].classList.add('active');
                     tabContent.textContent = data.statement || 'Fără enunț.';
+                    // Afișează butonul de generare fișiere dacă există nume de fișier input/output
+                    if (generateExampleBtn) {
+                        const hasInputFile = data.example_input_name && data.example_input_name !== 'consola';
+                        const hasOutputFile = data.example_output_name && data.example_output_name !== 'consola';
+                        if (hasInputFile || hasOutputFile) {
+                            generateExampleBtn.style.display = 'inline-block';
+                        } else {
+                            generateExampleBtn.style.display = 'none';
+                        }
+                    }
                 })
                 .catch(() => {
                     tabContent.textContent = 'Eroare la căutare!';
                     currentProblem = null;
                     tabButtons.forEach(btn => btn.disabled = true);
+                    if (generateExampleBtn) generateExampleBtn.style.display = 'none';
                 });
         });
         // Tab switching logic
@@ -309,5 +320,169 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebarToggleBtn.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
         });
+    }
+
+    // === Gestionare fișiere suplimentare (input/output) ===
+    const filesSection = document.getElementById('ide-files-section');
+    const filesTabs = document.getElementById('ide-files-tabs');
+    const addFileBtn = document.getElementById('ide-add-file-btn');
+    const addFileForm = document.getElementById('ide-add-file-form');
+    const newFileName = document.getElementById('ide-new-file-name');
+    const newFileContent = document.getElementById('ide-new-file-content');
+    const cancelAddFile = document.getElementById('ide-cancel-add-file');
+    const filesEditors = document.getElementById('ide-files-editors');
+
+    let userFiles = JSON.parse(localStorage.getItem('ide_user_files') || '[]');
+    let activeFileIdx = null;
+
+    function renderFilesTabs() {
+        filesTabs.innerHTML = '';
+        userFiles.forEach((file, idx) => {
+            const tab = document.createElement('button');
+            tab.textContent = file.name;
+            tab.className = 'ide-file-tab';
+            tab.style = 'background:#e6f0fa;color:#1976d2;border:none;border-radius:6px;padding:5px 14px;font-size:0.98em;font-weight:500;cursor:pointer;';
+            if (activeFileIdx === idx) {
+                tab.style.background = '#fff';
+                tab.style.color = '#0074d9';
+                tab.style.fontWeight = '600';
+            }
+            tab.onclick = () => {
+                if (activeFileIdx === idx) {
+                    activeFileIdx = null;
+                } else {
+                    activeFileIdx = idx;
+                }
+                renderFilesTabs();
+                renderFileEditor();
+            };
+            // Buton ștergere
+            const delBtn = document.createElement('span');
+            delBtn.textContent = '×';
+            delBtn.title = 'Șterge fișier';
+            delBtn.style = 'margin-left:6px;color:#d32f2f;font-weight:700;cursor:pointer;';
+            delBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (confirm('Sigur vrei să ștergi acest fișier?')) {
+                    userFiles.splice(idx, 1);
+                    if (activeFileIdx === idx) activeFileIdx = null;
+                    localStorage.setItem('ide_user_files', JSON.stringify(userFiles));
+                    renderFilesTabs();
+                    renderFileEditor();
+                }
+            };
+            tab.appendChild(delBtn);
+            filesTabs.appendChild(tab);
+        });
+    }
+    function renderFileEditor() {
+        filesEditors.innerHTML = '';
+        if (activeFileIdx === null || userFiles.length === 0) return;
+        const file = userFiles[activeFileIdx];
+        // Monaco Editor pentru fișiere suplimentare
+        const editorDiv = document.createElement('div');
+        editorDiv.style = 'width:100%;min-height:80px;height:180px;border-radius:6px;border:1px solid #bbb;background:#fff;margin-bottom:8px;';
+        editorDiv.id = 'ide-file-monaco-editor';
+        filesEditors.appendChild(editorDiv);
+        // Determină limbajul după extensie
+        let lang = 'plaintext';
+        if (file.name.endsWith('.cpp') || file.name.endsWith('.cc') || file.name.endsWith('.cxx')) lang = 'cpp';
+        else if (file.name.endsWith('.py')) lang = 'python';
+        else if (file.name.endsWith('.txt') || file.name.endsWith('.in') || file.name.endsWith('.out')) lang = 'plaintext';
+        // Inițializează Monaco
+        window.require(['vs/editor/editor.main'], function() {
+            if (window.ideFileMonaco) {
+                window.ideFileMonaco.dispose();
+            }
+            window.ideFileMonaco = monaco.editor.create(editorDiv, {
+                value: file.content,
+                language: lang,
+                theme: 'vs',
+                fontSize: 15,
+                minimap: { enabled: false },
+                automaticLayout: true,
+                lineNumbers: 'off',
+                wordWrap: 'on',
+                scrollBeyondLastLine: false,
+                roundedSelection: false,
+                scrollbar: { vertical: 'auto', horizontal: 'auto' }
+            });
+            window.ideFileMonaco.onDidChangeModelContent(function() {
+                userFiles[activeFileIdx].content = window.ideFileMonaco.getValue();
+                localStorage.setItem('ide_user_files', JSON.stringify(userFiles));
+            });
+        });
+    }
+    addFileBtn.onclick = function() {
+        addFileForm.style.display = 'block';
+        addFileBtn.style.display = 'none';
+        newFileName.value = '';
+        newFileContent.value = '';
+    };
+    cancelAddFile.onclick = function() {
+        addFileForm.style.display = 'none';
+        addFileBtn.style.display = 'inline-block';
+    };
+    addFileForm.onsubmit = function(e) {
+        e.preventDefault();
+        const name = newFileName.value.trim();
+        if (!name || userFiles.some(f => f.name === name)) {
+            alert('Numele fișierului este gol sau există deja!');
+            return;
+        }
+        userFiles.push({ name, content: newFileContent.value });
+        localStorage.setItem('ide_user_files', JSON.stringify(userFiles));
+        addFileForm.style.display = 'none';
+        addFileBtn.style.display = 'inline-block';
+        activeFileIdx = userFiles.length - 1;
+        renderFilesTabs();
+        renderFileEditor();
+    };
+    // Inițializare la load
+    renderFilesTabs();
+    renderFileEditor();
+
+    if (generateExampleBtn) {
+        generateExampleBtn.onclick = function() {
+            if (!currentProblem) return;
+            let files = JSON.parse(localStorage.getItem('ide_user_files') || '[]');
+            // Adaugă fișier de input dacă nu există deja
+            if (currentProblem.example_input_name && currentProblem.example_input_name !== 'consola') {
+                if (!files.some(f => f.name === currentProblem.example_input_name)) {
+                    files.push({ name: currentProblem.example_input_name, content: currentProblem.example_input || '' });
+                }
+            }
+            // Adaugă fișier de output dacă nu există deja
+            if (currentProblem.example_output_name && currentProblem.example_output_name !== 'consola') {
+                if (!files.some(f => f.name === currentProblem.example_output_name)) {
+                    files.push({ name: currentProblem.example_output_name, content: '' });
+                }
+            }
+            localStorage.setItem('ide_user_files', JSON.stringify(files));
+            userFiles = files;
+            activeFileIdx = null;
+            renderFilesTabs();
+            renderFileEditor();
+        };
+    }
+
+    // Butonul de resetare cod și fișiere
+    const resetBtn = document.getElementById('ide-reset-code');
+    if (resetBtn) {
+        resetBtn.onclick = function(e) {
+            e.preventDefault();
+            // Cod C++ basic (hello world)
+            const helloCode = '#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, world!" << endl;\n    return 0;\n}';
+            if (window.ideMonaco) {
+                window.ideMonaco.setValue(helloCode);
+            }
+            localStorage.setItem('ide_code', helloCode);
+            // Șterge fișierele suplimentare
+            localStorage.removeItem('ide_user_files');
+            userFiles = [];
+            activeFileIdx = null;
+            renderFilesTabs();
+            renderFileEditor();
+        };
     }
 });

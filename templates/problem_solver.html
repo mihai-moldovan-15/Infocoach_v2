@@ -432,6 +432,20 @@ body {
           </div>
         </div>
         <div id="ide-code-editor" style="height:340px;border:1.5px solid #bbb;border-radius:8px;background:#f8f9fa;margin-bottom:12px;"></div>
+        <div id="ide-files-section" style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
+            <div id="ide-files-tabs" style="display:flex;gap:8px;"></div>
+            <button id="ide-generate-example-files-btn" style="display:none;background:#43a047;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;margin-right:8px;">Generează fișiere exemplu</button>
+            <button id="ide-add-file-btn" style="background:#0074d9;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;">Adaugă fișier</button>
+          </div>
+          <form id="ide-add-file-form" style="display:none;margin-top:10px;background:#f8f9fa;padding:12px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <input type="text" id="ide-new-file-name" placeholder="Nume fișier (ex: sum.in)" style="padding:6px 10px;border-radius:4px;border:1px solid #bbb;font-size:1em;width:180px;">
+            <textarea id="ide-new-file-content" placeholder="Conținut fișier..." style="margin-left:8px;padding:6px 10px;border-radius:4px;border:1px solid #bbb;font-size:1em;width:260px;vertical-align:middle;"></textarea>
+            <button type="submit" style="background:#0074d9;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:500;cursor:pointer;font-size:1em;margin-left:8px;">Salvează</button>
+            <button type="button" id="ide-cancel-add-file" style="background:#eee;color:#333;border:none;border-radius:6px;padding:6px 16px;font-weight:500;cursor:pointer;font-size:1em;margin-left:8px;">Anulează</button>
+          </form>
+          <div id="ide-files-editors"></div>
+        </div>
         <textarea class="ide-custom-test" placeholder="Input de test personalizat..."></textarea>
         <div class="ide-editor-buttons">
           <button id="ide-run-code" class="ide-btn-run">Rulează</button>
