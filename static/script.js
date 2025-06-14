@@ -181,4 +181,60 @@ document.addEventListener('DOMContentLoaded', () => {
     // hljs.highlightAll();
 
     // Removed feedback form submission logic
+
+    // Problem search logic for problem_solver page
+    const searchForm = document.querySelector('.ide-search-bar');
+    const searchInput = document.querySelector('.ide-search-input');
+    const tabButtons = document.querySelectorAll('.ide-tab');
+    const tabContent = document.querySelector('.ide-tab-content');
+    let currentProblem = null;
+
+    if (searchForm && searchInput && tabButtons.length && tabContent) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = searchInput.value.trim();
+            if (!query) return;
+            fetch(`/api/problem_search?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        tabContent.textContent = 'Problema nu a fost găsită!';
+                        currentProblem = null;
+                        return;
+                    }
+                    currentProblem = data;
+                    // Show statement by default
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabButtons[0].classList.add('active');
+                    tabContent.textContent = data.statement || 'Fără enunț.';
+                })
+                .catch(() => {
+                    tabContent.textContent = 'Eroare la căutare!';
+                    currentProblem = null;
+                });
+        });
+        // Tab switching logic
+        tabButtons.forEach((btn, idx) => {
+            btn.addEventListener('click', function() {
+                tabButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                if (!currentProblem) {
+                    tabContent.textContent = 'Aici va fi enunțul problemei...';
+                    return;
+                }
+                if (idx === 0) {
+                    tabContent.textContent = currentProblem.statement || 'Fără enunț.';
+                } else if (idx === 1) {
+                    tabContent.textContent = (currentProblem.input_description || '') + '\n' + (currentProblem.output_description || '');
+                } else if (idx === 2) {
+                    tabContent.textContent = currentProblem.constraints || 'Fără restricții.';
+                } else if (idx === 3) {
+                    let ex = '';
+                    if (currentProblem.example_input) ex += 'Intrare:\n' + currentProblem.example_input + '\n';
+                    if (currentProblem.example_output) ex += 'Ieșire:\n' + currentProblem.example_output;
+                    tabContent.textContent = ex || 'Fără exemple.';
+                }
+            });
+        });
+    }
 });

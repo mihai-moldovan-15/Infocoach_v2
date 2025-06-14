@@ -67,79 +67,120 @@ class PbinfoScraper:
         try:
             response = requests.get(url, headers=self.headers)
             response.raise_for_status()
-            # Salvează HTML-ul pentru debug
-            with open(f'debug_{problem_id}.html', 'w', encoding='utf-8') as f:
-                f.write(response.text)
+
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            name = self.clean_text(soup.find('h1').text) if soup.find('h1') else ""
+            # Verificare 404 sau pagină lipsă
+            if soup.title and "Eroare" in soup.title.text:
+                logging.warning(f"Problem {problem_id} not found (404 page)")
+                return None
 
-            # Inițializează variabilele
-            statement = ""
+            # Salvare HTML pentru debugging
+            with open(f'debug_{problem_id}.html', 'w', encoding='utf-8') as f:
+                f.write(response.text)
+
+            # Nume problemă
+            name_tag = soup.find('h1', class_='text-primary')
+            name = self.clean_text(name_tag.text) if name_tag else ""
+
+            logging.info(f"Problem name extracted: {name}")
+
+            # Inițializare câmpuri
+            intro = ""
+            cerinta = ""
             input_desc = ""
             output_desc = ""
             constraints = ""
             example_input = ""
             example_output = ""
 
-            # Parcurge toate cardurile
-            for card in soup.find_all('div', class_='card'):
-                header = card.find('div', class_='card-header')
-                body = card.find('div', class_='card-body')
-                if not header or not body:
-                    continue
-                header_text = header.text.strip().lower()
-                body_text = self.clean_text(body.text)
-                if 'enunțul problemei' in header_text:
-                    statement = body_text
-                elif 'date de intrare' in header_text:
-                    input_desc = body_text
-                elif 'date de ieșire' in header_text:
-                    output_desc = body_text
-                elif 'restricții' in header_text:
-                    constraints = body_text
-                elif 'exemplu' in header_text:
-                    # Exemplul poate conține atât input cât și output
-                    example_parts = body_text.split('Ieșire')
-                    if len(example_parts) > 1:
-                        example_input = example_parts[0].replace('Intrare', '').strip()
-                        example_output = example_parts[1].strip()
-                    else:
-                        example_input = body_text
+            problem_content = soup.find('article', id='enunt')
+            if problem_content:
+                current_section = None
+                found_intro = False
+                for tag in problem_content.find_all(['h1', 'p', 'pre']):
+                    text = self.clean_text(tag.text)
+                    text_lower = text.lower()
 
-            # Extragem clasa, categoria și dificultatea (dacă există)
+                    if tag.name == 'h1':
+                        if "cerin" in text_lower:
+                            current_section = "cerinta"
+                        elif "date de intrare" in text_lower:
+                            current_section = "input"
+                        elif "date de ieșire" in text_lower or "date de iesire" in text_lower:
+                            current_section = "output"
+                        elif "restric" in text_lower:
+                            current_section = "constraints"
+                        elif "exemplu" in text_lower:
+                            current_section = "example"
+                        else:
+                            current_section = None
+                    elif tag.name == 'p':
+                        if not found_intro:
+                            intro = text
+                            found_intro = True
+                        elif current_section == "cerinta":
+                            cerinta += text + "\n"
+                        elif current_section == "input":
+                            input_desc += text + "\n"
+                        elif current_section == "output":
+                            output_desc += text + "\n"
+                        elif current_section == "constraints":
+                            constraints += text + "\n"
+                    elif tag.name == 'pre':
+                        if current_section == "example":
+                            # Heuristic: primul pre e input, al doilea e output
+                            if not example_input:
+                                example_input = text
+                            else:
+                                example_output = text
+
+            # Statement = enunt + cerinta
+            statement = intro.strip()
+            if cerinta.strip():
+                statement += "\n" + cerinta.strip()
+
+            # Extragere metadate
             grade = None
             category = ""
             difficulty = ""
-            info_div = soup.find('div', class_='panel-info')
-            if info_div:
-                for span in info_div.find_all('span'):
-                    text = span.text.lower()
-                    if 'clasa' in text:
-                        try:
-                            grade = int(re.search(r'\d+', text).group())
-                        except:
-                            pass
-                    elif 'categorie' in text:
-                        category = self.clean_text(span.text.replace('Categorie:', ''))
-                    elif 'dificultate' in text:
-                        difficulty = self.clean_text(span.text.replace('Dificultate:', ''))
+
+            info_table = soup.find('table', class_='table')
+            if info_table:
+                for row in info_table.find_all('tr'):
+                    cells = row.find_all('td')
+                    if len(cells) >= 2:
+                        key = cells[0].text.lower()
+                        value = self.clean_text(cells[1].text)
+
+                        if 'clasa' in key:
+                            try:
+                                grade = int(re.search(r'\d+', value).group())
+                            except:
+                                pass
+                        elif 'categorie' in key:
+                            category = value
+                        elif 'dificultate' in key:
+                            difficulty = value
+
+            logging.info(f"Grade: {grade}, Category: {category}, Difficulty: {difficulty}")
 
             return {
                 'id': problem_id,
                 'name': name,
-                'statement': statement,
-                'input_description': input_desc,
-                'output_description': output_desc,
-                'constraints': constraints,
-                'example_input': example_input,
-                'example_output': example_output,
+                'statement': statement.strip(),
+                'input_description': input_desc.strip(),
+                'output_description': output_desc.strip(),
+                'constraints': constraints.strip(),
+                'example_input': example_input.strip(),
+                'example_output': example_output.strip(),
                 'grade': grade,
                 'category': category,
                 'difficulty': difficulty,
                 'last_updated': datetime.now().isoformat(),
                 'status': 'active'
             }
+
         except Exception as e:
             logging.error(f'Eroare la extragerea problemei {problem_id}: {str(e)}')
             return None
@@ -177,40 +218,24 @@ class PbinfoScraper:
             
             conn.commit()
             conn.close()
+            logging.info(f"Problem {problem_data['id']} saved successfully")
             return True
             
         except Exception as e:
             logging.error(f"Eroare la salvarea problemei {problem_data['id']}: {str(e)}")
             return False
 
-    def scrape_range(self, start_id, end_id):
-        """Extrage problemele dintr-un interval de ID-uri"""
-        for problem_id in range(start_id, end_id + 1):
-            logging.info(f"Procesez problema {problem_id}")
-            
-            problem_data = self.extract_problem_data(problem_id)
-            if problem_data:
-                if self.save_problem(problem_data):
-                    logging.info(f"Problema {problem_id} a fost salvată cu succes")
-                else:
-                    logging.error(f"Nu s-a putut salva problema {problem_id}")
-            
-            # Așteptăm 1 secundă între cereri pentru a nu supraîncărca serverul
-            time.sleep(1)
-
-def main():
-    scraper = PbinfoScraper()
-    
-    # Poți ajusta intervalul de ID-uri după necesități
-    start_id = 1
-    end_id = 100  # Începem cu primele 100 de probleme pentru test
-    
-    logging.info(f"Încep extragerea problemelor de la {start_id} până la {end_id}")
-    scraper.scrape_range(start_id, end_id)
-    logging.info("Extragerea s-a încheiat")
-
 if __name__ == "__main__":
     scraper = PbinfoScraper()
-    data = scraper.extract_problem_data(3983)  # Poți schimba 3983 cu orice ID vrei să testezi
-    print(data)
-    main() 
+    # Adaugă problema 1 și 2
+    for problem_id in [1, 2]:
+        logging.info(f"Starting to scrape problem {problem_id}")
+        problem_data = scraper.extract_problem_data(problem_id)
+        if problem_data:
+            logging.info(f"Successfully extracted data for problem {problem_id}")
+            if scraper.save_problem(problem_data):
+                logging.info(f"Problem {problem_id} was saved to database")
+            else:
+                logging.error(f"Failed to save problem {problem_id} to database")
+        else:
+            logging.error(f"Failed to extract data for problem {problem_id}") 

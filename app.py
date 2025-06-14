@@ -1051,7 +1051,7 @@ def view_problems():
     search = request.args.get('search', '')
     
     # Construim query-ul de bază
-    query = "SELECT * FROM problems WHERE 1=1"
+    query = "SELECT id, name, statement, input_description, output_description, difficulty FROM problems WHERE 1=1"
     params = []
     
     if grade:
@@ -1102,7 +1102,26 @@ def view_problems():
 
 def get_db():
     import sqlite3
-    return sqlite3.connect('problems.db', check_same_thread=False)
+    conn = sqlite3.connect('problems.db', check_same_thread=False)
+    conn.row_factory = sqlite3.Row  # Asigură rezultate ca dict
+    return conn
+
+# === Route for problem search ===
+@app.route('/api/problem_search')
+@login_required
+def api_problem_search():
+    query = request.args.get('q', '').strip()
+    db = get_db()
+    problem = None
+    if query.isdigit():
+        problem = db.execute('SELECT * FROM problems WHERE id = ?', (int(query),)).fetchone()
+    else:
+        problem = db.execute('SELECT * FROM problems WHERE name LIKE ?', (f'%{query}%',)).fetchone()
+    if problem:
+        # Convert to dict if using sqlite3.Row
+        return jsonify(dict(problem))
+    else:
+        return jsonify({'error': 'Problem not found'}), 404
 
 # === Start application ===
 if __name__ == '__main__':
