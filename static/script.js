@@ -346,6 +346,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Modal custom pentru confirmare ștergere fișier
+    function showDeleteFileModal(message) {
+        return new Promise((resolve) => {
+            let modal = document.getElementById('custom-delete-modal');
+            let msg = document.getElementById('custom-delete-message');
+            let okBtn = document.getElementById('custom-delete-ok');
+            let cancelBtn = document.getElementById('custom-delete-cancel');
+            if (!modal) {
+                // Creează modalul dacă nu există
+                modal = document.createElement('div');
+                modal.id = 'custom-delete-modal';
+                modal.className = 'custom-modal';
+                modal.style.display = 'none';
+                modal.innerHTML = `
+                  <div class="custom-modal-content">
+                    <div class="custom-modal-message" id="custom-delete-message"></div>
+                    <div class="custom-modal-actions">
+                      <button id="custom-delete-ok" class="ide-btn-run">Șterge</button>
+                      <button id="custom-delete-cancel" class="ide-btn-reset">Renunță</button>
+                    </div>
+                  </div>
+                `;
+                document.body.appendChild(modal);
+                msg = document.getElementById('custom-delete-message');
+                okBtn = document.getElementById('custom-delete-ok');
+                cancelBtn = document.getElementById('custom-delete-cancel');
+            }
+            msg.innerHTML = message;
+            modal.style.display = 'flex';
+            okBtn.onclick = () => { modal.style.display = 'none'; resolve(true); };
+            cancelBtn.onclick = () => { modal.style.display = 'none'; resolve(false); };
+        });
+    }
+
     function renderFilesTabs() {
         filesTabs.innerHTML = '';
         userFiles.forEach((file, idx) => {
@@ -373,16 +407,16 @@ document.addEventListener('DOMContentLoaded', () => {
             delBtn.textContent = '×';
             delBtn.title = 'Șterge fișier';
             delBtn.style = 'margin-left:6px;color:#d32f2f;font-weight:700;cursor:pointer;';
-            delBtn.onclick = (e) => {
+            delBtn.onclick = async (e) => {
                 e.stopPropagation();
-                if (confirm('Sigur vrei să ștergi acest fișier?')) {
-                    userFiles.splice(idx, 1);
-                    if (activeFileIdx === idx) activeFileIdx = null;
-                    localStorage.setItem('ide_user_files', JSON.stringify(userFiles));
-                    renderFilesTabs();
-                    renderFileEditor();
-                    updateCustomInputVisibility();
-                }
+                const proceed = await showDeleteFileModal('Sigur vrei să ștergi acest fișier?');
+                if (!proceed) return;
+                userFiles.splice(idx, 1);
+                if (activeFileIdx === idx) activeFileIdx = null;
+                localStorage.setItem('ide_user_files', JSON.stringify(userFiles));
+                renderFilesTabs();
+                renderFileEditor();
+                updateCustomInputVisibility();
             };
             tab.appendChild(delBtn);
             filesTabs.appendChild(tab);
@@ -503,6 +537,9 @@ document.addEventListener('DOMContentLoaded', () => {
             activeFileIdx = null;
             renderFilesTabs();
             renderFileEditor();
+            // Golește inputul de test personalizat
+            const customInput = document.querySelector('.ide-custom-test');
+            if (customInput) customInput.value = '';
         };
     }
 
