@@ -1138,18 +1138,11 @@ def api_run_code():
     data = request.get_json()
     code = data.get('code', '')
     files = data.get('files', [])  # list of {name, content}
-    # Detectează automat inputul de test personalizat (dacă există)
     custom_input = data.get('custom_input') or data.get('input') or ''
     main_filename = 'main.cpp'
     result = {'success': False, 'output': '', 'error': ''}
     tempdir = tempfile.mkdtemp(prefix='cpp_run_')
     try:
-        # Șterge toate fișierele .out din tempdir înainte de rulare
-        for out_file in glob.glob(f'{tempdir}/*.out'):
-            try:
-                os.remove(out_file)
-            except Exception:
-                pass
         # Scrie main.cpp
         with open(f'{tempdir}/{main_filename}', 'w', encoding='utf-8') as f:
             f.write(code)
@@ -1170,60 +1163,57 @@ def api_run_code():
             if fobj['name'].endswith('.in'):
                 input_file = fobj['name']
                 break
-        # --- NOU: verifică dacă există fișier .out printre fișierele trimise ---
-        has_out_file = any(fobj['name'].endswith('.out') for fobj in files)
         run_cmd = f"timeout 2s ./main"
         if input_file:
             run_cmd += f" < {input_file}"
-        if not has_out_file:
-            run_cmd += " > program_out.txt"
-        run_cmd += " 2> runtime_err.txt"
-        # Rulează în Docker
-        docker_cmd = [
-            'docker', 'run', '--rm',
-            '--network', 'none',
-            '--memory', '256m', '--cpus', '0.5',
-            '-v', f'{tempdir}:/workspace',
-            '-w', '/workspace',
-            'cpp-runner',
-            '/bin/bash', '-c', f"{compile_cmd} && {run_cmd}"
-        ]
-        if has_in_file:
-            # Rulează normal, cu shell și redirecturi
+            run_cmd += " > program_out.txt 2> runtime_err.txt"
+            # Rulează în Docker cu shell pentru redirecturi
+            docker_cmd = [
+                'docker', 'run', '--rm',
+                '--network', 'none',
+                '--memory', '256m', '--cpus', '0.5',
+                '-v', f'{tempdir}:/workspace',
+                '-w', '/workspace',
+                'cpp-runner',
+                '/bin/bash', '-c', f"{compile_cmd} && {run_cmd}"
+            ]
             proc = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=10)
-            # După execuție, caută fișier .out
-            out_files = glob.glob(f'{tempdir}/*.out')
-            print('DEBUG: OUT files after run:', out_files)
-            if out_files:
-                try:
-                    with open(out_files[0], 'r', encoding='utf-8') as f:
-                        prog_out = f.read().strip()
-                except Exception:
-                    prog_out = ''
-                result['output'] = prog_out
-                result['error'] = proc.stderr.strip()
-                result['success'] = True
+            # După execuție, citește erorile de compilare
+            compile_err = ''
+            try:
+                with open(f'{tempdir}/compile_err.txt', 'r', encoding='utf-8') as f:
+                    compile_err = f.read().strip()
+            except Exception:
+                pass
+            if compile_err:
+                result['output'] = ''
+                result['error'] = compile_err
+                result['success'] = False
+                shutil.rmtree(tempdir, ignore_errors=True)
+                return jsonify(result)
+            # Citește stdout și stderr
+            prog_out = ''
+            runtime_err = ''
+            try:
+                with open(f'{tempdir}/program_out.txt', 'r', encoding='utf-8') as f:
+                    prog_out = f.read().strip()
+                with open(f'{tempdir}/runtime_err.txt', 'r', encoding='utf-8') as f:
+                    runtime_err = f.read().strip()
+            except Exception:
+                pass
+            if runtime_err:
+                result['output'] = ''
+                result['error'] = runtime_err
+                result['success'] = False
             else:
-                # Dacă nu există .out, dar stdout nu e gol, afișează stdout
-                prog_out = ''
-                try:
-                    with open(f'{tempdir}/program_out.txt', 'r', encoding='utf-8') as f:
-                        prog_out = f.read().strip()
-                except Exception:
-                    pass
-                if prog_out:
-                    result['output'] = prog_out
-                    result['error'] = proc.stderr.strip()
-                    result['success'] = True
-                else:
-                    result['output'] = ''
-                    result['error'] = 'Nu există niciun fișier de ieșire generat. Verifică dacă ai creat corect fișierul de ieșire în codul tău.'
-                    result['success'] = False
+                result['output'] = prog_out
+                result['error'] = ''
+                result['success'] = True
             shutil.rmtree(tempdir, ignore_errors=True)
             return jsonify(result)
         else:
-            # Compilează separat cu Docker
-            compile_cmd = [
+            # Compilează separat
+            compile_docker_cmd = [
                 'docker', 'run', '--rm',
                 '--network', 'none',
                 '--memory', '256m', '--cpus', '0.5',
@@ -1232,15 +1222,15 @@ def api_run_code():
                 'cpp-runner',
                 'g++', '-O2', '-std=c++17', 'main.cpp', '-o', 'main'
             ]
-            compile_proc = subprocess.run(compile_cmd, capture_output=True, text=True, timeout=10)
+            compile_proc = subprocess.run(compile_docker_cmd, capture_output=True, text=True, timeout=10)
             if compile_proc.returncode != 0:
                 result['output'] = ''
                 result['error'] = compile_proc.stderr + '\n' + compile_proc.stdout
                 result['success'] = False
                 shutil.rmtree(tempdir, ignore_errors=True)
                 return jsonify(result)
-            # Rulează direct ./main, fără shell, cu stdin din custom_input
-            docker_cmd_no_shell = [
+            # Rulează cu stdin din custom_input
+            run_docker_cmd = [
                 'docker', 'run', '--rm',
                 '-i',  # <-- flag pentru stdin
                 '--network', 'none',
@@ -1250,34 +1240,17 @@ def api_run_code():
                 'cpp-runner',
                 './main'
             ]
-            print('DEBUG: custom_input:', repr(custom_input))
-            proc = subprocess.run(docker_cmd_no_shell, input=custom_input, capture_output=True, text=True, timeout=10)
-            # Debug output
-            print('DEBUG: proc.stdout:', repr(proc.stdout))
-            print('DEBUG: proc.stderr:', repr(proc.stderr))
-            prog_out = proc.stdout.strip()  # <-- asigur outputul
-            # După execuție, caută fișier .out
-            out_files = glob.glob(f'{tempdir}/*.out')
-            print('DEBUG: OUT files after run:', out_files)
-            if out_files:
-                try:
-                    with open(out_files[0], 'r', encoding='utf-8') as f:
-                        prog_out = f.read().strip()
-                except Exception:
-                    prog_out = ''
-                result['output'] = prog_out
-                result['error'] = proc.stderr.strip()
-                result['success'] = True
+            proc = subprocess.run(run_docker_cmd, input=custom_input, capture_output=True, text=True, timeout=10)
+            prog_out = proc.stdout.strip()
+            runtime_err = proc.stderr.strip()
+            if runtime_err:
+                result['output'] = ''
+                result['error'] = runtime_err
+                result['success'] = False
             else:
-                # NU reseta prog_out aici!
-                if prog_out:
-                    result['output'] = prog_out
-                    result['error'] = proc.stderr.strip()
-                    result['success'] = True
-                else:
-                    result['output'] = ''
-                    result['error'] = ''  # Nu afișa mesajul cu fișierul de ieșire dacă nu există .in
-                    result['success'] = True
+                result['output'] = prog_out
+                result['error'] = ''
+                result['success'] = True
             shutil.rmtree(tempdir, ignore_errors=True)
             return jsonify(result)
     except subprocess.TimeoutExpired:

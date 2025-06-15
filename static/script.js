@@ -551,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (checkFileVsConsoleWarning(code)) {
                 const proceed = await showCustomWarning(
                     `<strong>Atenție!</strong> Ai adăugat fișier(e) de input, dar codul tău folosește doar tastatura (<code>cin</code>/<code>cout</code>).<br>
-                    Problema originală probabil necesită citirea și scrierea în fișiere.<br><br>
+                    Pentru a citi din fișier, trebuie să folosești <code>ifstream</code>.<br><br>
                     <span style='color:#1976d2;'>Vrei să continui oricum?</span>`
                 );
                 if (!proceed) {
