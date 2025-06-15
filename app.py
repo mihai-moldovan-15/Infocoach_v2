@@ -1201,12 +1201,29 @@ def api_run_code():
                     runtime_err = f.read().strip()
             except Exception:
                 pass
+            # Citește toate fișierele .out generate
+            out_files = glob.glob(f'{tempdir}/*.out')
+            file_outputs = []
+            for out_file in out_files:
+                try:
+                    with open(out_file, 'r', encoding='utf-8') as f:
+                        file_outputs.append(f.read().strip())
+                except Exception:
+                    pass
+            combined_output = ''
+            if file_outputs:
+                combined_output += '\n'.join(file_outputs)
+            if prog_out:
+                if combined_output:
+                    combined_output += '\n' + prog_out
+                else:
+                    combined_output = prog_out
             if runtime_err:
                 result['output'] = ''
                 result['error'] = runtime_err
                 result['success'] = False
             else:
-                result['output'] = prog_out
+                result['output'] = combined_output if combined_output else '(fără output)'
                 result['error'] = ''
                 result['success'] = True
             shutil.rmtree(tempdir, ignore_errors=True)
