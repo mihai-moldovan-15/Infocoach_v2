@@ -1120,20 +1120,26 @@ def get_db():
 
 # === Route for problem search ===
 @app.route('/api/problem_search')
-@login_required
 def api_problem_search():
-    query = request.args.get('q', '').strip()   
-    db = get_db()
-    problem = None
-    if query.isdigit():
-        problem = db.execute('SELECT * FROM problems WHERE id = ?', (int(query),)).fetchone()
-    else:
-        problem = db.execute('SELECT * FROM problems WHERE name LIKE ?', (f'%{query}%',)).fetchone()
-    if problem:
-        # Convert to dict if using sqlite3.Row
-        return jsonify(dict(problem))
-    else:
-        return jsonify({'error': 'Problem not found'}), 404
+    q = request.args.get('q', '').strip().lower()
+    if not q:
+        return jsonify({'problems': []})
+    # Exemplu: caută în nume și categorie, ordonează după potrivire simplă
+    conn = sqlite3.connect('problems.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    # Caută problemele care conțin toți termenii din query în nume sau categorie
+    terms = q.split()
+    sql = "SELECT id, name, category FROM problems"
+    cur.execute(sql)
+    all_problems = cur.fetchall()
+    def score(problem):
+        name = problem['name'].lower()
+        category = problem['category'].lower() if problem['category'] else ''
+        return sum(1 for term in terms if term in name or term in category)
+    filtered_problems = [p for p in all_problems if score(p) > 0]
+    filtered_problems.sort(key=score, reverse=True)
+    return jsonify({'problems': [{'id': p['id'], 'name': p['name'], 'category': p['category']} for p in filtered_problems[:10]]})
 
 # === Route for running code ===
 @app.route('/api/run_code', methods=['POST'])
@@ -1393,6 +1399,32 @@ Codul curent al utilizatorului:
         return jsonify({'response': ai_reply})
     except Exception as e:
         return jsonify({'error': f'Eroare la OpenAI: {str(e)}'}), 500
+
+# === Route for problem details ===
+@app.route('/api/problem_details')
+def api_problem_details():
+    problem_id = request.args.get('id', type=int)
+    if not problem_id:
+        return jsonify({'error': 'ID lipsă'}), 400
+    conn = sqlite3.connect('problems.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute("SELECT statement, input_description, output_description, constraints, example_input, example_output, example_input_name, example_output_name, time_limit, memory_limit FROM problems WHERE id = ?", (problem_id,))
+    row = cur.fetchone()
+    if not row:
+        return jsonify({'error': 'Problemă inexistentă'}), 404
+    return jsonify({
+        'statement': row['statement'],
+        'input_description': row['input_description'],
+        'output_description': row['output_description'],
+        'constraints': row['constraints'],
+        'example_input': row['example_input'],
+        'example_output': row['example_output'],
+        'example_input_name': row['example_input_name'],
+        'example_output_name': row['example_output_name'],
+        'time_limit': row['time_limit'],
+        'memory_limit': row['memory_limit']
+    })
 
 # === Start application ===
 if __name__ == '__main__':

@@ -472,10 +472,16 @@ body {
   <div class="ide-container">
     <div class="ide-main">
       <div class="ide-editor-section">
-        <form class="ide-search-bar">
-          <input type="text" class="ide-search-input" placeholder="Caută problemă după #ID sau nume...">
-          <button type="submit" class="ide-search-btn">Caută</button>
-        </form>
+        <div class="problem-search-autocomplete">
+          <input
+            type="text"
+            id="problem-search"
+            class="ide-search-input"
+            placeholder="Caută problemă după titlu, tag sau cuvinte cheie..."
+            autocomplete="off"
+          />
+          <ul id="problem-suggestions" class="autocomplete-suggestions"></ul>
+        </div>
         <div class="ide-problem-card">
           <div class="ide-tabs">
             <button class="ide-tab active">Enunț</button>

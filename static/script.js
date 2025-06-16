@@ -287,10 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         ? currentProblem.example_output_name : 'Ieșire';
                     const labelStyle = 'color:#1976d2;font-size:0.95em;font-weight:500;';
                     if (currentProblem.example_input) {
-                        ex += `<span style="${labelStyle}">${inputLabel}</span><br>` + currentProblem.example_input + '<br>';
+                        ex += `<span style=\"${labelStyle}\">${inputLabel}</span><br>` + currentProblem.example_input + '<br>';
                     }
                     if (currentProblem.example_output) {
-                        ex += `<span style="${labelStyle}">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
+                        ex += `<span style=\"${labelStyle}\">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
                     }
                     tabContent.innerHTML = `<div>${ex.trim() || 'Fără exemplu.'}</div>`;
                 }
@@ -777,5 +777,181 @@ document.addEventListener('DOMContentLoaded', () => {
                 aiMessages.scrollTop = aiMessages.scrollHeight;
             });
         };
+    }
+
+    // Problem search logic for problem_solver page
+    const problemSearchInput = document.getElementById('problem-search');
+    const problemSuggestionsList = document.getElementById('problem-suggestions');
+    if (problemSearchInput && problemSuggestionsList) {
+        let suggestions = [];
+        let selectedIdx = -1;
+        function renderSuggestions() {
+            problemSuggestionsList.innerHTML = '';
+            if (suggestions.length === 0) {
+                problemSuggestionsList.classList.remove('show');
+                return;
+            }
+            suggestions.forEach((sug, idx) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="suggestion-title">${sug.name}</span>${sug.category ? `<span class="suggestion-tags">${sug.category}</span>` : ''}`;
+                if (idx === selectedIdx) li.classList.add('active');
+                li.onclick = () => {
+                    problemSearchInput.value = sug.name;
+                    problemSuggestionsList.classList.remove('show');
+                    fetch(`/api/problem_details?id=${sug.id}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (!data || data.error) return;
+                            currentProblem = data;
+                            tabButtons.forEach(btn => btn.disabled = false);
+                            updateTabsWithProblem(currentProblem);
+                        });
+                };
+                problemSuggestionsList.appendChild(li);
+            });
+            problemSuggestionsList.classList.add('show');
+        }
+        let debounceTimeout = null;
+        problemSearchInput.addEventListener('input', function () {
+            const query = problemSearchInput.value.trim();
+            if (debounceTimeout) clearTimeout(debounceTimeout);
+            if (!query) {
+                suggestions = [];
+                renderSuggestions();
+                return;
+            }
+            debounceTimeout = setTimeout(() => {
+                fetch(`/api/problem_search?q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        suggestions = data.problems || [];
+                        selectedIdx = -1;
+                        renderSuggestions();
+                    });
+            }, 200);
+        });
+        problemSearchInput.addEventListener('keydown', function (e) {
+            if (!suggestions.length) return;
+            if (e.key === 'ArrowDown') {
+                selectedIdx = (selectedIdx + 1) % suggestions.length;
+                renderSuggestions();
+                e.preventDefault();
+            } else if (e.key === 'ArrowUp') {
+                selectedIdx = (selectedIdx - 1 + suggestions.length) % suggestions.length;
+                renderSuggestions();
+                e.preventDefault();
+            } else if (e.key === 'Enter' && selectedIdx >= 0) {
+                problemSearchInput.value = suggestions[selectedIdx].name;
+                problemSuggestionsList.classList.remove('show');
+                fetch(`/api/problem_details?id=${suggestions[selectedIdx].id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data || data.error) return;
+                        currentProblem = data;
+                        tabButtons.forEach(btn => btn.disabled = false);
+                        updateTabsWithProblem(currentProblem);
+                    });
+                e.preventDefault();
+            }
+        });
+        document.addEventListener('click', function (e) {
+            if (!problemSearchInput.contains(e.target) && !problemSuggestionsList.contains(e.target)) {
+                problemSuggestionsList.classList.remove('show');
+            }
+        });
+    }
+
+    function updateTabsWithProblem(problem) {
+        if (!problem) return;
+        // Activează toate tab-urile
+        document.querySelectorAll('.ide-tab').forEach(btn => btn.disabled = false);
+        // Activează tab-ul Enunț
+        document.querySelectorAll('.ide-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.ide-tab')[0].classList.add('active');
+        // Populează tab-ul Enunț
+        tabContent.textContent = problem.statement || 'Fără enunț.';
+
+        // Afișează/ascunde butonul de generare fișier exemplu corect
+        const generateExampleBtn = document.getElementById('ide-generate-example-files-btn');
+        if (generateExampleBtn) {
+            const hasInputFile = problem.example_input_name && problem.example_input_name !== 'consola';
+            const hasOutputFile = problem.example_output_name && problem.example_output_name !== 'consola';
+            if (hasInputFile || hasOutputFile) {
+                generateExampleBtn.style.display = 'inline-block';
+            } else {
+                generateExampleBtn.style.display = 'none';
+            }
+        }
+
+        // Elimină event listener-ele vechi (prin clonare)
+        let tabButtons = document.querySelectorAll('.ide-tab');
+        for (let i = 0; i < tabButtons.length; i++) {
+            const btn = tabButtons[i];
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+        }
+        // Refac selecția pentru a avea referințe proaspete
+        tabButtons = document.querySelectorAll('.ide-tab');
+        // Reatașează event listener-ele corecte
+        tabButtons.forEach((btn, idx) => {
+            btn.addEventListener('click', function() {
+                if (btn.disabled) return;
+                tabButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                if (!currentProblem) {
+                    tabContent.textContent = 'Aici va fi enunțul problemei...';
+                    return;
+                }
+                if (idx === 0) {
+                    tabContent.textContent = currentProblem.statement || 'Fără enunț.';
+                } else if (idx === 1) {
+                    let date = '';
+                    if (currentProblem.input_description) date += currentProblem.input_description + '\n';
+                    if (currentProblem.output_description) date += currentProblem.output_description;
+                    if (date.trim()) {
+                        tabContent.innerHTML = `<div style='white-space:pre-line;'>${date.trim()}</div>`;
+                    } else {
+                        tabContent.textContent = 'Fără date de intrare/ieșire.';
+                    }
+                } else if (idx === 2) {
+                    if (currentProblem.constraints) {
+                        const lines = currentProblem.constraints.split('\n').filter(l => l.trim());
+                        let ul = document.createElement('ul');
+                        lines.forEach(line => {
+                            let li = document.createElement('li');
+                            li.textContent = line;
+                            ul.appendChild(li);
+                        });
+                        tabContent.innerHTML = '';
+                        tabContent.appendChild(ul);
+                    } else {
+                        tabContent.textContent = 'Fără restricții.';
+                    }
+                } else if (idx === 3) {
+                    let limHtml = '';
+                    if (currentProblem.time_limit || currentProblem.memory_limit) {
+                        if (currentProblem.time_limit) limHtml += `<div><b>Limită timp:</b> ${currentProblem.time_limit}</div>`;
+                        if (currentProblem.memory_limit) limHtml += `<div><b>Limită memorie:</b> ${currentProblem.memory_limit}</div>`;
+                    } else {
+                        limHtml = 'Nu există limite definite pentru această problemă.';
+                    }
+                    tabContent.innerHTML = limHtml;
+                } else if (idx === 4) {
+                    let ex = '';
+                    let inputLabel = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola'
+                        ? currentProblem.example_input_name : 'Intrare';
+                    let outputLabel = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola'
+                        ? currentProblem.example_output_name : 'Ieșire';
+                    const labelStyle = 'color:#1976d2;font-size:0.95em;font-weight:500;';
+                    if (currentProblem.example_input) {
+                        ex += `<span style=\"${labelStyle}\">${inputLabel}</span><br>` + currentProblem.example_input + '<br>';
+                    }
+                    if (currentProblem.example_output) {
+                        ex += `<span style=\"${labelStyle}\">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
+                    }
+                    tabContent.innerHTML = `<div>${ex.trim() || 'Fără exemplu.'}</div>`;
+                }
+            });
+        });
     }
 });
