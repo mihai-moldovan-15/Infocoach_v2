@@ -15,9 +15,12 @@ import shutil
 import subprocess
 import json
 import glob
+import openai
+
+# Încarcă variabilele de mediu din .env
+load_dotenv()
 
 # Load API key
-load_dotenv()
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 app = Flask(__name__)
@@ -944,7 +947,7 @@ def rezumat_conversatie(conversation_id):
     prompt = f"""Rezumă conversația de mai jos într-un mod clar, structurat și pe scurt (maxim 5-7 propoziții). Folosește titluri de secțiuni dacă e relevant.\n\n{conv_text}\n\nRezumat structurat:"""
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "Ești un asistent care face rezumate clare, structurate și concise pentru conversații educaționale."},
                 {"role": "user", "content": prompt}
@@ -1007,7 +1010,7 @@ IMPORTANT: Marchează cu (corect) doar o singură variantă la fiecare întrebar
 Quiz structurat în Markdown:"""
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": (
                     "Ești un asistent care generează quiz-uri clare, structurate și concise pentru conversații educaționale. "
@@ -1275,6 +1278,121 @@ def api_run_code():
     except Exception as e:
         result['error'] = f'Eroare la execuție: {e}'
     return jsonify(result)
+
+# === Route for sending message ===
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    data = request.get_json()
+    conversation_id = data.get('conversation_id')
+    message = data.get('message')
+    
+    # Extrage enunțul problemei și codul curent al userului din baza de date
+    problem = db.execute("SELECT problem_statement FROM problems WHERE id = (SELECT problem_id FROM conversations WHERE id = ?)", (conversation_id,)).fetchone()
+    user_code = db.execute("SELECT code FROM conversations WHERE id = ?", (conversation_id,)).fetchone()
+    
+    if not problem or not user_code:
+        return jsonify({"error": "Problemă sau cod negăsit"}), 404
+    
+    problem_statement = problem['problem_statement']
+    user_code = user_code['code']
+    
+    # Construiește promptul specific pentru asistentul de programare
+    system_prompt = """Ești un asistent specializat în programare, cu focus pe C++. 
+    Rolul tău este să ajuti studenții să înțeleagă și să rezolve probleme de programare.
+    Răspunsurile tale trebuie să fie clare, concise și să includă explicații pas cu pas.
+    Dacă observi erori în cod, explică-le și sugerează corecții.
+    Nu rescrie niciodată codul corectat
+    Dacă codul este corect, oferă sugestii de optimizare sau îmbunătățire."""
+    
+    user_prompt = f"""
+    Problemă: {problem_statement}
+    
+    Codul curent al studentului:
+    {user_code}
+    
+    Întrebarea studentului: {message}
+    """
+    
+    try:
+        # Configurare OpenAI
+        openai.api_key = os.getenv('OPENAI_API_KEY1')  # Folosește OPENAI_API_KEY1 din .env
+        
+        # Trimite promptul la API-ul OpenAI
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.7,  # Controllează creativitatea răspunsurilor
+            max_tokens=1000   # Limitează lungimea răspunsului
+        )
+        
+        ai_response = response.choices[0].message['content']
+        
+        # Salvează mesajul și răspunsul în baza de date
+        db.execute("INSERT INTO messages (conversation_id, content, is_user) VALUES (?, ?, ?)", 
+                  (conversation_id, message, True))
+        db.execute("INSERT INTO messages (conversation_id, content, is_user) VALUES (?, ?, ?)", 
+                  (conversation_id, ai_response, False))
+        db.commit()
+        
+        return jsonify({"response": ai_response})
+        
+    except Exception as e:
+        print(f"Eroare la comunicarea cu OpenAI: {str(e)}")
+        return jsonify({"error": "A apărut o eroare la procesarea cererii. Vă rugăm să încercați din nou."}), 500
+
+# === Route for AI assistant ===
+@app.route('/ai_assistant', methods=['POST'])
+def ai_assistant():
+    data = request.get_json()
+    user_message = data.get('message', '')
+    enunt = data.get('enunt', '')
+    date = data.get('date', '')
+    restrictii = data.get('restrictii', '')
+    limite = data.get('limite', '')
+    exemplu = data.get('exemplu', '')
+    code = data.get('code', '')
+    if not user_message:
+        return jsonify({'error': 'Mesajul este gol.'}), 400
+    import openai
+    import os
+    api_key = os.getenv('OPENAI_API_KEY1')
+    client = openai.OpenAI(api_key=api_key)
+    # Încarcă system promptul din fișier
+    try:
+        with open(os.path.join(os.path.dirname(__file__), 'instructions_code.txt'), encoding='utf-8') as f:
+            system_prompt = f.read().strip()
+    except Exception as e:
+        return jsonify({'error': f'Nu pot citi instructions_code.txt: {str(e)}'}), 500
+    # Construiește promptul contextual cu toate secțiunile
+    user_prompt = f"""Problemă:
+Enunț: {enunt}
+Date: {date}
+Restricții: {restrictii}
+Limite: {limite}
+Exemplu: {exemplu}
+
+Codul curent al utilizatorului:
+{code}
+
+Întrebare:
+{user_message}"""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=800
+        )
+        ai_reply = response.choices[0].message.content
+        return jsonify({'response': ai_reply})
+    except Exception as e:
+        return jsonify({'error': f'Eroare la OpenAI: {str(e)}'}), 500
 
 # === Start application ===
 if __name__ == '__main__':

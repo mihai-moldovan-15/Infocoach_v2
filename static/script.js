@@ -316,9 +316,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sidebar toggle logic ca pe index
     const sidebar = document.getElementById('sidebar');
     const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+    const navBrand = document.getElementById('nav-brand');
     if (sidebar && sidebarToggleBtn) {
         sidebarToggleBtn.addEventListener('click', function() {
+            sidebar.classList.add('transitioning');
             sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                navBrand && navBrand.classList.remove('shifted');
+            } else {
+                navBrand && navBrand.classList.add('shifted');
+            }
+            setTimeout(() => {
+                sidebar.classList.remove('transitioning');
+            }, 400);
         });
     }
 
@@ -621,6 +631,151 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorLog.textContent = 'Eroare la comunicarea cu serverul.';
                 errorLog.style.color = '#d32f2f';
             }
+        };
+    }
+
+    function sendMessage() {
+        const messageInput = document.getElementById('message-input');
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        const currentConversationId = document.getElementById('current-conversation-id').value;
+        if (!currentConversationId) {
+            alert('Vă rugăm să selectați o conversație sau să creați una nouă.');
+            return;
+        }
+
+        // Adaugă mesajul userului în chat
+        const chatMessages = document.getElementById('chat-messages');
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.className = 'message user-message';
+        userMessageDiv.textContent = message;
+        chatMessages.appendChild(userMessageDiv);
+
+        // Trimite mesajul la backend
+        fetch('/send_message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                conversation_id: currentConversationId,
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                // Adaugă răspunsul AI în chat
+                const aiMessageDiv = document.createElement('div');
+                aiMessageDiv.className = 'message assistant-message';
+                aiMessageDiv.textContent = data.response;
+                chatMessages.appendChild(aiMessageDiv);
+                
+                // Scroll la ultimul mesaj
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('A apărut o eroare la trimiterea mesajului.');
+        });
+
+        // Curăță input-ul
+        messageInput.value = '';
+    }
+
+    // Asistent AI Modern - UI only
+    const aiSidebar = document.getElementById('ai-assistant-sidebar');
+    const aiOpenBtn = document.getElementById('ai-assistant-open-btn');
+    const aiCloseBtn = document.getElementById('ai-assistant-close-btn');
+    const aiForm = document.getElementById('ai-assistant-form');
+    const aiInput = document.getElementById('ai-assistant-input');
+    const aiMessages = document.getElementById('ai-assistant-messages');
+
+    if (aiSidebar && aiOpenBtn && aiCloseBtn) {
+        aiOpenBtn.onclick = function() {
+            aiSidebar.classList.add('open');
+            aiOpenBtn.style.display = 'none';
+        };
+        aiCloseBtn.onclick = function() {
+            aiSidebar.classList.remove('open');
+            aiOpenBtn.style.display = '';
+        };
+    }
+    if (aiForm && aiInput && aiMessages) {
+        aiForm.onsubmit = function(e) {
+            e.preventDefault();
+            const msg = aiInput.value.trim();
+            if (!msg) return;
+            // Citește conținutul tuturor tab-urilor
+            const tabContents = document.querySelectorAll('.ide-tab-content, .ide-tab-content > div');
+            let enunt = '', date = '', restrictii = '', limite = '', exemplu = '';
+            // Caută tab-urile după butoane
+            const tabButtons = document.querySelectorAll('.ide-tab');
+            tabButtons.forEach((btn, idx) => {
+                const tabName = btn.textContent.trim().toLowerCase();
+                let content = '';
+                // Caută conținutul asociat tab-ului
+                if (tabContents[idx]) {
+                    content = tabContents[idx].textContent.trim();
+                } else if (tabContents.length === 1) {
+                    // fallback: totul e în același div
+                    content = tabContents[0].textContent.trim();
+                }
+                if (tabName === 'enunț') enunt = content;
+                else if (tabName === 'date') date = content;
+                else if (tabName === 'restricții') restrictii = content;
+                else if (tabName === 'limite') limite = content;
+                else if (tabName === 'exemplu') exemplu = content;
+            });
+            let cod = '';
+            if (window.ideMonaco) cod = window.ideMonaco.getValue();
+            // Adaugă mesajul userului în UI
+            const userDiv = document.createElement('div');
+            userDiv.className = 'ai-assistant-message user';
+            userDiv.textContent = msg;
+            aiMessages.appendChild(userDiv);
+            aiInput.value = '';
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+            // Trimite mesajul la backend
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'ai-assistant-message assistant';
+            loadingDiv.textContent = 'InfoCoach scrie...';
+            aiMessages.appendChild(loadingDiv);
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+            fetch('/ai_assistant', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: msg,
+                    enunt: enunt,
+                    date: date,
+                    restrictii: restrictii,
+                    limite: limite,
+                    exemplu: exemplu,
+                    code: cod
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                loadingDiv.remove();
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'ai-assistant-message assistant';
+                aiDiv.textContent = data.response || (data.error ? data.error : 'Eroare la răspunsul AI.');
+                aiMessages.appendChild(aiDiv);
+                aiMessages.scrollTop = aiMessages.scrollHeight;
+            })
+            .catch(() => {
+                loadingDiv.remove();
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'ai-assistant-message assistant';
+                aiDiv.textContent = 'Eroare la comunicarea cu serverul.';
+                aiMessages.appendChild(aiDiv);
+                aiMessages.scrollTop = aiMessages.scrollHeight;
+            });
         };
     }
 });
