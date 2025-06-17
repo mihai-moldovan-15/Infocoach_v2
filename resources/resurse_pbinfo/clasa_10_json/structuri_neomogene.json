@@ -1,0 +1,45 @@
+{
+    "title": "Structuri Neomogene în C++",
+    "description": "Utilizarea structurilor pentru gruparea datelor de tipuri diferite",
+    "tags": ["structuri", "tipuri_date", "C++", "date_compuse", "grupare_date"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "De multe ori datele folosite într-un program caracterizează obiecte/fenomene din realitate, iar acestea au mai multe caracteristici decât un simplu număr sau un șir de caractere. Structurile neomogene permit gruparea acestor date de tipuri diferite într-o singură entitate."
+        },
+        {
+            "title": "Exemplu de Date Complexe",
+            "subsections": [
+                {
+                    "title": "Caracteristicile unei Persoane",
+                    "content": "O persoană poate fi caracterizată prin mai multe informații de tipuri diferite:\n1. nume – șir de caractere\n2. prenume – șir de caractere\n3. sex – caracter (M/F)\n4. vârsta – număr natural\n5. salariu – număr real"
+                }
+            ]
+        },
+        {
+            "title": "Problema Gestionării Datelor",
+            "content": "Fără structuri, gestionarea datelor complexe ar necesita:\n1. Mai multe variabile separate pentru fiecare caracteristică\n2. Pentru n persoane, ar fi necesare n vectori\n3. Sincronizarea elementelor vectorilor devine complicată\n4. Codul devine mai greu de întreținut"
+        },
+        {
+            "title": "Soluția: Structuri",
+            "subsections": [
+                {
+                    "title": "Definiție",
+                    "content": "O structură este un tip de date care înglobează mai multe date componente, numite câmpuri sau membri, fiecare de un anumit tip precizat la definiția structurii."
+                },
+                {
+                    "title": "Avantaje",
+                    "content": "1. Gruparea logică a datelor conexe\n2. Simplificarea gestionării datelor complexe\n3. Reducerea numărului de variabile necesare\n4. Îmbunătățirea organizării codului\n5. Facilitarea sincronizării datelor"
+                }
+            ]
+        },
+        {
+            "title": "Utilizare",
+            "content": "Fiecare câmp al structurii:\n1. Memorează o valoare specifică\n2. Poate fi tratat ca o variabilă de tipul său\n3. Poate fi supus operațiilor specifice tipului său (citire, afișare, atribuire)\n4. Este accesibil prin intermediul variabilei de tip structură"
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Structurile permit gruparea logică a datelor conexe\n2. Fiecare câmp poate fi de un tip diferit\n3. Accesul la câmpuri se face prin intermediul variabilei de tip structură\n4. Structurile simplifică gestionarea datelor complexe\n5. Codul devine mai ușor de întreținut și de înțeles"
+        }
+    ]
+} 

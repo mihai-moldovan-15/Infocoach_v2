@@ -1,0 +1,54 @@
+{
+    "title": "Alocarea Dinamică a Memoriei în C++",
+    "description": "Explicație detaliată a alocării dinamice a memoriei în C++, crearea și eliminarea variabilelor dinamice",
+    "tags": ["memorie", "alocare_dinamică", "C++", "pointeri", "heap", "new", "delete"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Alocarea dinamică a memoriei permite crearea variabilelor în timpul execuției programului. Variabilele dinamice sunt create explicit de programator, alocate în HEAP și pot fi eliminate fie la finalul programului, fie explicit de către programator."
+        },
+        {
+            "title": "Crearea Variabilelor Dinamice",
+            "subsections": [
+                {
+                    "title": "Variabile Simple",
+                    "content": "Se folosește operatorul new pentru crearea unei variabile dinamice simple:\n\nint *p;\np = new int;    // creează variabila dinamică\n*p = 5;          // inițializează variabila\ncout << *p;      // afișează 5"
+                },
+                {
+                    "title": "Tablouri Dinamice",
+                    "content": "Pentru crearea unui tablou dinamic:\n\nint n, *p;\ncin >> n;\np = new int[n];    // creează tabloul dinamic\nfor(int i = 0; i < n; i++)\n    cin >> p[i];    // citește elementele\nfor(int i = 0; i < n; i++)\n    cout << p[i];   // afișează elementele"
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "subsections": [
+                {
+                    "title": "Creare și Acces",
+                    "content": "1. Dacă alocarea eșuează, new returnează NULL\n2. Rezultatul new trebuie stocat într-un pointer\n3. Pointerul poate fi static sau dinamic\n4. O variabilă dinamică poate fi accesată prin mai mulți pointeri\n5. Trebuie păstrată adresa în cel puțin un pointer"
+                },
+                {
+                    "title": "Acces la Elemente",
+                    "content": "1. Verificați întotdeauna limitele tabloului\n2. C++ nu verifică accesul la elemente inexistente\n3. Accesul la elemente în afara limitelor are efecte imprevizibile"
+                }
+            ]
+        },
+        {
+            "title": "Eliminarea Variabilelor Dinamice",
+            "subsections": [
+                {
+                    "title": "Eliminare Variabilă Simplă",
+                    "content": "int *p = new int;\n*p = 5;\n...\ndelete p;    // elimină variabila dinamică\n// *p nu mai are sens, variabila nu mai există"
+                },
+                {
+                    "title": "Eliminare Tablou Dinamic",
+                    "content": "int *p = new int[10];\n...\ndelete[] p;    // elimină tabloul dinamic"
+                }
+            ]
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Verificați întotdeauna rezultatul operației new\n2. Eliberați memoria alocată când nu mai este necesară\n3. Nu dereferențiați pointeri după delete\n4. Folosiți delete[] pentru tablouri și delete pentru variabile simple\n5. Mențineți un singur pointer principal pentru fiecare variabilă dinamică\n6. Documentați clar proprietatea și responsabilitatea pentru memoria alocată"
+        }
+    ]
+} 

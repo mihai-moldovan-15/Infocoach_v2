@@ -1,0 +1,46 @@
+{
+    "title": "Pointeri în C++",
+    "description": "Explicație detaliată a conceptului de pointeri în C++, operațiile cu pointeri și utilizarea lor",
+    "tags": ["pointeri", "C++", "memorie", "adrese", "referențiere", "dereferențiere"],
+    "sections": [
+        {
+            "title": "Introducere în Pointeri",
+            "subsections": [
+                {
+                    "title": "Definiție și Concepte de Bază",
+                    "content": "Un pointer este o dată a cărei valoare este o adresă de memorie. În C++, o variabilă de tip pointer stochează adresa altor variabile. Memoria RAM este o succesiune de octeți numerotați, iar adresa unui octet este reprezentată de obicei în baza 16 (ex: 0x7fff741e0d74)."
+                },
+                {
+                    "title": "Declararea Pointerilor",
+                    "content": "Sintaxa pentru declararea unui pointer:\nTIP * NUME;\n\nExemple:\nint * p;     // pointer la int\ndouble * f;  // pointer la double\n\nObservații importante:\n1. Pentru mai mulți pointeri: int *p, *q;\n2. Tipul specificat este crucial pentru operațiile cu pointeri"
+                }
+            ]
+        },
+        {
+            "title": "Operații cu Pointeri",
+            "subsections": [
+                {
+                    "title": "Referențiere și Dereferențiere",
+                    "content": "1. Referențiere (&):\n   - Oferă adresa unei variabile\n   - Poate fi atribuită unui pointer\n\n2. Dereferențiere (*):\n   - Accesează variabila de la adresa stocată în pointer\n   - Permite modificarea valorii variabilei\n\nExemplu:\nint x, *p;\nx = 7;\np = &x;    // p memorează adresa lui x\n*p = 10;   // modifică valoarea lui x\ncout << x; // afișează 10"
+                },
+                {
+                    "title": "Compararea Pointerilor",
+                    "content": "1. Operatorii == și != pentru verificarea egalității adreselor\n2. Operatorii relaționali <, >, <=, >= pentru compararea adreselor\n3. Atenție la dereferențierea pointerilor neinițializați"
+                }
+            ]
+        },
+        {
+            "title": "Pointeri la Structuri",
+            "subsections": [
+                {
+                    "title": "Accesarea Câmpurilor",
+                    "content": "Două metode de accesare a câmpurilor unei structuri prin pointer:\n\n1. Folosind operatorul de dereferențiere și punct:\n   (*pA).x\n\n2. Folosind operatorul săgeată (->):\n   pA->x\n\nExemplu:\nstruct Punct {\n    int x,y;\n};\nPunct A, *pA;\nA.x = 1, A.y = 2;\npA = &A;\ncout << (*pA).x << \" \" << (*pA).y << endl;\ncout << pA->x << \" \" << pA->y << endl;"
+                }
+            ]
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Inițializați întotdeauna pointerii înainte de utilizare\n2. Verificați dacă un pointer este NULL înainte de dereferențiere\n3. Folosiți operatorul -> pentru pointeri la structuri\n4. Atenție la pointerii neinițializați care pot cauza erori de rulare\n5. Documentați clar scopul și utilizarea pointerilor în cod"
+        }
+    ]
+} 

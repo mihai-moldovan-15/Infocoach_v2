@@ -1,0 +1,198 @@
+Recursivitatea reprezintă proprietatea unor noțiuni de a se defini prin ele însele.
+
+Exemple:
+
+* factorialul unui număr: N! = N * (N - 1)!;
+* ridicarea la putere: a^n = a * a^(n-1);
+* termenul unei progresii aritmetice: a_n = a_(n-1) + r;
+* șirul lui Fibonacci: F_n = F_(n-1) + F_(n-2);
+* etc.
+
+Să observăm că aceste reguli nu se aplică întotdeauna. Dacă ar fi așa, pentru 3! am obține:
+
+3! = 3 * 2! = 3 * 2 * 1! = 3 * 2 * 1 * 0! = 3 * 2 * 1 * 0 * (-1)!
+
+De aici am putea deduce că 0! = 0 și înlocuind în relațiile de mai sus obținem că N! = 0, pentru orice număr natural N. Bineînțeles, nu este corect. De fapt, formula recursivă pentru n! se aplică numai pentru n > 0, iar prin definiție 0! = 1.
+
+Astfel, identificăm următoarea definiție pentru n!, acum completă:
+n! =
+  1, dacă n = 0,
+  n * (n - 1)!, dacă n > 0.
+
+Similar, pentru toate formulele de mai sus există cel puțin o situație în care formula recursivă nu se mai poate aplica, iar rezultatul se determină în mod direct.
+
+În C++, recursivitatea se realizează prin intermediul funcțiilor, care se pot autoapela.
+
+Ne amintim că o funcție trebuie definită iar apoi se poate apela. Recursivitatea constă în faptul că în definiția unei funcții apare apelul ei însăși. Acest apel, care apare în însăși definiția funcției, se numește autoapel. Primul apel, făcut în altă funcție, se numește apel principal.
+
+Exemplu C++
+
+Să scriem o funcție C++ care returnează factorialul unui număr natural transmis ca parametru. Varianta nerecursivă (iterativă) este următoarea:
+int fact(int n)
+{
+    int p = 1;
+    for(int i = 1 ; i <= n ; i ++)
+        p = p * i;
+    return p;
+}
+
+Să observăm că această funcție determină rezultatul corect pentru valori ale lui n mai mari sau egale cu 0 (valori mici, practic n <= 12). Funcția determină corect rezultatul și pentru n == 0.
+
+O variantă recursivă pentru determinarea lui n!, care folosește observațiile de mai sus, este:
+
+int fact(int n){
+    if(n == 0)
+        return 1;
+    else
+        return n * fact(n-1);
+}
+Cum funcționează recursivitatea?
+Ne amintim că toate variabilele locale din definiția unei funcții precum și valorile parametrilor formali se memorează la apel în memoria de tip STIVĂ (STACK).
+
+Pentru fiecare apel al unei funcții se adaugă pe stivă o zonă de memorie în care se memorează variabilele locale și parametrii pentru apelul curent. Această zonă a stivei va exista până la finalul apelului, după care se va elibera. Dacă din apelul curent se face un alt apel, se adaugă pe stivă o nouă zonă de memorie, iar conținutul zonei anterioare este inaccesibil până la finalul acelui apel. Aceste operații se fac la fel și dacă al doilea apel este un autoapel al unei funcții recursive.
+
+Să considerăm acum următoarea secvență:
+
+int fact(int n){
+    int f;
+    if(n == 0)
+        return 1;
+    else
+        f = fact(n - 1) * n;
+    return f;
+}
+
+int main(){
+    int x = fact(3);
+    cout << x;
+    return 0;
+}
+Să urmărim pas cu pas execuția acestui program:
+
+Pas	Conținut stivă	Observații
+int x = 
+x = ??
+
+În zona curentă a stivei se alocă memorie pentru variabila x. Să o numim Zona 0.
+fact(3) 
+Zona 1: n = 3, f = 3 *  fact(2) = ??
+Zona 0: x = ??
+
+În apelul principal are loc autoapelul fact(3). Se alocă o nouă zonă pe stivă, pentru acest apel, Zona 1. Deoarece n>0, are loc apelul fact(2).
+fact(2) 
+Zona 2: n = 2, f = 2 *  fact(1) = ??
+Zona 1: n = 3, f = 3 *  fact(2) = ??
+Zona 0: x = ??
+
+În Zona 1 a stivei se face autoapelul fact(2). Se alocă o nouă zonă pe stivă, pentru acest apel, Zona 2. Deoarece n>0, are loc autoapelul fact(1).
+fact(1) 
+Zona 3: n = 1, f = 2 *  fact(0) = ??
+Zona 2: n = 2, f = 2 *  fact(1) = ??
+Zona 1: n = 3, f = 3 *  fact(2) = ??
+Zona 0: x = ??
+
+În Zona  a stivei se face autoapelul fact(1). Se alocă o nouă zonă pe stivă, pentru acest apel, Zona 3. Deoarece n>0, are loc autoapelul fact(0).
+fact(0) 
+Zona 4: n = 0, f = 1
+Zona 3: n = 1, f = 2 *  fact(0) = ??
+Zona 2: n = 2, f = 2 *  fact(1) = ??
+Zona 1: n = 3, f = 3 *  fact(2) = ??
+Zona 0: x = ??
+
+În Zona 3 a stivei se face autoapelul fact(0). Se alocă o nouă zonă pe stivă, pentru acest apel, Zona 4. Suntem în cazul particular și nu mai are loc autoapelul. Rezultatul autoapelului fact(0) este 1. Zona 4 se eliberează.
+fact(1) 
+Zona 3: n = 1, f = 1 *  1 = 1
+Zona 2: n = 2, f = 2 *  fact(1) = ??
+Zona 1: n = 3, f = 3 *  fact(2) = ??
+Zona 0: x = ??
+
+Se revine în apelul fact(1), adică în Zona 3. Se calculează f=1 și se termină și autoapelul fact(1) cu valoarea 1. Se eliberează Zona 3.
+fact(2) 
+Zona 2: n = 2, f = 2 *  1 = 2
+Zona 1: n = 3, f = 3 *  fact(2) = ??
+Zona 0: x = ??
+
+Se revine în apelul fact(2), adică în Zona 2. Se calculează f=2 și se termină și autoapelul fact(2) cu valoarea 2. Se eliberează Zona 2.
+fact(3) 
+Zona 1: n = 3, f = 3 * 2 = 6
+Zona 0: x = ??
+
+Se revine în apelul fact(3), adică în Zona 1. Se calculează f=6 și se termină și autoapelul fact(3) cu valoarea 6. Se eliberează Zona 1.
+cout << x; 
+return 0;
+Zona 0: x = 6
+
+Se revine în apelul funcției main, adică în Zona 0. Se calculează x=6 și se afișează această valoare. După instrucțiunea return 0; se eliberează Zona 0. Execuția programului se încheie.
+Observații: La fiecare apel al funcției fact avem variabilele n și f. Ele însă sunt variabile diferite, cu valori diferite, memorate în zone diferite ale stivei. La un moment dat, se pot folosi numai variabilele din zona de memorie curentă, cea din “vârful” stivei.
+
+Observații
+este obligatoriu ca în definiția unei funcții recursive să apară cazul particular (în care să nu aibă loc autoapelul). În caz contrar autoapelurile vor avea loc “la nesfârșit”. De fapt, în urma prea multor autoapeluri, stiva se va ocupa în totalitate și execuția programului se va întrerupe.
+este obligatoriu ca, pentru cazurile neelementare, valorile la autoapel a parametrilor să se apropie de valorile din cazul elementar. Altfel se va întâmpla situația descrisă mai sus: stiva se va ocupa în totalitate și programul se va opri, fără a determina/afișa rezultatele dorite :).
+Cum facem autoapelul?
+Autoapelul se face în conformitate cu antetul funcției recursive. Astfel:
+
+dacă funcția recursivă este de tip non-void, autoapelul se va face într-o expresie;
+dacă funcția recursivă este de tip void, autoapelul se va face într-o instrucțiune de sine stătătoare; dacă funcția întoarce valori, se vor folosi parametri de ieșire.
+Exemple:
+
+Funcție de tip void	Funcție de tip non-void
+void fact(int n, int &r){
+    if(n == 0)
+        r = 1;
+    else{
+        fact(n - 1 , r);
+        r = r * n;
+    }
+}
+int main(){
+    int a;
+    fact(4, a);
+    cout << a;
+    return 0;
+}
+int fact(int n){
+    int r;
+    if(n == 0)
+        r = 1;
+    else
+        r = n * fact(n - 1);
+    return r;
+}
+int main(){
+    int a;
+    a = fact(4);
+    cout << a;
+    return 0;
+}
+
+Alte formule recursive
+
+* calculul combinărilor: C(n, k) =
+    1, dacă n = k sau k = 0, unde C(n, k) înseamnă "combinări de n luate câte k"
+    C(n-1, k) + C(n-1, k-1), altfel.
+
+* calculul combinărilor: C(n, k) =
+    1, dacă k = 0,
+    C(n, k-1) * (n-k+1) / k, altfel.
+
+* cel mai mare divizor comun a două numere: cmmdc(a, b) =
+    a, dacă b = 0,
+    cmmdc(b, a % b), dacă b > 0.
+
+* operații cu cifrele unui număr natural, de exemplu:
+    o suma cifrelor: sumcif(n) =
+        n, dacă n < 10,
+        n%10 + sumcif(n/10), dacă n >= 10.
+
+    o numărul de cifre: nrcif(n) =
+        1, dacă n < 10,
+        1 + nrcif(n/10), dacă n >= 10.
+
+    o cifra maximă: cifmax(n) =
+        n, dacă n < 10,
+        max(n%10, cifmax(n/10)), dacă n >= 10.
+
+Tipuri de recursivitate
+
+* recursivitate directă: în definiția funcției F apare apelul funcției F;
+* recursivitate indirectă: în definiția funcției F apare apelul funcției G, iar în definiția funcției G apare apelul lui F.

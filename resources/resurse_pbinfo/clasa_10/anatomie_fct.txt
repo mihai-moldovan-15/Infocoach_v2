@@ -1,0 +1,107 @@
+Problema 1
+Se dau două numere naturale n și m. Să se determine suma dintre oglinditul lui n și oglinditul lui m.
+
+Programul următor rezolvă problema de mai sus.
+
+#include <iostream>
+using namespace std;
+
+int ogl(int x)
+{
+    int r = 0;
+    do
+    {
+        r = 10 * r + x % 10;
+        x /= 10;
+    }
+    while(x != 0);
+    return r;
+}
+
+int main(){
+    int n , m;
+    cin >> n >> m;
+    cout << ogl(n) + ogl(m);
+    return 0;
+}
+Funcția care calculează oglinditul unui număr este int ogl(int x).
+
+Antetul funcției
+Funcția are un antet: int ogl(int x), din care deducem că:
+
+funcția se numește ogl;
+funcția are un parametru, x, de tip int. Parametrul este important, deoarece prin el se precizează care este numărul pentru care se determină oglinditul:
+o funcție poate avea mai mulți parametri;
+parametrii care apar în antetul funcției se numesc parametri formali;
+parametrii unei funcții se mai numesc și argumente;
+funcția are un anumit tip, aici int, care precizează care este tipul rezultatului;
+Corpul funcției
+Funcția are un bloc de instrucțiuni, corpul funcției, delimitat de acolade {}, care precizează operațiile prin care se obține rezultatul. Mai mult:
+
+corpul funcției poate avea propriile variabile (aici r);
+aceste variabile se numesc variabile locale;
+în corpul funcției, parametrul se comportă ca o variabilă locală;
+nu putem avea o variabilă locală cu același identificator ca parametrul formal;
+în corpul funcției nu se cunosc valorile parametrilor formali. Funcția trebuie să determine rezultatul corect indiferent de valoarea lor;
+rezultatul determinat în cadrul funcției este întors în programul apelant prin instrucțiunea return. Rezultatul este calculat în mod obișnuit în variabila r. Prin instrucțiunea return r;, valoarea curentă a variabilei r este returnată în programul apelant;
+Apelul funcției
+În funcția main găsim apelul funcției ogl:
+
+apelul funcției se face într-o expresie: cout << ogl(n) + ogl(m);. Pentru operația de adunare, operanzii vor fi rezultatele apelurilor celor două funcții;
+parametrii n, respectiv m, întâlniți în apel, se numesc parametri efectivi sau parametri actuali. Valorile parametrilor
+actuali sunt cunoscute – valorile citite pentru cele două variabile;
+Problema 2
+Se citește un tablou cu elemente numere întregi. Să se ordoneze crescător elementele tabloului și apoi să se afișeze.
+
+O rezolvare C/C++ care folosește funcții este următoarea:
+
+#include <iostream>
+using namespace std;
+
+void citire(int & n, int x[])
+{
+    cin  >> n;  
+    for(int i = 0 ; i < n ; ++ i)
+        cin >> x[i];
+}
+
+void sortare(int n, int x[])
+{
+    bool sortat = false;
+    while(! sortat)
+    {
+        sortat = true;
+        for(int i = 0 ; i < n - 1 ; i++)
+            if(x[i] > x[i+1])
+            {
+                int aux = x[i];
+                x[i] = x[i+1];
+                x[i+1] = aux;
+                sortat = false;
+            }
+    }
+}
+
+void afisare(int n, int x[])
+{
+    for(int i = 0 ; i < n ; ++ i)
+        cout << x[i] << " ";
+}
+
+int main(){
+    int k, v[1005];
+    citire(k , v);
+    sortare(k , v);
+    afisare(k , v);
+    return 0;
+}
+Față de cele de mai sus, putem observa următoarele:
+
+funcțiile citire, sortare și afisare nu returnează valori și au un tip al rezultatului special, void. Tipul void este un tip de date care nu conține valori și poate fi folosit tocmai în asemenea situații. Am putea spune că sunt de tip procedură;
+apelul acestor funcții se face în instrucțiuni de sine stătătoare;
+funcțiile au câte doi parametri, numărul de elemente ale tabloului și tabloul propriu zis. Pentru parametrul formal de tip tablou nu trebuie să fie precizată dimensiunea declarată a tabloului;
+numele parametrilor actuali nu trebuie să fie aceiași cu cei ai parametrilor formali. Trebuie însă să corespundă numărul lor, tipul lor și ordinea;
+parametrul actual de tip tablou nu conține []:
+dacă am fi avut apelul citire(k , v[]); am fi obținut o eroare de sintaxă, sintagma v[] neavând înțeles;
+dacă am fi avut apelul citire(k , v[k]); am fi obținut de asemenea eroare de sintaxă, v[k] fiind elementul de indice k din tabloul v, deci o variabilă de tip int, nu tablou;
+observați prezența caracterului & înaintea parametrului formal n din antetul funcției citire. Acesta transformă parametrul formal într-o referință a parametrului actual, iar modificările făcute asupra parametrului formal n au loc de fapt asupra parametrului actual k din main;

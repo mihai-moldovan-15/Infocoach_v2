@@ -1,0 +1,73 @@
+Stiva (stack) este o structură de date liniară abstractă, pentru care sunt definite operațiile de adăugare a unui element și eliminare a unui element și aceste operații se realizează la un singur capăt al structurii, numit vârful stivei.
+
+În timpul operațiilor cu stiva avem acces numai la elementul din vârful stivei.
+
+Operații cu stiva
+Cu o stivă se pot face următoarele operații:
+
+inițializarea stivei – crearea unei stive vide;
+verificarea faptului că o stivă este sau nu vidă;
+adăugarea unui nou element pe stivă – elementul devine vârful stivei. Operația se numește push;
+eliminarea unui element de pe stivă – se va elimina vârful stivei. Un nou element devine vârf al stivei, sau ea devine vidă. Operația se numește pop;
+identificarea valorii elementului din vârful stivei – accesul la acel element Operația se numește top.
+Imaginați-vă o stivă de lăzi într-un depozit. Dacă adăugăm încă o ladă, o vom plasa în vârful stivei. Dacă luăm o ladă, o vom lua pe cea din vârful stivei – altfel s-ar răsturna stiva!!
+
+Deoarece operațiile cu elementele stivei se fac la același capăt, spunem că stiva este o structură de date de tip LIFO – Last In First Out (ultimul intrat, primul ieșit).
+
+Când folosim stiva?
+Programele au la dispoziție memorie, iar o parte a ei se numește de tip stivă – STACK, tocmai pentru că operațiile cu această memorie se fac pe principiul stivei. Apelul functiilor, deci și recursivitatea, folosesc memoria de tip stivă, iar înțelegerea acestui concept cere înțelegerea modului în care funcționează o stivă.
+
+În programe putem folosi stiva atunci când vrem să amânăm efectuarea unor operații până la obținerea unor rezultate. De exemplu, conversia unui număr din baza 10 în baza 2 constă în efectuarea succesivă a unor împărțiri la 2. Cifrele reprezentării în baza 2 sunt resturile împărțirii în ordine inversă. Ne putem imagina că la fiecare împărțire plasăm restul pe o stivă. În final golim stiva și afișăm valorile întâlnite.
+
+Modalități de implementare a stivei
+La fel ca în cazul cozii, stiva poate fi implementată în limbajul C++ în mai multe moduri:
+
+implementare statică, prin intermediul tablourilor;
+implementare dinamică, prin intermediul listelor alocate dinamic;
+folosirea containerului stack din STL.
+Acest articol prezintă implementarea statică și folosirea STL.
+
+Implementarea statică a stivei
+Vom folosi un tablou alocat static și o variabilă simplă prin care identificăm vârful stivei. În continuare considerăm o stivă cu elemente întregi.
+
+Declarații
+
+const int DIM = 100;
+int S[DIM], vf;
+Inițializarea stivei – crearea unei stive vide
+
+vf = 0;
+Verificarea faptului că stiva este vidă
+
+vf == 0 // stivă vidă
+vf > 0 // stivă nevidă
+Adăugarea unui element – PUSH
+
+S[vf++] = _VALOARE ;
+Eliminarea unui element – POP
+
+vf --;
+Identificarea valorii din vârful stivei – TOP
+
+S[vf-1]
+Folosirea containerului STL stack
+Standard Template Library pune la dispoziție un container adaptor specializat pentru gestionarea unei stive, numit stack. Un obiect de tip stack încapsulează toate operațiile specifice stivei:
+
+Declarații
+
+#include <stack>
+Inițializarea stivei – crearea unei stive vide
+
+stack<int> S;
+Verificarea faptului că stiva este vidă
+
+S.empty() // true dacă stiva este vidă, false în caz contrar
+Adăugarea unui element – PUSH
+
+S.push( _VALOARE );
+Eliminarea unui element – POP
+
+S.pop();
+Identificarea valorii din vârful stivei – TOP
+
+S.top()

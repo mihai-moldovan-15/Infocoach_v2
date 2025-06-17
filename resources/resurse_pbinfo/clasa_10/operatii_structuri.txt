@@ -1,0 +1,48 @@
+Cea mai importantă operație cu structuri este referirea unui câmp.
+
+Referirea unui câmp
+Se face cu ajutorul operatorului . (punct), numit și operator de acces direct la membrii unei structuri. Forma generală a acestei operații este:
+
+variabila_de_tip_structura.câmp
+Observații
+Rezultatul acestei operații este câmpul referit și este lvalue (poate fi supus unei atribuiri) ;
+Operația nu este comutativă;
+Despre accesul la membrii unei structuri referite de un pointer puteți citi aici;
+Exemplu
+Considerăm următoarea secvență:
+
+struct Persoana{
+    char nume[21], prenume[21], sex;
+    int varsta;
+    double salariu;
+};
+Persoana A, B;
+Următoarele operații sunt corecte:
+
+cin >> A.varsta;
+strcpy(A.nume, "Popescu");
+strcpy(B.nume, A.nume);
+A.sex = 'M';
+A.salariu = B.salariu + 125.80;
+B.varsta ++;
+Următoarele operații sunt greșite:
+
+Persoana.nume
+Persoana.A
+varsta.persoana
+Citirea și afișarea
+O variabilă de tip structură nu poate fi nici citită, nici afișată. Putem în schimb să realizăm aceste operații cu câmpurile structurii, folosind operatorul de access ..
+
+CORECT!
+
+cin >> A.nume >> A.prenume >> A.sex >> A.varsta >> A.salariu;
+cout << A.nume << " " << A.prenume << " " << A.sex << " " << A.varsta << " " << A.salariu;
+GREȘIT!
+
+cin >> A;
+cout << B;
+Atribuirea
+Singura operație uzuală care se poate efectua cu o variabilă de tip structură este atribuirea:
+
+A = B
+unde A și B sunt două variabile de același tip structură. Atribuirea se face bit cu bit – fiecare bit din reprezentarea în memorie a variabilei B se copiază corespunzător în reprezentarea în memorie a variabilei A.

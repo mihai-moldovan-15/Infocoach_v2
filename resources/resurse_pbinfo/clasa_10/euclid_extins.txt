@@ -1,0 +1,101 @@
+
+Am extras informațiile din imaginea furnizată și le-am formatat într-un fișier text. Am acordat o atenție deosebită formulelor și pseudocodului, adaptând notațiile pentru a fi clare în text simplu.
+
+Iată conținutul:
+
+Algoritmul lui Euclid pentru determinarea celui mai mare divizor comun a două numere naturale are următoarea consecință: pentru două numere naturale nenule a, b există numerele întregi x, y astfel încât a * x + b * y = d, unde d = (a, b) este cel mai mare divizor comun al lui a și b.
+
+Algoritmul lui Euclid
+
+Algoritmul lui Euclid se bazează pe următoarea formulă:
+
+(a, b) =
+  a, dacă b = 0
+  (b, r), dacă b ≠ 0 unde r este restul împărțirii lui a la b.
+
+Analizăm cazul b ≠ 0. Fie d = (a, b). Conform teoremei împărțirii cu rest, există numerele naturale c și r, astfel încât a = b * c + r, unde 0 <= r < b.
+
+Dacă d|a și d|b atunci d|(a - b * c), adică d|r. Să presupunem că există un număr n > d, astfel încât n = (b, r). Atunci n|b și n|r, deci n|(b * c + r), adică n|a. Astfel, n este divizor comun al lui a și b, dar d este cel mai mare divizor comun al lui a și b - contradicție.
+
+Următoarea funcție recursivă implementează algoritmul lui Euclid și întoarce rezultatul printr-un parametru de ieșire:
+
+```cpp
+void euclid(int a, int b, int &d)
+{
+    if (b == 0)
+    {
+        d = a;
+    }
+    else
+    {
+        euclid(b, a % b, d);
+    }
+}
+Algoritmul extins
+
+Pentru a determina numerele x, y de mai sus, vom extinde funcția de mai sus, adăugându-i parametrii de ieșire x și y:
+
+C++
+
+void euclid(int a, int b, int &d, int &x, int &y);
+Determinarea valorilor lui x și y se va face astfel:
+
+dacă b este nul, atunci d = a și deoarece a * 1 + 0 * y = a, deducem că x=1, iar y poate lua orice valoare, de exemplu y=0;
+dacă b este nenul, se determină în urma autoapelului x1 și y1 astfel încât bx1 + ry1 = d, unde r = a % b. Pe de altă parte, a = b * c + r, unde c = a / b, deci r = a - b * c. Înlocuind, obținem: o b * x1 + (a - b * c) * y1 = d o b * x1 + a * y1 - b * c * y1 = d o a * y1 + b * (x1 - c * y1) = d, unde c = a / b - câtul împărțirii o a * y1 + b * (x1 - (a / b) * y1) = d o Deci x = y1 și y = x1 - (a / b) * y1
+Funcția următoare implementează algoritmul descris mai sus:
+void euclid(int a , int b ,int & d, int & x ,int & y)
+{
+    if(b == 0)
+    {
+        d = a;
+        x = 1, y = 1;
+    }
+    else
+    {
+        int x1 , y1;
+        euclid(b , a % b , d, x1 , y1);
+        x = y1;
+        y = x1 - a / b * y1;
+    }
+}
+
+Invers modular
+
+Operația B/A nu poate fi realizată modulo N astfel: (B/A) % N != ((B % N) / (A % N)) % N - ușor de verificat pentru exemple concrete - deși relațiile similare au loc pentru adunare și înmulțire.
+
+Restul împărțirii la N a lui B/A poate fi determinat, dacă A și N sunt prime între ele, prin intermediul inversului modular - dacă A și N nu sunt prime între ele, inversul modular nu există.
+
+Mai precis, dacă 1 <= A < N, inversul lui A modulo N este un număr natural 1 <= A^-1 < N cu proprietatea că A * A^-1 = 1 mod N.
+Atunci (B/A) % N = (B * A^-1) % N = ((B % N) * (A^-1 % N)) % N.
+
+Pentru a determina inversul modular, folosim algoritmul lui Euclid extins. Mai precis, conform algoritmului, există X și Y astfel încât A*X + N*Y = 1, deoarece 1 = cmmdc(A, N), A și N fiind prime între ele. Trecând la operațiile modulo N, obținem A * X = 1 mod N, deoarece N * Y = 0 mod N. De aici rezultă că inversul modular al lui A modulo N este chiar X. Dacă X determinat astfel este negativ, îl vom mări cu N până când devine pozitiv.
+
+Următoarea secvență C++ determină inversul modular al lui A, modulo N:
+void euclid(int a , int b ,int & x ,int & y)
+{
+    if(b == 0)
+    {
+        x = 1, y = 1;
+    }
+    else
+    {
+        int x1 , y1;
+        euclid(b , a % b , x1 , y1);
+        x = y1;
+        y = x1 - a / b * y1;
+    }
+}
+
+int main()
+{
+    int A = 9, N = 11; // prime intre ele, 1 <= A < N
+    int X , Y;
+    euclid(A, N , X ,Y);
+    while(X < 0)
+        X += N;
+    cout << X; // 5
+    return 0;
+}
+Inversul modular poate fi folosit, de exemplu pentru a calcula (Combinari de n luate cate k) modulo P, unde P este un număr prim.
+
+

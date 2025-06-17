@@ -1,0 +1,43 @@
+Problemă: Se dă o matrice binară, reprezentând harta unui teren (labirint, clădire, tablă de joc, etc.), în care valorile 0 reprezintă zone libere, iar cele egale cu 1 reprezintă obstacole. Într-o zonă aflată la coordonate cunoscute se află un mobil, care se poate deplasa prin matrice, trecând din zona curenta în una din cele patru zone vecine de pe aceeași linie sau aceeași coloană, dacă este liberă. Să se identifice zonele în care poate să ajungă mobilul.
+
+Problema enunțată mai sus face parte din categoria Algoritmilor de umplere sau FILL, iar prezentul articol este consacrat acestor algoritmi!Pentru a identifica zonele în care poate ajunge mobilul, le vom marca în matrice cu o altă valoare (de exemplu cu 2); vom face operația pas cu pas, pe următorul principiu: dacă o anumită zonă a matricei este zonă curentă (mobilul se află în acea zonă), atunci acea zonă va fi marcată ca vizitată, iar vecinii acelei zone care sunt liberi și nu au fost vizitați vor deveni la rândul lor zone curente.
+
+Identificarea vecinilor
+Înainte de a descrie efectiv modul în care se realizează umplerea, să analizăm conceptul de vecin al unui element din matrice. Deși nu este nou, este bine să sistematizăm lucrurile, pentru a obține algoritmi cât mai clari și mai ușor de depanat!
+
+În probleme este precizat care sunt vecinii unui element al matricei. De regulă, sunt elementele învecinate pe linie și pe coloană, dar pot fi și pe diagonală, sau în formă de L, așa cum se deplasează calul de șah.
+Vecini pe linie și coloană	Vecini pe diagonală	Vecini în săritura calului
+Pentru a identifica vecinii elementului curent, trebuie să identificăm coordonatele acestora. Dacă elementul curent are coordonatele i,j, vecinii vor avea coordonatele din imaginea următoare (am considerat vecinii pe linie și coloană):
+Pentru a evita repetarea unor instrucțiuni aproape identice – singura diferență fiind coordonatele vecinului curent, putem construi două tablouri unidimensionale di[], dj[] – numiți și vectori de deplasare:
+
+numărul de elemente ale vectorilor de deplasare este egal cu numărul de vecini ai unui element;
+valorile elementelor vectorilor de deplasare sunt astfel alese, încât adunându-le la i, respectiv j, să obținem coordonatele vecinilor elementului de coordonate i,j;
+identificarea vecinilor se face parcurgând vectorii de deplasare.
+Când considerăm vecinii pe linie și coloană, vectorii de deplasare pot fi – ordinea elementelor în vectori nu este neapărat importantă, dar este necesară “sincronizarea” între vectori:
+
+int di[]={-1, 0, 1, 0},
+    dj[]={ 0, 1, 0,-1};
+Pentru vectorii de mai sus:
+
+i+di[ 0 ],j+dj[ 0 ] înseamnă i-1,j+0 și reprezintă vecinul de pe linia anterioară – vecinul din NORD
+i+di[ 1 ],j+dj[ 1 ] înseamnă i+0,j+1 și reprezintă vecinul de pe coloana următoare – vecinul din EST
+i+di[ 2 ],j+dj[ 2 ] înseamnă i+1,j+0 și reprezintă vecinul de pe linia următoare – vecinul din SUD
+i+di[ 3 ],j+dj[ 3 ] înseamnă i+0,j-1 și reprezintă vecinul de pe coloana anterioară – vecinul din VEST
+Analiza vecinilor elementului curent se poate face cu o secvență de forma:
+
+for(int k = 0 ; k < 4 ; k ++)
+{
+    // analizăm vecinul i+di[k], j+dj[k]
+}
+Bordarea matricei
+Un alt aspect care trebuie avut în vedere constă evitarea ieșirii din matrice – analiza unor elemente care nu fac parte din matrice, ceea ce are de regulă consecințe impredictibile. În cazul vecinilor pe linie și coloană, majoritatea elementelor au patru vecini, dar există și elemente cu trei vecini – chenarul matricei, precum și elemente cu doi vecini – colțurile:
+Pentru a evita cazurile particulare putem borda matricea cu obstacole sau putem pentru fiecare element vecin, determinat cu ajutorul vectorilor de deplasare, să verificăm dacă aparține matricei, înainte de a-l analiza/prelucra:
+
+for(int k = 0 ; k < 4 ; k ++)
+{
+    int iv = i+di[k], jv = j+dj[k];
+    if(iv >= 1 && jv >= 1 && iv <=n && jv <= m)
+    {
+        //analizam vecinul iv,jv
+    }
+}

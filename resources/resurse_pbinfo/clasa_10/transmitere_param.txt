@@ -1,0 +1,233 @@
+Să ne amintim că parametri din antetul unei funcții se numesc parametri formali, iar cei din apelul funcției se numesc parametri efectivi.
+
+Corespondența dintre parametri formali și cei efectivi
+Fie următorul program, în care funcția cmmdc returnează cel mai mare divizor comun al parametrilor:
+
+#include <iostream>
+using namespace std;
+
+int cmmdc(int a , int b){
+    while(b != 0)
+    {
+        int r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+int main(){
+    int x = 24, y = 18;
+    cout << cmmdc(x , y) << endl; // 6
+    cout << cmmdc(x, y + 2) << endl; // 4
+    cout << cmmdc(x , 36) << endl; // 12
+    cout << cmmdc(26 , 39) << endl; // 13
+    cout << cmmdc(8.5 , 12.56) << endl; // 4
+    return 0;
+}
+Să observăm că între parametri formali și cei actuali trebuie să existe o anumită corespondență, astfel:
+
+numărul parametrilor formali și cel al parametrilor actuali trebuie să fie același (există și o excepție care depășește cadrul acestui articol)
+tipul parametrilor formali trebuie să fie același cu cel al parametrilor actuali, sau să se poată face o conversie implicită:
+cmmdc(x , y) – parametri actuali sunt variabile de tip int
+cmmdc(x, y + 2) – un parametru actual este variabilă de tip int, celălalt este o expresie al cărei rezultat este de tip int
+cmmdc(26 , 39) – parametri actuali sunt constante de tip int
+cmmdc(8.5 , 12.56) – parametri actuali sunt constante de tip double. Înainte de apel valorile parametrilor actuali vor fi convertite la tipul int, apelul fiind similar cu cmmdc(8 , 12).
+numele parametrilor formali nu trebuie să fie aceiași cu numele parametrilor actuali corespunzători
+Parametrii formali ai unei funcții se comportă la fel ca niște variabile locale:
+
+li se alocă memorie pe stivă, ca variabilelor locale.
+devin variabile locale pentru funcție, iar numele acestor variabile este identic cu numele parametrilor din antetul funcției
+la revenirea din apelul funcției, conținutul parametrilor, la fel ca al variabilelor locale, se pierde
+Mecanismele de transmitere a parametrilor în C++
+Există două modalități de transmitere a parametrilor:
+
+transmiterea prin valoare
+transmiterea prin referință
+Transmiterea prin valoare
+În cazul transmiterii parametrilor prin valoare, parametrii formali ai unei funcții sunt copii ale valorilor parametrilor actuali. Acest lucru înseamnă că:
+
+parametri actuali pot fi expresii ale căror valori corespund ca tip cu parametri formali (sau pot fi convertite implicit la tipul parametrilor formali).
+pe stivă se memorează valoare expresiei (sau variabilei) date ca parametru actual.
+la ieșirea din apelul funcției modificările realizate în funcție asupra parametrilor formali nu au efect asupra parametrilor actuali. Parametrii actuali sunt nemodificați!
+acesta este modul implicit de transmitere a parametrilor.
+Exemplu:
+
+#include <iostream>
+using namespace std;
+
+int cmmdc(int a , int b){
+    cout << "La inceputul functiei cmmdc, a = " << a << " si b = " << b << endl;
+    while(b != 0)
+    {
+        int r = a % b;
+        a = b;
+        b = r;
+    }
+    cout << "La finalul functiei cmmdc, a = " << a << " si b = " << b << endl;
+    return a;
+}
+
+int main(){
+    int x = 24, y = 18;
+    cout << cmmdc(x , y) << endl;
+    cout << "După apelul functiei cmmdc, x = " << x << " si y = " << y << endl;
+    return 0;
+}
+Constatăm că deși în funcția cmmdc parametrii formali a și b se modifică, în main(), după apelul funcției cmmdc(), parametrii actuali x și y au valorile anterioare.
+
+Transmiterea prin referință
+Este mecanismul specific C++ prin care putem modifica într-o funcție variabile din afara funcției. În cazul transmiterii parametrilor prin referință, parametrii formali ai unei funcții sunt referințe ale parametrilor actuali. Acest lucru înseamnă că:
+
+parametri actuali pot fi doar variabile, sau expresii ale căror rezultate sunt similare variabilelor: elemente de tablou, câmp al unei structuri, pointer dereferențiat, etc.
+pe stivă se memorează adresa variabilei date ca parametru actual.
+toate modificările realizate în apelul funcției asupra parametrilor formali se fac de fapt asupra parametrilor actuali. Parametrii actuali sunt modificați la ieșirea din apel!
+pentru a preciza că un parametru este transmis prin referință va fi precedat de caracterul & în antetul funcției.
+Trebuie amintit că în limbajul C nu este posibilă transmiterea parametrilor prin referință. Dacă dorim să modificăm într-o funcție o variabilă din afara ei trebuie să folosim pointeri.
+
+Exemplu:
+
+#include <iostream>
+using namespace std;
+
+void dublare(int & n)
+{
+    n = 2 * n;
+}
+
+int main(){
+    int x = 24;
+    cout << "x = "  << x << endl;
+    dublare(x);
+    cout << "x = "  << x << endl;
+    return 0;
+}
+Constatăm că, la ieșirea din apel, valoarea variabilei x este modificată. Mai mult, un apel de forma dublare(10); reprezintă o eroare de sintaxă, deoarece parametrul actual trebuie să fie variabilă.
+
+Transmiterea ca parametri a tablourilor
+Tablourile au un comportament special în ceea ce privește transferul parametrilor. Mai precis:
+
+Tablourile se transmit prin valoare, dar orice modificare a valorilor elementelor tabloului dat ca parametru formal va afecta elementul corespunzător al tabloului dat ca parametru actual.
+
+Exemplu:
+
+#include <iostream>
+using namespace std;
+
+void dublare(int & x)
+{
+    x = 2 * x;
+}
+
+void transf(int n, int  x[])
+{
+    for(int i = 0 ; i < n ; i ++)
+        dublare(x[i]);
+}
+
+void afisare(int n, int  x[])
+{
+    for(int i = 0 ; i < n ; i ++)
+        cout << x[i] << " ";
+    cout << endl;
+}
+
+int main(){
+    int n = 5, v[5];
+    for(int i = 0 ; i < n ; i ++)
+    v[i] = i;
+    afisare(n , v);     // tabloul memorează {0, 1, 2, 3, 4}
+    transf(n, v);
+    afisare(n , v);     // tabloul memorează {0, 2, 4, 6, 8}
+    return 0;
+}
+Analizând programul anterior, constatăm că:
+
+am transmis prin referință funcției dublare() un element al tabloului.
+funcția transf() are doi parametri transmiși prin valoare (inclusiv tabloul).
+la ieșirea din apelul funcției transf() elementele tabloului sunt modificate, deși tabloul a fost transmis prin valoare.
+Pentru a preciza că un parametru formal este tablou unidimensional avem următoarele posibilități (luăm ca exemplu funcția afișare de mai sus):
+
+void afisare(int n, int  x[]); // nu se precizează dimensiunea reală a tabloului
+void afisare(int n, int  x[10]); // se precizează dimensiunea reală a tabloului
+void afisare(int n, int  *x); // parametrul este un pointer la tipul elementelor tabloului
+Toate variantele de mai sus sunt echivalente.
+
+Pentru un tablou multidimensional, regula este că prima dimensiune a parametrului nu trebuie să fie în concordanță cu cea a parametrului actual. Toate celelalte dimensiuni ale parametrului formal trebuie să fie identice cu dimensiunile corespunzătoare ale parametrului actual. De exemplu, pentru o matrice următoarele secvențe sunt corecte:
+
+void F(int n, int m, int A[][25]); //prototipul funcției
+...
+int n , m , A[25][25]; //declarații de variabile
+F(n,m,A); //apelul funcției
+sau
+
+void F(int n, int m, int A[25][25]); //prototipul funcției
+...
+int n , m , A[25][25]; //declarații de variabile
+F(n,m,A); //apelul funcției
+Următoare secvență este însă greșită, deoarece a doua dimensiune a parametrului actual (numărul de coloane) nu corespunde cu cea a parametrului formal:
+
+void F(int n, int m, int A[][25]); //prototipul funcției
+...
+int n , m , A[20][20]; //declarații de variabile
+F(n,m,A); //apelul funcției
+Parametri de intrare, de ieșire și de intrare/ieșire
+Așa cum am văzut deja, parametri sunt folosiți pentru a transfera date între subprograme. Astfel prin intermediul parametrilor o funcție poate să primească date pe care să le prelucreze sau poate să întoarcă rezultate în funcția care a făcut apelul.
+
+Din acest punct de vedere, parametrii unei funcții pot fi:
+
+parametri de intrare – prin intermediul lor funcția primește date pe care să le prelucreze. De obicei sunt parametri transmiși prin valoare. Valoarea cu care intră în funcție este importantă, valoarea pe care o au la finalul apelului nu este importantă.
+parametri de ieșire – prin intermediul lor funcția întoarce în programul apelant rezultate. De obicei sunt parametri transmiși prin referință, cu excepția tablourilor. Valoare pe care o au la intrarea în funcție nu este importantă; este importantă însă valoarea pe care o au la finalul apelului, deoarece reprezintă probabil rezultatul.
+parametri de intrare-ieșire – prin intermediul lor funcția primește date de intrare, le prelucrează și tot prin intermediul lor întoarce rezultatul în programul apelant. De obicei sunt parametri transmiși prin referință, cu excepția tablourilor. Pentru acești parametri este importantă atât valoarea cu care intră în apel, cât și valoarea de la ieșirea din apel.
+Pentru exemplificare să vedem câteva variante pentru o funcție care determină oglinditul unui număr natural, precum și modul de apelare:
+
+Parametri de intrare – funcția are un singur parametru, de intrare, transmis prin valoare, prin care primește un număr pentru care determină oglinditul. Rezultatul va fi returnat de către funcție, iar apelul se va face într-o expresie.
+
+int ogl(int n)
+{
+    int r = 0;
+    while(n)
+        r = 10 * r + n % 10, n /= 10;
+    return r;
+}
+int main(){
+    int a;
+    cin >> a;
+    cout << ogl(a);
+    return 0;
+}
+Parametri de ieșire – funcția are doi parametri:
+
+un parametru de intrare, transmis prin valoare, prin care primește un număr pentru care determină oglinditul
+un parametru de ieșire, transmis prin referință, prin care întoarce rezultatul
+Funcția se apelează într-o instrucțiune de sine stătătoare.
+
+void ogl(int n, int & r)
+{
+    r = 0;
+    while(n)
+        r = 10 * r + n % 10, n /= 10;
+}
+int main(){
+    int a, x;
+    cin >> a;
+    ogl(a, x);
+    cout << x;
+    return 0;
+}
+Parametri de intrare ieșire – funcția are un singur parametru, transmis prin referință, prin care primește un număr natural. Funcția determină oglinditul acestuia și îl întoarce prin intermediul aceluiași parametru. Funcția se apelează într-o instrucțiune de sine stătătoare.
+
+void ogl(int & n)
+{
+    int r = 0;
+    while(n)
+        r = 10 * r + n % 10, n /= 10;
+    n = r;
+}
+int main(){
+    int a;
+    cin >> a;
+    ogl(a);
+    cout << a;
+    return 0;
+}

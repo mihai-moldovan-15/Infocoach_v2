@@ -1,0 +1,107 @@
+Algoritmul de umplere (FILL) pe matrice funcționează pe ideea: marcăm elementul curent și analizăm vecinii liberi și nemarcați ai acestuia. Pentru a gestiona ordinea în care se face acest lucru putem folosi recursivitatea sau putem folosi o structură de date de tip coadă – queue. Această metodă are o serie de avantaje, fiind de regulă mai rapidă.
+
+Reamintim, coada este o structură de date de tip FIFO – first in, first out. Elementele se elimină strict în ordinea în care au fost adăugate.
+
+Algoritmul de umplere cu coadă
+Vom folosi o coadă în care elementele sunt perechi de indici ai tabloului. Algoritmul de umplere este următorul:
+
+marcăm poziția inițială în matrice și o adăugăm în coadă;
+cât timp coada este nevidă:
+scoatem din coadă un element
+analizăm vecinii acestuia:
+dacă vecinul curent este liber și nemarcat, îl marcăm în matrice și îl adăugăm în coadă
+Algoritmul este eficient, fiecare element accesibil în matrice pornind de la poziția inițială (de fapt coordonatele lui) este adăugat și eliminat din coadă exact o dată. Astfel numărul de elemente ale cozii este cel mult n*m (unde n și m sunt dimensiunile matricei).
+
+Modalități de implementare
+Pentru implementarea cozii se pot folosi mai multe metode:
+
+simulare folosind un tablou unidimensional și doi indici, st dr, unde st este indicele elementului de la începutul cozii (cel care urmează a fi scos), iar dr este indicele elementul de la sfârșitul cozii (ultimul adăugat);
+o structură de date de tip coadă specifică limbajului de programare folosit – de exemplu containerul C++ STL queue;
+implementare folosind alocarea dinamică – liste simplu înlănțuite alocate dinamic.
+Acest articol prezintă primele două metode.
+
+Simularea cozii cu tablou
+Pentru această variantă avem nevoie de un tablou unidimensional (vector) în care să memorăm elementele cozii. Observații:
+
+dimensiunea acestui tablou trebuie să fie suficient de mare pentru a memora toate elementele parcurse – în caz extrem toate elementele matricei. Dimensiunea trebuie deci să fie n*m.
+elementele tabloului sunt perechi de indici (linie-coloană). Pentru aceasta vom declara o structură cu două câmpuri: linie, coloana.
+gestionarea cozii se face folosind doi indici, st și dr:
+dr reprezintă finalul cozii – poziția ultimului element adăugat;
+st reprezintă începutul cozii – poziția elementul care urmează a fi eliminat. La eliminare, elementul nu se șterge propriu-zis din vector (operația este prea costisitoare ca timp); îl mărim doar pe st, ignorând elementele aflate în tablou înaintea sa – elementele cu indici între 1 și st-1.
+Următoarea secvență conține declarațiile specifice algoritmului cu coadă și definiția unei funcții C++ care realizează umplerea pornind dintr-o poziție dată – programul complet este atașat articolului:
+
+struct Coordonate
+{
+    int linie, coloana;
+};
+
+Coordonate Q[100 * 100 + 1];
+
+void Fill(int istart ,int jstart ,int v)
+{
+    int st = 1 , dr = 0;
+    //initializare coada
+    dr ++;
+    Q[dr].linie = istart, Q[dr].coloana = jstart;
+    //marcare pozitie de start
+    A[istart][jstart] = v;
+    while(st <= dr) // cat timp coada este nevida
+    {   
+        int i = Q[st].linie, j = Q[st].coloana; // determinam elementul de la inceputul cozii
+        for(int k = 0 ; k < 4 ; k ++)
+        {
+            int iv = i + di[k], jv = j + dj[k]; // coordonatele vecinului
+            if(iv >= 1 && iv <= n && jv >= 1 && jv <= m // element în matrice
+                && A[iv][jv] != 1 // element liber
+                && A[iv][jv] != v) // nemarcat
+            {
+                // marcam elementul vecin
+                A[iv][jv] = v;
+                // il adaugam in coada
+                dr ++;
+                Q[dr].linie = iv , Q[dr].coloana = jv;
+            }
+        }
+        st ++; // eliminam din coada
+    }
+}
+Algoritm cu STL queue
+Containerul STL queue permite gestionarea unei cozi, având definite toate operațiile necesare. Înainte de a prezenta secvența C++ care folosește acest container în cadrul algoritmului de umplere, să facem o scurtă prezentare a containerului queue și a operațiilor specifice:
+
+pentru a folosi containerul, trebuie incluse headerul queue: #include <queue>
+declarăm o variabilă pentru coadă: queue<pair<int,int> Q;
+elementele cozii vor fi gestionate dinamic, memoria alocată lor fiind în HEAP, nu în STACK;
+pentru algoritmul de umplere, în coadă trebuie să memorăm coordonatele unor elemente din matrice. în acest scop putem folosi clasa C++ pair, care încapsulează două valori. Accesul la cele două valori se face prin câmpurile first și second. Crearea unei variabile de tip pair se poate face prin intermediul funcției make_pair(v1,v2);
+în gestionarea cozii se folosesc patru operații:
+verificarea faptului că în coadă avem sau nu elemente (coada este nevidă sau vidă): Q.empty() – returnează true sau false;
+identificare elementului de la începutul cozii: Q.front();
+adăugarea unui element în coadă: Q.push(valoare);
+eliminarea unui element din coadă: Q.pop().
+Următoarea funcție C++ realizează umplerea pornind dintr-o poziție dată – programul complet este atașat articolului:
+
+void Fill(int istart ,int jstart ,int v)
+{
+    queue<pair<int,int>> Q;
+    //initializare coada
+    Q.push(make_pair(istart , jstart));
+    //marcare pozitie de start
+    A[istart][jstart] = v;
+    while(! Q.empty()) // cat timp coada este nevida
+    {   
+        int i = Q.front().first, j = Q.front().second; // determinam elementul de la inceputul cozii
+        for(int k = 0 ; k < 4 ; k ++)
+        {
+            int iv = i + di[k], jv = j + dj[k]; // coordonatele vecinului
+            if(iv >= 1 && iv <= n && jv >= 1 && jv <= m // element în matrice
+                && A[iv][jv] != 1 // element liber
+                && A[iv][jv] != v) // nemarcat
+            {
+                // marcam elementul vecin
+                A[iv][jv] = v;
+                // il adaugam in coada
+                Q.push(make_pair(iv , jv));
+            }
+        }
+        Q.pop(); // eliminam din coada
+    }
+}

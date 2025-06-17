@@ -1,0 +1,57 @@
+În acest articol vom vedea cum declarăm și folosim tablouri ale căror elemente sunt structuri, precum și modul de lucru cu subprograme care au ca parametri structuri.
+
+Tablouri de structuri. Structuri cu câmpuri de tip tablou
+În C/C++ se pot declara tablouri cu elemente de tip structură și, de asemenea, o structură poate avea elemente de tip tablou (am văzut deja acest lucru în cazul tipului Persoana, cu câmpurile nume și prenume de tip șir de caractere).
+
+Următoarea secvență C++ conține o asemenea situație:
+
+struct Elev{
+    char nume[21], prenume[21], sex;
+    int numar_note;
+    int note[10];
+};
+
+int n;
+Elev V[28];
+
+int main()
+{
+    //....
+    for(int i = 0 ; i < n ; i ++)
+    {
+        cin >> V[i].nume >> V[i].prenume >> V[i].sex >> V[i].numar_note;
+        for(int j = 0 ; j < V[i].numar_note; j ++)
+            cin >> V[i].note[j];
+    }
+    //...
+}
+Funcții care lucrează cu structuri
+De reținut:
+
+o funcție C++ poate avea parametri de tip structură
+dacă dorim ca funcția să întoarcă un parametru modificat (cu câmpurile modificate), acesta trebuie transmis prin referință
+o funcție poate returna o valoare de tip structură
+Exemplu:
+
+Structura Punct memorează coordonatele întregi ale unui punct din plan:
+
+struct Punct{
+    int x,y;
+};
+Funcția double Dist(Punct P) determină distanța de la origine la punctul P. Parametru este transmis prin valoare:
+
+double Dist(Punct P){
+    return sqrt(P.x * P.x + P.y * P.y);
+}
+Funcția void Citire(Punct & P) citește coordonatele punctului P și întoarce coordonatele:
+
+void Citire(Punct & P){
+    cin >> P.x >> P.y;
+}
+Funcția Punct Simetric(Punct P) returnează o structură cu coordonatele simetricului lui P față de origine:
+
+Punct Simetric(Punct P){
+    Punct tmp;
+    tmp.x = - P.x, tmp.y = - P.y;
+    return tmp;
+}

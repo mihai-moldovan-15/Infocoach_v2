@@ -1,0 +1,75 @@
+{
+    "title": "Liste Dinamice în C++",
+    "description": "Ghid complet pentru implementarea și manipularea listelor liniare simplu înlănțuite în C++",
+    "tags": ["liste", "dinamice", "C++", "pointeri", "memorie", "algoritmi"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "O listă liniară simplu înlănțuită conține elemente (noduri) cu două componente: informația utilă și informația de legătură. Fiecare element memorează adresa următorului element din listă."
+        },
+        {
+            "title": "Structura de Bază",
+            "subsections": [
+                {
+                    "title": "Definirea Nodului",
+                    "content": "struct nod {\n    int info;\n    nod * urm;\n};\n\nnod * prim = NULL;"
+                },
+                {
+                    "title": "Observații",
+                    "content": "1. prim este pointer la primul element\n2. Ultimul element are urm = NULL\n3. Elementele sunt variabile dinamice\n4. Memoria se alocă în HEAP\n5. Fiecare nod ocupă 8 octeți (4 pentru info, 4 pentru urm)"
+                }
+            ]
+        },
+        {
+            "title": "Operații de Bază",
+            "subsections": [
+                {
+                    "title": "Crearea unui Nod Nou",
+                    "content": "nod * p = new nod;\np->info = valoare;\np->urm = NULL;"
+                },
+                {
+                    "title": "Adăugare la Final",
+                    "content": "void AdaugaFinal(nod * & prim, int x) {\n    nod * q = new nod;\n    q->info = x;\n    q->urm = NULL;\n    if(prim == NULL)\n        prim = q;\n    else {\n        nod * t = prim;\n        while(t->urm != NULL)\n            t = t->urm;\n        t->urm = q;\n    }\n}"
+                },
+                {
+                    "title": "Adăugare la Început",
+                    "content": "void AdaugaInceput(nod * & prim, int x) {\n    nod * t = new nod;\n    t->info = x;\n    t->urm = prim;\n    prim = t;\n}"
+                }
+            ]
+        },
+        {
+            "title": "Parcurgerea Listei",
+            "content": "void Parcurgere(nod * prim) {\n    nod * p = prim;\n    while(p != NULL) {\n        // prelucrăm p->info\n        p = p->urm;\n    }\n}"
+        },
+        {
+            "title": "Ștergerea unui Element",
+            "subsections": [
+                {
+                    "title": "Ștergere Primul Element",
+                    "content": "nod * t = prim;\nprim = prim->urm;\ndelete t;"
+                },
+                {
+                    "title": "Ștergere Element Oarecare",
+                    "content": "nod * t = p->urm;\np->urm = t->urm;\ndelete t;"
+                }
+            ]
+        },
+        {
+            "title": "Inserarea unui Element",
+            "subsections": [
+                {
+                    "title": "Inserare la Început",
+                    "content": "nod * t = new nod;\nt->info = valoare;\nt->urm = prim;\nprim = t;"
+                },
+                {
+                    "title": "Inserare după un Nod",
+                    "content": "nod * t = new nod;\nt->info = valoare;\nt->urm = p->urm;\np->urm = t;"
+                }
+            ]
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Verificați întotdeauna dacă lista este vidă\n2. Eliberați memoria când ștergeți noduri\n3. Verificați pointerii înainte de dereferențiere\n4. Mențineți legăturile corecte între noduri\n5. Folosiți pointeri auxiliari pentru parcurgere"
+        }
+    ]
+} 

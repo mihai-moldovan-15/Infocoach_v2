@@ -1,0 +1,59 @@
+Memoria RAM este o succesiune de octeți, numerotați. Numărul de ordine al unui octet reprezintă adresa lui și de regulă este reprezentat în baza 16, de exemplu: 0x7fff741e0d74. Orice variabilă ocupă în memorie un anumit număr de octeți consecutivi (în funcție de tipul variabilei); adresa primului octet alocat unei variabile reprezintă adresa variabilei.
+
+Definiție: Un pointer este o dată a cărei valoare este o adresă de memorie. O variabilă de tip pointer este o variabilă a cărei valoare este adresa altor variabile.
+
+Important: Nu confundați adresa unei variabile cu valoarea memorată de aceasta. Ele sunt de regulă diferite, chiar și în cazul pointerilor!
+
+Declararea pointerilor
+La declararea unei variabile de tip pointer se precizează tipul variabilelor a căror adrese pot fi memorate de acel pointer:
+
+TIP * NUME;
+Exemple:
+
+int * p;
+p este o variabilă de tip pointer a cărei valoare este adresa unei variabile de tip int.
+
+double * f;
+f este o variabilă de tip pointer a cărei valoare este adresa unei variabile de tip double.
+
+Observații:
+
+dacă declarăm mai multe variabile de același tip pointer trebuie să plasăm simbolul * înaintea fiecăreia:
+int *p, *q;
+precizarea tipului variabilei cu adresa în pointer este foarte importantă pentru corectitudinea operațiilor cu pointeri.
+Referențiere, dereferențiere
+adresa unei variabile poate fi determinată cu ajutorul operatorului de referențiere &. Fiind o adresă, rezultatul acestei operații poate fi atribuit unui pointer:
+int x , * p;
+cout << & x; // adresă
+p = & x;
+cout << p; // aceeași adresă ca mai sus
+variabila cu adresa memorată într-un anumit pointer poate fi obținută cu ajutorul operatorului de dereferențiere *:
+int x , * p;
+x = 7;
+p = & x; // x memorează adresa lui x
+*p = 10; // dereferențiere: *p este variabila x; s-a modificat x
+cout << x; // 10
+la declararea unei variabile de tip pointer, aceasta este inițializată; valoarea ei este 0 sau o adresă la întâmplare; operația de dereferențiere produce de obicei erori de rulare, deoarece valoarea pointerului nu coincide cu adresa unei variabile din zonele de memorie alocate programului curent:
+int *p;
+*p = 10; // eroare la rulare
+Compararea pointerilor
+În mod curent trebuie să verificăm dacă doi pointeri rețin aceeași adresă. Pentru aceasta putem folosi operatorii == și !=.
+
+De asemenea, pointerilor li se pot aplica operatorii relaționali <, >, <=, >=.
+
+Pointeri la structuri
+Considerăm următoarea secvență:
+
+struct Punct{
+    int x,y;
+};
+
+Punct A, *pA;
+A.x = 1, A.y = 2;
+pA = & A;
+cout << (*pA).x << " " << (*pA).y << endl;
+cout << pA->x << " " << pA->y << endl;
+Pointerul pA memorează adresa variabilei A. Observați modul în care s-a făcut accesul la câmpurile variabilei cu adresa în pointerul pA:
+
+în expresia (*pA).x parantezele rotunde sunt necesare, deoarece operatorul de acces . are prioritate mai mare decât operatorul de dereferențiere *. Fără acestea expresia ar fi fost interpretată astfel: *(pA.x), dar pA nu este o structură cu câmpul x, deci s-ar fi obținut eroare de sintaxă;
+o altă modalitate, mai simplă, de accesare a câmpurilor structurii cu adresa în pointerul pA constă în folosirea operatorului -> de acces indirect. În operația p->camp, p trebuie să fie pointer la o structură, iar camp trebuie să fie câmp al acelei structuri.

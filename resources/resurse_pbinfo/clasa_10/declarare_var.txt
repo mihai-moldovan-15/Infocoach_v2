@@ -1,0 +1,124 @@
+Generalități
+După cum știm, în C++ variabilele despre care am învățat până acum trebuie declarate și odată cu declararea li se alocă în memorie spațiu în conformitate cu tipul lor. Întrebarea este: “Unde putem declara variabile și prin ce diferă acestea?”.
+
+Sistemul de operare alocă fiecărui program, în memoria RAM, trei zone în care putem memora variabile:
+
+zona de date
+zona de stivă
+zona liberă (heap)
+O variabilă se caracterizează prin:
+
+clasa de memorare
+vizibilitate
+durata de viață
+tipul variabilei
+Să nu uităm, de asemenea, identificatorul variabilei! Dar nu toate variabilele au un identificator, așa cum vom vedea cândva!
+
+Clasa de memorare reprezintă zona de memorie unde poate fi alocat spațiu pentru o variabilă. Ea poate fi: zona de date, zona de stivă, heap-ul sau un registru al procesorului – o memorie specială, de mici dimensiuni, foarte rapidă, existentă în procesor (CPU).
+
+Vizibilitatea unei variabile precizează partea din codul sursă (liniile programului C++) unde se poate folosi respectiva variabilă și poate fi:
+
+la nivel de bloc – variabila este vizibilă numai într-un bloc al programului
+la nivel de fișier – variabila este vizibilă în tot fișierul sursă cu care lucrăm
+la nivel de clasă – specific programării orientate pe obiecte
+Durata de viață reprezintă timpul în care variabilei îi este alocat spațiu în memorie și poate fi:
+
+durată statică – variabila are alocat spațiu pe tot parcursul execuției programului
+durata locală – variabila are alocat spațiu numai pe parcursul execuției instrucțiunilor dintr-un bloc
+durata dinamică – variabila se creează (i se alocă spațiu) și se distruge de către programator, în timpul executării programului
+În C++ variabile pot fi: locale, globale și dinamice. Variabile dinamice vor fi prezentate într-un alt articol, iar cele locale și globale în continuare.
+
+Variabile locale
+Variabilele locale se declară într-un anumit bloc al programului, în corpul unei funcții. Fie programul de mai jos:
+
+#include <iostream>
+using namespace std;
+
+void F(){
+    int x;
+    x = 5;
+    cout << x << endl;
+}
+
+int main(){
+    int y = 10;
+    F();
+    cout << y << endl;
+    return 0;
+}
+Variabilele x și y declarate în programul de mai sus sunt locale. Variabila x poate fi utilizată numai în funcție F(), iar variabila y numai în funcția main(). Mai mult, cele două variabile ar fi putut avea același nume și nu ar fi fost nicio confuzie.
+
+Variabilele locale respectă următoarele reguli:
+
+li se alocă memorie în zona de stivă
+sunt vizibile numai în blocul în care au fost declarate
+durata de viață a lor este execuția instrucțiunilor din blocul în care au fost declarate
+sunt inițializate cu valori aleatorii. Mai precis, standardul C++ nu garantează inițializarea lor cu o anumită valoare. Asta nu înseamnă că nu este posibil ca variabilele locale să fie inițializate de exemplu cu 0 într-o anumită implementare a compilatorului, dar nu ne putem baza pe acest lucru. Mai mult, compilatorul utilizat pe pbInfo nu inițializează variabilele locale cu o anumită valoare
+Observație: Parametrii formali ai unei funcții respectă proprietățile unei variabile locale. Nu vom putea declara în blocul funcției variabile cu același nume ca al parametrilor formali.
+
+Variabile globale
+Variabilele globale se declară în afara oricărei funcții. La declarare, ele sunt inițializate cu 0.
+
+#include <iostream>
+using namespace std;
+
+int x;
+
+void F(){
+    cout << x << endl;
+    x = 10;
+}
+
+int y;
+
+int main(){
+    cout << x << " " << y << endl;
+    x = 5; y = 15;
+    F();
+    cout << x << " " << y << endl;
+    return 0;
+}
+În programul de mai sus variabilele x și y sunt globale. Variabila x poate fi utilizată atât în funcția main() cât și in F(), iar variabila y numai în main().
+
+Variabilele globale respectă următoarele reguli:
+
+li se alocă memorie în zona de date
+sunt vizibile în toate funcțiile care urmează în codul sursă declarării lor
+durata de viață a lor este execuția întregului program
+sunt inițializate cu valoarea 0.
+Observație: Într-un program putem avea și variabile globale și variabile locale, ba chiar variabile globale și locale cu același nume. Următorul program exemplifică această situație. Rulați-l și analizați valorile afișate pentru a deduce modul în care sunt ele vizibile!
+
+#include <iostream>
+using namespace std;
+
+int x;
+
+void F(){
+    cout << x << endl; //5, variabila globala
+    int x = 10;
+    cout << x << endl; //10, variabila locala in F()
+    {
+        int x = 20;
+        cout << x << endl; //20, variabila locala în F(), blocul interior
+    }
+    cout << x << endl; //10, variabila locala in F()
+}
+
+int y;
+
+int main(){
+    cout << x << endl; //0, variabila globală
+    x = 5;
+    cout << x << endl; //5, variabila globala
+    F();
+    cout << x << endl; //5, variabila globala
+    int x = 100;
+    cout << x << endl; //100, variabila locala in main()
+    return 0;
+}
+Observație: Dacă într-un program avem variabile cu același nume, dar cu domenii de vizibilitate diferite, are prioritate variabila cu domeniul de vizibilitate cel mai mic. În particular, dacă ave o variabilă globală și una locală cu același nume are prioritate variabila locală.
+
+Observație: Dacă declarăm o variabilă în expresia de inițializare a unei instrucțiuni for, ea va fi vizibilă numai în expresiile de control ale instrucțiunii for și în blocul subordonat acesteia. De exemplu:
+
+for(int i =1 ; i <= 10 ; i ++)
+    cout << i << " " ;

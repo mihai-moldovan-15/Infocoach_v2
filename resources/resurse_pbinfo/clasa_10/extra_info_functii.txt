@@ -1,0 +1,77 @@
+În acest articol vom prezenta câteva concepte suplimentare din zona funcțiilor C++.
+
+Variabile statice
+După cum știm, variabilele locale dintr-o funcție au durata de viață egala cu timpul în care se execută instrucțiunile respectivei funcții, în contextul apelului curent.
+
+Uneori este necesar să păstrăm valoarea unei variabile locale de la un apel la altul al funcției. Pentru aceasta putem folosi variabile statice.
+
+O variabilă se declară statică precedând tipul său cu cuvântul rezervat static, de exemplu:
+
+static int x;
+Efectul este alocarea de memorie în zona de date, și modificarea duratei de viață la perioada de execuție a programului. Nivelul de vizibilitate rămâne însă blocul în care a fost declarată. Variabila va fi creată și inițializată cu 0 la primul apel al funcției în care este declarată.
+
+Exemplul de mai jos numără apelurile funcției în care este declarată o variabilă statică.
+
+int ogl(int n)
+{
+    static int cnt;
+    cnt ++;
+    cout << "In functie cnt = " << cnt << endl;
+    int r = 0;
+    while(n)
+        r = 10 * r + n % 10, n /= 10;
+    return r;
+}
+
+int main(){
+    int a;
+    for(int i =1 ; i <= 3 ; i ++ )
+        cin >> a, cout << ogl(a);
+    return 0;
+}
+Funcții cu parametri impliciți
+Limbajul C++ permite crearea de funcții cu parametri impliciți. În antetul unei astfel de funcții unor parametri formali li se precizează anumite valori, iar la apel, parametri actuali corespunzători pot să lipsească.
+
+Exemplu:
+
+Următoarea funcție mărește valoarea unui parametru transmis prin referință cu o valoare dată, care implicit este 1.
+
+void Mareste(int & x, int val = 1){
+    x += val;
+}
+Funcția poate fi apelată astfel:
+
+int x = 3;
+Mareste(x , 2); // x devine 5
+Mareste(x); // parametrul actual corespunzator lui val este implict 1, x devine 6
+Observații:
+
+dacă o funcție are parametri impliciți, aceștia trebuie să fie ultimii în lista parametrilor formali;
+în lista parametrilor formali, după un parametru cu valoare implictă nu se poate pune un parametru fără valoare implicită; antetul void F(int x = 1, int y) este greșit sintactic;
+dacă separăm declarație funcției de definiție, atunci vom preciza valorile implicite la declarație:
+void Mareste(int & , int val = 1);
+…
+void Mareste(int & x, int val /* = 1*/){
+    x += val;
+}
+Supraîncărcarea funcțiilor
+Limbajul C++ permite existența mai multor funcții cu același identificator:
+
+ele trebuie să difere prin lista parametrilor formali – prin numărul și/sau tipul lor;
+nu se pot supraîncărca funcții care diferă numai prin tipul rezultatul;
+Exemplu
+
+void Mareste(int & x, int val = 1)
+{
+    x += val; 
+}
+void Mareste(double & x, double val = 1)
+{ 
+    x += val; 
+}
+...
+int n = 7;
+Mareste(n, 3); // n devine 10
+...
+double x = 2.5;
+Mareste(x); //x devine 3.5

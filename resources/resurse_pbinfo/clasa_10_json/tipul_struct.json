@@ -1,0 +1,48 @@
+{
+    "title": "Tipul Struct în C++",
+    "description": "Declararea și utilizarea tipului struct în C++",
+    "tags": ["structuri", "tipuri_date", "C++", "declarare", "variabile"],
+    "sections": [
+        {
+            "title": "Declararea unei Structuri",
+            "subsections": [
+                {
+                    "title": "Sintaxa Generală",
+                    "content": "struct [NUME_STRUCTURĂ] {\n    [TIP1 NUME_CÂMP[, NUME_CÂMP[, ...]];]\n    [TIP2 NUME_CÂMP[, NUME_CÂMP[, ...]];]\n    ...\n} [LISTA DE VARIABILE];",
+                    "explanation": "În acest mod se declară un tip de date cu numele NUME_STRUCTURA și eventual niște variabile de acest tip. NUME_STRUCTURA poate fi folosit ca un tip de date oarecare, de exemplu pentru a declara variabile sau în lista parametrilor formali ai unei funcții."
+                },
+                {
+                    "title": "Exemplu de Declarare",
+                    "code": "struct Persoana {\n    char nume[21], prenume[21], sex;\n    int varsta;\n    double salariu;\n};"
+                }
+            ]
+        },
+        {
+            "title": "Variabile de Tip Structură",
+            "subsections": [
+                {
+                    "title": "Declarare Împreună cu Structura",
+                    "content": "Variabilele pot fi declarate odată cu structura:",
+                    "code": "struct Persoana {\n    char nume[21], prenume[21], sex;\n    int varsta;\n    double salariu;\n} A, B;"
+                },
+                {
+                    "title": "Declarare Separată",
+                    "content": "Variabilele pot fi declarate după declararea structurii:",
+                    "code": "// Corect în C++, dar nu în C\nPersoana A, B;\n\n// Corect atât în C++ cât și în C\nstruct Persoana A, B;"
+                }
+            ]
+        },
+        {
+            "title": "Componentele Declarării",
+            "content": "În declarările de mai sus avem:\n1. Persoana – este un tip de date, similar cu int sau char\n2. A și B – sunt nume de variabile de tip Persoana sau struct Persoana\n3. nume, prenume, sex, varsta, salariu – sunt numele câmpurilor structurii Persoana"
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Câmpurile structurii pot fi utilizate doar prin intermediul variabilelor de tip structură\n2. În C++, numele structurii poate fi folosit direct ca tip de date\n3. În C, trebuie folosit cuvântul cheie struct înaintea numelui structurii\n4. Structurile permit gruparea logică a datelor conexe"
+        },
+        {
+            "title": "Utilizare în Programe",
+            "content": "Tipul struct poate fi folosit pentru:\n1. Declararea variabilelor\n2. Parametri de funcții\n3. Tipuri de return pentru funcții\n4. Declararea tablourilor de structuri\n5. Declararea pointerilor la structuri"
+        }
+    ]
+} 

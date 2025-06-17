@@ -1,0 +1,60 @@
+{
+    "title": "Operații cu Structuri în C++",
+    "description": "Operațiile de bază care se pot efectua cu structuri în C++",
+    "tags": ["structuri", "operații", "C++", "acces_câmpuri", "atribuire", "citire_afișare"],
+    "sections": [
+        {
+            "title": "Referirea Câmpurilor",
+            "subsections": [
+                {
+                    "title": "Operatorul de Acces",
+                    "content": "Se folosește operatorul . (punct) pentru accesul direct la membrii unei structuri.\nForma generală: variabila_de_tip_structura.câmp",
+                    "observations": [
+                        "Rezultatul este câmpul referit și este lvalue (poate fi supus unei atribuiri)",
+                        "Operația nu este comutativă"
+                    ]
+                },
+                {
+                    "title": "Exemplu de Structură",
+                    "code": "struct Persoana {\n    char nume[21], prenume[21], sex;\n    int varsta;\n    double salariu;\n};\nPersoana A, B;"
+                }
+            ]
+        },
+        {
+            "title": "Operații Corecte",
+            "examples": [
+                {
+                    "description": "Operații valide cu câmpurile structurii",
+                    "code": "cin >> A.varsta;\nstrcpy(A.nume, \"Popescu\");\nstrcpy(B.nume, A.nume);\nA.sex = 'M';\nA.salariu = B.salariu + 125.80;\nB.varsta++;"
+                }
+            ]
+        },
+        {
+            "title": "Operații Greșite",
+            "content": "Următoarele operații sunt incorecte:\n1. Persoana.nume - nu se poate accesa un câmp direct din tipul structură\n2. Persoana.A - nu se poate accesa o variabilă direct din tipul structură\n3. varsta.persoana - nu se poate accesa o structură dintr-un câmp"
+        },
+        {
+            "title": "Citirea și Afișarea",
+            "subsections": [
+                {
+                    "title": "Operații Corecte",
+                    "content": "Citirea și afișarea se face câmp cu câmp:",
+                    "code": "cin >> A.nume >> A.prenume >> A.sex >> A.varsta >> A.salariu;\ncout << A.nume << \" \" << A.prenume << \" \" << A.sex << \" \" << A.varsta << \" \" << A.salariu;"
+                },
+                {
+                    "title": "Operații Greșite",
+                    "content": "Nu se pot citi sau afișa structuri întregi:",
+                    "code": "cin >> A;  // GREȘIT!\ncout << B;  // GREȘIT!"
+                }
+            ]
+        },
+        {
+            "title": "Atribuirea",
+            "content": "Singura operație uzuală care se poate efectua cu o variabilă de tip structură este atribuirea:\nA = B\nunde A și B sunt două variabile de același tip structură. Atribuirea se face bit cu bit – fiecare bit din reprezentarea în memorie a variabilei B se copiază corespunzător în reprezentarea în memorie a variabilei A."
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Accesul la câmpuri se face întotdeauna prin intermediul unei variabile de tip structură\n2. Citirea și afișarea se face doar la nivel de câmp\n3. Atribuirea este singura operație care se poate face cu întreaga structură\n4. Toate câmpurile sunt copiate la atribuire, inclusiv tablourile de caractere"
+        }
+    ]
+} 

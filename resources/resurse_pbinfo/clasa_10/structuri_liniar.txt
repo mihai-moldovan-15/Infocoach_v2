@@ -1,0 +1,9 @@
+Algoritmii prelucrează date organizate în diverse moduri:
+
+date simple, neorganizate ca structuri de date;
+date organizate ca strucuri de date liniare – listele: rezultatele la un concurs, lista de cumpărături, etc;
+date organizate ca structuri de date arborescente: organigrama unei instituții, arborele genealogic al unei persoane, regnul animal, etc.
+etc.
+O structură de date reprezintă un ansamblu de date caracterizat prin relațiile dintre acestea și prin operațiile care pot fi realizate cu datele respective.
+
+Datele care fac parte din structură sunt de un tip oarecare, de obicei structurat (tipul C/C++ struct), care nu caracterizează structura de date. Ele se numesc elemente sau noduri și uneori articol sau înregistrare.

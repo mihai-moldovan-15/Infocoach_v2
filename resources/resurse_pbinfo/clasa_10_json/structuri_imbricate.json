@@ -1,0 +1,48 @@
+{
+    "title": "Structuri Imbricate în C++",
+    "description": "Utilizarea structurilor în interiorul altor structuri în C++",
+    "tags": ["structuri", "imbricare", "C++", "tipuri_date", "acces_câmpuri"],
+    "sections": [
+        {
+            "title": "Definiție și Concept",
+            "content": "Structurile imbricate sunt structuri care conțin câmpuri de tip structură. Acest concept permite organizarea mai complexă a datelor și crearea de tipuri de date compuse."
+        },
+        {
+            "title": "Exemplu de Structuri Imbricate",
+            "examples": [
+                {
+                    "title": "Structură Data",
+                    "description": "Structură pentru reprezentarea unei date calendaristice",
+                    "code": "struct Data {\n    int zi, luna, an;\n};"
+                },
+                {
+                    "title": "Structură Persoana",
+                    "description": "Structură care conține un câmp de tip Data",
+                    "code": "struct Persoana {\n    char nume[21], prenume[21], sex;\n    int varsta;\n    Data data_angajarii;\n    double salariu;\n};"
+                }
+            ]
+        },
+        {
+            "title": "Accesarea Câmpurilor",
+            "subsections": [
+                {
+                    "title": "Operații Corecte",
+                    "content": "1. A - acces la întreaga structură Persoana\n2. A.data_angajarii - acces la structura Data din Persoana\n3. A.data_angajarii.an - acces la câmpul an din structura Data",
+                    "example": "Persoana A;\nA.data_angajarii.an = 2024;"
+                },
+                {
+                    "title": "Operații Greșite",
+                    "content": "Următoarele operații sunt incorecte:\n1. A.Data - Data nu este un câmp al structurii Persoana\n2. A.Data.an - Data nu este un câmp valid\n3. A.an.data_angajarii - an este de tip int, nu are câmpuri\n4. A.an.Data - an este de tip int\n5. A.salariu.an - salariu este de tip double"
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Ordinea declarării structurilor este importantă - structura conținută trebuie declarată înaintea structurii care o conține\n2. Accesul la câmpurile structurilor imbricate se face folosind operatorul punct (.) în cascadă\n3. Fiecare nivel de acces trebuie să fie valid - nu se poate accesa un câmp dintr-un tip de date care nu este structură"
+        },
+        {
+            "title": "Utilizare în Programe",
+            "content": "Structurile imbricate sunt utile pentru:\n1. Organizarea datelor complexe\n2. Crearea de tipuri de date mai elaborate\n3. Reprezentarea relațiilor între entități\n4. Gruparea logică a informațiilor conexe"
+        }
+    ]
+} 

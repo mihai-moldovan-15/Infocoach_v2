@@ -1,0 +1,25 @@
+Stars and Bars (Stele și bare) este o metodă de rezolvare a unor probleme de combinatorică. Se poate folosi când trebuie să determinăm numărul de modalități de a grupa un număr dat de obiecte identice.
+
+Teoremă: Numărul de variante de a plasa n obiecte identice în k cutii este egal cu: C(n + k - 1, k - 1).
+
+Demonstrația implică separarea celor n obiecte (stele) în k cutii prin k-1 bare - de unde și numele. De exemplu, configurația următoare are n=7 stele și k=4 cutii:
+**|*|*****|** și corespunde următoarei situații:
+
+* prima cutie conține un obiect
+* a doua cutie conține două obiecte
+* a treia cutie nu conține niciun obiect
+* a patra cutie conține patru obiecte
+
+Configurația este echivalentă cu următoarea configurație de biți: 0100110000, în care bitul 1 corespunde obiectului, iar 1 corespunde barei, |. Toate configurațiile convenabile au n+k-1 biți, dintre care n au valoarea 0 și k-1 au valoarea 1 și corespund submulțimilor cu k-1 elemente ale unei mulțimi cu n+k-1 elemente.
+
+Astfel, numărul lor este C(n+k-1, k-1).
+
+Consecință: Ecuația x₁ + x₂ + x₃ + ... + xₖ = n are C(n+k-1, k-1) soluții întregi nenegative (mai mari sau egale cu 0).
+
+Afirmația este echivalentă cu teorema de mai sus, în care x_i fiind egal cu numărul de obiecte din cutia i.
+
+Teoremă: Numărul de variante de a plasa n obiecte identice în k cutii astfel încât fiecare cutie conține cel puțin un obiect este egal cu: C(n-1, k-1).
+
+Demonstrația 1: Fixăm în fiecare cutie câte un obiect. Rămân n-k obiecte care trebuie plasate în k cutii, în condițiile teoremei de mai sus. Astfel, numărul de variante este C((n-k)+k-1, k-1) = C(n-1, k-1).
+
+Demonstrația 2: Folosim metoda Stars and bars. Separarea obiectelor în cutii se face plasând k bare în golurile dintre obiecte. Sunt n-1 goluri în care putem plasa k bare în C(n-1, k-1) moduri.

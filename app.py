@@ -49,7 +49,7 @@ def load_user(user_id):
 # === Already created vector-stores (replace with actual IDs obtained at upload) ===
 vector_stores = {
     "9": client.vector_stores.retrieve("vs_683acc055d98819186a2cd0fbf7c6ed4"),
-    "10": client.vector_stores.retrieve("vs_68336c5facbc8191becf60fe5b02fa8e"),
+    "10": client.vector_stores.retrieve("vs_6851c43ad020819182dce3fa43d42afe"),
     "11-12": client.vector_stores.retrieve("vs_68336c5f54748191bc3a4e9e632103a4")
 }
 
@@ -461,7 +461,7 @@ def new_conversation():
 def index():
     user_input = ''
     output = ''
-    clasa = '9'
+    clasa = current_user.clasa or '9'
     chat_history = []
 
     # Get all conversations for sidebar
@@ -485,7 +485,7 @@ def index():
 
     if request.method == 'POST':
         user_input = request.form.get('user_input', '')
-        clasa = request.form.get('clasa', '9')
+        clasa = request.form.get('clasa', current_user.clasa or '9')
         # Use conversation_id from form if present
         form_conversation_id = request.form.get('conversation_id')
         if form_conversation_id:
@@ -551,7 +551,7 @@ def index():
 @login_required
 def chat_api():
     user_input = request.form.get('user_input', '')
-    clasa = request.form.get('clasa', '9')
+    clasa = request.form.get('clasa', current_user.clasa or '9')
     conversation_id = request.form.get('conversation_id')
     if conversation_id:
         conversation_id = int(conversation_id)
@@ -1145,62 +1145,99 @@ def api_problem_search():
 @app.route('/api/run_code', methods=['POST'])
 def api_run_code():
     data = request.get_json()
-    code = data.get('code', '')
+    if not data:
+        return jsonify({'error': 'Invalid request data'}), 400
+        
+    code = data.get('code', '').strip()
     files = data.get('files', [])  # list of {name, content}
     custom_input = data.get('custom_input') or data.get('input') or ''
+    
+    # Validate input
+    if not code:
+        return jsonify({'error': 'No code provided'}), 400
+        
+    # Validate file names and content
+    for file in files:
+        if not isinstance(file, dict) or 'name' not in file or 'content' not in file:
+            return jsonify({'error': 'Invalid file format'}), 400
+        if not file['name'] or not isinstance(file['name'], str):
+            return jsonify({'error': 'Invalid file name'}), 400
+        if not isinstance(file['content'], str):
+            return jsonify({'error': 'Invalid file content'}), 400
+            
     main_filename = 'main.cpp'
     result = {'success': False, 'output': '', 'error': ''}
     tempdir = tempfile.mkdtemp(prefix='cpp_run_')
+    
     try:
-        # Scrie main.cpp
+        # Write main.cpp with proper encoding
         with open(f'{tempdir}/{main_filename}', 'w', encoding='utf-8') as f:
             f.write(code)
-        # Scrie fișiere suplimentare, dar ignoră orice .out venit de la utilizator
+            
+        # Write additional files with proper validation
         for fobj in files:
             fname = fobj.get('name')
             fcontent = fobj.get('content', '')
             if fname and fname != main_filename and not fname.endswith('.out'):
+                # Validate file path to prevent directory traversal
+                if '..' in fname or '/' in fname or '\\' in fname:
+                    raise ValueError('Invalid file path')
                 with open(f'{tempdir}/{fname}', 'w', encoding='utf-8') as ff:
                     ff.write(fcontent)
-        # Verifică dacă există fișier .in printre fișierele trimise
+                    
+        # Check for input file
         has_in_file = any(fobj['name'].endswith('.in') for fobj in files)
-        # Comenzi pentru Docker
-        compile_cmd = f"g++ -O2 -std=c++17 main.cpp -o main 2> compile_err.txt"
-        # Dacă există fișier .in, folosește-l ca input, altfel rulează fără redirect
+        
+        # Compile command with additional security flags
+        compile_cmd = f"g++ -O2 -std=c++17 -Wall -Wextra -Werror main.cpp -o main 2> compile_err.txt"
+        
+        # Find input file if exists
         input_file = None
         for fobj in files:
             if fobj['name'].endswith('.in'):
                 input_file = fobj['name']
                 break
+                
+        # Run command with timeout and resource limits
         run_cmd = f"timeout 2s ./main"
         if input_file:
             run_cmd += f" < {input_file}"
             run_cmd += " > program_out.txt 2> runtime_err.txt"
-            # Rulează în Docker cu shell pentru redirecturi
+            
+            # Run in Docker with enhanced security
             docker_cmd = [
                 'docker', 'run', '--rm',
                 '--network', 'none',
                 '--memory', '256m', '--cpus', '0.5',
-                '-v', f'{tempdir}:/workspace',
+                '--security-opt', 'no-new-privileges',
+                '--cap-drop', 'ALL',
+                '-v', f'{tempdir}:/workspace:ro',
                 '-w', '/workspace',
                 'cpp-runner',
                 '/bin/bash', '-c', f"{compile_cmd} && {run_cmd}"
             ]
-            proc = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=10)
-            # După execuție, citește erorile de compilare
+            
+            try:
+                proc = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=10)
+            except subprocess.TimeoutExpired:
+                result['error'] = 'Execution timed out'
+                return jsonify(result)
+                
+            # Read compilation errors
             compile_err = ''
             try:
                 with open(f'{tempdir}/compile_err.txt', 'r', encoding='utf-8') as f:
                     compile_err = f.read().strip()
             except Exception:
                 pass
+                
             if compile_err:
                 result['output'] = ''
                 result['error'] = compile_err
                 result['success'] = False
-                shutil.rmtree(tempdir, ignore_errors=True)
                 return jsonify(result)
-            # Citește stdout și stderr
+                
+            # Read program output and errors
             prog_out = ''
             runtime_err = ''
             try:
@@ -1210,7 +1247,8 @@ def api_run_code():
                     runtime_err = f.read().strip()
             except Exception:
                 pass
-            # Citește toate fișierele .out generate
+                
+            # Read any generated .out files
             out_files = glob.glob(f'{tempdir}/*.out')
             file_outputs = []
             for out_file in out_files:
@@ -1219,6 +1257,8 @@ def api_run_code():
                         file_outputs.append(f.read().strip())
                 except Exception:
                     pass
+                    
+            # Combine outputs
             combined_output = ''
             if file_outputs:
                 combined_output += '\n'.join(file_outputs)
@@ -1227,48 +1267,67 @@ def api_run_code():
                     combined_output += '\n' + prog_out
                 else:
                     combined_output = prog_out
+                    
             if runtime_err:
                 result['output'] = ''
                 result['error'] = runtime_err
                 result['success'] = False
             else:
-                result['output'] = combined_output if combined_output else '(fără output)'
+                result['output'] = combined_output if combined_output else '(no output)'
                 result['error'] = ''
                 result['success'] = True
-            shutil.rmtree(tempdir, ignore_errors=True)
+                
             return jsonify(result)
+            
         else:
-            # Compilează separat
+            # Compile separately with enhanced security
             compile_docker_cmd = [
                 'docker', 'run', '--rm',
                 '--network', 'none',
                 '--memory', '256m', '--cpus', '0.5',
-                '-v', f'{tempdir}:/workspace',
+                '--security-opt', 'no-new-privileges',
+                '--cap-drop', 'ALL',
+                '-v', f'{tempdir}:/workspace:ro',
                 '-w', '/workspace',
                 'cpp-runner',
-                'g++', '-O2', '-std=c++17', 'main.cpp', '-o', 'main'
+                'g++', '-O2', '-std=c++17', '-Wall', '-Wextra', '-Werror', 'main.cpp', '-o', 'main'
             ]
-            compile_proc = subprocess.run(compile_docker_cmd, capture_output=True, text=True, timeout=10)
+            
+            try:
+                compile_proc = subprocess.run(compile_docker_cmd, capture_output=True, text=True, timeout=10)
+            except subprocess.TimeoutExpired:
+                result['error'] = 'Compilation timed out'
+                return jsonify(result)
+                
             if compile_proc.returncode != 0:
                 result['output'] = ''
                 result['error'] = compile_proc.stderr + '\n' + compile_proc.stdout
                 result['success'] = False
-                shutil.rmtree(tempdir, ignore_errors=True)
                 return jsonify(result)
-            # Rulează cu stdin din custom_input
+                
+            # Run with custom input
             run_docker_cmd = [
                 'docker', 'run', '--rm',
-                '-i',  # <-- flag pentru stdin
+                '-i',
                 '--network', 'none',
                 '--memory', '256m', '--cpus', '0.5',
-                '-v', f'{tempdir}:/workspace',
+                '--security-opt', 'no-new-privileges',
+                '--cap-drop', 'ALL',
+                '-v', f'{tempdir}:/workspace:ro',
                 '-w', '/workspace',
                 'cpp-runner',
                 './main'
             ]
-            proc = subprocess.run(run_docker_cmd, input=custom_input, capture_output=True, text=True, timeout=10)
+            
+            try:
+                proc = subprocess.run(run_docker_cmd, input=custom_input, capture_output=True, text=True, timeout=10)
+            except subprocess.TimeoutExpired:
+                result['error'] = 'Execution timed out'
+                return jsonify(result)
+                
             prog_out = proc.stdout.strip()
             runtime_err = proc.stderr.strip()
+            
             if runtime_err:
                 result['output'] = ''
                 result['error'] = runtime_err
@@ -1277,13 +1336,19 @@ def api_run_code():
                 result['output'] = prog_out
                 result['error'] = ''
                 result['success'] = True
-            shutil.rmtree(tempdir, ignore_errors=True)
+                
             return jsonify(result)
-    except subprocess.TimeoutExpired:
-        result['error'] = 'Execuția a depășit limita de timp.'
+            
     except Exception as e:
-        result['error'] = f'Eroare la execuție: {e}'
-    return jsonify(result)
+        result['error'] = f'Execution error: {str(e)}'
+        return jsonify(result)
+        
+    finally:
+        # Clean up temporary directory
+        try:
+            shutil.rmtree(tempdir, ignore_errors=True)
+        except Exception:
+            pass
 
 # === Route for sending message ===
 @app.route('/send_message', methods=['POST'])

@@ -1,0 +1,31 @@
+{
+    "title": "Codul ASCII",
+    "description": "Explicație detaliată a codului ASCII și utilizarea sa în programare",
+    "tags": ["C++", "ASCII", "caractere", "codificare", "reprezentare", "biți"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "ASCII (American Standard Code for Information Interchange) este o formă de reprezentare în calculator a caracterelor folosită în toate limbajele de programare studiate în liceu. Codul ASCII standard codifică caracterele folosind 7 biți, permitând codificarea a 2⁷=128 caractere."
+        },
+        {
+            "title": "Caractere Imprimabile",
+            "content": "Caracterele imprimabile au codurile ASCII în intervalul 32-126 și includ:\n\n1. Literele mari: A-Z (coduri 65-90)\n2. Literele mici: a-z (coduri 97-122)\n3. Cifrele: 0-9 (coduri 48-57)\n4. Semnele de punctuație: .,:;!?'\"\n5. Operatori aritmetici: + - / * <> = (){}[]\n6. Alte caractere: ~`@#$%^&_\\|\n7. Caracterul spațiu (codul 32)"
+        },
+        {
+            "title": "Caractere Neimprimabile",
+            "content": "Caracterele neimprimabile (de control) au codurile 0-31 și 127. Două caractere importante sunt:\n\n1. Caracterul nul (codul 0, '\\0') - marchează sfârșitul unui șir de caractere\n2. Line Feed (codul 10, '\\n') - produce trecerea la rând nou"
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Literele mari și mici au coduri ASCII diferite\n2. Codurile literelor mari sunt consecutive (A=65, B=66, ..., Z=90)\n3. Codurile literelor mici sunt consecutive (a=97, b=98, ..., z=122)\n4. Diferența între o literă mică și corespondenta sa mare este 32\n5. Cifrele au coduri consecutive (0=48, 1=49, ..., 9=57)\n6. Caracterul spațiu are codul 32"
+        },
+        {
+            "title": "Limitări",
+            "content": "Codul ASCII standard nu include:\n\n1. Literele cu diacritice (ă, â, î, ș, ț, etc.)\n2. Literele din alte alfabete (chirilic, ebraic, arab, chinez, etc.)\n\nPentru aceste caractere se folosește codul ASCII Extins sau Unicode."
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Folosiți constantele caracter pentru comparații ('A' în loc de 65)\n2. Atenție la diferența dintre litere mari și mici\n3. Verificați codurile ASCII când lucrați cu caractere speciale\n4. Folosiți Unicode pentru suport multilingv\n5. Documentați clar codificarea folosită în aplicație"
+        }
+    ]
+} 

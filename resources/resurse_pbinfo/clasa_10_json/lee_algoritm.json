@@ -1,0 +1,40 @@
+{
+    "title": "Algoritmul lui Lee",
+    "description": "Explicație detaliată a algoritmului lui Lee pentru determinarea drumului minim într-un labirint",
+    "tags": ["algoritmi", "labirint", "BFS", "coadă", "C++", "traseu_minim"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Algoritmul lui Lee este folosit pentru determinarea ieșirii dintr-un labirint sau în alte probleme similare cu aceasta. Considerăm un labirint reprezentat printr-o matrice cu n linii și m coloane, în care elementele egale cu 0 reprezintă camere libere, iar cele egale cu 1 reprezintă camere blocate."
+        },
+        {
+            "title": "Principii de Funcționare",
+            "content": "Pentru rezolvarea problemei procedăm astfel:\n\n1. Marcăm în matrice elementele libere cu 0, iar obstacolele cu -1\n2. Marcăm poziția de start cu 1\n3. Pentru fiecare k=1,2,3,...:\n   - Analizăm elementele marcate cu valoarea k\n   - Marcăm cu k+1 toți vecinii săi care sunt liberi și nemarcați\n4. Dacă pentru un anumit k nu găsim niciun element egal cu k, ne oprim"
+        },
+        {
+            "title": "Implementare cu Coadă",
+            "content": "void Lee(int istart, int jstart) {\n    queue<pair<int,int>> Q;\n    // initializare coada\n    Q.push(make_pair(istart, jstart));\n    // marcare pozitie de start\n    A[istart][jstart] = 1;\n    while(!Q.empty()) { // cat timp coada este nevida\n        int i = Q.front().first, j = Q.front().second;\n        for(int k = 0; k < 4; k++) {\n            int iv = i + di[k], jv = j + dj[k];\n            if(iv >= 1 && iv <= n && jv >= 1 && jv <= m // element în matrice\n                && A[iv][jv] == 0) // element liber si nemarcat\n            {\n                A[iv][jv] = A[i][j] + 1;\n                Q.push(make_pair(iv, jv));\n            }\n        }\n        Q.pop();\n    }\n}"
+        },
+        {
+            "title": "Reconstituirea Traseului",
+            "subsections": [
+                {
+                    "title": "Reconstituire Recursivă",
+                    "content": "void Traseu(int i, int j, int lg) {\n    if(A[i][j] == 1) {\n        cout << lg << \"\\n\";\n        cout << i << \" \" << j << \"\\n\";\n    }\n    else {\n        int p = -1;\n        for(int k = 0; k < 4 && p == -1; k++)\n            if(A[i][j] == A[i+di[k]][j+dj[k]] + 1)\n                p = k;\n        Traseu1(i + di[p], j + dj[p], lg + 1);\n        cout << i << \" \" << j << \"\\n\";\n    }\n}"
+                },
+                {
+                    "title": "Reconstituire Iterativă",
+                    "content": "void Traseu2(int istop, int jstop) {\n    vector<pair<int,int>> V;\n    int i = istop, j = jstop;\n    V.push_back(make_pair(i, j));\n    do {\n        int p = -1;\n        for(int k = 0; k < 4 && p == -1; k++)\n            if(A[i][j] == A[i+di[k]][j+dj[k]] + 1)\n                p = k;\n        i = i + di[p], j = j + dj[p];\n        V.push_back(make_pair(i, j));\n    }\n    while(A[i][j] != 1);\n    cout << V.size() << '\\n';\n    for(vector<pair<int,int>>::reverse_iterator I = V.rbegin(); I != V.rend(); I++)\n        cout << I->first << \" \" << I->second << '\\n';\n}"
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Algoritmul folosește o coadă pentru eficiență\n2. Complexitatea este O(n*m) în timp și spațiu\n3. Se poate reconstitui traseul în două moduri: recursiv sau iterativ\n4. Algoritmul garantează drumul minim\n5. Se poate extinde pentru mai multe direcții de mișcare"
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Verificați limitele matricei\n2. Folosiți vectori de direcții pentru vecini\n3. Alegeți metoda de reconstituire potrivită (recursivă/iterativă)\n4. Atenție la gestionarea memoriei\n5. Considerați optimizări pentru cazuri speciale"
+        }
+    ]
+} 

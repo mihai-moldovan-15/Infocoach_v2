@@ -1,0 +1,103 @@
+În numeroase probleme de informatică se cere determinarea restului împărțirii unui anumit număr (de regulă rezultat ale unui calcul) la o valoare dată, N. De cele mai multe ori numărul nu poate fi determinat direct, valoarea sa fiind prea mare. În aceste situații intervine aritmetica modulară, în care restul cerut se determină făcând operații cu resturi la împărțirea cu N a unor rezultate parțiale.
+
+Fie N >= 1 un număr natural și două numere întregi a și b. Spunem că a și b sunt congruente modulo N, a = b mod N dacă N|(a - b). Echivalent, dacă a și b dau același rest la împărțirea cu N.
+
+Adunarea și înmulțirea
+
+Avem următoarele reguli - spunem că congruența modulo n este compatibilă cu adunarea și înmulțirea numerelor întregi:
+
+* Dacă a = x mod N și b = y mod N, atunci a + b = x + y mod N.
+* Dacă a = x mod N și b = y mod N, atunci a * b = x * y mod N.
+
+Consecințe (C/C++):
+
+* având două numere naturale a, b, iar N > 1 un număr natural:
+    o restul împărțirii sumei la N este (a + b) % N = ( (a % N) + (b % N) ) % N
+    o restul împărțirii produsului la N este (a * b) % N = ( (a % N) * (b % N) ) % N
+* având n numere naturale A[1], A[2], ..., A[n], restul împărțirii la N a produsului lor se determină astfel:
+
+```cpp
+int P = 1;
+for (int i = 1; i <= n; i++)
+{
+    P = (P * A[i]) % N;
+}
+pentru a calcula restul împărțirii la N a lui N! - N factorial:
+C++
+
+int P = 1;
+for (int i = 1; i <= n; i++)
+{
+    P = (P * i) % N;
+}
+Scăderea
+
+Fie numerele naturale a >= b, și N >= 1. Deși congruența modulo N este compatibilă cu operația de scădere, expresia (a - b)%N = ( (a%N) - (b%N) )%N nu este întotdeauna corectă.
+
+Mai precis, chiar dacă a >= b, deci (a - b)>=0, expresia (a%N - b%N) și deci (a%N - b%N)%N poate fi negativă. Situația poate fi rezolvată ușor, adunând la X=(a%N - b%N)%N valoarea N, astfel X nemaifiind negativ.
+
+Exemplu: Fie N = 2, două numere naturale, 1 <= n <= 1000. Determinați restul împărțirii lui m!-n! la 1009.
+
+Rezolvare: Fie N = 1009. Deoarece numere sunt mari, nu putem calcula factorialele. Vom calcula A = m! % N, B = n! % N, apoi X = (A - B) % N. Dacă X este negativ, vom aduna la X valoarea N, acesta fiind și rezultatul.
+
+Următoarea secvență C++ implementează ideea de mai sus:
+int n , m;
+const int N = 1009;
+cin >> n >> m; // n <= m
+int  A = 1, B = 1;
+for(int i = 1 ; i <= m ; i ++)
+    A = (A * i) % N;
+for(int i = 1 ; i <= n ; i ++)
+    B = (B * i) % N;
+int X = A - B;
+if(X < 0)
+    X += N;
+cout << X;
+
+Împărțirea. Inversul modular
+
+Congruența modulo N nu este compatibilă cu împărțirea. Consecința este că (B/A) % N != ( (B % N) / (A % N) ) % N. Pentru a determina rezultatul modulo N al unor expresii în care intervin împărțiri vom folosi inversul modular.
+
+Acesta permite transformarea expresiei B/A % N într-o înmulțire și poate fi determinat numai dacă numerele A și N sunt prime între ele.
+
+Mai precis, dacă 1 <= A < N, inversul lui A modulo N este un număr natural 1 <= A^(-1) < N cu proprietatea că A * A^(-1) = 1 mod N.
+Atunci (B/A) % N = (B * A^(-1)) % N = ((B % N) * (A^(-1) % N)) % N.
+
+Există mai multe modalități de a determina inversul modular. În cele ce urmează vom nota inversul modular al lui A cu I.
+
+O primă variantă este să analizăm fiecare număr k cuprins între 1 și N-1. Dacă A * k % N este 1, atunci I=k. Complexitatea este O(N).
+
+Aplicând teorema lui Euler, A^φ(N) = 1 (mod N), unde φ(N) este indicatorul lui Euler. Atunci A * A^(φ(N)-1) = 1 (mod N), deci I = A^(φ(N)-1) mod N. Acest rezultat poate fi determinat folosind exponențierea rapidă cu complexitatea O(log₂N). Putem calcula indicatorul lui Euler cu complexitatea O(√N). deci complexitatea determinării inversului modular devine O(log₂N * √N).
+
+Dacă N este prim, atunci φ(N) = N-1, deci I = A^(N-2) mod N. Pentru determinare folosim exponențierea rapidă.
+
+Cea mai eficientă metodă de a determina inversul modular folosește algoritmul lui Euclid extins, pentru A și N. Conform acestuia, există X și Y astfel încât A*X + N*Y = 1, deoarece 1=cmmdc(A, N), A și N fiind prime între ele. Trecând la operațiile modulo N, obținem A * X = 1 mod N, deoarece N * Y = 0 mod N. De aici rezultă că inversul modular al lui A modulo N este chiar X. Dacă X determinat astfel este negativ, îl vom mări cu N până când devine pozitiv.
+
+Următoarea secvență C++ determină inversul modular al lui A, modulo N:
+void euclid(int a , int b ,int & x ,int & y)
+{
+    if(b == 0)
+    {
+        x = 1, y = 1;
+    }
+    else
+    {
+        int x1 , y1;
+        euclid(b , a % b , x1 , y1);
+        x = y1;
+        y = x1 - a / b * y1;
+    }
+}
+
+int main()
+{
+    int A = 9, N = 11; // prime intre ele, 1 <= A < N
+    int X , Y;
+    euclid(A, N , X ,Y);
+    while(X < 0)
+        X += N;
+    cout << X; // 5
+    return 0;
+}
+
+Inversul modular poate fi folosit, de exemplu pentru a calcula(Combinari de n luate cate k) modulo P, unde P este un număr prim.

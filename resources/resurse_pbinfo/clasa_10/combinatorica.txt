@@ -1,0 +1,131 @@
+Analiza combinatorică este un domeniu al matematicii care studiază modalitățile de numărare ale elementelor mulțimilor finite, precum și de alegere și aranjare a lor. Numeroase concepte specifice acestui domeniu intervin și în probleme de algoritmică.
+Produsul cartezian
+Produsul cartezian
+
+Fie n ∈ N și mulțimile A₁, A₂, ..., An. Produsul cartezian A₁ × A₂ × ... × An este mulțimea n-tuplelor (x₁, x₂, ..., xn) cu proprietatea că x₁ ∈ A₁, x₂ ∈ A₂, ..., xn ∈ An.
+
+Regula produsului: Dacă mulțimile A₁, A₂, ..., An au respectiv k₁, k₂, ..., kn, atunci numărul de elemente al produsului cartezian A₁ × A₂ × ... × An este k₁ × k₂ × ... × kn.
+
+Submulțimile unei mulțimi
+
+Fie A o mulțimi cu n elemente. Atunci ea are 2ⁿ submulțimi.
+
+Exemplu: Mulțimea A = {1, 2, 3} are 2³ = 8 submulțimi:
+1. ∅
+2. {1}, {2}, {3}
+3. {1, 2}, {1, 3}, {2, 3}
+4. {1, 2, 3}
+
+Permutări
+
+Se numește permutare o corespondență biunivocă (bijecție) între o mulțime finită și ea însăși.
+
+Altfel spus, se numește permutare a unei mulțimi finite o aranjare a elementelor sale într-o anumită ordine.
+
+Exemplu: permutările mulțimii {1, 2, 3} sunt: (1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2) și (3, 2, 1). Într-o altă reprezentare, acestea sunt:
+
+(1 2 3)  (1 2 3)  (1 2 3)  (1 2 3)  (1 2 3)  (1 2 3)
+(1 2 3), (1 3 2), (2 1 3), (2 3 1), (3 1 2), (3 2 1)
+
+Dacă σ = (1 2 3), atunci σ(1) = 3, σ(2) = 1 și σ(3) = 2.
+           (3 1 2)
+
+Numărul de permutări al unei mulțimi cu n elemente este Pn = n! = 1 × 2 × ... × n. Acest articol conține mai multe despre factorialul unui număr.
+
+Numărul permutărilor unei mulțimi crește foarte repede. Pentru valori mici ale lui n, numărul permutărilor depășește domeniul de valori al datelor întregi, fiind necesară implementarea operațiilor de numere mari.
+
+Permutări cu repetiție
+
+Considerăm un set de n obiecte de k tipuri. Avem n₁ obiecte de tipul 1, n₂ obiecte d tipul 2, ..., nₖ obiecte de tipul k și n₁ + n₂ + ... + nₖ = n. Numărul de permutări distincte ale celor n obiecte este:
+
+Pₙ(n) = n! / (n₁! n₂! ... nₖ!)
+
+Exemplu: Numărul de anagrame distincte ale cuvântului ABABBA este:
+
+P_R(2 + 3) = (2 + 3)! / (2! 3!) = (1 * 2 * 3 * 4 * 5) / ( (1 * 2) * (1 * 2 * 3) ) = 10
+
+Acestea sunt: AABABB, AABBAA, ABABBA, ABABAA, ABBABA, ABBAAB, BAABAB, BAABBA, BBAAAB, BBAABA.
+
+Aranjamente
+
+Dacă A este o mulțime cu n elemente, submulțimile ordonate cu k elemente ale lui A, 0 ≤ k ≤ n se numesc aranjamente a n elemente luate câte k.
+
+Numărul de aranjamente de n luate câte k se notează Aₙᵏ = n * (n - 1) * (n - 2) * ... * (n - k + 1) = n! / (n - k)!.
+
+La fel ca în cazul permutărilor, pentru determinarea numărului de aranjamente poate fi necesară implementarea operațiilor pe numere mari.
+Combinări
+
+O mulțime dată o combinare reprezintă o modalitate de alegere a unor elemente, fără ține cont de ordinea lor. Se numesc combinări de k elemente submulțimile cu k elemente ale mulțimii, presupuse cu n elemente. Numărul de asemenea submulțimi se numește combinări de n luate câte k și se notează C(n, k) sau nCk.
+
+Formule:
+
+C(n, k) = A(n, k) / Pk = (n * (n-1) * ... * (n-k+1)) / k! = n! / (k! * (n-k)!)
+
+C(n, k) =
+  1, dacă k = 0
+  n, dacă k = 1
+  C(n, k-1) * (n-k+1) / k, altfel.
+
+C(n, k) = C(n, n-k), dacă n >= k sau k = 0; această formulă se regăsește în Triunghiul lui Pascal.
+
+C(n, k) = C(n-1, k) + C(n-1, k-1), altfel.
+
+Numerele lui Catalan
+
+Termenul general al acestui șir este:
+
+Cn = C(2n, n) - C(2n, n-1) = (1 / (n+1)) * C(2n, n) = Produs de la k=2 la n de (n+k)/k , pentru n >= 0
+
+O formulă recursivă:
+
+C(n+1) = Suma de la i=0 la n de Ci * C(n-i)
+
+Pentru n = 0, 1, 2, 3, ... numere Catalan sunt: 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, ...
+
+Există numeroase probleme care au ca rezultat numerele lui Catalan. Amintim:
+
+* Cn este egal cu numărul de șiruri de n paranteze deschise și n paranteze închise care se închid corect. Pentru n=3, avem C3 = 5 variante: (((()))), (()()()), (())(()), ()(()()), ()()().
+* Numărul de cuvinte Dyck de lungime 2*n formate din n caractere X și n caractere Y și în orice prefix numărul de X este mai mare sau egal cu numărul de Y. Pentru n=3: XXXYYY, XYXYXY, XYXXYY, XXYYXY, XXYXYY.
+* Numărul de șiruri formate din n de 1 și n de -1 astfel încât toate sumele parțiale să fie nenegative.
+* Cn reprezintă numărul de modalități de a paranteza o expresie formată din n+1 operanzi ai unei operații asociative: ((ab)c)d, (a(bc))d, (ab)(cd), a((bc)d), a(b(cd)).
+* Cn reprezintă numărul de modalități de a desena "șiruri de munți" cu n linii crescătoare și n linii descrescătoare. Munții încep și se termină la același nivel și nu coboară sub acel nivel:
+* numărul de drumuri laticiale de la punctul (0,0) la (2*n,0) cu pași din (1,1),(1,-1) care nu coboară sub axa Ox.
+* Cn este numărul de modalități de a triangula un poligon cu n+2 laturi
+* Cn este umărul de drumuri laticiale de la (0,0) la (n,n) cu pași din {(0,1),(1,0)} care nu depășesc prima diagonală y = x. 
+* pe un cerc sunt 2*n puncte. Numărul posibilități de a desena n coarde care nu se intersectează este Cn.
+Partițiile unei mulțimi
+
+Fie A = {a₁, a₂, ..., an} o mulțime (finită). Se numește partiție a mulțimii A o familie de submulțimi A₁, A₂, ..., Aₖ ale lui A cu proprietățile:
+
+1. Aᵢ ⊂ A, ∀i = 1, K
+2. A₁ ∪ A₂ ∪ ... ∪ Aₖ = A
+3. Aᵢ ∩ Aⱼ = ∅, ∀i ≠ j
+
+De exemplu, A = {1, 2, 3} are următoarele partiții:
+
+* {1, 2, 3}
+* {1, 2}, {3}
+* {1, 3}, {2}
+* {2, 3}, {1}
+* {1}, {2}, {3}
+
+Numărul de partiții cu k submulțimi ale unei mulțimi cu n elemente se numește numărul lui Stirling de speța a doua, notat S(n, k). El respectă următoarea relație de recurență:
+
+S(0, 0) = 1
+S(n, 0) = 0
+S(n + 1, k) = k * S(n, k) + S(n, k - 1)  pentru k > 0
+
+Numerele Stirling de speța a doua pe Wikipedia
+
+Numărul total de partiții ale unei mulțimi cu n elemente este numărul lui Bell:
+
+B_n = Suma de la k=0 la n de S(n, k)
+
+Începând cu B₀ = B₁ = 1, primele numere Bell sunt: 1, 1, 2, 5, 15, 52, 203, 877, 4140, ...
+
+Numerele Bell pot fi construite cu ajutorul așa-numitului triunghi Bell. Vom construi (parțial) un tablou A[][]:
+
+* A[0][1] = 1
+* primul element de pe liniile următoare este egal cu ultimul de pe linia precedentă: A[i][1] = A[i-1][i]
+* celelalte elemente ale fiecărei linii sunt egale cu suma celor două elemente din stânga (linia curentă și linia precedentă): A[i][j] = A[i][j-1] + A[i-1][j-1], pentru j >= 2, ..., i+1
+* primul element de pe fiecare linie este numărul Bell corespunzător: B_n = A[n][1].

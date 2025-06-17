@@ -1,0 +1,103 @@
+Ridicarea la putere este o operație binecunoscută, formulă uzuală fiind:
+A^n = Produs de la i=1 la n de A = A x A x ... x A (de n ori)
+Un algoritm care implementează această metodă va avea complexitate liniară, O(n):
+int Putere(int A , int n)
+{
+    int P = 1 ;
+    for(int i = 1 ; i <= n ; i ++)
+        P = P * A;
+    return P;
+}
+Descriere
+O metodă mai bună este cea numită exponențierea rapidă , sau ridicarea la putere în timp logaritmic, complexitatea sa fiind O(log2 n). Ea se bazează pe următoarea formulă:
+A^n =
+  1, dacă n = 0
+  A * A^(n-1), dacă n e impar
+  (A^(n/2))^2, dacă n e par
+
+Exemplu
+Să calculăm 2^25:
+
+* 2^25 = 2^24 * 2, deoarece 25 este impar
+* 2^24 = (2^12)^2, deoarece 24 este par
+* 2^12 = (2^6)^2, deoarece 12 este par
+* 2^6 = (2^3)^2, deoarece 6 este par
+* 2^3 = 2^2 * 2, deoarece 3 este impar
+* 2^2 = (2^1)^2, deoarece 2 este par
+* 2^1 = 2^0 * 2, deoarece 1 este impar
+* 2^0 = 1
+
+Atunci în ordine inversă:
+
+* 2^1 = 2 * 1 = 2
+* 2^2 = 2 * 2 = 4
+* 2^3 = 2 * 4 = 8
+* 2^6 = 8^2 = 64
+* 2^12 = 64^2 = 4096
+* 2^24 = 4096^2 = 16777216
+* 2^25 = 2 * 16777216 = 33554432
+
+Constatăm că numărul înmulțirilor efectuate este mult mai mic decât în cazul primei metode.
+
+Implementare recursivă
+
+Implementarea recursivă este directă:
+
+int Putere(int A, int n)
+{
+    if (n == 0)
+    {
+        return 1;
+    }
+    if (n % 2 == 1) // n e impar
+    {
+        return A * Putere(A, n - 1);
+    }
+    // n e par
+    int P = Putere(A, n / 2);
+    return P * P;
+}
+
+Implementare iterativă
+
+Să considerăm A^25. S-a-l scriem pe 25 ca sumă de puteri ale lui 2 (orice număr natural poate fi scris ca sumă de puteri ale lui 2 într-un singur mod): 25 = 1 + 8 + 16.
+
+Atunci A^25 = A^(1+8+16) = A^1 * A^8 * A^16 = (A^1)^1 * (A^2)^0 * (A^4)^0 * (A^8)^1 * (A^16)^1. Observăm că exponenții 0 și 1 sunt cifrele reprezentării în baza 2 a lui 25.
+
+Se figurează următoarea idee, pentru a determina A^n:
+
+* vom determina un produs P, format din factori de forma A^1, A^2, A^4, A^8, ...
+* determinăm cifrele reprezentării în baza 2 a lui n, începând cu cea mai semnificativă:
+    * dacă cifra curentă este 1, înmulțim pe P cu A; P = P * A;
+    * înmulțim pe A cu el însuși: A = A * A; obținând următoarea putere din șirul de mai sus
+
+Implementare C++:
+int Putere(int A, int n)
+{
+    int P = 1;
+    while (n)
+    {
+        if (n % 2 == 1) // n este impar (ultima cifră a lui n în binar este 1)
+        {
+            P = P * A;
+        }
+        A = A * A; // A devine A^2, A^4, A^8, ...
+        n = n / 2; // eliminăm ultima cifră a lui n în binar
+    }
+    return P;
+}
+altă variantă, care folosește operațiile pe biți:
+
+int Putere(int A, int n)
+{
+    int P = 1;
+    for (int k = 1; k <= n; k <<= 1) // k va lua valorile 1, 2, 4, 8, ...
+    {
+        if ((n & k) != 0) // dacă bitul corespunzător lui k în n este 1
+        {
+            P = P * A;
+        }
+        A = A * A; // A devine A^2, A^4, A^8, ...
+    }
+    return P;
+}

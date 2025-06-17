@@ -1,0 +1,53 @@
+{
+    "title": "Transmiterea Parametrilor în C++",
+    "description": "Explicație detaliată a mecanismelor de transmitere a parametrilor în C++",
+    "tags": ["C++", "funcții", "parametri", "referințe", "valoare", "transmitere"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Parametrii din antetul unei funcții se numesc parametri formali, iar cei din apelul funcției se numesc parametri efectivi. Între aceștia trebuie să existe o anumită corespondență în ceea ce privește numărul și tipul lor."
+        },
+        {
+            "title": "Corespondența Parametrilor",
+            "content": "1. Numărul parametrilor formali și cel al parametrilor actuali trebuie să fie același\n2. Tipul parametrilor formali trebuie să fie același cu cel al parametrilor actuali, sau să se poată face o conversie implicită\n3. Numele parametrilor formali nu trebuie să fie aceiași cu numele parametrilor actuali corespunzători"
+        },
+        {
+            "title": "Mecanisme de Transmitere",
+            "subsections": [
+                {
+                    "title": "Transmiterea prin Valoare",
+                    "content": "În cazul transmiterii parametrilor prin valoare:\n\n1. Parametrii formali sunt copii ale valorilor parametrilor actuali\n2. Parametri actuali pot fi expresii ale căror valori corespund ca tip cu parametri formali\n3. Pe stivă se memorează valoarea expresiei date ca parametru actual\n4. La ieșirea din apelul funcției modificările realizate în funcție asupra parametrilor formali nu au efect asupra parametrilor actuali\n5. Este modul implicit de transmitere a parametrilor"
+                },
+                {
+                    "title": "Transmiterea prin Referință",
+                    "content": "În cazul transmiterii parametrilor prin referință:\n\n1. Parametrii formali sunt referințe ale parametrilor actuali\n2. Parametri actuali pot fi doar variabile sau expresii ale căror rezultate sunt similare variabilelor\n3. Pe stivă se memorează adresa variabilei date ca parametru actual\n4. Toate modificările realizate în apelul funcției asupra parametrilor formali se fac de fapt asupra parametrilor actuali\n5. Pentru a preciza că un parametru este transmis prin referință va fi precedat de caracterul & în antetul funcției"
+                }
+            ]
+        },
+        {
+            "title": "Transmiterea Tablourilor",
+            "content": "Tablourile au un comportament special:\n\n1. Se transmit prin valoare, dar modificările afectează elementele originale\n2. Pentru tablouri unidimensionale se pot folosi trei sintaxe echivalente:\n   - void f(int n, int x[])\n   - void f(int n, int x[10])\n   - void f(int n, int *x)\n3. Pentru tablouri multidimensionale, prima dimensiune poate fi omisă, dar celelalte trebuie să fie identice"
+        },
+        {
+            "title": "Tipuri de Parametri",
+            "subsections": [
+                {
+                    "title": "Parametri de Intrare",
+                    "content": "1. Funcția primește date pe care să le prelucreze\n2. De obicei sunt transmiși prin valoare\n3. Valoarea de intrare este importantă, cea de ieșire nu"
+                },
+                {
+                    "title": "Parametri de Ieșire",
+                    "content": "1. Funcția întoarce rezultate în programul apelant\n2. De obicei sunt transmiși prin referință\n3. Valoarea de intrare nu este importantă, cea de ieșire este"
+                },
+                {
+                    "title": "Parametri de Intrare-Ieșire",
+                    "content": "1. Funcția primește date, le prelucrează și întoarce rezultatul\n2. De obicei sunt transmiși prin referință\n3. Atât valoarea de intrare cât și cea de ieșire sunt importante"
+                }
+            ]
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Folosiți transmiterea prin valoare pentru parametri de intrare\n2. Folosiți transmiterea prin referință pentru parametri de ieșire\n3. Atenție la conversiile implicite de tip\n4. Verificați dimensiunile tablourilor\n5. Documentați clar rolul fiecărui parametru"
+        }
+    ]
+} 

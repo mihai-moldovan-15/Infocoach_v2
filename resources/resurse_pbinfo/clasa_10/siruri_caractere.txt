@@ -1,0 +1,295 @@
+În C++ există mai multe modalități de a reprezenta șirurile de caractere. În acest articol vom discuta despre șirurile de caractere reprezentate ca tablouri unidimensionale cu elemente de tip char, reprezentare care provine din limbajul C.
+
+
+Aceste șiruri se mai numesc null-terminated byte string (NTBS). În reprezentarea internă, după ultimul caracter (byte, octet) valid din șir se află caracterul '\0' – caracterul cu codul ASCII 0, numit și caracter nul.
+
+Astfel, pentru reprezentarea în C/C++ a cuvântului copil, care are 5 caractere, se vor folosi 6 octeți, cu valorile: 'c', 'o', 'p', 'i', 'l', '\0'.
+
+Declararea unui șir de caractere
+Un șir de caractere se declară în C++ astfel:
+
+char s[11];
+S-a declarat un șir care poate memora maxim 11 caractere, cu indici 0 1 ... 10. Șirul s poate memora cel mult 10 caractere utile, după ultimul caracter util fiind memorat caracterul '\0'.
+
+De asemenea, la declararea unui șir acesta poate fi inițializat. Următoarele exemple declară șiruri de caractere și le inițializează cu șirul "copil":
+
+char s[11] = "copil"; // se folosesc doar 6 caractere
+char t[]="copil"; // se aloca automat 6 octeti pentru sirul t: cele 5 litere si caracterul nul \0
+char x[6]={'c','o','p','i','l','\0'}; // initializarea este similara cu cea a unui tablou oarecare - sirurile de caractere sunt tablouri
+char z[]={'c','o','p','i','l','\0'}; // se aloca automat 6 octeti pentru sir
+Afișarea și citirea unui șir de caractere
+Afișarea unui șir de caractere
+Se poate face cu operatorul << de inserție în stream:
+
+cout << s << endl;
+Citirea unui șir de caractere
+Se poate folosi operatorul >> de extracție din stream:
+
+cin >> s;
+În acest mod, datorită specificului operatorului >> nu se pot citi șiruri care conțin spații – se vor citi caracterele până la primul spațiu, fără acesta.
+
+Pentru a citi șiruri care conțin spații, putem folosi metoda getline a obiectului cin sau alt obiect de tip istream:
+
+istream& getline (char* s, streamsize n );
+Se vor citi în șirul s caracterele din stream-ul de intrare (de la tastatură) până la apariția caracterului sfârșit de linie '\n', dar nu mai mult de n-1 caractere. Caracterul '\n' nu va fi adăugat la șirul s, dar va fi extras din stream. De exemplu:
+
+cin.getline(s , 11);
+Am putea spune că getline citește toată linia și sare peste ENTER. Iată un exemplu complet:
+
+#include <iostream>
+using namespace std;
+int main(){
+    char nume1[31], nume2[31];
+    cout << "Cum te cheama? (nume, prenume) ";
+    cin.getline(nume1, 31);
+    cout << "Cum il cheama pe prietenule tau? ";
+    cin.getline(nume2 , 31);
+    cout << "Te numesti " << nume1 << endl;
+    cout << "Esti prieten cu " << nume2 << endl;
+    return 0;
+}
+O altă modalitate de citire a unui șir care poate conține spații este folosirea metodei get a obiectului istream, pe care nu o mai prezentăm aici.
+
+Referirea unui caracter din șir. Parcurgerea unui șir de caractere
+Deoarece șirurile de caractere sunt de fapt tablouri, pentru referirea unui caracter din șir se folosește operatorul [], ca în exemplul următor:
+
+char s[]="abac"; // sirul consta din 5 caractere: cele 4 litere si caracterul nul '\0'
+cout << s[3]; // c
+s[1] = 'r';
+cout << s; // arac
+cout << s[10]; // ??? comportament impredictibil: nu exista in sir caracter cu indice 10
+În numeroase situații este necesară analizarea fiecărui caracter din șir. Pentru aceasta este necesară o parcurgere a șirului; aceasta se face similar cu parcurgerea unui tablou oarecare. Diferența constă în faptul că, pentru șirul de caractere nu se cunoaște explicit lungimea. Ea poate fi determinată cu funcția strlen (vezi mai jos), dar putem controla parcurgerea șirului știind că după ultimul caracter valid din șir apare caracterul nul '\0'.
+
+Următoarele exemple parcurg un sir de caractere și afișează caracterele separate prin spații:
+
+char s[11];
+cin >> s; // se citeste un cuvant , fara spatii
+int i = 0;
+while(s[i] != '\0')
+{
+    cout << s[i] << " ";
+    i ++;
+}
+sau mai condensat:
+
+char s[11];
+cin >> s; // se citeste un cuvant , fara spatii
+for(int i = 0 ; s[i] ; i ++)
+    cout << s[i] << " ";
+Tipul char *. Legătura dintre pointer-i și tablouri
+Considerăm declarația:
+
+char * p , s[31] = "pbinfo";
+Ce este p? Este un pointer la char, adică o variabilă a cărei valoare este adresa unei date de tip char. Întrebarea este a cărei date? În acest moment a niciuneia, deoarece variabila p nu a fost inițializată, iar valoare ei este o adresă aleatorie. Șansele ca ea să reprezinte adresa unei date de tip char din spațiul de memorie al programului nostru sunt la fel de mici ca șansele ca valoarea inițială a unei variabile de tip int să fie în intervalul 1 ... 100.
+
+Ce este s? Spunem că este un șir de caractere, dar practic s este tot un pointer. Valoarea sa este adresa primului element din șir, adică adresa lui s[0]. Observăm că de fapt, variabilele p și s sunt de același tip, pointer la char. Diferența dintre cele două variabile este că s memorează o adresa de memorie unde începe un șir de caractere (la acea adresă există o dată de tip char ) în timp ce p memorează o adresă aleatorie.
+
+Cu ce putem inițializa pointer-ul p? Cu adresa unei date de tip char. O asemenea dată este orice element al unui șir de caractere, de exemplu orice element din s. Dacă p reprezinta adresa unui caracter dintr-un șir, atunci cu p se pot face toate operațiile care se pot face cu acel șir.
+
+Iată un exemplu:
+
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    char * p , s[]="pbinfo";
+    cout << s << endl; // pbinfo
+    p = s;
+    cout << p << endl; // pbinfo
+    p ++;
+    cout << p << endl; // binfo
+    return 0;
+}
+Funcții pentru caractere
+Următoarele funcții au ca parametri valori numerice, reprezentând codul ASCII al unor caractere. Prototipul lor se află în header-ul cctype.
+
+isalnum
+
+int isalnum( int ch );
+Verifică dacă un caracter este alfanumeric (cifră, literă mare, literă mică). Returnează o valoare diferită de zero dacă parametrul este alfanumeric, 0 în caz contrar.
+
+isalpha
+
+int isalpha( int ch );
+Verifică dacă un caracter este alfabetic (literă mare, literă mică). Returnează o valoare diferită de zero dacă parametrul este alfabetic, 0 în caz contrar.
+
+islower
+
+int islower( int ch );
+Verifică dacă un caracter este literă mică. Returnează o valoare diferită de zero dacă parametrul este literă mică, 0 în caz contrar.
+
+isupper
+
+int isupper( int ch );
+Verifică dacă un caracter este literă mare. Returnează o valoare diferită de zero dacă parametrul este literă mare, 0 în caz contrar.
+
+isdigit
+
+int isdigit( int ch );
+Verifică dacă un caracter este cifră. Returnează o valoare diferită de zero dacă parametrul este cifră, 0 în caz contrar.
+
+tolower
+
+int tolower( int ch );
+Convertește parametrul la literă mică. Dacă parametrul este literă mare, returnează valoarea convertită, în caz contrar returnează valoarea inițială a parametrului.
+
+toupper
+
+int toupper( int ch );
+Convertește parametrul la literă mare. Dacă parametrul este literă mică, returnează valoarea convertită, în caz contrar returnează valoarea inițială a parametrului.
+
+Funcții pentru șiruri de caractere
+Următoarele funcții prelucrează șiruri de caractere. Dacă nu se precizează altfel, prototipul lor se află în header-ul cstring.
+
+strlen
+std::size_t strlen( const char* str );
+Returnează lungimea șirului str, adică numărul de caractere din șirul al cărui prim caracter se află la adresa memorată în str. Caracterul nul nu se numără.
+
+std::size_t este un alias pentru un tip de date întreg fără semn, de exemplu unsigned int. Funcția strlen() are ca rezultat un număr întreg pozitiv. Mai multe detalii aici: en.cppreference.com/w/cpp/types/size_t.
+
+Exemple:
+
+cout << strlen("pbinfo"); // 6
+char s[10]="copil";
+cout << strlen(s); // 5
+cout << strlen(s + 2); //3
+strcpy
+char* strcpy( char* dest, const char* src );
+Copiază caracterele din șirul aflat la adresa src, inclusiv caracterul nul, în șirul al cărui prim element se află la adresa din dest.
+
+Funcția returnează adresa dest.
+
+Comportamentul acestei funcții este nedefinit dacă șirurile de la adresele dest și src se suprapun.
+
+Exemple:
+
+char s[21], t[21] = "copil";
+strcpy(s , "pbinfo");
+cout << s; // pbinfo
+strcpy(s , t);
+cout << s; // copil
+strcpy(s , t + 2);
+cout << s; // pil
+strcpy(s + 2 , t);
+cout << s; // picopil
+strncpy
+char *strncpy( char *dest, const char *src, std::size_t count );
+Copiază cel mult count caractere din șirul aflat la adresa src, în șirul al cărui prim element se află la adresa din dest.
+
+În șirul dest nu se va plasa caracterul nul după cele count caractere copiate.
+
+Funcția returnează adresa dest.
+
+Comportamentul acestei funcții este nedefinit dacă șirurile de la adresele dest și src se suprapun.
+
+Exemple:
+
+char s[100]="abcdefghjkl";
+strncpy(s, "poveste", 3);
+cout << s; // povdefghjkl
+strcat
+char *strcat( char *dest, const char *src );
+Adaugă (concatenează) caracterele din șirul aflat la adresa src, inclusiv caracterul nul, la șirul al cărui prim element se află la adresa din dest.
+
+Funcția returnează adresa dest.
+
+Comportamentul acestei funcții este nedefinit dacă șirurile de la adresele dest și src se suprapun.
+
+Exemple:
+
+char s[21]="pbinfo", t[21] = "copil";
+strcat(s , t);
+cout << s; // pbinfocopil
+strcat(s , t + 2);
+cout << s; // pbinfocopilpil
+strchr
+char *strchr( char * str, char ch );
+Caută caracterul ch în șirul al cărui prim caracter se află în memorie la adresa din str.
+
+Funcția returnează adresa NULL, dacă caracterul ch nu apare în șirul str, respectiva adresa primei apariții al lui ch în str, dacă ch apare în str.
+
+Exemple:
+
+char s[21]="pbinfo";
+char * p = strchr(s , 'i');
+cout << p; // info
+char ch = 'i';
+if(strchr("aeiou" , ch) != NULL)
+  cout << "DA"
+else
+  cout << "NU";
+//se va afisa DA
+strstr
+char *strstr( char * s, char * t );
+Caută șirul t în șirul al cărui prim caracter se află în memorie la adresa din s.
+
+Funcția returnează adresa NULL, dacă șirul t nu apare în șirul s, respectiva adresa primei apariții al lui t în s, dacă t apare în s.
+
+Exemplu:
+
+char s[21]="pbinfo";
+char * p = strstr(s , "inf");
+cout << p; // info
+strcmp
+int strcmp( char * s, char * t );
+Compară lexicografic cele două șiruri de caractere:
+
+dacă șirul s este lexicografi mai mic decât t funcția va returna o valoare negativă
+dacă șirul s este lexicografi mai mare decât t funcția va returna o valoare pozitivă
+dacă cele două șiruri sunt identice funcția va returna valoarea 0
+Standardul C/C++ stabilește doar semnul rezultatului, nu și valoarea acestuia. Valorile returnate pot fi -1 0 1, dar nu trebuie să fie așa și nu este întotdeauna așa.
+
+Exemplu:
+
+char s[21]="abur", t[21]="abecedar";
+if(strcmp(s , t) < 0)
+  cout << "Da"
+else
+  cout << "Nu";
+// se va afisa Nu; cuvantul "abur" este lexicografic dupa "abecedar"
+strtok
+char *strtok( char *str, const char *sep );
+Funcția strtok extrage dintr-un sir de caractere câte un subșir (cuvânt) delimitat de caractere din șirul sep. Funcția se apelează în două moduri:
+
+primul apel are ca parametri șirul din care se face extragerea și șirul separatorilor
+la următoarele apeluri primul parametru este NULL.
+Rezultatul funcției strtok este adresa de început a subșirului curent extras, sau NULL dacă nu se mai poate extrage niciun subșir din șirul dat.
+
+Șirul din care se face extragerea se modifică în urma apelurilor. Dacă este nevoie de el mai târziu trebuie să-i facem o copie.
+
+Exemplu
+
+Secvența de mai jos extrage dintr-un șir s cuvintele (separate prin caractere din mulțimea {' ', ',', '.'}) și le afișează pe linii diferite. Șirul s se presupune declarat și citit.
+
+char sep[]=" .,";
+char * p = strtok(s , sep);
+while(p != NULL)
+{
+    cout << p << endl;
+    p = strtok(NULL , sep);
+}
+Eliminarea și inserarea unui caracter într-un șir
+Acestea sunt operații frecvente și pot fi realizate cu ajutorul funcției strcpy. Deoarece comportamentul funcției strcpy este impredictibil dacă parametri se suprapun, este necesară utilizarea unui șir suplimentar.
+
+Eliminarea unui caracter dintr-un sir
+
+Următoarea secvență elimină din șirul s (presupus citit) caracterul de poziția x.
+
+char s[256], t[256];
+int x;
+// ...
+//eliminarea
+strcpy(t , s + x + 1);
+strcpy(s + x , t);
+Inserarea unui caracter într-un sir
+
+Următoarea secvență inserează în șirul s (presupus citit) de poziția x caracterul 'A'.
+
+char s[256], t[256];
+int x;
+// ...
+//inserarea
+strcpy(t , s + x);
+strcpy(s + x + 1 , t);
+s[x] = 'A'; // echivalent, *(s+x) = 'A';

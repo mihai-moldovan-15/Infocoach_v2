@@ -1,0 +1,79 @@
+{
+    "title": "Anatomia Funcțiilor în C++",
+    "description": "Structura și componentele funcțiilor în limbajul C++",
+    "tags": ["funcții", "C++", "programare", "parametri", "return", "void"],
+    "sections": [
+        {
+            "title": "Componentele unei Funcții",
+            "subsections": [
+                {
+                    "title": "Antetul Funcției",
+                    "content": "Antetul funcției definește:\n- Numele funcției\n- Tipul de return\n- Parametrii formali\n- Tipul parametrilor",
+                    "example": "int ogl(int x)"
+                },
+                {
+                    "title": "Corpul Funcției",
+                    "content": "Corpul funcției conține:\n- Variabile locale\n- Instrucțiuni de procesare\n- Instrucțiunea return (dacă este necesară)",
+                    "code_example": {
+                        "description": "Exemplu de corp de funcție",
+                        "code": "int ogl(int x) {\n    int r = 0;\n    do {\n        r = 10 * r + x % 10;\n        x /= 10;\n    } while(x != 0);\n    return r;\n}"
+                    }
+                }
+            ]
+        },
+        {
+            "title": "Parametri Funcției",
+            "subsections": [
+                {
+                    "title": "Parametri Formali",
+                    "content": "Parametrii declarați în antetul funcției. Se comportă ca variabile locale în corpul funcției."
+                },
+                {
+                    "title": "Parametri Actuali",
+                    "content": "Valorile concrete transmise la apelul funcției. Trebuie să corespundă ca număr, tip și ordine cu parametrii formali."
+                },
+                {
+                    "title": "Transmiterea Parametrilor",
+                    "content": "Există două moduri principale de transmitere a parametrilor:\n1. Transmitere prin valoare (implicită)\n2. Transmitere prin referință (folosind &)"
+                }
+            ]
+        },
+        {
+            "title": "Tipuri de Funcții",
+            "subsections": [
+                {
+                    "title": "Funcții cu Return",
+                    "content": "Funcții care returnează o valoare de un anumit tip. Folosesc instrucțiunea return pentru a transmite rezultatul."
+                },
+                {
+                    "title": "Funcții void",
+                    "content": "Funcții care nu returnează valori. Sunt folosite pentru efecte secundare (citire, afișare, modificare parametri)."
+                }
+            ]
+        },
+        {
+            "title": "Exemple Practice",
+            "examples": [
+                {
+                    "title": "Funcție cu Return",
+                    "description": "Calculul oglinditului unui număr",
+                    "code": "int ogl(int x) {\n    int r = 0;\n    do {\n        r = 10 * r + x % 10;\n        x /= 10;\n    } while(x != 0);\n    return r;\n}"
+                },
+                {
+                    "title": "Funcție void",
+                    "description": "Citirea unui tablou",
+                    "code": "void citire(int &n, int x[]) {\n    cin >> n;\n    for(int i = 0; i < n; ++i)\n        cin >> x[i];\n}"
+                },
+                {
+                    "title": "Funcție void",
+                    "description": "Sortarea unui tablou",
+                    "code": "void sortare(int n, int x[]) {\n    bool sortat = false;\n    while(!sortat) {\n        sortat = true;\n        for(int i = 0; i < n-1; i++)\n            if(x[i] > x[i+1]) {\n                int aux = x[i];\n                x[i] = x[i+1];\n                x[i+1] = aux;\n                sortat = false;\n            }\n    }\n}"
+                }
+            ]
+        },
+        {
+            "title": "Reguli Importante",
+            "content": "1. Parametrii formali și actuali trebuie să corespundă ca număr, tip și ordine\n2. Variabilele locale sunt accesibile doar în corpul funcției\n3. Parametrii formali se comportă ca variabile locale\n4. Transmiterea prin referință permite modificarea parametrilor actuali\n5. Funcțiile void nu returnează valori"
+        }
+    ]
+} 

@@ -1,0 +1,46 @@
+Tehnica alocării dinamice a memoriei se bazează pe utilizarea variabilelor dinamice. Acestea sunt create de programator prin operații explicite, li se alocă memorie în HEAP și sunt eliminate la finalul execuției programului sau explicit de către programator. Pentru a putea fi accesate, adresa lor trebuie păstrată într-o variabilă de tip pointer. La rândul ei, aceasta poate fi statică sau dinamică.
+
+Crearea variabilelor dinamice
+Se face în C++ cu ajutorul operatorului new. Putem aloca variabile simple sau tablouri.
+
+Crearea unei variabile dinamice simple
+Crearea unei variabile dinamice simple de tipul TIP se face cu operația new TIP. Efectul operației este crearea unei variabile dinamice de tipul precizat, iar rezultatul său este adresa variabilei create. Aceasta trebuie memorată într-o variabilă de tip pointer, pentru a folosi mai târziu variabila!
+
+int *p;
+p = new int;
+*p = 5;
+cout << *p; //5
+Crearea unui tablou alocat dinamic
+Pentru a crea un tablou cu n elemente de tip TIP, folosim operația new TIP[n]. n poate fi o expresie întreagă (nu trebuie să fie o constantă), efectul operației este crearea tabloului, iar rezultatul este adresa primului element al tabloului creat. Aceasta trebuie memorată într-o variabilă de tip pointer, pentru a folosi mai târziu tabloul!
+
+int n, *p;
+cin >> n;
+p = new int[n];
+for(int i = 0 ; i < n ; i ++)
+    cin >> p[i];
+for(int i = 0 ; i < n ; i ++)
+    cout << p[i];
+Observații
+
+dacă variabila dinamică nu poate fi creată, rezultatul operației new este pointerul null;
+dacă nu stocăm rezultatul operației new într-un pointer nu vom avea acces mai târziu la variabila creată;
+p este o variabilă statică. Este dinamică variabila cu adresa memorată în p, după ce am creat-o!
+putem memora adresa variabilei create în mai mulți pointeri. Trebuie însă să avem adresa variabilei dinamice în cel puțin un pointer, în caz contrar nu mai avem acces la variabilă (am pierdut-o!).
+indiferent dacă un tablou este alocat static sau dinamic, trebuie să fim atenți să nu accesăm elemente care nu există. Limbajul C++ nu verifică dacă un element al tabloului există atunci când se încearcă accesarea lui, iar efectele sunt imprevizibile.
+Eliminarea unei variabile dinamice
+Pentru a elimina o variabilă dinamică, trebuie să-i cunoaștem adresa.
+
+Eliminarea unei variabile dinamice simple se face folosind operația delete ADRESA, unde ADRESA este adresa variabilei, iar pentru a elimina un tablou alocat dinamic folosim operația delete[] ADRESA, unde ADRESA este adresa primului element al tabloului.
+
+int *p = new int;
+*p = 5; 
+...
+delete p;
+//*p nu mai are sens, variabila nu mai exista
+int *p = new int[10];
+...
+delete[] p;
+Observații:
+
+operația delete aplicată unui pointer care reține adresa unei variabile dinamice va elimina din memorie variabila dinamică, dar nu va modifica valoarea pointerului. Altfel spus, pointerul va reține adresa unde a fost alocat spațiu pentru variabila dinamică, iar operația de dereferențiere a pointerului va avea efecte impredictibile!
+nu confundați variabila dinamică cu pointerul care reține adresa ei!

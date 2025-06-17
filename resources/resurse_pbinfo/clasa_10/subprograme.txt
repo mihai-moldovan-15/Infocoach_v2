@@ -1,0 +1,28 @@
+Un subprogram este o colecție de tipuri de date, variabile, instrucțiuni care îndeplinesc o anumită sarcină (calcule, citiri, afișări), atunci când este apelat (folosit) de un program sau de un alt subprogram.
+
+Pentru a înțelege conceptul de subprogram, să considerăm două probleme:
+
+Problema 1: Se dau două numere naturale n și m. Să se determine suma dintre oglinditul lui n și oglinditul lui m.
+
+Până acum, pentru a rezolva această problemă, trebuia să determinăm, folosind două secvențe de program aproape identice, oglinditele celor două numere, iar apoi să facem suma. O soluție mai simplă este să construim un subprogram care determină oglinditul unui număr natural oarecare, să-l apelăm de două ori pentru a determina oglinditul lui n și al lui m, apoi să facem suma rezultatelor.
+
+Problema 2: Se citește un tablou cu n elemente, numere întregi. Să se ordoneze crescător elementele tabloului și apoi să se afișeze.
+
+Putem rezolva această problemă, în mai multe moduri, folosind cunoștințe pe care le avem deja. Dacă dorim să o rezolvăm folosind subprograme, vom construi trei subprograme:
+
+citire – care citește elementele vectorului
+sortare – care ordonează elementele vectorului
+afisare – care afișează elementele vectorului
+Astfel, programul care rezolvă problema constă în apelul celor trei subprograme, în ordinea potrivită. Am reușit să descompunem rezolvarea unei probleme complexe în mai multe subprobleme, mai simple, care pot fi rezolvate de mai multe persoane, dacă este cazul.
+
+Constatăm că utilizarea subprogramelor are câteva avantaje:
+
+reutilizarea codului – după ce am scris un subprogram îl putem apela (folosi) de oricâte ori este nevoie;
+modularizarea programelor – subprogramele ne permit să împărțim problema dată în mai multe subprobleme, mai simple;
+reducerea numărului de erori care pot să apară în scrierea unui program
+depistarea cu ușurință a erorilor – fiecare subprogram va fi verificat la crearea sa, apoi verificăm modul în care apelăm subprogramele
+Subprogramele pot fi de două tipuri:
+
+funcții – subprograme care determină un anumit rezultat, o anumită valoare, pornind de la anumite date de intrare. Spunem că valoarea este returnată de către funcție, iar aceasta va fi apelată ca operand într-o expresie, valoarea operandului în expresie fiind de fapt valoarea rezultatului funcției.
+proceduri – subprograme care se folosesc într-o instrucțiune de sine stătătoare, nu într-o expresie. Ele îndeplinesc o sarcină, au un efect și nu returnează un rezultat. De exemplu, citirea unor variabile, afișarea unor valori, transformarea unor date, etc.
+În limbajul C/C++, există doar subprograme de tip funcție. Pentru proceduri se folosește o formă particulară a funcțiilor.

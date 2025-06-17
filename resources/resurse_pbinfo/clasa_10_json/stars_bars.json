@@ -1,0 +1,58 @@
+{
+    "title": "Metoda Stars and Bars",
+    "description": "Metodă de rezolvare a problemelor de combinatorică pentru gruparea obiectelor identice",
+    "tags": ["combinatorică", "matematică", "algoritmi", "combinări", "distribuție"],
+    "sections": [
+        {
+            "title": "Definiție și Concept",
+            "content": "Stars and Bars (Stele și bare) este o metodă de rezolvare a unor probleme de combinatorică. Se poate folosi când trebuie să determinăm numărul de modalități de a grupa un număr dat de obiecte identice."
+        },
+        {
+            "title": "Teorema Principală",
+            "subsections": [
+                {
+                    "title": "Enunț",
+                    "content": "Numărul de variante de a plasa n obiecte identice în k cutii este egal cu: C(n + k - 1, k - 1)."
+                },
+                {
+                    "title": "Demonstrație",
+                    "content": "Demonstrația implică separarea celor n obiecte (stele) în k cutii prin k-1 bare. De exemplu, configurația **|*|*****|** are n=7 stele și k=4 cutii și corespunde următoarei situații:\n- prima cutie conține un obiect\n- a doua cutie conține două obiecte\n- a treia cutie nu conține niciun obiect\n- a patra cutie conține patru obiecte"
+                }
+            ]
+        },
+        {
+            "title": "Reprezentare Binară",
+            "content": "Configurația este echivalentă cu o secvență de biți:\n1. Bitul 0 corespunde obiectului (stea)\n2. Bitul 1 corespunde barei (|)\n3. Toate configurațiile convenabile au n+k-1 biți\n4. Dintre care n au valoarea 0 și k-1 au valoarea 1\n5. Corespund submulțimilor cu k-1 elemente ale unei mulțimi cu n+k-1 elemente"
+        },
+        {
+            "title": "Consecințe",
+            "subsections": [
+                {
+                    "title": "Ecuații Diofantice",
+                    "content": "Ecuația x₁ + x₂ + x₃ + ... + xₖ = n are C(n+k-1, k-1) soluții întregi nenegative (mai mari sau egale cu 0)."
+                },
+                {
+                    "title": "Teorema cu Restricție",
+                    "content": "Numărul de variante de a plasa n obiecte identice în k cutii astfel încât fiecare cutie conține cel puțin un obiect este egal cu: C(n-1, k-1)."
+                }
+            ]
+        },
+        {
+            "title": "Demonstrații pentru Teorema cu Restricție",
+            "subsections": [
+                {
+                    "title": "Demonstrația 1",
+                    "content": "Fixăm în fiecare cutie câte un obiect. Rămân n-k obiecte care trebuie plasate în k cutii, în condițiile teoremei principale. Astfel, numărul de variante este C((n-k)+k-1, k-1) = C(n-1, k-1)."
+                },
+                {
+                    "title": "Demonstrația 2",
+                    "content": "Folosim metoda Stars and bars. Separarea obiectelor în cutii se face plasând k bare în golurile dintre obiecte. Sunt n-1 goluri în care putem plasa k bare în C(n-1, k-1) moduri."
+                }
+            ]
+        },
+        {
+            "title": "Aplicații",
+            "content": "Metoda Stars and Bars este folosită pentru:\n1. Rezolvarea ecuațiilor diofantice\n2. Calculul numărului de moduri de a distribui obiecte identice\n3. Rezolvarea problemelor de combinatorică\n4. Analiza distribuțiilor de probabilitate"
+        }
+    ]
+} 

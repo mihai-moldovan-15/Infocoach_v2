@@ -1,0 +1,49 @@
+{
+    "title": "Recursivitate cu Cifre în C++",
+    "description": "Ghid pentru rezolvarea problemelor recursive care implică manipularea cifrelor unui număr",
+    "tags": ["recursivitate", "cifre", "algoritmi", "C++", "funcții", "numere"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Există numeroase probleme cu cifrele unui număr care se pot rezolva recursiv, cum ar fi:\n1. Suma cifrelor unui număr\n2. Numărul de cifre\n3. Construirea unui număr folosind anumite cifre\n4. Operații cu cifre de anumit tip (pare/impare)"
+        },
+        {
+            "title": "Algoritm General",
+            "content": "Pentru realizarea unei funcții recursive care prelucrează cifrele unui număr:\n1. Identificăm cazul particular\n2. Dacă suntem în cazul particular, obținem rezultatul direct\n3. Dacă nu suntem în cazul particular:\n   - Rezolvăm problema pentru numărul fără ultima cifră\n   - Combinăm rezultatul cu ultima cifră pentru obținerea rezultatului final"
+        },
+        {
+            "title": "Exemple de Implementare",
+            "subsections": [
+                {
+                    "title": "Suma Cifrelor",
+                    "content": "int sumcif(int n) {\n    if(n == 0)\n        return 0;\n    else {\n        int S = sumcif(n/10);\n        return S + n%10;\n    }\n}"
+                },
+                {
+                    "title": "Număr de Cifre",
+                    "content": "int nrcif(int n) {\n    if(n < 10)\n        return 1;\n    else {\n        int S = nrcif(n/10);\n        return S + 1;\n    }\n}"
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "subsections": [
+                {
+                    "title": "Cazul Particular",
+                    "content": "Pentru funcțiile recursive care prelucrează cifrele unui număr, considerăm cazul particular când numărul are o singură cifră (n<10), nu când numărul este zero (n==0)."
+                },
+                {
+                    "title": "Explicație",
+                    "content": "Condiția n==0 poate fi adevărată în două situații diferite:\n1. Când n devine 0 în urma autoapelurilor (trebuie returnat 0)\n2. Când n este zero în apelul principal (trebuie returnat 1)\nDe aceea, este mai bine să folosim condiția n<10 ca caz particular."
+                }
+            ]
+        },
+        {
+            "title": "Aplicații",
+            "content": "Funcțiile recursive pentru cifre pot fi folosite pentru:\n1. Calculul sumei cifrelor pare/impare\n2. Determinarea numărului de cifre pare/impare\n3. Construirea unui număr folosind doar anumite cifre\n4. Verificarea proprietăților numerelor\n5. Rezolvarea problemelor de combinatorică cu cifre"
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Folosiți n<10 ca caz particular în loc de n==0\n2. Verificați corectitudinea pentru numere cu o singură cifră\n3. Asigurați-vă că funcția funcționează corect pentru 0\n4. Testați funcția cu diverse cazuri de intrare\n5. Verificați limitele tipului de date folosit"
+        }
+    ]
+} 

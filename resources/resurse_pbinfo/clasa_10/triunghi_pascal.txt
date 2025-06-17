@@ -1,0 +1,149 @@
+Triunghiul lui Pascal este un tablou triunghiular cu numere naturale, în care fiecare element aflat pe laturile triunghiului are valoarea 1, iar celelalte elemente sunt egale cu suma celor două elemente vecine, situate pe linia de deasupra.
+
+Considerând liniile și coloanele numerotate ca mai sus atunci: A(i,j) =
+  1, dacă i = j sau j = 0,
+  A(i-1,j-1) + A(i-1,j), altfel.
+De fapt, această relație este cunoscută în calculul combinărilor: C(n, k) =
+  1, dacă n = k sau k = 0, unde C(n, k) înseamnă "combinări de n luate câte k"
+  C(n-1, k-1) + C(n-1, k), altfel.
+De fapt, un element A(i,j) al tabloului de mai sus este egal cu C(i,j).
+
+Elementele de pe linia n sunt coeficienți binomiali ai dezvoltării (a + b)^n = C(n,0)*a^n*b^0 + C(n,1)*a^(n-1)*b^1 + C(n,2)*a^(n-2)*b^2 + ... + C(n,k)*a^(n-k)*b^k + ... + C(n,n-1)*a^1*b^(n-1) + C(n,n)*a^0*b^n - binomul lui Newton.
+
+Suma elementelor de pe linia n este egală cu 2^n: C(n,0) + C(n,1) + C(n,2) + ... + C(n,k) + ... + C(n,n) = 2^n.
+
+Problemă
+Se citește un număr natural n. Afișați linia n din triunghiul lui Pascal.
+Soluție cu combinări
+O primă soluție constă în calcularea valorii C(n, k) pentru fiecare k din {0, 1, 2, ..., n}.
+#include <iostream>
+
+using namespace std;
+
+int comb(int n , int k)
+{
+    int p = 1;
+    for(int i = 1 ; i <= k ; i ++)
+        p = p * (n-i+1) / i;
+    return p;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    for(int i = 0 ; i <= n ; i ++)
+        cout << comb(n,i) << " ";
+    return 0;
+}
+O îmbunătățire a variantei de mai sus este:
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    int p = 1;
+    cout << "1 ";
+    for(int i = 1 ; i <= n ; i ++)
+    {
+        p = p * (n-i+1) / i;
+        cout << p << " ";
+    }
+    return 0;
+}
+
+Soluție cu matrice
+În soluția următoare aplicăm formula A(i,j) = A(i-1,j-1) + A(i-1,j) folosind un tablou unidimensional:
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n, A[31][31];
+    cin >> n;
+    for(int i = 0 ; i <= n ; i ++)
+    {
+        A[i][0] = A[i][i] = 1;
+        for(int j = 1 ; j < i ; j ++)
+            A[i][j] = A[i-1][j-1] + A[i-1][j];
+    }
+    for(int j = 0 ; j <= n ; j ++)
+        cout << A[n][j] << " ";
+    return 0;
+}
+Soluție cu doi vectori
+Soluția de mai sus poate fi îmbunătățită, observând că pentru a calcula linia curentă folosim doar linia precedentă. Vom folosi doar doi vectori, unul pentru linia curentă, celălalt pentru linia precedentă:
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n, v[31],u[31];
+    cin >> n;
+    v[0] = 0;
+    for(int i = 1 ; i <= n ; i ++)
+    {
+        u[0] = u[i] = 1;
+        for(int j = 1 ; j < i ; j ++)
+            u[j] = v[j-1] + v[j];
+        for(int j = 0 ; j <= i ; j ++)
+            v[j] = u[j];
+    }
+    for(int j = 0 ; j <= n ; j ++)
+        cout << v[j] << " ";
+    return 0;
+}
+Soluție cu doi vectori și doi pointeri
+În soluția de mai sus putem evita copierea elementelor din u în v, folosind doi pointeri suplimentari. Aceștia vor memora adresa de început a celor două tablouri, iar copierea elementelor este înlocuită de interschimbarea valorilor celor doi pointeri:
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n, A[31], B[31];
+    int * u = A, * v = B;
+    cin >> n;
+    v[0] = 0;
+    for(int i = 1 ; i <= n ; i ++)
+    {
+        u[0] = u[i] = 1;
+        for(int j = 1 ; j < i ; j ++)
+            u[j] = v[j-1] + v[j];
+        swap(u,v);
+    }
+    for(int j = 0 ; j <= n ; j ++)
+        cout << v[j] << " ";
+    return 0;
+}
+Soluție cu un singur vector
+Putem folosi un singur vector. Acesta conține linia anterioară și se modifică pas cu pas, pentru a deveni linia curentă a triunghiului:
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n, v[31];
+    cin >> n;
+    v[0] = 0;
+    for(int i = 1 ; i <= n ; i ++)
+    {
+        v[i] = 1;
+        for(int j = i - 1 ; j > 0 ; j --)
+            v[j] = v[j] + v[j-1];
+        v[0] = 1;
+    }
+    for(int j = 0 ; j <= n ; j ++)
+        cout << v[j] << " ";
+    return 0;
+}

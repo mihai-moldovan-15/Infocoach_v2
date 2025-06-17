@@ -1,0 +1,22 @@
+Să considerăm declarația int v[11];. Care este efectul acestei instrucțiuni?
+
+se alocă spațiu pentru 11 date de tip int, într-o zonă continuă de memorie. Aceasta înseamnă că, tipul int fiind reprezentat pe 4 octeți, adresa elementului v[1] este cu 4 mai mare decât a elementului v[0], adresa elementului v[2] este cu 4 mai mare decât a elementului v[1], etc.
+se alocă memorie pentru variabila v; aceasta este un pointer, a cărui valoare va fi adresa lui v[0]. Altfel spus, v == &v[0]! În plus, v este un pointer constant. Orice atribuire de forma v = &... va duce la eroare de compilare.
+Să considerăm un pointer int * p;. El este de fapt de același tip cu v, doar că la adresa memorată în p nu există o variabilă de tip int.
+
+În schimb:
+
+p = v;
+Atribuirea este corectă. În acest moment, p memorează adresa lui v[0]; mai mult, asupra lui p putem aplica operații de indexare:
+
+p[2] = 5;
+cout << v[2]; // 5
+Mai mult:
+
+for(int i = 0 ; i < 11 ; i ++)
+    v[i] = i * 10;
+p = & v[5];
+cout << p[0] << endl; // v[5], adică 50
+cout << p[1] << endl; // v[6], adică 60
+cout << p[-1] << endl; // v[4], adică 40 !!!!!
+Utilizarea pointerilor și tablourilor devine și mai interesantă dacă folosim Aritmetica pointerilor!

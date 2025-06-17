@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "title": "Definiție Triunghiul lui Pascal",
+    "content": "Triunghiul lui Pascal este un tablou triunghiular cu numere naturale, unde fiecare element de pe laturi are valoarea 1, iar celelalte sunt suma celor două elemente vecine de pe linia de deasupra.",
+    "tags": ["triunghiul lui Pascal", "combinări", "matematică", "c++", "teorie"]
+  },
+  {
+    "id": "2",
+    "title": "Relația de recurență și legătura cu combinările",
+    "content": "A(i,j) = 1 dacă i = j sau j = 0, altfel A(i-1,j-1) + A(i-1,j). Fiecare element A(i,j) este C(i,j) (combinări de i luate câte j).",
+    "tags": ["triunghiul lui Pascal", "combinări", "recurență", "c++"]
+  },
+  {
+    "id": "3",
+    "title": "Coeficienți binomiali și binomul lui Newton",
+    "content": "Elementele de pe linia n sunt coeficienți binomiali ai dezvoltării (a + b)^n. Suma elementelor de pe linia n este 2^n.",
+    "tags": ["coeficienți binomiali", "binomul lui Newton", "triunghiul lui Pascal"]
+  },
+  {
+    "id": "4",
+    "title": "Soluție cu combinări (C++)",
+    "content": "Se calculează C(n, k) pentru fiecare k din 0..n. Cod C++ inclus.",
+    "exemplu_cod": "int comb(int n , int k) { int p = 1; for(int i = 1 ; i <= k ; i ++) p = p * (n-i+1) / i; return p; }\nint main() { int n; cin >> n; for(int i = 0 ; i <= n ; i ++) cout << comb(n,i) << \" \"; return 0; }",
+    "tags": ["triunghiul lui Pascal", "combinări", "c++", "exemplu"]
+  },
+  {
+    "id": "5",
+    "title": "Soluție optimizată cu combinări (C++)",
+    "content": "Se folosește o variabilă p pentru a calcula eficient fiecare element. Cod C++ inclus.",
+    "exemplu_cod": "int main() { int n; cin >> n; int p = 1; cout << \"1 \\\"; for(int i = 1 ; i <= n ; i ++) { p = p * (n-i+1) / i; cout << p << \" \\\"; } return 0; }",
+    "tags": ["triunghiul lui Pascal", "combinări", "c++", "optimizare"]
+  },
+  {
+    "id": "6",
+    "title": "Soluție cu matrice (C++)",
+    "content": "Se folosește o matrice pentru a aplica recurența. Cod C++ inclus.",
+    "exemplu_cod": "int main() { int n, A[31][31]; cin >> n; for(int i = 0 ; i <= n ; i ++) { A[i][0] = A[i][i] = 1; for(int j = 1 ; j < i ; j ++) A[i][j] = A[i-1][j-1] + A[i-1][j]; } for(int j = 0 ; j <= n ; j ++) cout << A[n][j] << \" \\\"; return 0; }",
+    "tags": ["triunghiul lui Pascal", "matrice", "c++", "exemplu"]
+  },
+  {
+    "id": "7",
+    "title": "Soluție cu doi vectori (C++)",
+    "content": "Se folosește doar doi vectori pentru a calcula linia curentă și precedentă. Cod C++ inclus.",
+    "exemplu_cod": "int main() { int n, v[31],u[31]; cin >> n; v[0] = 0; for(int i = 1 ; i <= n ; i ++) { u[0] = u[i] = 1; for(int j = 1 ; j < i ; j ++) u[j] = v[j-1] + v[j]; for(int j = 0 ; j <= i ; j ++) v[j] = u[j]; } for(int j = 0 ; j <= n ; j ++) cout << v[j] << \" \\\"; return 0; }",
+    "tags": ["triunghiul lui Pascal", "vectori", "c++", "exemplu"]
+  },
+  {
+    "id": "8",
+    "title": "Soluție cu pointeri (C++)",
+    "content": "Se folosesc doi pointeri pentru a evita copierea vectorilor. Cod C++ inclus.",
+    "exemplu_cod": "int main() { int n, A[31], B[31]; int * u = A, * v = B; cin >> n; v[0] = 0; for(int i = 1 ; i <= n ; i ++) { u[0] = u[i] = 1; for(int j = 1 ; j < i ; j ++) u[j] = v[j-1] + v[j]; swap(u,v); } for(int j = 0 ; j <= n ; j ++) cout << v[j] << \" \\\"; return 0; }",
+    "tags": ["triunghiul lui Pascal", "pointeri", "c++", "exemplu"]
+  },
+  {
+    "id": "9",
+    "title": "Soluție cu un singur vector (C++)",
+    "content": "Se folosește un singur vector care se actualizează la fiecare pas. Cod C++ inclus.",
+    "exemplu_cod": "int main() { int n, v[31]; cin >> n; v[0] = 0; for(int i = 1 ; i <= n ; i ++) { v[i] = 1; for(int j = i - 1 ; j > 0 ; j --) v[j] = v[j] + v[j-1]; v[0] = 1; } for(int j = 0 ; j <= n ; j ++) cout << v[j] << \" \\\"; return 0; }",
+    "tags": ["triunghiul lui Pascal", "vector", "c++", "exemplu"]
+  }
+] 

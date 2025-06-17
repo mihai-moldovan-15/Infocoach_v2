@@ -1,0 +1,41 @@
+{
+    "title": "Legătura dintre Pointeri și Tablouri în C++",
+    "description": "Explicație detaliată a relației dintre pointeri și tablouri în C++",
+    "tags": ["pointeri", "tablouri", "C++", "memorie", "adrese", "indexare"],
+    "sections": [
+        {
+            "title": "Declararea unui Tablou",
+            "content": "Când declarăm un tablou, de exemplu int v[11], se întâmplă două lucruri:\n1. Se alocă spațiu pentru 11 date de tip int într-o zonă continuă de memorie\n2. Se alocă memorie pentru variabila v, care este un pointer constant la primul element"
+        },
+        {
+            "title": "Caracteristici Importante",
+            "subsections": [
+                {
+                    "title": "Adrese în Memorie",
+                    "content": "1. Elementele sunt stocate consecutiv în memorie\n2. Adresa elementului v[i+1] este cu 4 octeți mai mare decât adresa lui v[i]\n3. v este un pointer constant (v == &v[0])\n4. Nu se poate modifica adresa memorată în v"
+                },
+                {
+                    "title": "Pointeri și Tablouri",
+                    "content": "Un pointer int * p poate fi folosit cu tablouri:\n1. p = v; // p memorează adresa lui v[0]\n2. p[2] = 5; // echivalent cu v[2] = 5\n3. p poate fi folosit pentru indexare"
+                }
+            ]
+        },
+        {
+            "title": "Exemple de Utilizare",
+            "subsections": [
+                {
+                    "title": "Indexare cu Pointeri",
+                    "content": "int v[11];\nint * p = v;\nfor(int i = 0; i < 11; i++)\n    v[i] = i * 10;\np = &v[5];\ncout << p[0];  // v[5], adică 50\ncout << p[1];  // v[6], adică 60\ncout << p[-1]; // v[4], adică 40"
+                },
+                {
+                    "title": "Observații",
+                    "content": "1. Indexarea cu pointeri permite accesul la elemente anterioare (p[-1])\n2. Pointerii pot fi folosiți pentru a accesa elemente din tablou\n3. Operațiile de indexare sunt valide atât pentru tablouri cât și pentru pointeri"
+                }
+            ]
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Verificați limitele tabloului când folosiți pointeri\n2. Atenție la indexarea negativă\n3. Nu încercați să modificați adresa unui tablou\n4. Folosiți pointeri pentru acces eficient la elemente\n5. Verificați alinierea în memorie când lucrați cu pointeri"
+        }
+    ]
+} 

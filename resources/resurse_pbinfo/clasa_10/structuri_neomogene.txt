@@ -1,0 +1,11 @@
+De multe ori datele folosite într-un program caracterizează obiecte/fenomene din realizate, iar acestea au mai multe caracteristici decât un simplu număr sau un șir de caractere. De exemplu, o persoană poate fi caracterizată prin câteva informații:
+
+nume – șir de caractere
+prenume – șir de caractere
+sex – (M/F) probabil caracter
+vârsta – număr natural
+salariu – număr real
+etc.
+Pentru a gestiona informațiile despre o persoană avem nevoie de (cel puțin) 5 variabile, câte una pentru fiecare informație caracteristică a persoanelor: nume, prenume, etc., iar dacă am prelucra informații despre n persoane am avea nevoie de 5 vectori cu n elemente, corespunzătoare acelor persoane. Elementele vectorilor trebuie sincronizate, ceea ce devine foarte complicat și obositor. Ar fi mult mai simplu dacă am putea grupa toate aceste informații specifice unei persoane într-o singură variabilă.
+
+Acest lucru este posibil în C/C++, folosind tipul de date struct, prin care vom defini o structură. O dată de tip structură înglobează mai multe date componente, numite câmpuri sau membri sau date membre, fiecare de un anumit tip precizat la definiția tipului structură corespunzător. Fiecare câmp memorează o anumită valoare, care poate fi tratată ca o variabilă oarecare de tipul corespunzător (i se pot aplica citiri, afișări, atribuiri, etc.).

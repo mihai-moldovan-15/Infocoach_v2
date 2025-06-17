@@ -1,0 +1,53 @@
+{
+    "title": "Secvențe Escape în C++",
+    "description": "Explicație detaliată a secvențelor escape și utilizarea lor în C++",
+    "tags": ["C++", "caractere", "string", "escape", "ASCII", "sintaxă"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Secvențele escape sunt succesiuni de caractere care au alt înțeles decât cel direct atunci când sunt folosite într-un literal caracter sau șir de caractere. Ele încep cu caracterul \\ (backslash) și sunt înlocuite cu caractere care nu ar putea fi folosite în mod direct."
+        },
+        {
+            "title": "Necesitatea Secvențelor Escape",
+            "content": "Secvențele escape sunt necesare pentru a reprezenta caractere speciale sau caractere care ar avea alt înțeles în cod. De exemplu, pentru a include ghilimele în interiorul unui șir de caractere, trebuie să folosim secvența escape \\\"."
+        },
+        {
+            "title": "Lista Secvențelor Escape",
+            "subsections": [
+                {
+                    "title": "Secvențe de Bază",
+                    "content": "\\a - Alertă, Beep (7)\n\\b - Backspace (8)\n\\e - Escape (27)\n\\f - Formfeed (12)\n\\n - NewLine (10)\n\\r - Carriage Return (13)\n\\t - Tab orizontal (9)\n\\v - Tab vertical (11)\n\\\\ - Backslash (92)\n\\\" - Ghilimele (34)\n\\' - Apostrof (39)\n\\? - Semn de întrebare (63)\n\\0 - Caracterul nul (0)"
+                },
+                {
+                    "title": "Secvențe Numerice",
+                    "content": "\\nnn - Caracterul cu codul egal cu valoarea octală nnn\n\\xhh - Caracterul cu codul egal cu valoarea hexazecimală hh"
+                }
+            ]
+        },
+        {
+            "title": "Exemple de Utilizare",
+            "subsections": [
+                {
+                    "title": "Ghilimele în Șiruri",
+                    "content": "#include <iostream>\nusing namespace std;\nint main() {\n    cout << \"Hamlet a spus \\\"A fi, sau a nu fi\\\".\";\n    return 0;\n}"
+                },
+                {
+                    "title": "Trecere la Rând Nou",
+                    "content": "#include <iostream>\nusing namespace std;\nint main() {\n    cout << \"Vrei 10 la info?\\nHai pe pbinfo\";\n    return 0;\n}"
+                },
+                {
+                    "title": "Variante de Utilizare",
+                    "content": "Secvența escape poate fi folosită:\n1. Într-un caracter: '\\n'\n2. Într-un șir de caractere: \"\\n\"\n3. Ca parte a unui șir mai lung: \"Text\\nAlt text\""
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Toate secvențele escape încep cu \\\n2. Sunt folosite în constante literale de tip caracter sau șir\n3. Permit reprezentarea caracterelor speciale\n4. Sunt necesare pentru caractere care ar avea alt înțeles în cod\n5. Pot fi folosite pentru reprezentarea caracterelor non-ASCII"
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Folosiți secvențele escape pentru caractere speciale\n2. Evitați caracterele non-ASCII directe în cod\n3. Documentați utilizarea secvențelor complexe\n4. Verificați compatibilitatea între sisteme\n5. Folosiți secvențele standard când este posibil"
+        }
+    ]
+} 

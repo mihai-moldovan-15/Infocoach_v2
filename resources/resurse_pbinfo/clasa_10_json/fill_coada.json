@@ -1,0 +1,45 @@
+{
+    "title": "Algoritmul de Umplere (Fill) cu Coadă",
+    "description": "Explicație detaliată a algoritmului de umplere folosind o structură de date de tip coadă în C++",
+    "tags": ["algoritmi", "fill", "coadă", "BFS", "matrice", "C++", "STL"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Algoritmul de umplere (FILL) pe matrice funcționează prin marcarea elementului curent și analiza vecinilor liberi și nemarcați. Implementarea cu coadă oferă avantaje de performanță față de varianta recursivă."
+        },
+        {
+            "title": "Concepte de Bază",
+            "subsections": [
+                {
+                    "title": "Structura Coadă",
+                    "content": "Coada este o structură de date FIFO (First In, First Out) unde elementele se elimină în ordinea în care au fost adăugate."
+                },
+                {
+                    "title": "Pași Algoritm",
+                    "content": "1. Marcăm poziția inițială și o adăugăm în coadă\n2. Cât timp coada este nevidă:\n   - Extragem un element\n   - Analizăm vecinii\n   - Marcăm vecinii liberi și nemarcați\n   - Adăugăm vecinii în coadă"
+                }
+            ]
+        },
+        {
+            "title": "Implementări",
+            "subsections": [
+                {
+                    "title": "Simulare cu Tablou",
+                    "content": "struct Coordonate {\n    int linie, coloana;\n};\n\nCoordonate Q[100 * 100 + 1];\n\nvoid Fill(int istart, int jstart, int v) {\n    int st = 1, dr = 0;\n    dr++;\n    Q[dr].linie = istart, Q[dr].coloana = jstart;\n    A[istart][jstart] = v;\n    while(st <= dr) {\n        int i = Q[st].linie, j = Q[st].coloana;\n        for(int k = 0; k < 4; k++) {\n            int iv = i + di[k], jv = j + dj[k];\n            if(iv >= 1 && iv <= n && jv >= 1 && jv <= m\n                && A[iv][jv] != 1 && A[iv][jv] != v) {\n                A[iv][jv] = v;\n                dr++;\n                Q[dr].linie = iv, Q[dr].coloana = jv;\n            }\n        }\n        st++;\n    }\n}"
+                },
+                {
+                    "title": "Implementare cu STL Queue",
+                    "content": "void Fill(int istart, int jstart, int v) {\n    queue<pair<int,int>> Q;\n    Q.push(make_pair(istart, jstart));\n    A[istart][jstart] = v;\n    while(!Q.empty()) {\n        int i = Q.front().first, j = Q.front().second;\n        for(int k = 0; k < 4; k++) {\n            int iv = i + di[k], jv = j + dj[k];\n            if(iv >= 1 && iv <= n && jv >= 1 && jv <= m\n                && A[iv][jv] != 1 && A[iv][jv] != v) {\n                A[iv][jv] = v;\n                Q.push(make_pair(iv, jv));\n            }\n        }\n        Q.pop();\n    }\n}"
+                }
+            ]
+        },
+        {
+            "title": "Operații cu Coada STL",
+            "content": "1. Verificare coadă goală: Q.empty()\n2. Acces primul element: Q.front()\n3. Adăugare element: Q.push(valoare)\n4. Eliminare element: Q.pop()\n5. Creare pereche: make_pair(v1, v2)"
+        },
+        {
+            "title": "Observații și Best Practices",
+            "content": "1. Verificați întotdeauna limitele matricei\n2. Atenție la dimensiunea cozii (n*m în caz extrem)\n3. Folosiți STL queue pentru implementare mai simplă\n4. Verificați condițiile pentru vecini (liber și nemarcat)\n5. Optimizați memoria folosind structuri de date potrivite\n6. Documentați clar scopul și comportamentul algoritmului"
+        }
+    ]
+} 

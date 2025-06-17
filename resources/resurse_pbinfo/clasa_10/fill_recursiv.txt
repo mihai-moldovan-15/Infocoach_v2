@@ -1,0 +1,44 @@
+Operația de umplere poate fi sistematizată astfel:
+
+avem un anumit element al matricei, precizat prin coordonatele sale – elementul curent;
+dacă elementul curent respectă anumite restricții (este în matrice, nu conține obstacol, nu a fost deja marcat):
+îl marcăm;
+continuăm în același mod cu fiecare vecin al său.
+Ultima etapă – continuarea în mod similar cu vecinii elementului curent, ne duce cu gândul la recursivitate. Următorul program realizează umplerea pornind dintr-o poziție dată:
+
+#include <iostream>
+
+using namespace std;
+
+const int di[]={-1, 0, 1, 0},
+          dj[]={ 0, 1, 0,-1};
+
+int A[101][101], n , m, istart , jstart;
+
+void Fill(int i ,int j ,int v)
+{
+    // i,j - elementul curent, v - valoarea cu care facem Fill
+    if(i >= 1 && i <= n && j >= 1 && j <= m && A[i][j] == 0)
+    {   // in matrice, element liber si nemarcat
+        A[i][j] = v;
+        for(int k = 0 ; k < 4 ; k ++)
+            Fill(i + di[k] , j + dj[k], v);
+    }
+}
+
+int main()
+{
+    cin >> n >> m;
+    for(int i = 1 ; i <= n ;i ++)
+        for(int j = 1 ; j <= m ; j ++)
+            cin >> A[i][j];
+    cin >> istart >> jstart;
+
+    Fill(istart, jstart, 2);
+
+    for(int i =1 ; i <= n ;i ++, cout << endl)
+        for(int j = 1; j <= m ; j ++)
+            cout << A[i][j] << " ";
+
+    return 0;
+}

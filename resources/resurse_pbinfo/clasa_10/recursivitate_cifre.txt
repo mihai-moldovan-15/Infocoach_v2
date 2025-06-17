@@ -1,0 +1,72 @@
+Introducere
+Există numeroase probleme cu cifrele unui număr și multe dintre ele se pot rezolva cu ajutorul unei funcții – chiar recursive:
+
+suma cifrelor unui număr; suma cifrelor de unu numit tip (pare/impare, etc.);
+numărul de cifre; numărul de cifre de un anumit tip (pare/impare, etc.);
+construirea unui număr folosind anumite cifre din numărul dat;
+etc.
+Pentru realizarea unei funcții recursive, care determină rezultatul cerut, folosim un algoritm de forma următoare:
+
+identificăm cazul particular;
+dacă suntem în cazul particular, obținem rezultatul în mod direct;
+dacă nu suntem în cazul particular:
+rezolvăm, prin autoapel, problema pentru numărul fără ultima cifră;
+cu rezultatul obținut și ultima cifră obținem rezultatul final, pentru numărul dat.
+Desigur, algoritmul de mai sus trebuie adaptat la specificul problemei, dar în majoritatea situațiilor el este de acest tip!
+
+Exemplu
+Pentru a determina suma cifrelor unui număr procedăm astfel:
+
+antetul funcției va fi: int sumcif(int n)
+cazul particular poate fi când numărul este 0 (n==0). În acest caz rezultatul este 0;
+dacă n>0, determinăm rezultatul pentru numărul fără ultima cifră: S = sumcif(n/10);
+rezultatul final va fi S + n % 10 – suma cifrelor numărului fără ultima cifră, adunată cu ultima cifră a lui n.
+Puse împreună, obținem:
+
+int sumcif(int n)
+{
+    if(n == 0)
+        return 0;
+    else
+    {
+        int S = sumcif(n/10);
+        return S + n%10;
+    }
+}
+Un alt exemplu, parțial corect
+Funcția de mai sus este corectă, dând rezultatul valid pentru orice valoarea număr natural a paramatrului (valoare care se încadrează in tipul int, bineînțeles). Pe de altă parte, dacă vom scrie o funție pe același model pentru numărul de cifre, am obține:
+
+int nrcif(int n)
+{
+    if(n == 0)
+        return 0;
+    else
+    {
+        int S = nrcif(n/10);
+        return S + 1;
+    }
+}
+Dar funcția de mai sus este corectă numai pentru n>0. Apelul nrcif(0) dă rezultatul 0 – greșit, deoarece numărul zero conține 1 cifră.
+
+De ce nu este corect?!
+Condiția n == 0 poate fi adevărată în două situații, pentru care funcția trebuie să returneze valori diferite:
+
+dacă n devine 0 în urma autoapelurilor, funcția trebuie să returneze 0 – suntem în situația în care avem un număr “fără cifre”!
+dacă n este zero în apelul principal, funcția trebuie să returneze 1 – ne interesează efectiv câte cifre are 0 – are o cifră.
+La apelul funcției nu putem știi în ce situație ne aflăm, așa că nu putem stabili valoarea care trebuie returnată!
+
+Cum corectăm?!
+Soluția este simplă: considerăm cazul particular când numărul are o cifră (n<0), nu când este egal cu 0. Funcția pentru numărul de cifre devine:
+
+int nrcif(int n)
+{
+    if(n < 10)
+        return 1;
+    else
+    {
+        int S = nrcif(n/10);
+        return S + 1;
+    }
+}
+Important
+Pentru funcțiile recursive care prelucrează cifrele unui număr (n) considerăm cazul particular când numărul are o singură cifră (n<10), nu când numărul este zero (n==0)!

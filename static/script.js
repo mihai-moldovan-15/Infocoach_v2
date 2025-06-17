@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentProblem.input_description) date += currentProblem.input_description + '\n';
                     if (currentProblem.output_description) date += currentProblem.output_description;
                     if (date.trim()) {
-                        tabContent.innerHTML = `<div style='white-space:pre-line;'>${date.trim()}</div>`;
+                        tabContent.innerHTML = `<div style='white-space:pre-line;'>${highlightFilenames(date.trim())}</div>`;
                     } else {
                         tabContent.textContent = 'Fără date de intrare/ieșire.';
                     }
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentProblem.example_output) {
                         ex += `<span style=\"${labelStyle}\">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
                     }
-                    tabContent.innerHTML = `<div>${ex.trim() || 'Fără exemplu.'}</div>`;
+                    tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
             });
         });
@@ -909,7 +909,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentProblem.input_description) date += currentProblem.input_description + '\n';
                     if (currentProblem.output_description) date += currentProblem.output_description;
                     if (date.trim()) {
-                        tabContent.innerHTML = `<div style='white-space:pre-line;'>${date.trim()}</div>`;
+                        tabContent.innerHTML = `<div style='white-space:pre-line;'>${highlightFilenames(date.trim())}</div>`;
                     } else {
                         tabContent.textContent = 'Fără date de intrare/ieșire.';
                     }
@@ -949,9 +949,214 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentProblem.example_output) {
                         ex += `<span style=\"${labelStyle}\">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
                     }
-                    tabContent.innerHTML = `<div>${ex.trim() || 'Fără exemplu.'}</div>`;
+                    tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
             });
         });
+    }
+
+    function showError(message, duration = 5000) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => {
+            errorDiv.remove();
+        }, duration);
+    }
+
+    function showSuccess(message, duration = 3000) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-message';
+        successDiv.textContent = message;
+        document.body.appendChild(successDiv);
+        
+        setTimeout(() => {
+            successDiv.remove();
+        }, duration);
+    }
+
+    function handleApiError(error) {
+        console.error('API Error:', error);
+        let errorMessage = 'An unexpected error occurred';
+        
+        if (error.response) {
+            const data = error.response.data;
+            if (typeof data === 'object' && data.error) {
+                errorMessage = data.error;
+            } else if (typeof data === 'string') {
+                errorMessage = data;
+            }
+        } else if (error.request) {
+            errorMessage = 'No response from server. Please check your connection.';
+        }
+        
+        showError(errorMessage);
+    }
+
+    async function runCode() {
+        const code = editor.getValue();
+        const customInput = document.getElementById('custom-input').value;
+        const files = getFiles();
+        
+        try {
+            const response = await axios.post('/api/run_code', {
+                code,
+                files,
+                custom_input: customInput
+            });
+            
+            const result = response.data;
+            if (result.success) {
+                document.getElementById('output').textContent = result.output;
+                document.getElementById('error').textContent = '';
+                showSuccess('Code executed successfully');
+            } else {
+                document.getElementById('output').textContent = '';
+                document.getElementById('error').textContent = result.error;
+                showError('Execution failed');
+            }
+        } catch (error) {
+            handleApiError(error);
+            document.getElementById('output').textContent = '';
+            document.getElementById('error').textContent = 'Failed to execute code';
+        }
+    }
+
+    async function submitSolution() {
+        const code = editor.getValue();
+        const files = getFiles();
+        
+        try {
+            const response = await axios.post('/api/submit', {
+                code,
+                files
+            });
+            
+            const result = response.data;
+            if (result.success) {
+                showSuccess('Solution submitted successfully');
+                updateTestResults(result.results);
+            } else {
+                showError(result.error || 'Failed to submit solution');
+            }
+        } catch (error) {
+            handleApiError(error);
+        }
+    }
+
+    function updateTestResults(results) {
+        const resultsContainer = document.getElementById('test-results');
+        resultsContainer.innerHTML = '';
+        
+        results.forEach((result, index) => {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${result.passed ? 'passed' : 'failed'}`;
+            
+            const status = document.createElement('div');
+            status.className = 'test-status';
+            status.textContent = result.passed ? '✓' : '✗';
+            
+            const details = document.createElement('div');
+            details.className = 'test-details';
+            details.innerHTML = `
+                <div>Test ${index + 1}</div>
+                <div>${result.passed ? 'Passed' : 'Failed'}</div>
+                ${result.message ? `<div class="test-message">${result.message}</div>` : ''}
+            `;
+            
+            resultDiv.appendChild(status);
+            resultDiv.appendChild(details);
+            resultsContainer.appendChild(resultDiv);
+        });
+    }
+
+    // Add CSS for notifications
+    const style = document.createElement('style');
+    style.textContent = `
+        .error-message, .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .error-message {
+            background-color: #dc3545;
+        }
+        
+        .success-message {
+            background-color: #28a745;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .test-result {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        
+        .test-result.passed {
+            border-left: 4px solid #28a745;
+        }
+        
+        .test-result.failed {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .test-status {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        
+        .test-details {
+            flex: 1;
+        }
+        
+        .test-message {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    `;
+
+    document.head.appendChild(style);
+
+    // Evidențiere automată a numelor de fișiere în secțiunile de problemă
+    function highlightFilenamesInTabs() {
+        const tabContents = document.querySelectorAll('.ide-tab-content');
+        const fileRegex = /\b([a-zA-Z0-9_\-]+\.(in|out|txt|dat|csv|json|xml))\b/g;
+        tabContents.forEach(tab => {
+            // Nu evidenția dacă deja există span.file-name
+            if (tab.innerHTML.includes('class="file-name"')) return;
+            tab.innerHTML = tab.innerHTML.replace(fileRegex, '<span class="file-name">$1</span>');
+        });
+    }
+
+    highlightFilenamesInTabs();
+
+    // Funcție pentru evidențierea numelor de fișiere în text (ex: sum.in, sum.out, *.txt etc.)
+    function highlightFilenames(text) {
+        const fileRegex = /\b([a-zA-Z0-9_\-]+\.(in|out|txt|dat|csv|json|xml))\b/g;
+        return text.replace(fileRegex, '<span class="file-name">$1</span>');
     }
 });

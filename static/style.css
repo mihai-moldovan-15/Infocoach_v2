@@ -1014,11 +1014,11 @@ select.form-control:focus {
 
 .ai-assistant-sidebar {
     position: fixed;
-    top: 0;
+    top: 64px;
     right: 0;
     width: 400px;
     max-width: 98vw;
-    height: 100vh;
+    height: calc(100vh - 64px);
     background: #fff;
     box-shadow: -2px 0 16px rgba(30,64,175,0.10);
     border-radius: 18px 0 0 18px;
@@ -1118,9 +1118,8 @@ select.form-control:focus {
 }
 @media (max-width: 700px) {
     .ai-assistant-sidebar {
-        width: 98vw;
-        border-radius: 0;
-        max-width: 100vw;
+        top: 56px;
+        height: calc(100vh - 56px);
     }
     .ai-assistant-fab {
         right: 12px;
@@ -1208,4 +1207,16 @@ select.form-control:focus {
         font-size: 1em;
         padding: 0.8em 1em;
     }
+}
+
+/* Evidențiere nume fișiere cu albastru */
+.file-name, .filename, .file-label {
+    color: #1976d2;
+    font-weight: 500;
+    background: #e3f0fc;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+    margin: 0 2px;
+    display: inline-block;
 } 

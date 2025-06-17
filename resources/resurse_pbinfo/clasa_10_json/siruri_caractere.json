@@ -1,0 +1,75 @@
+{
+    "title": "Șiruri de Caractere în C++",
+    "description": "Ghid complet pentru lucrul cu șiruri de caractere în C++, inclusiv funcții și operații specifice",
+    "tags": ["șiruri", "caractere", "C++", "string", "pointeri", "funcții"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "În C++ există mai multe modalități de a reprezenta șirurile de caractere. Acest articol se concentrează pe șirurile de caractere reprezentate ca tablouri unidimensionale cu elemente de tip char, reprezentare care provine din limbajul C. Aceste șiruri se mai numesc null-terminated byte string (NTBS)."
+        },
+        {
+            "title": "Reprezentarea Internă",
+            "content": "În reprezentarea internă, după ultimul caracter (byte, octet) valid din șir se află caracterul '\\0' – caracterul cu codul ASCII 0, numit și caracter nul. De exemplu, pentru cuvântul 'copil' se folosesc 6 octeți: 'c', 'o', 'p', 'i', 'l', '\\0'."
+        },
+        {
+            "title": "Declararea Șirurilor",
+            "subsections": [
+                {
+                    "title": "Declarare Simplă",
+                    "content": "char s[11]; // poate memora maxim 10 caractere utile + '\\0'"
+                },
+                {
+                    "title": "Declarare cu Inițializare",
+                    "content": "Exemple de inițializare:\n1. char s[11] = \"copil\";\n2. char t[] = \"copil\";\n3. char x[6] = {'c','o','p','i','l','\\0'};\n4. char z[] = {'c','o','p','i','l','\\0'};"
+                }
+            ]
+        },
+        {
+            "title": "Operații de I/O",
+            "subsections": [
+                {
+                    "title": "Afișare",
+                    "content": "Se poate face cu operatorul << de inserție în stream:\ncout << s << endl;"
+                },
+                {
+                    "title": "Citire",
+                    "content": "1. Cu operatorul >> (nu citește spații):\ncin >> s;\n2. Cu getline (citește și spații):\ncin.getline(s, 11);"
+                }
+            ]
+        },
+        {
+            "title": "Funcții pentru Caractere",
+            "subsections": [
+                {
+                    "title": "Funcții de Verificare",
+                    "content": "1. isalnum(ch) - verifică dacă e alfanumeric\n2. isalpha(ch) - verifică dacă e alfabetic\n3. islower(ch) - verifică dacă e literă mică\n4. isupper(ch) - verifică dacă e literă mare\n5. isdigit(ch) - verifică dacă e cifră"
+                },
+                {
+                    "title": "Funcții de Conversie",
+                    "content": "1. tolower(ch) - convertește la literă mică\n2. toupper(ch) - convertește la literă mare"
+                }
+            ]
+        },
+        {
+            "title": "Funcții pentru Șiruri",
+            "subsections": [
+                {
+                    "title": "Funcții de Lungime și Copiere",
+                    "content": "1. strlen(str) - returnează lungimea șirului\n2. strcpy(dest, src) - copiază șirul src în dest\n3. strncpy(dest, src, count) - copiază cel mult count caractere"
+                },
+                {
+                    "title": "Funcții de Manipulare",
+                    "content": "1. strcat(dest, src) - concatenează șirurile\n2. strchr(str, ch) - caută un caracter în șir\n3. strstr(s, t) - caută un subșir în șir\n4. strcmp(s, t) - compară lexicografic două șiruri"
+                }
+            ]
+        },
+        {
+            "title": "Pointeri și Șiruri",
+            "content": "Șirurile de caractere sunt de fapt pointeri la primul element. Un pointer la char poate fi folosit pentru a manipula șiruri de caractere. Exemplu:\nchar *p, s[] = \"pbinfo\";\np = s;\ncout << p; // afișează \"pbinfo\""
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Șirurile sunt terminate cu '\\0'\n2. Lungimea unui șir este numărul de caractere până la '\\0'\n3. Accesul la elemente se face cu operatorul []\n4. Funcțiile de manipulare a șirurilor nu verifică depășirea dimensiunii\n5. Compararea șirurilor se face cu strcmp, nu cu operatorii == sau !="
+        }
+    ]
+} 

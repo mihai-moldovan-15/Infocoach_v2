@@ -1,0 +1,51 @@
+{
+    "title": "Stiva în C++",
+    "description": "Implementarea și utilizarea structurii de date stivă în C++",
+    "tags": ["stivă", "structuri_date", "LIFO", "C++", "STL", "stack"],
+    "sections": [
+        {
+            "title": "Definiție și Concept",
+            "content": "Stiva (stack) este o structură de date liniară abstractă, pentru care sunt definite operațiile de adăugare a unui element și eliminare a unui element și aceste operații se realizează la un singur capăt al structurii, numit vârful stivei. În timpul operațiilor cu stiva avem acces numai la elementul din vârful stivei."
+        },
+        {
+            "title": "Operații cu Stiva",
+            "content": "Cu o stivă se pot face următoarele operații:\n1. inițializarea stivei – crearea unei stive vide\n2. verificarea faptului că o stivă este sau nu vidă\n3. adăugarea unui nou element pe stivă (push)\n4. eliminarea unui element de pe stivă (pop)\n5. identificarea valorii elementului din vârful stivei (top)"
+        },
+        {
+            "title": "Caracteristici",
+            "subsections": [
+                {
+                    "title": "Principiul LIFO",
+                    "content": "Stiva este o structură de date de tip LIFO – Last In First Out (ultimul intrat, primul ieșit)."
+                },
+                {
+                    "title": "Analogia cu Stiva de Lăzi",
+                    "content": "Imaginați-vă o stivă de lăzi într-un depozit. Dacă adăugăm încă o ladă, o vom plasa în vârful stivei. Dacă luăm o ladă, o vom lua pe cea din vârful stivei – altfel s-ar răsturna stiva!"
+                }
+            ]
+        },
+        {
+            "title": "Aplicații",
+            "content": "Stiva este folosită în:\n1. Gestionarea memoriei programelor (STACK)\n2. Apelul funcțiilor și recursivitate\n3. Conversia numerelor între baze\n4. Evaluarea expresiilor\n5. Amânarea efectuării unor operații"
+        },
+        {
+            "title": "Implementări",
+            "subsections": [
+                {
+                    "title": "Implementare Statică",
+                    "content": "Folosind tablouri alocate static:",
+                    "code": "const int DIM = 100;\nint S[DIM], vf;\n\n// Inițializare\nvf = 0;\n\n// Verificare vidă\nvf == 0\n\n// Push\nS[vf++] = valoare;\n\n// Pop\nvf--;\n\n// Top\nS[vf-1]"
+                },
+                {
+                    "title": "Implementare STL",
+                    "content": "Folosind containerul stack din STL:",
+                    "code": "#include <stack>\nstack<int> S;\n\n// Verificare vidă\nS.empty()\n\n// Push\nS.push(valoare);\n\n// Pop\nS.pop();\n\n// Top\nS.top()"
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Accesul la elemente se face doar prin vârful stivei\n2. Operațiile push și pop sunt rapide (O(1))\n3. Implementarea statică are o dimensiune fixă\n4. Implementarea STL este dinamică și mai flexibilă\n5. Stiva este folosită intens în gestionarea memoriei programelor"
+        }
+    ]
+} 

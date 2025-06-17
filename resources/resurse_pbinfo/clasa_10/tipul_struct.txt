@@ -1,0 +1,41 @@
+Declararea unei structuri
+Sintaxa generală a declarării unui tip de date struct este următoarea:
+
+struct [NUME_STRUCTURĂ]
+{
+    [TIP1 NUME_CÂMP[, NUME_CÂMP[, ...]];]
+    [TIP2 NUME_CÂMP[, NUME_CÂMP[, ...]];]
+    ...
+} [LISTA DE VARIABILE];
+În acest mod s-a declarat un tip de date cu numele NUME_STRUCTURA și eventual niște variabile de acest tip. În continuare NUME_STRUCTURA poate fi folosit ca un tip de date oarecare, de exemplu pentru a declara variabile sau în lista parametrilor formali ai unei funcții.
+
+Pentru exemplul dat mai sus, declararea va fi:
+
+struct Persoana{
+    char nume[21], prenume[21], sex;
+    int varsta;
+    double salariu;
+};
+Variabile de tip structură
+În exemplul de mai sus s-a declarat o structură cu numele Persoana, dar nu s-a declarat nicio variabilă de acest tip. Pentru a declara variabile de tip Persoana putem să le adăugăm la declararea structurii:
+
+struct Persoana{
+    char nume[21], prenume[21], sex;
+    int varsta;
+    double salariu;
+} A, B;
+(am declarat odată cu tipul de date Persoana și două variable A și B de acest tip), sau putem să le declarăm ulterior declarării tipului de date, astfel:
+
+Această declarare este corectă în C++, dar nu este corectă în C:
+
+Persoana A, B;
+sau
+
+Această declarare este corectă atât în C++ cât și în C:
+
+struct Persoana A, B;
+În declarările de mai sus avem următoarele:
+
+Persoana – este un tip de date, similar cu int sau char;
+A și B – sunt nume de variabile. Tipul acestor variabile este Persoana sau, mai explicit, struct Persoana;
+nume, prenume, sex, varsta, salariu – sunt numele unor câmpuri ale structurii Persoana. Ele pot fi utilizate într-un program doar dacă există variabile de tip Persoana!

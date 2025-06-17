@@ -1,0 +1,47 @@
+{
+    "title": "Subprograme în Programare",
+    "description": "Concepte și utilizarea subprogramelor în programare",
+    "tags": ["subprograme", "funcții", "proceduri", "modularizare", "reutilizare_cod"],
+    "sections": [
+        {
+            "title": "Definiție și Concept",
+            "content": "Un subprogram este o colecție de tipuri de date, variabile, instrucțiuni care îndeplinesc o anumită sarcină (calcule, citiri, afișări), atunci când este apelat (folosit) de un program sau de un alt subprogram."
+        },
+        {
+            "title": "Avantaje ale Utilizării Subprogramelor",
+            "content": "1. Reutilizarea codului – după ce am scris un subprogram îl putem apela (folosi) de oricâte ori este nevoie\n2. Modularizarea programelor – subprogramele ne permit să împărțim problema dată în mai multe subprobleme, mai simple\n3. Reducerea numărului de erori care pot să apară în scrierea unui program\n4. Depistarea cu ușurință a erorilor – fiecare subprogram va fi verificat la crearea sa, apoi verificăm modul în care apelăm subprogramele"
+        },
+        {
+            "title": "Tipuri de Subprograme",
+            "subsections": [
+                {
+                    "title": "Funcții",
+                    "content": "Subprograme care determină un anumit rezultat, o anumită valoare, pornind de la anumite date de intrare. Valoarea este returnată de către funcție și aceasta este apelată ca operand într-o expresie."
+                },
+                {
+                    "title": "Proceduri",
+                    "content": "Subprograme care se folosesc într-o instrucțiune de sine stătătoare, nu într-o expresie. Ele îndeplinesc o sarcină, au un efect și nu returnează un rezultat. În C/C++, procedurile sunt implementate ca funcții de tip void."
+                }
+            ]
+        },
+        {
+            "title": "Exemple Practice",
+            "examples": [
+                {
+                    "title": "Problema 1: Suma Oglinditelor",
+                    "description": "Se dau două numere naturale n și m. Să se determine suma dintre oglinditul lui n și oglinditul lui m.",
+                    "solution": "Construim un subprogram care determină oglinditul unui număr natural oarecare, îl apelăm de două ori pentru a determina oglinditul lui n și al lui m, apoi facem suma rezultatelor."
+                },
+                {
+                    "title": "Problema 2: Sortare Vector",
+                    "description": "Se citește un tablou cu n elemente, numere întregi. Să se ordoneze crescător elementele tabloului și apoi să se afișeze.",
+                    "solution": "Construim trei subprograme:\n1. citire – care citește elementele vectorului\n2. sortare – care ordonează elementele vectorului\n3. afisare – care afișează elementele vectorului"
+                }
+            ]
+        },
+        {
+            "title": "Implementare în C/C++",
+            "content": "În limbajul C/C++:\n- Există doar subprograme de tip funcție\n- Procedurile sunt implementate ca funcții de tip void\n- Funcțiile pot returna valori de orice tip\n- Funcțiile void sunt folosite pentru efecte secundare (citire, afișare, modificare parametri)"
+        }
+    ]
+} 

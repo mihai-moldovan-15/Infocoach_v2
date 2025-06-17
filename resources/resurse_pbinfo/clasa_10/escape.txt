@@ -1,0 +1,67 @@
+Secvențele escape au fost folosite inițial în limbajele C/C++; în prezent sunt folosite în numeroase alte limbaje, precum Java, C# sau PHP. Ele sunt succesiuni de caractere care cu alt înțeles decât cel direct atunci când sunt folosite într-un literal caracter sau șir de caractere, fiind înlocuite cu caractere care nu ar putea fi folosite în mod direct.
+
+Toate secvențele escape încep cu caracterul \ – numit caracter escape și conțin două sau mai multe caractere. Cele care urmează după \ definesc caracterul care va apărea în constanta literal. De exemplu, \n este o secvență escape care reprezintă caracterul newline – trecere la rând nou.
+
+De ce sunt necesare?
+Să scriem un program care să afișeze pe ecran textul Hamlet a spus "A fi, sau a nu fi". – atenție la ghilimele! După cum știm, un literal de tip șir de caractere este delimitat cu caracterul ghilimele ", deci ar trebui să folosim o instrucțiune C++ de felul următor:
+
+cout << "Hamlet a spus "A fi, sau a nu fi".";
+Această instrucțiune este însă greșită: compilatorul identifică șirul "Hamlet a spus ", iar șirul A fi, sau a nu fi nu are înțeles sintactic! Pentru a fi corect vom folosi pentru caracterul " din șir o secvență escape, adică \":
+
+cout << "Hamlet a spus \"A fi, sau a nu fi\".";
+Mai sus, secvența escape \" este pentru caracterul " – acesta având alt înțeles pentru compilator.
+
+Lista secvențelor escape
+_ Secvența escape	_ Cod ASCII	_ Caracter
+\a	7	Alertă, Beep
+\b	8	Backspace
+\e	27	Escape
+\f	12	Formfeed
+\n	10	NewLine
+\r	13	Carriage Return
+\t	9	Tab orizontal
+\v	11	Tab vertical
+\\	92	Backslash
+\"	34	Ghilimele
+\'	39	Apostrof
+\?	63	Semn de întrebare
+\0	0	Caracterul nul, cu înțeles special în șirurile de caractere
+\nnn	oricare	Caracterul cu codul egal cu valoarea octală nnn
+\xhh	oricare	Caracterul cu codul egal cu valoarea hexazecimală hh
+Există de asemenea secvențe escape pentru reprezentarea caracterelor non ASCII.
+
+Exemple
+Utilizarea ghilimelelor într-un șir de caractere
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    cout << "Hamlet a spus \"A fi, sau a nu fi\".";
+    return 0;
+}
+Trecerea la rând nou
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    cout << "Vrei 10 la info?\nHai pe pbinfo";
+    return 0;
+}
+Secvența escape poate fi folosită într-un caracter (ex. '\n') sau într-un șir de caractere (ex. "\n"). Următoarele două programe au același efect ca cel de mai sus:
+
+#include <iostream>
+using namespace std;
+int main()
+{
+    cout << "Vrei 10 la info?" << "\n" << "Hai pe pbinfo";
+    return 0;
+}
+#include <iostream>
+using namespace std;
+int main()
+{
+    cout << "Vrei 10 la info?" << '\n' << "Hai pe pbinfo";
+    return 0;
+}

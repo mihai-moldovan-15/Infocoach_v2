@@ -1,0 +1,77 @@
+Ne amintim că toate variabilele locale din definiția unei funcții precum și valorile parametrilor formali se memorează la apel în memoria de tip STIVĂ (STACK).
+
+Pentru fiecare apel al unei funcții se adaugă pe stivă o zonă de memorie în care se memorează variabilele locale și parametrii pentru apelul curent. Această zonă a stivei va exista până la finalul apelului, după care se va elibera. Dacă din apelul curent se face un alt apel, al altei funcții, se adaugă pe stivă o nouă zonă de memorie, iar conținutul zonei anterioare este inaccesibil până la finalul acelui apel.
+
+Pentru a înțelege mai bine funcționarea stivei, să considerăm pentru început următoarea secvență de program:
+
+int suma(int a , int b){
+    int S = a + b;
+    return S;
+}
+
+int main(){
+    int a = 10 , b = 20;
+    int X = suma(a , b);
+    cout << X;
+    return 0;
+}
+Să urmărim pas cu pas execuția acestui program:
+
+
+
+
+
+
+
+Pas	Conținut stivă	Observații
+
+Înainte de apelul funcției main stiva este vidă.
+int a = 10 , b = 20; 
+a = 10
+b = 20
+
+Stiva conține o zonă de memorie, pentru apelul funcției main. Aici sunt alocate variabile a și b și au fost inițializate.
+int X = ; 
+a = 10
+b = 20
+X = ?
+
+Stiva conține o zonă de memorie, pentru apelul funcției main. S-a alocat memorie penru variabila X, dar încă nu a primit valoare; trebuie apelată funcția suma.
+.. = suma(a, b); 
+a = 10
+b = 20
+a = 10
+b = 20
+X = ?
+Stiva are două zone de memorie.
+
+În zona curentă se află parametrii din apelul funcției suma
+
+În zona “inferioară” se află variabile din main, dar sunt în acest moment inaccesibile.
+
+int S = a + b;
+a = 10
+b = 20
+S = 30
+a = 10
+b = 20
+X = ?
+Stiva are două zone de memorie. În zona curentă se află variabilele și parametrii din apelul funcției suma (s-a alocat memorie pentru variabila S și s-a inițializat).
+
+În zona “inferioară” se află variabile din main, dar sunt în acest moment inaccesibile.
+
+return S; 
+a = 10
+b = 20
+X = 30
+
+Apelul funcției suma se încheie și se revine în apelul funcției main.După revenire, avem din nou o singură zona de memorie pe stivă, cu variabilele din main. Acum însă valoarea variabilei X este determinată. Zona de memorie unde au fost alocate variabilele locale și parametrii funcției suma a fost eliberată.
+cout << X; 
+a = 10
+b = 20
+X = 30
+
+Zona de stivă curentă este cea pentru apelul funcției main. Se afișează pe ecran valoarea lui X, adică 30.
+return 0;
+
+Zona de stivă curentă cea pentru apelul funcției main. La terminarea programului se eliberează și ea.

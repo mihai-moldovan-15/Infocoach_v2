@@ -1,0 +1,35 @@
+Alături de dereferențiere, pe care o știm deja, asupra pointerilor se pot aplica următoarele operații: incrementarea și decrementarea, adunarea cu un număr întreg, diferența a doi pointeri. Aceste operații sunt utile mai ales când pointerii memorează adrese ale unor elemente dintr-un tablou.
+
+Fie următoarea secvență:
+
+int v[5] = {1,2,3,4,5}, *p;
+p = v;
+Pointerul p memorează adresa primului element al tabloului, (p == &v[0]).
+
+Incrementarea/decrementarea
+Asupra variabilelor de tip pointer, la fel ca asupra celor de tip numeric, se pot aplica operatorul de incrementare ++ și cel de decrementare, --, care pot fi prefixați sau postfixați. Efectul acestor este mărirea, respectiv micșorarea valorii adresei memorate de pointer cu dimensiunea tipului de bază al pointerului.
+
+p ++;
+Valoarea pointerului p crește cu numărul de octeți alocați tipului int ( sizeof(int), de regulă 4). Astfel, valoarea lui p devine egală cu adresa lui v[1], adică p == &v[1], iar *p este aceeași variabilă cu v[1]:
+
+*p = 7;
+cout << v[1]; // 7
+Adunarea/scăderea unui pointer cu un număr întreg
+Forma operației este p + n sau p - n, iar rezultatul mărirea/micșorarea adresei memorate în p cu n * sizeof(TIP), unde TIP este tipul de bază al pointerului p.
+
+p = v;
+*(p + 2) = 10;
+cout << v[2] << endl; // 10
+cout << (p + 3)[1] << endl; // 5
+p + 2 este adresa lui v[2], deci prin dereferențiere obținem variabila v[2]. Aceasta devine 10.
+
+p + 3 este un pointer; aplicându-i operația de indexare, (p + 3)[1] este un element al tabloului v aflat la distanța 3 + 1 de primul element, adică este v[4].
+
+Scăderea a doi pointeri
+Scăderea se poate face doar dacă cei doi pointeri au același tip de bază TIP. Rezultatul este diferența dintre adrese, împărțită la sizeof(TIP).
+
+int v[10], *p, *q;
+p = v + 4; // *p este v[4]
+q = v + 7; // *q este v[7]
+cout << q - p << endl; // 3
+cout << p - v << endl; // 4 - indicele lui *p în tabloul v

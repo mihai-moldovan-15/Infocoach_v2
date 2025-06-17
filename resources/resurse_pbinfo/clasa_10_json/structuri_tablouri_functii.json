@@ -1,0 +1,56 @@
+{
+    "title": "Structuri, Tablouri și Funcții în C++",
+    "description": "Lucrul cu structuri în tablouri și funcții în C++",
+    "tags": ["structuri", "tablouri", "funcții", "C++", "parametri", "referințe"],
+    "sections": [
+        {
+            "title": "Tablouri de Structuri",
+            "content": "În C/C++ se pot declara tablouri cu elemente de tip structură și, de asemenea, o structură poate avea elemente de tip tablou.",
+            "examples": [
+                {
+                    "title": "Structură cu Câmpuri de Tip Tablou",
+                    "description": "Exemplu de structură Elev cu câmpuri de tip tablou",
+                    "code": "struct Elev {\n    char nume[21], prenume[21], sex;\n    int numar_note;\n    int note[10];\n};\n\nint n;\nElev V[28];\n\nint main() {\n    for(int i = 0; i < n; i++) {\n        cin >> V[i].nume >> V[i].prenume >> V[i].sex >> V[i].numar_note;\n        for(int j = 0; j < V[i].numar_note; j++)\n            cin >> V[i].note[j];\n    }\n}"
+                }
+            ]
+        },
+        {
+            "title": "Funcții cu Structuri",
+            "subsections": [
+                {
+                    "title": "Reguli Generale",
+                    "content": "1. O funcție C++ poate avea parametri de tip structură\n2. Dacă dorim ca funcția să întoarcă un parametru modificat, acesta trebuie transmis prin referință\n3. O funcție poate returna o valoare de tip structură"
+                },
+                {
+                    "title": "Exemple de Funcții",
+                    "examples": [
+                        {
+                            "title": "Structură Punct",
+                            "description": "Structură pentru coordonatele unui punct în plan",
+                            "code": "struct Punct {\n    int x, y;\n};"
+                        },
+                        {
+                            "title": "Funcție cu Parametru Transmis prin Valoare",
+                            "description": "Calculul distanței de la origine la un punct",
+                            "code": "double Dist(Punct P) {\n    return sqrt(P.x * P.x + P.y * P.y);\n}"
+                        },
+                        {
+                            "title": "Funcție cu Parametru Transmis prin Referință",
+                            "description": "Citirea coordonatelor unui punct",
+                            "code": "void Citire(Punct &P) {\n    cin >> P.x >> P.y;\n}"
+                        },
+                        {
+                            "title": "Funcție care Returnează o Structură",
+                            "description": "Determinarea simetricului unui punct față de origine",
+                            "code": "Punct Simetric(Punct P) {\n    Punct tmp;\n    tmp.x = -P.x;\n    tmp.y = -P.y;\n    return tmp;\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. La transmiterea parametrilor de tip structură prin valoare, se face o copie a întregii structuri\n2. La transmiterea prin referință, se lucrează direct cu structura originală\n3. Când o funcție returnează o structură, se face o copie a structurii returnate\n4. Este important să se aleagă corect modul de transmitere a parametrilor (valoare/referință) în funcție de necesități"
+        }
+    ]
+} 

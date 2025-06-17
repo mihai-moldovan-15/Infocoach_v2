@@ -1,0 +1,41 @@
+Uneori într-o structură putem avea câmpuri de alt tip structură. Exemplu:
+
+Secvență C/C++
+
+struct Data{
+    int zi, luna, an;
+};
+struct Persoana{
+    char nume[21], prenume[21], sex;
+    int varsta;
+    struct Data data_angajarii;
+    double salariu;
+};
+struct Persoana A;
+Secvență C++:
+
+struct Data{
+    int zi, luna, an;
+};
+struct Persoana{
+    char nume[21], prenume[21], sex;
+    int varsta;
+    Data data_angajarii;
+    double salariu;
+};
+Persoana A;
+Am declarat doua tipuri de date: Data – pentru a memora o dată calendaristică, Persoana – pentru a memora informații despre o persoană și o variabilă A de tip Persoana. Variabila A are un câmp de tip Data, numit data_angajarii. Prin intermediul acestuia avem acces la anul, luna și ziua angajării persoanei respective.
+
+Următoarele operații sunt corecte.
+
+A // de tip Persoana
+A.data_angajarii // de tip Data
+A.data_angajarii.an // de tip int
+
+
+Următoarele operații sunt greșite. DE CE?
+A.Data
+A.Data.an
+A.an.data_angajarii
+A.an.Data
+A.salariu.an

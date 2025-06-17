@@ -1,0 +1,61 @@
+Una dintre regulile limbajului C/C++ este următoarea, și o știm foarte bine pentru variabile: Orice identificator, pentru a putea fi folosit, trebuie să fie mai întâi declarat. Această regulă este valabilă și pentru funcții, astfel că identificăm următoarele noțiuni, aparent asemănătoare. Buna lor înțelegere ne va scuti de numeroase erori!!
+
+definirea unei funcții înseamnă scrierea ei în întregime; este alcătuită din antetul funcției și din corpul funcției;
+declararea unei funcții înseamnă să-i anunțăm existența. Declararea funcției se face într-o instrucțiune declarativă și se mai numește și prototip al funcției. Declararea funcției poate fi înlocuită de definirea ei.
+Să considerăm următorul exemplu, fără însemnătate practică:
+
+#include <iostream>
+
+using namespace std;
+
+void F(){
+    cout << "Salut";
+}
+
+int main(){
+    F();
+    return 0;
+}
+Programul este sintactic corect. Partea:
+
+void F(){
+    cout << "Salut";
+}
+reprezintă definirea funcției F(), dar tot aici are loc și declararea. Dacă schimbăm ordinea funcțiilor F() și main() obținem:
+
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    F();
+    return 0;
+}
+
+void F(){
+    cout << "Salut";
+}
+De data aceasta programul nu mai este corect; la compilare obținem următoarea eroare:
+
+ttt.cpp: In function ‘int main()’:
+ttt.cpp:6:7: error: ‘F’ was not declared in this scope
+     F();
+       ^
+Compilation failed.
+Constatăm că identificatorul F nu este declarat. El poate fi declarat precizând prototipul funcției înaintea funcției main() (practic, înainte de a o apela), ca mai jos:
+
+#include <iostream>
+
+using namespace std;
+
+void F();
+
+int main(){
+    F();
+    return 0;
+}
+
+void F(){
+    cout << "Salut";
+}
+Observăm că prototipul (declararea) este o instrucțiune C++ obișnuită, care se termină cu ;!!

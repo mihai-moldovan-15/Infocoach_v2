@@ -1,0 +1,75 @@
+{
+    "title": "Recursivitate în C++",
+    "description": "Ghid complet pentru înțelegerea și implementarea recursivității în C++",
+    "tags": ["recursivitate", "algoritmi", "C++", "funcții", "stivă", "autoapel"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Recursivitatea reprezintă proprietatea unor noțiuni de a se defini prin ele însele. Exemple comune includ factorialul, ridicarea la putere, progresii aritmetice și șirul lui Fibonacci."
+        },
+        {
+            "title": "Definiție și Concept",
+            "subsections": [
+                {
+                    "title": "Cazuri de Bază",
+                    "content": "Orice definiție recursivă trebuie să aibă cel puțin un caz particular (caz de bază) în care să nu aibă loc autoapelul. De exemplu, pentru factorial:\nn! = 1, dacă n = 0\nn! = n * (n-1)!, dacă n > 0"
+                },
+                {
+                    "title": "Implementare în C++",
+                    "content": "În C++, recursivitatea se realizează prin funcții care se pot autoapela. Un apel care apare în definiția funcției se numește autoapel, iar primul apel făcut în altă funcție se numește apel principal."
+                }
+            ]
+        },
+        {
+            "title": "Funcționarea Recursivității",
+            "subsections": [
+                {
+                    "title": "Stiva de Execuție",
+                    "content": "Toate variabilele locale și parametrii formali se memorează în memoria de tip STIVĂ (STACK). Pentru fiecare apel se adaugă o nouă zonă pe stivă, care există până la finalul apelului."
+                },
+                {
+                    "title": "Exemplu de Execuție",
+                    "content": "Pentru calculul factorialului:\n1. Se alocă memorie pentru fiecare apel\n2. Se execută apelurile recursive până la cazul de bază\n3. Se calculează rezultatele în ordine inversă\n4. Se eliberează memoria de pe stivă"
+                }
+            ]
+        },
+        {
+            "title": "Implementare Funcții Recursive",
+            "subsections": [
+                {
+                    "title": "Funcții void",
+                    "content": "void fact(int n, int &r) {\n    if(n == 0)\n        r = 1;\n    else {\n        fact(n-1, r);\n        r = r * n;\n    }\n}"
+                },
+                {
+                    "title": "Funcții cu Return",
+                    "content": "int fact(int n) {\n    if(n == 0)\n        return 1;\n    else\n        return n * fact(n-1);\n}"
+                }
+            ]
+        },
+        {
+            "title": "Formule Recursive Comune",
+            "subsections": [
+                {
+                    "title": "Combinări",
+                    "content": "C(n,k) = 1, dacă n=k sau k=0\nC(n,k) = C(n-1,k) + C(n-1,k-1), altfel"
+                },
+                {
+                    "title": "CMMDC",
+                    "content": "cmmdc(a,b) = a, dacă b=0\ncmmdc(a,b) = cmmdc(b,a%b), dacă b>0"
+                },
+                {
+                    "title": "Operații cu Cifre",
+                    "content": "1. Suma cifrelor: sumcif(n) = n%10 + sumcif(n/10)\n2. Numărul de cifre: nrcif(n) = 1 + nrcif(n/10)\n3. Cifra maximă: cifmax(n) = max(n%10, cifmax(n/10))"
+                }
+            ]
+        },
+        {
+            "title": "Tipuri de Recursivitate",
+            "content": "1. Recursivitate directă: în definiția funcției F apare apelul funcției F\n2. Recursivitate indirectă: în definiția funcției F apare apelul funcției G, iar în definiția funcției G apare apelul lui F"
+        },
+        {
+            "title": "Observații Importante",
+            "content": "1. Este obligatoriu să existe cazul particular (caz de bază)\n2. Valorile la autoapel trebuie să se apropie de cazul elementar\n3. Prea multe autoapeluri pot duce la ocuparea completă a stivei\n4. Fiecare apel are propriile variabile locale\n5. Accesul la variabile se face doar în zona curentă a stivei"
+        }
+    ]
+} 

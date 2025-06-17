@@ -1,0 +1,40 @@
+{
+    "title": "Structura de Date Coadă",
+    "description": "Explicație detaliată a structurii de date coadă (queue) și implementările sale în C++",
+    "tags": ["C++", "structuri_date", "coadă", "FIFO", "STL", "algoritmi"],
+    "sections": [
+        {
+            "title": "Introducere",
+            "content": "Coada (queue) este o structură de date abstractă în care operația de adăugare se realizează la un capăt, iar cea de eliminare se realizează la celălalt capăt. Este o structură de tip FIFO (First In First Out)."
+        },
+        {
+            "title": "Operații de Bază",
+            "content": "Cu o coadă se pot face următoarele operații:\n\n1. Inițializarea cozii – crearea unei cozi vide\n2. Verificarea faptului că o coadă este sau nu vidă\n3. Adăugarea unui nou element în coadă (push)\n4. Eliminarea unui element din coadă (pop)\n5. Identificarea valorii elementului de la începutul cozii (front)"
+        },
+        {
+            "title": "Aplicații",
+            "content": "Coada este folosită în numeroase situații practice:\n\n1. Tipărirea documentelor la imprimantă\n2. Evaluarea soluțiilor la probleme pe platforme online\n3. Prelucrarea informațiilor în ordine cronologică\n4. Expandarea cozii pentru generarea de noi informații"
+        },
+        {
+            "title": "Implementări",
+            "subsections": [
+                {
+                    "title": "Implementare Statică",
+                    "content": "Folosește un tablou unidimensional și două variabile pentru început (st) și sfârșit (dr):\n\n```cpp\nconst int DIM = 1000;\nint Q[DIM], st, dr;\n\n// Inițializare\nst = 1, dr = 0;\n\n// Verificare vidă\nbool esteVida = st > dr;\n\n// Adăugare element\nQ[++dr] = valoare;\n\n// Eliminare element\nst++;\n\n// Acces la primul element\nint primulElement = Q[st];\n```"
+                },
+                {
+                    "title": "Implementare STL",
+                    "content": "Folosește containerul queue din Standard Template Library:\n\n```cpp\n#include <queue>\n\n// Declarare\nqueue<int> Q;\n\n// Verificare vidă\nbool esteVida = Q.empty();\n\n// Adăugare element\nQ.push(valoare);\n\n// Eliminare element\nQ.pop();\n\n// Acces la primul element\nint primulElement = Q.front();\n```"
+                }
+            ]
+        },
+        {
+            "title": "Expandarea Cozii",
+            "content": "Mecanismul de expandare a cozii constă în:\n\n1. Adăugarea informațiilor inițiale în coadă\n2. Cât timp coada este nevidă:\n   - Se extrage un element din coadă\n   - Se identifică noi informații pe baza elementului extras\n   - Se adaugă noile informații în coadă"
+        },
+        {
+            "title": "Best Practices",
+            "content": "1. Verificați întotdeauna dacă coada este vidă înainte de a extrage elemente\n2. Folosiți STL queue pentru implementări simple și eficiente\n3. Implementați coada statică când știți dimensiunea maximă\n4. Atenție la overflow în implementarea statică\n5. Documentați clar scopul și comportamentul cozii în aplicație"
+        }
+    ]
+} 
