@@ -1,0 +1,184 @@
+[
+  {
+    "id": "1",
+    "title": "Analiza Combinatorică",
+    "content": "Explicație detaliată a conceptelor de bază din analiza combinatorică și implementările lor în C++",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Analiza Combinatorică - Introducere",
+    "content": "Analiza combinatorică este un domeniu al matematicii care studiază modalitățile de numărare ale elementelor mulțimilor finite, precum și de alegere și aranjare a lor. Numeroase concepte specifice acestui domeniu intervin și în probleme de algoritmică.",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Analiza Combinatorică - Produsul Cartezian",
+    "content": "Fie n ∈ N și mulțimile A₁, A₂, ..., An. Produsul cartezian A₁ × A₂ × ... × An este mulțimea n-tuplelor (x₁, x₂, ..., xn) cu proprietatea că x₁ ∈ A₁, x₂ ∈ A₂, ..., xn ∈ An.\n\nRegula produsului: Dacă mulțimile A₁, A₂, ..., An au respectiv k₁, k₂, ..., kn, atunci numărul de elemente al produsului cartezian A₁ × A₂ × ... × An este k₁ × k₂ × ... × kn.",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Analiza Combinatorică - Submulțimi",
+    "content": "Fie A o mulțimi cu n elemente. Atunci ea are 2ⁿ submulțimi.\n\nExemplu: Mulțimea A = {1, 2, 3} are 2³ = 8 submulțimi:\n1. ∅\n2. {1}, {2}, {3}\n3. {1, 2}, {1, 3}, {2, 3}\n4. {1, 2, 3}",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Analiza Combinatorică - Permutări",
+    "content": "",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Analiza Combinatorică - Permutări - Definiție",
+    "content": "Se numește permutare o corespondență biunivocă (bijecție) între o mulțime finită și ea însăși. Altfel spus, se numește permutare a unei mulțimi finite o aranjare a elementelor sale într-o anumită ordine.",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Analiza Combinatorică - Permutări - Număr de Permutări",
+    "content": "Numărul de permutări al unei mulțimi cu n elemente este Pn = n! = 1 × 2 × ... × n.",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Analiza Combinatorică - Permutări - Permutări cu Repetiție",
+    "content": "Considerăm un set de n obiecte de k tipuri. Avem n₁ obiecte de tipul 1, n₂ obiecte de tipul 2, ..., nₖ obiecte de tipul k și n₁ + n₂ + ... + nₖ = n. Numărul de permutări distincte ale celor n obiecte este:\n\nPₙ(n) = n! / (n₁! n₂! ... nₖ!)",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Analiza Combinatorică - Aranjamente",
+    "content": "Dacă A este o mulțime cu n elemente, submulțimile ordonate cu k elemente ale lui A, 0 ≤ k ≤ n se numesc aranjamente a n elemente luate câte k.\n\nNumărul de aranjamente de n luate câte k se notează Aₙᵏ = n * (n - 1) * (n - 2) * ... * (n - k + 1) = n! / (n - k)!",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Analiza Combinatorică - Combinări",
+    "content": "O mulțime dată o combinare reprezintă o modalitate de alegere a unor elemente, fără ține cont de ordinea lor. Se numesc combinări de k elemente submulțimile cu k elemente ale mulțimii, presupuse cu n elemente.\n\nFormule:\n\n1. C(n, k) = A(n, k) / Pk = (n * (n-1) * ... * (n-k+1)) / k! = n! / (k! * (n-k)!)\n2. C(n, k) = C(n, n-k), dacă n >= k sau k = 0\n3. C(n, k) = C(n-1, k) + C(n-1, k-1)",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Analiza Combinatorică - Numerele lui Catalan",
+    "content": "Termenul general al acestui șir este:\n\nCn = C(2n, n) - C(2n, n-1) = (1 / (n+1)) * C(2n, n) = Produs de la k=2 la n de (n+k)/k , pentru n >= 0\n\nFormula recursivă:\n\nC(n+1) = Suma de la i=0 la n de Ci * C(n-i)\n\nPrimele numere Catalan sunt: 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, ...",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Analiza Combinatorică - Partițiile unei Mulțimi",
+    "content": "Fie A = {a₁, a₂, ..., an} o mulțime (finită). Se numește partiție a mulțimii A o familie de submulțimi A₁, A₂, ..., Aₖ ale lui A cu proprietățile:\n\n1. Aᵢ ⊂ A, ∀i = 1, K\n2. A₁ ∪ A₂ ∪ ... ∪ Aₖ = A\n3. Aᵢ ∩ Aⱼ = ∅, ∀i ≠ j\n\nNumărul de partiții cu k submulțimi ale unei mulțimi cu n elemente se numește numărul lui Stirling de speța a doua, notat S(n, k).",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Analiza Combinatorică - Best Practices",
+    "content": "1. Pentru valori mari, folosiți tipuri de date cu precizie mare\n2. Implementați operațiile pe numere mari când este necesar\n3. Folosiți memoizare pentru calcule recursive\n4. Atenție la overflow în calculele cu factorial\n5. Verificați validitatea parametrilor înainte de calcule",
+    "tags": [
+      "matematică",
+      "combinatorică",
+      "algoritmi",
+      "C++",
+      "permutări",
+      "combinări",
+      "aranjamente"
+    ]
+  }
+]

@@ -1,0 +1,119 @@
+[
+  {
+    "id": "1",
+    "title": "Algoritmul de Umplere (Fill) Recursiv",
+    "content": "Explicație detaliată a algoritmului de umplere implementat recursiv în C++",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Introducere",
+    "content": "Algoritmul de umplere recursiv funcționează prin marcarea elementului curent și apelarea recursivă pentru fiecare vecin valid. Această abordare este naturală din punct de vedere al implementării, deși poate fi mai lentă decât varianta cu coadă pentru matrice mari.",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Concepte de Bază",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Concepte de Bază - Pași Algoritm",
+    "content": "1. Verificăm elementul curent:\n   - Este în matrice\n   - Nu conține obstacol\n   - Nu a fost deja marcat\n2. Marcăm elementul curent\n3. Continuăm recursiv cu fiecare vecin",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Concepte de Bază - Direcții de Deplasare",
+    "content": "const int di[] = {-1, 0, 1, 0},  // direcții pe linii\n          dj[] = {0, 1, 0, -1}; // direcții pe coloane\n\nDirecțiile reprezintă:\n- Sus: (-1,0)\n- Dreapta: (0,1)\n- Jos: (1,0)\n- Stânga: (0,-1)",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Implementare C++",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Implementare C++ - Funcția Fill",
+    "content": "void Fill(int i, int j, int v) {\n    // i,j - elementul curent, v - valoarea cu care facem Fill\n    if(i >= 1 && i <= n && j >= 1 && j <= m && A[i][j] == 0) {\n        // în matrice, element liber și nemarcat\n        A[i][j] = v;\n        for(int k = 0; k < 4; k++)\n            Fill(i + di[k], j + dj[k], v);\n    }\n}",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Implementare C++ - Program Complet",
+    "content": "#include <iostream>\nusing namespace std;\n\nconst int di[] = {-1, 0, 1, 0},\n          dj[] = {0, 1, 0, -1};\n\nint A[101][101], n, m, istart, jstart;\n\nvoid Fill(int i, int j, int v) {\n    if(i >= 1 && i <= n && j >= 1 && j <= m && A[i][j] == 0) {\n        A[i][j] = v;\n        for(int k = 0; k < 4; k++)\n            Fill(i + di[k], j + dj[k], v);\n    }\n}\n\nint main() {\n    cin >> n >> m;\n    for(int i = 1; i <= n; i++)\n        for(int j = 1; j <= m; j++)\n            cin >> A[i][j];\n    cin >> istart >> jstart;\n\n    Fill(istart, jstart, 2);\n\n    for(int i = 1; i <= n; i++, cout << endl)\n        for(int j = 1; j <= m; j++)\n            cout << A[i][j] << \" \";\n\n    return 0;\n}",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Algoritmul de Umplere (Fill) Recursiv - Observații și Best Practices",
+    "content": "1. Verificați întotdeauna limitele matricei\n2. Atenție la adâncimea recursivității pentru matrice mari\n3. Verificați condițiile pentru vecini (liber și nemarcat)\n4. Folosiți constante pentru direcțiile de deplasare\n5. Documentați clar scopul și comportamentul algoritmului\n6. Considerați varianta cu coadă pentru matrice mari",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "recursivitate",
+      "DFS",
+      "matrice",
+      "C++"
+    ]
+  }
+]

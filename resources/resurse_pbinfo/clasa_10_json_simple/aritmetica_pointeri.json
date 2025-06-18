@@ -1,0 +1,132 @@
+[
+  {
+    "id": "1",
+    "title": "Aritmetica Pointerilor în C++",
+    "content": "Explicație detaliată a operațiilor aritmetice care se pot efectua cu pointeri în C++",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Aritmetica Pointerilor în C++ - Introducere",
+    "content": "Pe lângă dereferențiere, pointerii suportă mai multe operații aritmetice: incrementare/decrementare, adunare cu numere întregi și scăderea a doi pointeri. Aceste operații sunt deosebit de utile când lucrăm cu tablouri.",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Aritmetica Pointerilor în C++ - Operații de Bază",
+    "content": "",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Aritmetica Pointerilor în C++ - Operații de Bază - Incrementare și Decrementare",
+    "content": "1. Operatorii ++ și -- pot fi folosiți prefixați sau postfixați\n2. Efectul este mărirea/micșorarea adresei cu sizeof(TIP)\n\nExemplu:\nint v[5] = {1,2,3,4,5}, *p;\np = v;      // p == &v[0]\np++;        // p == &v[1]\n*p = 7;     // v[1] = 7\ncout << v[1]; // afișează 7",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Aritmetica Pointerilor în C++ - Operații de Bază - Adunare/Scădere cu Numere Întregi",
+    "content": "1. Forma: p + n sau p - n\n2. Rezultatul: adresa ± (n * sizeof(TIP))\n\nExemplu:\np = v;\n*(p + 2) = 10;        // v[2] = 10\ncout << v[2];         // afișează 10\ncout << (p + 3)[1];   // afișează v[4] = 5",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Aritmetica Pointerilor în C++ - Scăderea a Doi Pointeri",
+    "content": "",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Aritmetica Pointerilor în C++ - Scăderea a Doi Pointeri - Reguli și Rezultat",
+    "content": "1. Se poate face doar între pointeri de același tip\n2. Rezultatul este diferența dintre adrese împărțită la sizeof(TIP)\n3. Rezultatul reprezintă numărul de elemente dintre cei doi pointeri",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Aritmetica Pointerilor în C++ - Scăderea a Doi Pointeri - Exemplu de Utilizare",
+    "content": "int v[10], *p, *q;\np = v + 4;    // *p este v[4]\nq = v + 7;    // *q este v[7]\ncout << q - p;    // afișează 3\ncout << p - v;    // afișează 4 (indicele lui *p în v)",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Aritmetica Pointerilor în C++ - Observații Importante",
+    "content": "1. Operațiile aritmetice sunt utile pentru parcurgerea tablourilor\n2. Dimensiunea pasului depinde de tipul de bază al pointerului\n3. Atenție la limitele tabloului pentru a evita accesarea memoriei invalide\n4. Scăderea pointerilor oferă distanța în elemente, nu în octeți\n5. Operațiile aritmetice sunt valide doar pentru pointeri către elemente din același tablou",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Aritmetica Pointerilor în C++ - Best Practices",
+    "content": "1. Verificați întotdeauna limitele tabloului înainte de operații aritmetice\n2. Folosiți operațiile aritmetice pentru parcurgerea eficientă a tablourilor\n3. Preferați pointeri pentru accesul la elemente consecutive\n4. Documentați clar scopul operațiilor aritmetice cu pointeri\n5. Evitați operații aritmetice complexe care pot face codul greu de înțeles",
+    "tags": [
+      "pointeri",
+      "aritmetică",
+      "C++",
+      "tablouri",
+      "memorie",
+      "adrese"
+    ]
+  }
+]

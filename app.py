@@ -570,11 +570,12 @@ def chat_api():
         # Add context from previous messages
         context_text = "\n".join([
             f"{'User' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
-            for msg in context_messages[-5:]  # Only use last 5 messages for context
+            for msg in context_messages[-5:]
         ])
         prompt_content = f"Previous conversation:\n{context_text}\n\nCurrent question: {user_input}"
-    
-    prompt_content += "\nTe rog să folosești cât mai mult informațiile din resursele disponibile."
+
+    # Explicit instruction to use file_search
+    prompt_content += "\n\nTe rog să folosești funcția file_search și să răspunzi doar pe baza surselor găsite în vector store. Dacă nu găsești nimic relevant, spune explicit că nu există informații în surse. Nu inventa răspunsuri."
 
     assistant = assistants[clasa]
 

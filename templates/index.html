@@ -759,6 +759,7 @@
             <div id="wait-message"></div>
             <form id="chat-form" onsubmit="return submitForm(event)" autocomplete="off">
                 <input type="hidden" name="conversation_id" value="{{ selected_conversation_id or '' }}">
+                <input type="hidden" name="clasa" value="{{ clasa }}">
                 <div class="chat-input-row">
                     <textarea name="user_input" id="user-input" rows="2" placeholder="Scrie întrebarea aici..."></textarea>
                     <input type="submit" value="Trimite">

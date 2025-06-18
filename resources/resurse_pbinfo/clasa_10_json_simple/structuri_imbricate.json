@@ -1,0 +1,98 @@
+[
+  {
+    "id": "1",
+    "title": "Structuri Imbricate în C++",
+    "content": "Utilizarea structurilor în interiorul altor structuri în C++",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Structuri Imbricate în C++ - Definiție și Concept",
+    "content": "Structurile imbricate sunt structuri care conțin câmpuri de tip structură. Acest concept permite organizarea mai complexă a datelor și crearea de tipuri de date compuse.",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Structuri Imbricate în C++ - Exemplu de Structuri Imbricate",
+    "content": "",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Structuri Imbricate în C++ - Accesarea Câmpurilor",
+    "content": "",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Structuri Imbricate în C++ - Accesarea Câmpurilor - Operații Corecte",
+    "content": "1. A - acces la întreaga structură Persoana\n2. A.data_angajarii - acces la structura Data din Persoana\n3. A.data_angajarii.an - acces la câmpul an din structura Data",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Structuri Imbricate în C++ - Accesarea Câmpurilor - Operații Greșite",
+    "content": "Următoarele operații sunt incorecte:\n1. A.Data - Data nu este un câmp al structurii Persoana\n2. A.Data.an - Data nu este un câmp valid\n3. A.an.data_angajarii - an este de tip int, nu are câmpuri\n4. A.an.Data - an este de tip int\n5. A.salariu.an - salariu este de tip double",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Structuri Imbricate în C++ - Observații Importante",
+    "content": "1. Ordinea declarării structurilor este importantă - structura conținută trebuie declarată înaintea structurii care o conține\n2. Accesul la câmpurile structurilor imbricate se face folosind operatorul punct (.) în cascadă\n3. Fiecare nivel de acces trebuie să fie valid - nu se poate accesa un câmp dintr-un tip de date care nu este structură",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Structuri Imbricate în C++ - Utilizare în Programe",
+    "content": "Structurile imbricate sunt utile pentru:\n1. Organizarea datelor complexe\n2. Crearea de tipuri de date mai elaborate\n3. Reprezentarea relațiilor între entități\n4. Gruparea logică a informațiilor conexe",
+    "tags": [
+      "structuri",
+      "imbricare",
+      "C++",
+      "tipuri_date",
+      "acces_câmpuri"
+    ]
+  }
+]

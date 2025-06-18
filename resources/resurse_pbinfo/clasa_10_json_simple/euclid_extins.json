@@ -1,0 +1,184 @@
+[
+  {
+    "id": "1",
+    "title": "Algoritmul lui Euclid Extins",
+    "content": "Explicație detaliată a algoritmului lui Euclid extins și aplicațiile sale",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Algoritmul lui Euclid Extins - Introducere",
+    "content": "Algoritmul lui Euclid pentru determinarea celui mai mare divizor comun a două numere naturale are următoarea consecință: pentru două numere naturale nenule a, b există numerele întregi x, y astfel încât a * x + b * y = d, unde d = (a, b) este cel mai mare divizor comun al lui a și b.",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Algoritmul lui Euclid Extins - Algoritmul lui Euclid",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Algoritmul lui Euclid Extins - Algoritmul lui Euclid - Formulă de Bază",
+    "content": "(a, b) = a, dacă b = 0\n(a, b) = (b, r), dacă b ≠ 0 unde r este restul împărțirii lui a la b.",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Algoritmul lui Euclid Extins - Algoritmul lui Euclid - Implementare C++",
+    "content": "void euclid(int a, int b, int &d) {\n    if(b == 0) {\n        d = a;\n    } else {\n        euclid(b, a % b, d);\n    }\n}",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Algoritmul lui Euclid Extins - Algoritmul Extins",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Algoritmul lui Euclid Extins - Algoritmul Extins - Principiul",
+    "content": "Pentru a determina numerele x, y astfel încât a * x + b * y = d, extindem algoritmul de bază adăugând parametrii x și y.",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Algoritmul lui Euclid Extins - Algoritmul Extins - Implementare C++",
+    "content": "void euclid(int a, int b, int &d, int &x, int &y) {\n    if(b == 0) {\n        d = a;\n        x = 1, y = 1;\n    } else {\n        int x1, y1;\n        euclid(b, a % b, d, x1, y1);\n        x = y1;\n        y = x1 - a / b * y1;\n    }\n}",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Algoritmul lui Euclid Extins - Invers Modular",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Algoritmul lui Euclid Extins - Invers Modular - Definiție",
+    "content": "Dacă 1 <= A < N, inversul lui A modulo N este un număr natural 1 <= A^-1 < N cu proprietatea că A * A^-1 = 1 mod N.",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Algoritmul lui Euclid Extins - Invers Modular - Calcul",
+    "content": "Pentru a determina inversul modular, folosim algoritmul lui Euclid extins. Dacă A și N sunt prime între ele, există X și Y astfel încât A*X + N*Y = 1. Trecând la operațiile modulo N, obținem A * X = 1 mod N.",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Algoritmul lui Euclid Extins - Invers Modular - Implementare C++",
+    "content": "void euclid(int a, int b, int &x, int &y) {\n    if(b == 0) {\n        x = 1, y = 1;\n    } else {\n        int x1, y1;\n        euclid(b, a % b, x1, y1);\n        x = y1;\n        y = x1 - a / b * y1;\n    }\n}\n\nint main() {\n    int A = 9, N = 11; // prime între ele, 1 <= A < N\n    int X, Y;\n    euclid(A, N, X, Y);\n    while(X < 0)\n        X += N;\n    cout << X; // 5\n    return 0;\n}",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Algoritmul lui Euclid Extins - Observații Importante",
+    "content": "1. Algoritmul extins permite determinarea coeficienților x și y\n2. Inversul modular există doar dacă A și N sunt prime între ele\n3. Dacă X este negativ, îl mărim cu N până devine pozitiv\n4. Operația B/A modulo N se poate realiza folosind inversul modular\n5. Algoritmul este util în criptografie și teoria numerelor",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  },
+  {
+    "id": "14",
+    "title": "Algoritmul lui Euclid Extins - Best Practices",
+    "content": "1. Verificați întotdeauna dacă numerele sunt prime între ele\n2. Atenție la semnele coeficienților x și y\n3. Verificați limitele numerelor pentru a evita overflow\n4. Documentați clar scopul utilizării algoritmului\n5. Testați cu diverse perechi de numere",
+    "tags": [
+      "algoritmi",
+      "euclid",
+      "matematică",
+      "CMMDC",
+      "invers_modular",
+      "C++"
+    ]
+  }
+]

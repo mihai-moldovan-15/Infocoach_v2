@@ -1,0 +1,132 @@
+[
+  {
+    "id": "1",
+    "title": "Funcționarea Stivei în C++",
+    "content": "Explicație detaliată a modului în care funcționează memoria stivă în C++",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Funcționarea Stivei în C++ - Introducere",
+    "content": "Toate variabilele locale din definiția unei funcții și valorile parametrilor formali se memorează în memoria de tip STIVĂ (STACK). Pentru fiecare apel de funcție se adaugă o nouă zonă pe stivă, care există până la finalul apelului.",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Funcționarea Stivei în C++ - Caracteristici ale Stivei",
+    "content": "",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Funcționarea Stivei în C++ - Caracteristici ale Stivei - Alocare Memorie",
+    "content": "1. Se alocă o zonă de memorie pentru fiecare apel de funcție\n2. Zona conține variabilele locale și parametrii\n3. Zona există până la finalul apelului\n4. Se eliberează automat la terminarea apelului",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Funcționarea Stivei în C++ - Caracteristici ale Stivei - Acces la Variabile",
+    "content": "1. Doar variabilele din zona curentă sunt accesibile\n2. Variabilele din zonele anterioare devin inaccesibile\n3. La revenirea din apel, zona anterioară devine din nou accesibilă",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Funcționarea Stivei în C++ - Exemplu de Funcționare",
+    "content": "",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Funcționarea Stivei în C++ - Exemplu de Funcționare - Cod Exemplu",
+    "content": "int suma(int a, int b) {\n    int S = a + b;\n    return S;\n}\n\nint main() {\n    int a = 10, b = 20;\n    int X = suma(a, b);\n    cout << X;\n    return 0;\n}",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Funcționarea Stivei în C++ - Exemplu de Funcționare - Pași de Execuție",
+    "content": "1. Stiva inițială: variabilele a și b din main\n2. La apelul funcției suma: se adaugă o nouă zonă cu parametrii a și b\n3. În funcția suma: se adaugă variabila locală S\n4. La return: se eliberează zona funcției suma\n5. În main: se actualizează X cu rezultatul\n6. La terminare: se eliberează zona main",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Funcționarea Stivei în C++ - Observații Importante",
+    "content": "1. Fiecare apel de funcție creează o nouă zonă pe stivă\n2. Variabilele locale există doar în timpul apelului\n3. Parametrii sunt copiați în noua zonă de stivă\n4. Memoria se eliberează automat la terminarea apelului\n5. Accesul la variabile este limitat la zona curentă",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Funcționarea Stivei în C++ - Best Practices",
+    "content": "1. Evitați apeluri recursive prea adânci\n2. Nu stocați date mari pe stivă\n3. Atenție la dimensiunea variabilelor locale\n4. Verificați limitele stivei pentru programe complexe\n5. Folosiți alocare dinamică pentru date mari",
+    "tags": [
+      "stivă",
+      "memorie",
+      "C++",
+      "funcții",
+      "variabile",
+      "parametri"
+    ]
+  }
+]

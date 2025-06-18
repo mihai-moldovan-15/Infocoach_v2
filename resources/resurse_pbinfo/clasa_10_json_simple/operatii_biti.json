@@ -1,0 +1,184 @@
+[
+  {
+    "id": "1",
+    "title": "Operații pe Biți",
+    "content": "Explicație detaliată a operațiilor pe biți și reprezentarea numerelor în memorie",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Operații pe Biți - Introducere",
+    "content": "Operațiile pe biți sunt operații foarte eficiente, deoarece ele lucrează direct cu biții din reprezentările în memorie ale operanzilor. Înțelegerea lor presupune înțelegerea reprezentării în memorie a datelor întregi.",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Operații pe Biți - Reprezentarea în Memorie",
+    "content": "",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Operații pe Biți - Reprezentarea în Memorie - Valori Întregi",
+    "content": "Valorile întregi se reprezintă în memorie ca o secvență de biți (cifre binare, 0 și 1). Această secvență poate avea 8, 16, 32 sau 64 de biți. Reprezentarea se face similar pentru toate tipurile cu semn (char, short int, int, long long int) și similar pentru toate tipurile fără semn (unsigned char, unsigned short int, unsigned int, unsigned long long int).",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Operații pe Biți - Reprezentarea în Memorie - Valori Unsigned",
+    "content": "Pentru tipul unsigned short int (16 biți):\n\n1. Se transformă numărul în baza 2\n2. Se completează cu zerouri nesemnificative până la 16 biți\n3. Dacă reprezentarea are mai mult de 16 cifre, se trunchiază\n4. Intervalul de valori: 0 până la 2¹⁶-1 (0-65535)\n\nExemple:\n- 0: 0000000000000000\n- 65535: 1111111111111111\n- 5: 0000000000000101\n- 133: 0000000010000101",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Operații pe Biți - Reprezentarea în Memorie - Valori cu Semn",
+    "content": "Pentru tipul short int (16 biți):\n\n1. Cel mai din stânga bit (bit de semn) stabilește semnul:\n   - 0 pentru numere pozitive\n   - 1 pentru numere negative\n2. Intervalul: -32768 până la 32767\n3. Reprezentarea numerelor negative se face în cod complementar:\n   - Se determină reprezentarea valorii absolute\n   - Se complementează față de 1\n   - Se adună 1",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Operații pe Biți - Operatori pe Biți",
+    "content": "",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Operații pe Biți - Operatori pe Biți - Negație (~)",
+    "content": "Operator unar care complementează toți biții (0 devine 1, 1 devine 0).\n\nExemplu: ~133 == -134",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Operații pe Biți - Operatori pe Biți - Conjuncție (&)",
+    "content": "Operator binar care aplică AND pe fiecare pereche de biți:\n\n0 & 0 = 0\n0 & 1 = 0\n1 & 0 = 0\n1 & 1 = 1\n\nExemplu: 13 & 151 = 5",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Operații pe Biți - Operatori pe Biți - Disjuncție (|)",
+    "content": "Operator binar care aplică OR pe fiecare pereche de biți:\n\n0 | 0 = 0\n0 | 1 = 1\n1 | 0 = 1\n1 | 1 = 1\n\nExemplu: 13 | 151 = 159",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Operații pe Biți - Operatori pe Biți - Disjuncție Exclusivă (^)",
+    "content": "Operator binar care aplică XOR pe fiecare pereche de biți:\n\n0 ^ 0 = 0\n0 ^ 1 = 1\n1 ^ 0 = 1\n1 ^ 1 = 0\n\nExemplu: 13 ^ 151 = 154",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Operații pe Biți - Operatori pe Biți - Deplasare Stânga (<<)",
+    "content": "Deplasează biții spre stânga cu un număr specificat de poziții.\n\nProprietate: n << k = n * 2ᵏ\n\nExemplu: 13 << 3 = 104 (13 * 2³)",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Operații pe Biți - Operatori pe Biți - Deplasare Dreapta (>>)",
+    "content": "Deplasează biții spre dreapta cu un număr specificat de poziții.\n\nProprietate: n >> k = n / 2ᵏ\n\nExemplu: 133 >> 3 = 16 (133 / 2³)",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "14",
+    "title": "Operații pe Biți - Best Practices",
+    "content": "1. Folosiți operațiile pe biți pentru optimizări de performanță\n2. Atenție la semnul numerelor în operațiile de deplasare\n3. Verificați întotdeauna limitele tipurilor de date\n4. Documentați clar operațiile pe biți pentru lizibilitate\n5. Folosiți constante pentru măști de biți",
+    "tags": [
+      "C++",
+      "biți",
+      "operații",
+      "memorie",
+      "reprezentare",
+      "optimizare"
+    ]
+  }
+]

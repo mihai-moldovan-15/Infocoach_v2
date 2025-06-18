@@ -1,0 +1,158 @@
+[
+  {
+    "id": "1",
+    "title": "Declararea Variabilelor în C++",
+    "content": "Explicație detaliată a declarării și caracteristicilor variabilelor în C++",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Declararea Variabilelor în C++ - Introducere",
+    "content": "În C++, variabilele trebuie declarate și li se alocă spațiu în memorie conform tipului lor. Sistemul de operare alocă fiecărui program trei zone în memoria RAM: zona de date, zona de stivă și zona liberă (heap).",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Declararea Variabilelor în C++ - Caracteristici ale Variabilelor",
+    "content": "O variabilă se caracterizează prin:\n\n1. Clasa de memorare - zona de memorie unde este alocat spațiul\n2. Vizibilitate - partea din codul sursă unde poate fi folosită\n3. Durata de viață - timpul în care variabilei îi este alocat spațiu\n4. Tipul variabilei - determină spațiul alocat și operațiile permise",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Declararea Variabilelor în C++ - Zone de Memorie",
+    "content": "",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Declararea Variabilelor în C++ - Zone de Memorie - Zona de Date",
+    "content": "1. Folosită pentru variabile globale\n2. Alocare statică\n3. Inițializare implicită cu 0\n4. Persistă pe durata întregului program",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Declararea Variabilelor în C++ - Zone de Memorie - Zona de Stivă",
+    "content": "1. Folosită pentru variabile locale\n2. Alocare automată\n3. Nu sunt inițializate implicit\n4. Persistă doar în blocul de cod",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Declararea Variabilelor în C++ - Zone de Memorie - Zona Liberă (Heap)",
+    "content": "1. Folosită pentru variabile dinamice\n2. Alocare manuală\n3. Controlată de programator\n4. Persistă până la dezalocare",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Declararea Variabilelor în C++ - Tipuri de Variabile",
+    "content": "",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Declararea Variabilelor în C++ - Tipuri de Variabile - Variabile Locale",
+    "content": "1. Declarate în interiorul unui bloc\n2. Alocate în zona de stivă\n3. Vizibile doar în blocul de declarație\n4. Durata de viață limitată la blocul de cod\n5. Nu sunt inițializate implicit",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Declararea Variabilelor în C++ - Tipuri de Variabile - Variabile Globale",
+    "content": "1. Declarate în afara funcțiilor\n2. Alocate în zona de date\n3. Vizibile în toate funcțiile care urmează declarației\n4. Durata de viață pe întregul program\n5. Inițializate implicit cu 0",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Declararea Variabilelor în C++ - Reguli de Vizibilitate",
+    "content": "1. Variabilele locale au prioritate față de cele globale\n2. Domeniul de vizibilitate este limitat la blocul de declarație\n3. Variabilele din for sunt vizibile doar în for\n4. Parametrii formali sunt variabile locale\n5. Nu se pot declara variabile locale cu același nume ca parametrii formali",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Declararea Variabilelor în C++ - Best Practices",
+    "content": "1. Evitați variabilele globale când este posibil\n2. Inițializați întotdeauna variabilele locale\n3. Folosiți nume descriptive pentru variabile\n4. Atenție la domeniul de vizibilitate\n5. Documentați clar scopul variabilelor",
+    "tags": [
+      "C++",
+      "variabile",
+      "memorie",
+      "vizibilitate",
+      "durată_viață",
+      "clase_memorare"
+    ]
+  }
+]

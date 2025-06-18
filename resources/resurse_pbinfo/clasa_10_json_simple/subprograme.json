@@ -1,0 +1,98 @@
+[
+  {
+    "id": "1",
+    "title": "Subprograme în Programare",
+    "content": "Concepte și utilizarea subprogramelor în programare",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Subprograme în Programare - Definiție și Concept",
+    "content": "Un subprogram este o colecție de tipuri de date, variabile, instrucțiuni care îndeplinesc o anumită sarcină (calcule, citiri, afișări), atunci când este apelat (folosit) de un program sau de un alt subprogram.",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Subprograme în Programare - Avantaje ale Utilizării Subprogramelor",
+    "content": "1. Reutilizarea codului – după ce am scris un subprogram îl putem apela (folosi) de oricâte ori este nevoie\n2. Modularizarea programelor – subprogramele ne permit să împărțim problema dată în mai multe subprobleme, mai simple\n3. Reducerea numărului de erori care pot să apară în scrierea unui program\n4. Depistarea cu ușurință a erorilor – fiecare subprogram va fi verificat la crearea sa, apoi verificăm modul în care apelăm subprogramele",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Subprograme în Programare - Tipuri de Subprograme",
+    "content": "",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Subprograme în Programare - Tipuri de Subprograme - Funcții",
+    "content": "Subprograme care determină un anumit rezultat, o anumită valoare, pornind de la anumite date de intrare. Valoarea este returnată de către funcție și aceasta este apelată ca operand într-o expresie.",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Subprograme în Programare - Tipuri de Subprograme - Proceduri",
+    "content": "Subprograme care se folosesc într-o instrucțiune de sine stătătoare, nu într-o expresie. Ele îndeplinesc o sarcină, au un efect și nu returnează un rezultat. În C/C++, procedurile sunt implementate ca funcții de tip void.",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Subprograme în Programare - Exemple Practice",
+    "content": "",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Subprograme în Programare - Implementare în C/C++",
+    "content": "În limbajul C/C++:\n- Există doar subprograme de tip funcție\n- Procedurile sunt implementate ca funcții de tip void\n- Funcțiile pot returna valori de orice tip\n- Funcțiile void sunt folosite pentru efecte secundare (citire, afișare, modificare parametri)",
+    "tags": [
+      "subprograme",
+      "funcții",
+      "proceduri",
+      "modularizare",
+      "reutilizare_cod"
+    ]
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "title": "Aritmetica Modulară",
+    "content": "Concepte și aplicații ale aritmeticii modulare în programare",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Aritmetica Modulară - Introducere",
+    "content": "În numeroase probleme de informatică se cere determinarea restului împărțirii unui anumit număr (de regulă rezultat ale unui calcul) la o valoare dată, N. De cele mai multe ori numărul nu poate fi determinat direct, valoarea sa fiind prea mare. În aceste situații intervine aritmetica modulară, în care restul cerut se determină făcând operații cu resturi la împărțirea cu N a unor rezultate parțiale.",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Aritmetica Modulară - Congruență Modulo N",
+    "content": "Fie N >= 1 un număr natural și două numere întregi a și b. Spunem că a și b sunt congruente modulo N, a = b mod N dacă N|(a - b). Echivalent, dacă a și b dau același rest la împărțirea cu N.",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Aritmetica Modulară - Operații de Bază",
+    "content": "",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Aritmetica Modulară - Operații de Bază - Adunare și Înmulțire",
+    "content": "Congruența modulo n este compatibilă cu adunarea și înmulțirea numerelor întregi:\n- Dacă a = x mod N și b = y mod N, atunci a + b = x + y mod N\n- Dacă a = x mod N și b = y mod N, atunci a * b = x * y mod N",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Aritmetica Modulară - Operații de Bază - Scădere",
+    "content": "Pentru numerele naturale a >= b și N >= 1, trebuie să avem grijă la rezultatul negativ. Dacă X = (a%N - b%N)%N este negativ, adăugăm N pentru a obține rezultatul corect.",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Aritmetica Modulară - Împărțire și Invers Modular",
+    "content": "Congruența modulo N nu este compatibilă cu împărțirea. Pentru a determina rezultatul modulo N al expresiilor cu împărțiri, folosim inversul modular.",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Aritmetica Modulară - Împărțire și Invers Modular - Definiție Invers Modular",
+    "content": "Pentru 1 <= A < N, inversul lui A modulo N este un număr natural 1 <= A^(-1) < N cu proprietatea că A * A^(-1) = 1 mod N.",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Aritmetica Modulară - Împărțire și Invers Modular - Calculul Inversului Modular",
+    "content": "Există mai multe metode de calcul:\n1. Căutare liniară: O(N)\n2. Teorema lui Euler: O(log₂N * √N)\n3. Algoritmul lui Euclid extins: O(log N)",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Aritmetica Modulară - Aplicații",
+    "content": "Aritmetica modulară are numeroase aplicații în programare, inclusiv:\n- Calculul combinărilor modulo un număr prim\n- Criptografie\n- Generarea de numere aleatoare\n- Verificarea de validitate a datelor",
+    "tags": [
+      "aritmetica_modulara",
+      "matematică",
+      "algoritmi",
+      "congruență",
+      "invers_modular"
+    ]
+  }
+]

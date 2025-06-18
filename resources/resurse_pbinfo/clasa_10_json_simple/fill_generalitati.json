@@ -1,0 +1,142 @@
+[
+  {
+    "id": "1",
+    "title": "Generalități despre Algoritmul de Umplere (Fill)",
+    "content": "Explicație detaliată a conceptelor generale și implementării algoritmului de umplere în C++",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Introducere",
+    "content": "Algoritmul de umplere (FILL) este folosit pentru a identifica zonele accesibile dintr-o matrice binară, unde 0 reprezintă zone libere și 1 reprezintă obstacole. Scopul este marcarea tuturor zonelor în care poate ajunge un mobil, considerând că acesta se poate deplasa doar în zonele vecine libere.",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Concepte de Bază",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Concepte de Bază - Identificarea Vecinilor",
+    "content": "Există mai multe tipuri de vecini posibili:\n1. Vecini pe linie și coloană (4 vecini)\n2. Vecini pe diagonală (4 vecini)\n3. Vecini în săritura calului (8 vecini)\n\nPentru implementare, se folosesc vectori de deplasare (di[], dj[]) care definesc coordonatele relative ale vecinilor.",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Concepte de Bază - Vectori de Deplasare",
+    "content": "Pentru vecini pe linie și coloană:\nint di[] = {-1, 0, 1, 0},  // direcții pe linii\n    dj[] = {0, 1, 0, -1}; // direcții pe coloane\n\nDirecțiile reprezintă:\n- NORD: (-1,0)\n- EST: (0,1)\n- SUD: (1,0)\n- VEST: (0,-1)",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Implementare",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Implementare - Analiza Vecinilor",
+    "content": "for(int k = 0; k < 4; k++) {\n    // analizăm vecinul i+di[k], j+dj[k]\n}",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Implementare - Bordarea Matricei",
+    "content": "Pentru a evita ieșirea din matrice, avem două opțiuni:\n\n1. Bordare cu obstacole\n2. Verificare coordonate:\nfor(int k = 0; k < 4; k++) {\n    int iv = i+di[k], jv = j+dj[k];\n    if(iv >= 1 && jv >= 1 && iv <= n && jv <= m) {\n        // analizăm vecinul iv,jv\n    }\n}",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Observații Importante",
+    "content": "1. Elementele de pe margine au mai puțini vecini\n2. Colțurile au doar 2 vecini\n3. Bordarea sau verificarea coordonatelor evită accesarea memoriei invalide\n4. Vectorii de deplasare trebuie sincronizați\n5. Ordinea elementelor în vectorii de deplasare nu este importantă",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Generalități despre Algoritmul de Umplere (Fill) - Best Practices",
+    "content": "1. Folosiți vectori de deplasare pentru cod mai clar\n2. Verificați întotdeauna limitele matricei\n3. Alegeți metoda de bordare potrivită (obstacole sau verificări)\n4. Documentați clar direcțiile de deplasare\n5. Optimizați verificările pentru performanță\n6. Considerați toate cazurile speciale (margini, colțuri)",
+    "tags": [
+      "algoritmi",
+      "fill",
+      "matrice",
+      "vecini",
+      "deplasare",
+      "C++",
+      "bordare"
+    ]
+  }
+]

@@ -1,0 +1,132 @@
+[
+  {
+    "id": "1",
+    "title": "Divide et Impera",
+    "content": "Explicație detaliată a tehnicii de programare Divide et Impera și aplicațiile sale",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Divide et Impera - Introducere",
+    "content": "Divide et Impera este o metodă de programare bazată pe un principiu simplu:\n\n1. Problema dată se descompune în două (sau mai multe) subprobleme de același tip, dar de dimensiuni mai mici\n2. Se rezolvă independent fiecare subproblemă\n3. Se combină rezultatele obținute pentru subprobleme, obținând rezultatul problemei inițiale",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Divide et Impera - Concepte de Bază",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Divide et Impera - Concepte de Bază - Caracteristici ale Subproblemelor",
+    "content": "Subproblemele trebuie să fie:\n\n1. De același tip cu problema dată\n2. De dimensiuni mai mici (mai \"ușoare\")\n3. Independente (să nu se suprapună, prelucrează seturi de date distincte)",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Divide et Impera - Concepte de Bază - Probleme Elementare",
+    "content": "În tehnica Divide et Impera, în urma împărțirilor succesive în subprobleme, se ajunge la probleme elementare care nu mai pot fi împărțite și se rezolvă direct, de regulă foarte simplu.",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Divide et Impera - Implementare",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Divide et Impera - Implementare - Pseudocod",
+    "content": "Algoritm DivImp(P)\n    Dacă P este problemă elementară \n        R <- RezolvăDirect(P)\n    Altfel\n        [P1,P2] <- Descompune(P)\n        R1 <- DivImp(P1)\n        R2 <- DivImp(P2)\n        R <- Combină(R1,R2)\n    SfârșitDacă\nSfârșitAlgoritm",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Divide et Impera - Implementare - Aplicații",
+    "content": "1. Suma elementelor dintr-un vector:\nint Suma(int V[], int st, int dr) {\n    if(st == dr)\n        return V[st];\n    else {\n        int m = (st + dr) / 2;\n        int s1 = Suma(V, st, m);\n        int s2 = Suma(V, m + 1, dr);\n        return s1 + s2;\n    }\n}\n\n2. CMMDC al elementelor dintr-un vector:\nCMMDC(V,st,dr):\n    dacă st == dr\n        return V[st]\n    altfel\n        m = (st + dr) / 2\n        a = CMMDC(V, st, m)\n        b = CMMDC(V, m + 1, dr)\n        return Cmmdc2(a,b)",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Divide et Impera - Observații Importante",
+    "content": "1. Metoda admite de regulă o implementare recursivă\n2. Subproblemele trebuie să fie independente\n3. Problema elementară trebuie să fie ușor de rezolvat\n4. Combinarea rezultatelor trebuie să fie eficientă\n5. Dimensiunea subproblemelor trebuie să scadă semnificativ",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Divide et Impera - Best Practices",
+    "content": "1. Verificați întotdeauna cazul elementar\n2. Asigurați-vă că subproblemele sunt independente\n3. Alegeți o divizare echilibrată a problemei\n4. Optimizați operația de combinare\n5. Considerați cazurile speciale\n6. Documentați clar procesul de divizare și combinare",
+    "tags": [
+      "algoritmi",
+      "divide_et_impera",
+      "recursivitate",
+      "C++",
+      "subprobleme",
+      "optimizare"
+    ]
+  }
+]

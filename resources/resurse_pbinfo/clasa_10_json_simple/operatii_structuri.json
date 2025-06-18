@@ -1,0 +1,145 @@
+[
+  {
+    "id": "1",
+    "title": "Operații cu Structuri în C++",
+    "content": "Operațiile de bază care se pot efectua cu structuri în C++",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Operații cu Structuri în C++ - Referirea Câmpurilor",
+    "content": "",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Operații cu Structuri în C++ - Referirea Câmpurilor - Operatorul de Acces",
+    "content": "Se folosește operatorul . (punct) pentru accesul direct la membrii unei structuri.\nForma generală: variabila_de_tip_structura.câmp",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Operații cu Structuri în C++ - Referirea Câmpurilor - Exemplu de Structură",
+    "content": "",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Operații cu Structuri în C++ - Operații Corecte",
+    "content": "",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Operații cu Structuri în C++ - Operații Greșite",
+    "content": "Următoarele operații sunt incorecte:\n1. Persoana.nume - nu se poate accesa un câmp direct din tipul structură\n2. Persoana.A - nu se poate accesa o variabilă direct din tipul structură\n3. varsta.persoana - nu se poate accesa o structură dintr-un câmp",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Operații cu Structuri în C++ - Citirea și Afișarea",
+    "content": "",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Operații cu Structuri în C++ - Citirea și Afișarea - Operații Corecte",
+    "content": "Citirea și afișarea se face câmp cu câmp:",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Operații cu Structuri în C++ - Citirea și Afișarea - Operații Greșite",
+    "content": "Nu se pot citi sau afișa structuri întregi:",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Operații cu Structuri în C++ - Atribuirea",
+    "content": "Singura operație uzuală care se poate efectua cu o variabilă de tip structură este atribuirea:\nA = B\nunde A și B sunt două variabile de același tip structură. Atribuirea se face bit cu bit – fiecare bit din reprezentarea în memorie a variabilei B se copiază corespunzător în reprezentarea în memorie a variabilei A.",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Operații cu Structuri în C++ - Observații Importante",
+    "content": "1. Accesul la câmpuri se face întotdeauna prin intermediul unei variabile de tip structură\n2. Citirea și afișarea se face doar la nivel de câmp\n3. Atribuirea este singura operație care se poate face cu întreaga structură\n4. Toate câmpurile sunt copiate la atribuire, inclusiv tablourile de caractere",
+    "tags": [
+      "structuri",
+      "operații",
+      "C++",
+      "acces_câmpuri",
+      "atribuire",
+      "citire_afișare"
+    ]
+  }
+]

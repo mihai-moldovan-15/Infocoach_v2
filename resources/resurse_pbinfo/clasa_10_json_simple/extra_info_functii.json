@@ -1,0 +1,145 @@
+[
+  {
+    "id": "1",
+    "title": "Informații Suplimentare despre Funcții în C++",
+    "content": "Concepte avansate despre funcții în C++: variabile statice, parametri impliciți și supraîncărcarea funcțiilor",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Informații Suplimentare despre Funcții în C++ - Variabile Statice",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Informații Suplimentare despre Funcții în C++ - Variabile Statice - Definiție și Caracteristici",
+    "content": "Variabilele statice sunt variabile locale care își păstrează valoarea între apelurile funcției. Se declară folosind cuvântul cheie 'static' și au următoarele caracteristici:\n1. Sunt alocate în zona de date\n2. Durata de viață este perioada de execuție a programului\n3. Sunt inițializate cu 0 la primul apel\n4. Vizibilitatea rămâne limitată la blocul de declarație",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Informații Suplimentare despre Funcții în C++ - Variabile Statice - Exemplu de Utilizare",
+    "content": "int ogl(int n) {\n    static int cnt;\n    cnt++;\n    cout << \"In functie cnt = \" << cnt << endl;\n    int r = 0;\n    while(n)\n        r = 10 * r + n % 10, n /= 10;\n    return r;\n}",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Informații Suplimentare despre Funcții în C++ - Parametri Impliciți",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Informații Suplimentare despre Funcții în C++ - Parametri Impliciți - Definiție și Reguli",
+    "content": "Parametrii impliciți permit specificarea unor valori default pentru parametrii funcției. Reguli importante:\n1. Parametrii cu valori implicite trebuie să fie ultimii în lista parametrilor\n2. După un parametru cu valoare implicită nu poate urma unul fără valoare implicită\n3. La separarea declarației de definiție, valorile implicite se specifică la declarație",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Informații Suplimentare despre Funcții în C++ - Parametri Impliciți - Exemplu de Utilizare",
+    "content": "void Mareste(int & x, int val = 1) {\n    x += val;\n}\n\n// Apeluri:\nint x = 3;\nMareste(x, 2);  // x devine 5\nMareste(x);     // x devine 6 (val = 1 implicit)",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Informații Suplimentare despre Funcții în C++ - Supraîncărcarea Funcțiilor",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Informații Suplimentare despre Funcții în C++ - Supraîncărcarea Funcțiilor - Definiție și Reguli",
+    "content": "Supraîncărcarea permite existența mai multor funcții cu același nume, dar cu parametri diferiți. Reguli:\n1. Funcțiile trebuie să difere prin lista parametrilor (număr sau tip)\n2. Nu se pot supraîncărca funcții care diferă doar prin tipul rezultatului",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Informații Suplimentare despre Funcții în C++ - Supraîncărcarea Funcțiilor - Exemplu de Utilizare",
+    "content": "void Mareste(int & x, int val = 1) {\n    x += val;\n}\n\nvoid Mareste(double & x, double val = 1) {\n    x += val;\n}\n\n// Apeluri:\nint n = 7;\nMareste(n, 3);      // n devine 10\ndouble x = 2.5;\nMareste(x);         // x devine 3.5",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Informații Suplimentare despre Funcții în C++ - Best Practices",
+    "content": "1. Folosiți variabile statice cu grijă pentru a evita efecte secundare nedorite\n2. Parametrii impliciți trebuie să aibă sens în contextul funcției\n3. La supraîncărcare, asigurați-vă că funcțiile au comportament consistent\n4. Documentați clar comportamentul funcțiilor supraîncărcate\n5. Evitați supraîncărcarea excesivă care poate face codul greu de înțeles",
+    "tags": [
+      "funcții",
+      "C++",
+      "variabile_statice",
+      "parametri_impliciți",
+      "supraîncărcare",
+      "programare"
+    ]
+  }
+]

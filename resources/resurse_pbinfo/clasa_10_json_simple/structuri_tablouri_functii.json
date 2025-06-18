@@ -1,0 +1,80 @@
+[
+  {
+    "id": "1",
+    "title": "Structuri, Tablouri și Funcții în C++",
+    "content": "Lucrul cu structuri în tablouri și funcții în C++",
+    "tags": [
+      "structuri",
+      "tablouri",
+      "funcții",
+      "C++",
+      "parametri",
+      "referințe"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Structuri, Tablouri și Funcții în C++ - Tablouri de Structuri",
+    "content": "În C/C++ se pot declara tablouri cu elemente de tip structură și, de asemenea, o structură poate avea elemente de tip tablou.",
+    "tags": [
+      "structuri",
+      "tablouri",
+      "funcții",
+      "C++",
+      "parametri",
+      "referințe"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Structuri, Tablouri și Funcții în C++ - Funcții cu Structuri",
+    "content": "",
+    "tags": [
+      "structuri",
+      "tablouri",
+      "funcții",
+      "C++",
+      "parametri",
+      "referințe"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Structuri, Tablouri și Funcții în C++ - Funcții cu Structuri - Reguli Generale",
+    "content": "1. O funcție C++ poate avea parametri de tip structură\n2. Dacă dorim ca funcția să întoarcă un parametru modificat, acesta trebuie transmis prin referință\n3. O funcție poate returna o valoare de tip structură",
+    "tags": [
+      "structuri",
+      "tablouri",
+      "funcții",
+      "C++",
+      "parametri",
+      "referințe"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Structuri, Tablouri și Funcții în C++ - Funcții cu Structuri - Exemple de Funcții",
+    "content": "",
+    "tags": [
+      "structuri",
+      "tablouri",
+      "funcții",
+      "C++",
+      "parametri",
+      "referințe"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Structuri, Tablouri și Funcții în C++ - Observații Importante",
+    "content": "1. La transmiterea parametrilor de tip structură prin valoare, se face o copie a întregii structuri\n2. La transmiterea prin referință, se lucrează direct cu structura originală\n3. Când o funcție returnează o structură, se face o copie a structurii returnate\n4. Este important să se aleagă corect modul de transmitere a parametrilor (valoare/referință) în funcție de necesități",
+    "tags": [
+      "structuri",
+      "tablouri",
+      "funcții",
+      "C++",
+      "parametri",
+      "referințe"
+    ]
+  }
+]

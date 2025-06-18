@@ -1,0 +1,119 @@
+[
+  {
+    "id": "1",
+    "title": "Algoritmul MergeSort",
+    "content": "Explicație detaliată a algoritmului MergeSort și implementarea sa în C++",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Algoritmul MergeSort - Introducere",
+    "content": "Sortarea prin interclasare, sau MergeSort este o metodă eficientă de sortare a elementelor unui tablou, bazată pe următoarea idee: dacă prima jumătate a tabloului are elementele sortate și a doua jumătate are de asemenea elementele sortate, prin interclasare se va obține tabloul sortat.",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Algoritmul MergeSort - Principii de Funcționare",
+    "content": "Sortarea prin interclasare este un exemplu tipic de algoritm divide et impera. Pentru o secvență delimitată de indicii st și dr:\n\n1. Dacă st <= dr, problema este elementară, secvența fiind deja sortată\n2. Dacă st < dr:\n   - Se împarte problema în subprobleme, identificând mijlocul secvenței, m = (st + dr) / 2\n   - Se rezolvă subproblemele, sortând secvența delimitată de st și m, respectiv secvența delimitată de m+1 și dr\n   - Se combină soluțiile, interclasând cele două secvențe",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Algoritmul MergeSort - Implementare în C++",
+    "content": "void MergeSort(int v[], int st, int dr) {\n    if(st < dr) {\n        int m = (st + dr) / 2;\n        MergeSort(v, st, m);\n        MergeSort(v, m + 1, dr);\n        //Interclasare\n        int i = st, j = m + 1, k = 0;\n        while(i <= m && j <= dr)\n            if(v[i] < v[j])\n                tmp[++k] = v[i++];\n            else\n                tmp[++k] = v[j++];\n        while(i <= m)\n            tmp[++k] = v[i++];\n        while(j <= dr)\n            tmp[++k] = v[j++];\n        for(i = st, j = 1; i <= dr; i++, j++)\n            v[i] = tmp[j];\n    }\n}",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Algoritmul MergeSort - Complexitate",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Algoritmul MergeSort - Complexitate - Timp",
+    "content": "O(n * log n) în toate cazurile",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Algoritmul MergeSort - Complexitate - Spațiu",
+    "content": "O(n) pentru tabloul auxiliar",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Algoritmul MergeSort - Observații Importante",
+    "content": "1. Complexitatea este stabilă O(n * log n) în toate cazurile\n2. Este necesar un spațiu de memorie suplimentar de dimensiunea tabloului\n3. Tabloul auxiliar (tmp) trebuie declarat global sau alocat dinamic\n4. Algoritmul este stabil (păstrează ordinea relativă a elementelor egale)\n5. Este unul dintre cei mai predictibili algoritmi de sortare",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Algoritmul MergeSort - Best Practices",
+    "content": "1. Alocați dinamic tabloul auxiliar pentru a evita depășirea stivei\n2. Implementați optimizări pentru subsecvențe mici\n3. Atenție la gestionarea memoriei\n4. Verificați limitele tabloului\n5. Considerați variante iterative pentru spațiu optim",
+    "tags": [
+      "algoritmi",
+      "sortare",
+      "divide_et_impera",
+      "C++",
+      "complexitate",
+      "interclasare"
+    ]
+  }
+]

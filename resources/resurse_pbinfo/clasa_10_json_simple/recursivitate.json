@@ -1,0 +1,223 @@
+[
+  {
+    "id": "1",
+    "title": "Recursivitate în C++",
+    "content": "Ghid complet pentru înțelegerea și implementarea recursivității în C++",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Recursivitate în C++ - Introducere",
+    "content": "Recursivitatea reprezintă proprietatea unor noțiuni de a se defini prin ele însele. Exemple comune includ factorialul, ridicarea la putere, progresii aritmetice și șirul lui Fibonacci.",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Recursivitate în C++ - Definiție și Concept",
+    "content": "",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Recursivitate în C++ - Definiție și Concept - Cazuri de Bază",
+    "content": "Orice definiție recursivă trebuie să aibă cel puțin un caz particular (caz de bază) în care să nu aibă loc autoapelul. De exemplu, pentru factorial:\nn! = 1, dacă n = 0\nn! = n * (n-1)!, dacă n > 0",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Recursivitate în C++ - Definiție și Concept - Implementare în C++",
+    "content": "În C++, recursivitatea se realizează prin funcții care se pot autoapela. Un apel care apare în definiția funcției se numește autoapel, iar primul apel făcut în altă funcție se numește apel principal.",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Recursivitate în C++ - Funcționarea Recursivității",
+    "content": "",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Recursivitate în C++ - Funcționarea Recursivității - Stiva de Execuție",
+    "content": "Toate variabilele locale și parametrii formali se memorează în memoria de tip STIVĂ (STACK). Pentru fiecare apel se adaugă o nouă zonă pe stivă, care există până la finalul apelului.",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Recursivitate în C++ - Funcționarea Recursivității - Exemplu de Execuție",
+    "content": "Pentru calculul factorialului:\n1. Se alocă memorie pentru fiecare apel\n2. Se execută apelurile recursive până la cazul de bază\n3. Se calculează rezultatele în ordine inversă\n4. Se eliberează memoria de pe stivă",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Recursivitate în C++ - Implementare Funcții Recursive",
+    "content": "",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Recursivitate în C++ - Implementare Funcții Recursive - Funcții void",
+    "content": "void fact(int n, int &r) {\n    if(n == 0)\n        r = 1;\n    else {\n        fact(n-1, r);\n        r = r * n;\n    }\n}",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Recursivitate în C++ - Implementare Funcții Recursive - Funcții cu Return",
+    "content": "int fact(int n) {\n    if(n == 0)\n        return 1;\n    else\n        return n * fact(n-1);\n}",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Recursivitate în C++ - Formule Recursive Comune",
+    "content": "",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Recursivitate în C++ - Formule Recursive Comune - Combinări",
+    "content": "C(n,k) = 1, dacă n=k sau k=0\nC(n,k) = C(n-1,k) + C(n-1,k-1), altfel",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "14",
+    "title": "Recursivitate în C++ - Formule Recursive Comune - CMMDC",
+    "content": "cmmdc(a,b) = a, dacă b=0\ncmmdc(a,b) = cmmdc(b,a%b), dacă b>0",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "15",
+    "title": "Recursivitate în C++ - Formule Recursive Comune - Operații cu Cifre",
+    "content": "1. Suma cifrelor: sumcif(n) = n%10 + sumcif(n/10)\n2. Numărul de cifre: nrcif(n) = 1 + nrcif(n/10)\n3. Cifra maximă: cifmax(n) = max(n%10, cifmax(n/10))",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "16",
+    "title": "Recursivitate în C++ - Tipuri de Recursivitate",
+    "content": "1. Recursivitate directă: în definiția funcției F apare apelul funcției F\n2. Recursivitate indirectă: în definiția funcției F apare apelul funcției G, iar în definiția funcției G apare apelul lui F",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  },
+  {
+    "id": "17",
+    "title": "Recursivitate în C++ - Observații Importante",
+    "content": "1. Este obligatoriu să existe cazul particular (caz de bază)\n2. Valorile la autoapel trebuie să se apropie de cazul elementar\n3. Prea multe autoapeluri pot duce la ocuparea completă a stivei\n4. Fiecare apel are propriile variabile locale\n5. Accesul la variabile se face doar în zona curentă a stivei",
+    "tags": [
+      "recursivitate",
+      "algoritmi",
+      "C++",
+      "funcții",
+      "stivă",
+      "autoapel"
+    ]
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "1",
+    "title": "Structuri de Date Liniare",
+    "content": "Organizarea și prelucrarea datelor în structuri liniare",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Structuri de Date Liniare - Tipuri de Organizare a Datelor",
+    "content": "Algoritmii prelucrează date organizate în diverse moduri:\n1. Date simple, neorganizate ca structuri de date\n2. Date organizate ca structuri de date liniare – listele\n3. Date organizate ca structuri de date arborescente\n4. Alte tipuri de organizare",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Structuri de Date Liniare - Definiția Structurii de Date",
+    "content": "O structură de date reprezintă un ansamblu de date caracterizat prin:\n1. Relațiile dintre date\n2. Operațiile care pot fi realizate cu datele respective",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Structuri de Date Liniare - Elementele Structurii",
+    "content": "",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Structuri de Date Liniare - Elementele Structurii - Definiție",
+    "content": "Datele care fac parte din structură sunt de un tip oarecare, de obicei structurat (tipul C/C++ struct), care nu caracterizează structura de date.",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Structuri de Date Liniare - Elementele Structurii - Terminologie",
+    "content": "Elementele structurii pot fi numite:\n1. Elemente\n2. Noduri\n3. Articole\n4. Înregistrări",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Structuri de Date Liniare - Structuri Liniare",
+    "content": "",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Structuri de Date Liniare - Structuri Liniare - Definiție",
+    "content": "Structurile liniare sunt structuri de date în care elementele sunt organizate secvențial, unul după altul.",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Structuri de Date Liniare - Structuri Liniare - Exemple",
+    "content": "1. Rezultatele la un concurs\n2. Lista de cumpărături\n3. Șiruri de numere\n4. Lista de prezență",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Structuri de Date Liniare - Caracteristici",
+    "content": "1. Elementele sunt organizate secvențial\n2. Fiecare element are un predecesor și un succesor (cu excepția primului și ultimului)\n3. Accesul la elemente se face în ordine\n4. Operațiile de bază includ inserarea și ștergerea elementelor",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Structuri de Date Liniare - Aplicații",
+    "content": "Structurile liniare sunt folosite pentru:\n1. Gestionarea cozilor de așteptare\n2. Implementarea stivelor\n3. Prelucrarea secvențială a datelor\n4. Organizarea informațiilor în ordine cronologică",
+    "tags": [
+      "structuri_date",
+      "liniare",
+      "algoritmi",
+      "organizare_date",
+      "prelucrare"
+    ]
+  }
+]

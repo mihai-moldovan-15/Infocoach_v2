@@ -35,11 +35,15 @@ function addMessage(content, isUser = false, userInput = '') {
     if (isUser) {
         messageDiv.innerHTML = `<b>Tu:</b><br>${content}`;
     } else {
+        // Get clasa from the form
+        const clasa = document.querySelector('input[name="clasa"]')?.value || '9';
+        
         // Create the full assistant message structure with feedback form
         messageDiv.innerHTML = `
             <b>InfoCoach:</b>
             <div class="message-content">${content}</div>
             <input type="hidden" class="user-input-hidden" value="${userInput.replace(/"/g, '&quot;')}">
+            <input type="hidden" class="clasa-hidden" value="${clasa}">
             <div class="feedback-form">
                 <span>Acest răspuns a fost util?</span>
                 <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
@@ -62,7 +66,7 @@ function submitForm(event) {
     const form = event.target;
     const userInput = form.querySelector('textarea[name="user_input"]').value;
     const conversationId = form.querySelector('input[name="conversation_id"]').value;
-    const clasa = form.querySelector('select[name="clasa"]')?.value || '9';
+    const clasa = form.querySelector('input[name="clasa"]')?.value || '9';
     
     if (!userInput.trim()) return false;
     

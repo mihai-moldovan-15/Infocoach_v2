@@ -1,0 +1,171 @@
+[
+  {
+    "id": "1",
+    "title": "Anatomia Funcțiilor în C++",
+    "content": "Structura și componentele funcțiilor în limbajul C++",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Anatomia Funcțiilor în C++ - Componentele unei Funcții",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Anatomia Funcțiilor în C++ - Componentele unei Funcții - Antetul Funcției",
+    "content": "Antetul funcției definește:\n- Numele funcției\n- Tipul de return\n- Parametrii formali\n- Tipul parametrilor",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Anatomia Funcțiilor în C++ - Componentele unei Funcții - Corpul Funcției",
+    "content": "Corpul funcției conține:\n- Variabile locale\n- Instrucțiuni de procesare\n- Instrucțiunea return (dacă este necesară)",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Anatomia Funcțiilor în C++ - Parametri Funcției",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Anatomia Funcțiilor în C++ - Parametri Funcției - Parametri Formali",
+    "content": "Parametrii declarați în antetul funcției. Se comportă ca variabile locale în corpul funcției.",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Anatomia Funcțiilor în C++ - Parametri Funcției - Parametri Actuali",
+    "content": "Valorile concrete transmise la apelul funcției. Trebuie să corespundă ca număr, tip și ordine cu parametrii formali.",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Anatomia Funcțiilor în C++ - Parametri Funcției - Transmiterea Parametrilor",
+    "content": "Există două moduri principale de transmitere a parametrilor:\n1. Transmitere prin valoare (implicită)\n2. Transmitere prin referință (folosind &)",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Anatomia Funcțiilor în C++ - Tipuri de Funcții",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Anatomia Funcțiilor în C++ - Tipuri de Funcții - Funcții cu Return",
+    "content": "Funcții care returnează o valoare de un anumit tip. Folosesc instrucțiunea return pentru a transmite rezultatul.",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Anatomia Funcțiilor în C++ - Tipuri de Funcții - Funcții void",
+    "content": "Funcții care nu returnează valori. Sunt folosite pentru efecte secundare (citire, afișare, modificare parametri).",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Anatomia Funcțiilor în C++ - Exemple Practice",
+    "content": "",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Anatomia Funcțiilor în C++ - Reguli Importante",
+    "content": "1. Parametrii formali și actuali trebuie să corespundă ca număr, tip și ordine\n2. Variabilele locale sunt accesibile doar în corpul funcției\n3. Parametrii formali se comportă ca variabile locale\n4. Transmiterea prin referință permite modificarea parametrilor actuali\n5. Funcțiile void nu returnează valori",
+    "tags": [
+      "funcții",
+      "C++",
+      "programare",
+      "parametri",
+      "return",
+      "void"
+    ]
+  }
+]

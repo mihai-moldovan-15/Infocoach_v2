@@ -1,0 +1,223 @@
+[
+  {
+    "id": "1",
+    "title": "Liste Dinamice în C++",
+    "content": "Ghid complet pentru implementarea și manipularea listelor liniare simplu înlănțuite în C++",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Liste Dinamice în C++ - Introducere",
+    "content": "O listă liniară simplu înlănțuită conține elemente (noduri) cu două componente: informația utilă și informația de legătură. Fiecare element memorează adresa următorului element din listă.",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Liste Dinamice în C++ - Structura de Bază",
+    "content": "",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Liste Dinamice în C++ - Structura de Bază - Definirea Nodului",
+    "content": "struct nod {\n    int info;\n    nod * urm;\n};\n\nnod * prim = NULL;",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Liste Dinamice în C++ - Structura de Bază - Observații",
+    "content": "1. prim este pointer la primul element\n2. Ultimul element are urm = NULL\n3. Elementele sunt variabile dinamice\n4. Memoria se alocă în HEAP\n5. Fiecare nod ocupă 8 octeți (4 pentru info, 4 pentru urm)",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Liste Dinamice în C++ - Operații de Bază",
+    "content": "",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Liste Dinamice în C++ - Operații de Bază - Crearea unui Nod Nou",
+    "content": "nod * p = new nod;\np->info = valoare;\np->urm = NULL;",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Liste Dinamice în C++ - Operații de Bază - Adăugare la Final",
+    "content": "void AdaugaFinal(nod * & prim, int x) {\n    nod * q = new nod;\n    q->info = x;\n    q->urm = NULL;\n    if(prim == NULL)\n        prim = q;\n    else {\n        nod * t = prim;\n        while(t->urm != NULL)\n            t = t->urm;\n        t->urm = q;\n    }\n}",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Liste Dinamice în C++ - Operații de Bază - Adăugare la Început",
+    "content": "void AdaugaInceput(nod * & prim, int x) {\n    nod * t = new nod;\n    t->info = x;\n    t->urm = prim;\n    prim = t;\n}",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Liste Dinamice în C++ - Parcurgerea Listei",
+    "content": "void Parcurgere(nod * prim) {\n    nod * p = prim;\n    while(p != NULL) {\n        // prelucrăm p->info\n        p = p->urm;\n    }\n}",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Liste Dinamice în C++ - Ștergerea unui Element",
+    "content": "",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "12",
+    "title": "Liste Dinamice în C++ - Ștergerea unui Element - Ștergere Primul Element",
+    "content": "nod * t = prim;\nprim = prim->urm;\ndelete t;",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Liste Dinamice în C++ - Ștergerea unui Element - Ștergere Element Oarecare",
+    "content": "nod * t = p->urm;\np->urm = t->urm;\ndelete t;",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "14",
+    "title": "Liste Dinamice în C++ - Inserarea unui Element",
+    "content": "",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "15",
+    "title": "Liste Dinamice în C++ - Inserarea unui Element - Inserare la Început",
+    "content": "nod * t = new nod;\nt->info = valoare;\nt->urm = prim;\nprim = t;",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "16",
+    "title": "Liste Dinamice în C++ - Inserarea unui Element - Inserare după un Nod",
+    "content": "nod * t = new nod;\nt->info = valoare;\nt->urm = p->urm;\np->urm = t;",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  },
+  {
+    "id": "17",
+    "title": "Liste Dinamice în C++ - Best Practices",
+    "content": "1. Verificați întotdeauna dacă lista este vidă\n2. Eliberați memoria când ștergeți noduri\n3. Verificați pointerii înainte de dereferențiere\n4. Mențineți legăturile corecte între noduri\n5. Folosiți pointeri auxiliari pentru parcurgere",
+    "tags": [
+      "liste",
+      "dinamice",
+      "C++",
+      "pointeri",
+      "memorie",
+      "algoritmi"
+    ]
+  }
+]

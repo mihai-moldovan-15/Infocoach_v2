@@ -1,0 +1,119 @@
+[
+  {
+    "id": "1",
+    "title": "Declararea Funcțiilor în C++",
+    "content": "Explicație detaliată a declarării și definirea funcțiilor în C++",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Declararea Funcțiilor în C++ - Introducere",
+    "content": "În C++, orice identificator, inclusiv funcțiile, trebuie să fie declarat înainte de a fi folosit. Există două concepte importante legate de funcții: definirea și declararea.",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Declararea Funcțiilor în C++ - Definirea Funcțiilor",
+    "content": "Definirea unei funcții înseamnă scrierea ei în întregime și este alcătuită din:\n\n1. Antetul funcției - conține tipul returnat, numele funcției și lista parametrilor\n2. Corpul funcției - conține instrucțiunile care formează funcția",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Declararea Funcțiilor în C++ - Declararea Funcțiilor",
+    "content": "Declararea unei funcții (prototipul) înseamnă anunțarea existenței ei. Caracteristici importante:\n\n1. Se face într-o instrucțiune declarativă\n2. Se termină cu punct și virgulă (;)\n3. Poate fi înlocuită de definirea funcției\n4. Trebuie să fie înaintea primei utilizări a funcției",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Declararea Funcțiilor în C++ - Exemple de Cod",
+    "content": "",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Declararea Funcțiilor în C++ - Exemple de Cod - Definire și Declarare Împreună",
+    "content": "```cpp\nvoid F() {\n    cout << \"Salut\";\n}\n```\nÎn acest caz, definirea include și declararea funcției.",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Declararea Funcțiilor în C++ - Exemple de Cod - Declarare Separată",
+    "content": "```cpp\nvoid F(); // prototipul funcției\n\nint main() {\n    F();\n    return 0;\n}\n\nvoid F() {\n    cout << \"Salut\";\n}\n```\nDeclararea separată este necesară când funcția este folosită înainte de definirea ei.",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Declararea Funcțiilor în C++ - Reguli Importante",
+    "content": "1. Orice funcție trebuie declarată înainte de a fi folosită\n2. Declararea poate fi fie explicită (prototip), fie implicită (prin definire)\n3. Prototipul trebuie să se termine cu punct și virgulă\n4. Ordinea declarării este importantă pentru compilator\n5. Declararea separată permite organizarea mai bună a codului",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Declararea Funcțiilor în C++ - Best Practices",
+    "content": "1. Declarați toate funcțiile la începutul fișierului sau în header-uri\n2. Folosiți prototipuri pentru a organiza mai bine codul\n3. Asigurați-vă că prototipul și definirea sunt consistente\n4. Documentați funcțiile în prototip\n5. Evitați definirea funcțiilor înainte de utilizarea lor când este posibil",
+    "tags": [
+      "C++",
+      "funcții",
+      "declarare",
+      "definire",
+      "prototip",
+      "sintaxă"
+    ]
+  }
+]

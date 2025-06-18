@@ -1,0 +1,145 @@
+[
+  {
+    "id": "1",
+    "title": "Exponențierea Rapidă",
+    "content": "Explicație detaliată a algoritmului de exponențiere rapidă și implementările sale",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Exponențierea Rapidă - Introducere",
+    "content": "Ridicarea la putere este o operație binecunoscută, formulă uzuală fiind: A^n = A × A × ... × A (de n ori). Metoda naivă de implementare are complexitate liniară O(n), dar există o metodă mai eficientă numită exponențierea rapidă, cu complexitate O(log n).",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Exponențierea Rapidă - Concepte de Bază",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Exponențierea Rapidă - Concepte de Bază - Formulă de Bază",
+    "content": "A^n = 1, dacă n = 0\nA^n = A × A^(n-1), dacă n e impar\nA^n = (A^(n/2))^2, dacă n e par",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Exponențierea Rapidă - Concepte de Bază - Exemplu",
+    "content": "Calculul lui 2^25:\n\n1. 2^25 = 2^24 × 2 (25 impar)\n2. 2^24 = (2^12)^2 (24 par)\n3. 2^12 = (2^6)^2 (12 par)\n4. 2^6 = (2^3)^2 (6 par)\n5. 2^3 = 2^2 × 2 (3 impar)\n6. 2^2 = (2^1)^2 (2 par)\n7. 2^1 = 2^0 × 2 (1 impar)\n8. 2^0 = 1",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Exponențierea Rapidă - Implementări",
+    "content": "",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Exponențierea Rapidă - Implementări - Implementare Recursivă",
+    "content": "int Putere(int A, int n) {\n    if(n == 0) {\n        return 1;\n    }\n    if(n % 2 == 1) { // n e impar\n        return A * Putere(A, n - 1);\n    }\n    // n e par\n    int P = Putere(A, n / 2);\n    return P * P;\n}",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Exponențierea Rapidă - Implementări - Implementare Iterativă",
+    "content": "int Putere(int A, int n) {\n    int P = 1;\n    while(n) {\n        if(n % 2 == 1) { // n este impar\n            P = P * A;\n        }\n        A = A * A; // A devine A^2, A^4, A^8, ...\n        n = n / 2; // eliminăm ultima cifră a lui n în binar\n    }\n    return P;\n}",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Exponențierea Rapidă - Implementări - Implementare cu Operații pe Biți",
+    "content": "int Putere(int A, int n) {\n    int P = 1;\n    for(int k = 1; k <= n; k <<= 1) { // k = 1, 2, 4, 8, ...\n        if((n & k) != 0) { // dacă bitul corespunzător lui k în n este 1\n            P = P * A;\n        }\n        A = A * A; // A devine A^2, A^4, A^8, ...\n    }\n    return P;\n}",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Exponențierea Rapidă - Observații Importante",
+    "content": "1. Complexitatea este O(log n) în loc de O(n)\n2. Numărul de înmulțiri este mult mai mic\n3. Algoritmul se bazează pe descompunerea în baza 2\n4. Implementarea iterativă este mai eficientă din punct de vedere al memoriei\n5. Operațiile pe biți pot oferi o implementare și mai eficientă",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Exponențierea Rapidă - Best Practices",
+    "content": "1. Verificați cazurile speciale (n = 0, n = 1)\n2. Atenție la overflow în cazul numerelor mari\n3. Alegeți implementarea potrivită (recursivă/iterativă)\n4. Considerați operațiile pe biți pentru optimizare\n5. Testați cu diverse valori ale exponentului",
+    "tags": [
+      "algoritmi",
+      "exponențiere",
+      "matematică",
+      "C++",
+      "optimizare",
+      "logaritmic"
+    ]
+  }
+]

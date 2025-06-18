@@ -1,0 +1,145 @@
+[
+  {
+    "id": "1",
+    "title": "Stiva în C++",
+    "content": "Implementarea și utilizarea structurii de date stivă în C++",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Stiva în C++ - Definiție și Concept",
+    "content": "Stiva (stack) este o structură de date liniară abstractă, pentru care sunt definite operațiile de adăugare a unui element și eliminare a unui element și aceste operații se realizează la un singur capăt al structurii, numit vârful stivei. În timpul operațiilor cu stiva avem acces numai la elementul din vârful stivei.",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Stiva în C++ - Operații cu Stiva",
+    "content": "Cu o stivă se pot face următoarele operații:\n1. inițializarea stivei – crearea unei stive vide\n2. verificarea faptului că o stivă este sau nu vidă\n3. adăugarea unui nou element pe stivă (push)\n4. eliminarea unui element de pe stivă (pop)\n5. identificarea valorii elementului din vârful stivei (top)",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Stiva în C++ - Caracteristici",
+    "content": "",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Stiva în C++ - Caracteristici - Principiul LIFO",
+    "content": "Stiva este o structură de date de tip LIFO – Last In First Out (ultimul intrat, primul ieșit).",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Stiva în C++ - Caracteristici - Analogia cu Stiva de Lăzi",
+    "content": "Imaginați-vă o stivă de lăzi într-un depozit. Dacă adăugăm încă o ladă, o vom plasa în vârful stivei. Dacă luăm o ladă, o vom lua pe cea din vârful stivei – altfel s-ar răsturna stiva!",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "7",
+    "title": "Stiva în C++ - Aplicații",
+    "content": "Stiva este folosită în:\n1. Gestionarea memoriei programelor (STACK)\n2. Apelul funcțiilor și recursivitate\n3. Conversia numerelor între baze\n4. Evaluarea expresiilor\n5. Amânarea efectuării unor operații",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Stiva în C++ - Implementări",
+    "content": "",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Stiva în C++ - Implementări - Implementare Statică",
+    "content": "Folosind tablouri alocate static:",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Stiva în C++ - Implementări - Implementare STL",
+    "content": "Folosind containerul stack din STL:",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  },
+  {
+    "id": "11",
+    "title": "Stiva în C++ - Observații Importante",
+    "content": "1. Accesul la elemente se face doar prin vârful stivei\n2. Operațiile push și pop sunt rapide (O(1))\n3. Implementarea statică are o dimensiune fixă\n4. Implementarea STL este dinamică și mai flexibilă\n5. Stiva este folosită intens în gestionarea memoriei programelor",
+    "tags": [
+      "stivă",
+      "structuri_date",
+      "LIFO",
+      "C++",
+      "STL",
+      "stack"
+    ]
+  }
+]
