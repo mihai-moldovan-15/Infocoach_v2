@@ -867,6 +867,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTabsWithProblem(problem) {
         if (!problem) return;
+        // === ȘTERGE FIȘIERELE SUPLIMENTARE LA SCHIMBAREA PROBLEMEI ===
+        localStorage.removeItem('ide_user_files');
+        userFiles = [];
+        activeFileIdx = null;
+        renderFilesTabs();
+        renderFileEditor();
+        updateCustomInputVisibility();
         // Activează toate tab-urile
         document.querySelectorAll('.ide-tab').forEach(btn => btn.disabled = false);
         // Activează tab-ul Enunț

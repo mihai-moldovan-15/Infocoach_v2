@@ -1,0 +1,451 @@
+ x <- -1; y <- -1
+┌cât timp n>9 execută
+│┌dacă x=-1 atunci x <- n%100
+││altfel y <- n%100
+│└■
+│ n <- [n/10]
+└■
+┌dacă x<y atunci n <- (n*100+x)*100+y
+│altfel n <- (n*100+y)*100+x
+└■
+scrie n
+
+citește n,k
+ (numere naturale nenule)
+t <- 1
+┌pentru i <- 1,[n/k] execută
+│┌pentru j <- 1,k execută
+││ scrie 2*t,' '
+│└■
+│ t <- t+1
+└■
+┌pentru i <- n%k,1,-1 execută
+│ scrie 3*t,' '
+└■
+
+citeşte n (număr natural)
+p <- 1; m <- 0; k <- 0
+┌cât timp n≠0 execută
+│ citește x (număr natural)
+│┌pentru i <- 1,k execută
+││ x <- [x/10]
+│└■
+│┌dacă x≠0 atunci c <- x%10
+││altfel c <- n%10
+│└■
+│ m <- c*p+m
+│ n <- [n/10]
+│ p <- p*10; k <- k+1
+└■
+scrie m
+
+citeşte n (număr natural)
+m <- 0
+┌repetă
+│ c <- n%10; n <- [n/10]
+│┌dacă c=0 atunci c <- 2
+││altfel
+││┌dacă c%2=0 atunci
+│││c <- 0
+││└■
+│└■
+│ m <- m*10+c
+└până când n=0
+scrie m
+
+citeşte n (număr natural, n>9)
+c1 <- n%10; n <- [n/10]; c2 <- n%10
+┌dacă c1=c2 atunci s <- 0
+│altfel
+│┌dacă c1>c2 atunci s <- 1
+││altfel s <- -1
+│└■
+└■
+┌repetă
+│ c1 <- n%10; n <- [n/10]; c2 <- n%10
+└până când (c1-c2)*s≤0
+scrie s,' ',n
+
+
+citeşte n (număr natural)
+┌repetă
+│ c1 <- n%10; n <- [n/10]; c2 <- n%10
+│┌dacă c1>c2 atunci
+││ c2 <- c1; c1 <- n%10
+│└■
+│┌cât timp c1<c2 execută
+││ scrie c1
+││ c2 <- [c2/2]
+│└■
+└până când n≤9
+
+citește n
+ (număr natural nenul)
+x <- 1; y <- n; d <- 2
+┌cât timp x<y execută
+│┌dacă n%d=0 atunci
+││ x <- d
+││ y <- [n/d]
+│└■
+│ d <- d+1
+└■
+┌dacă x=y atunci
+│ scrie 'D',x
+│altfel scrie 'N'
+└■
+
+
+citește n (număr natural nenul)
+nr <- 0; i <- 1
+┌cât timp i≤n execută
+│ x <- 0; y <- 1; j <- 1
+│ ┌cât timp j<i execută
+│ │ r <- 2*x-y; x <- y; y <- r
+│ │ j <- j+1
+│ └■
+│ i <- i+1
+│ ┌dacă y>0 atunci
+│ │ nr <- nr+1
+│ └■
+└■
+scrie nr
+
+citește n
+ (număr natural nenul)
+x <- 1; m <- 0; p <- 1
+┌cât timp x<10 execută
+│ cn <- n
+│┌cât timp cn≠0 execută
+││ c <- cn%10; cn <- [cn/10]
+││┌dacă c=x atunci
+│││ m <- c*p+m; p <- p*10
+││└■
+│└■
+│ x <- x+2
+└■
+scrie m
+
+citește x,y
+ (numere naturale)
+┌repetă
+│ c <- x%10
+│ x <- [x/10]
+│┌dacă c≠0 atunci
+││┌dacă y%10<c atunci
+│││ y <- y*10+c
+│││altfel
+│││ y <- y*10-c
+││└■
+│└■
+└până când x=0
+scrie y
+
+citește n,k
+ (numere naturale nenule)
+t <- 1
+┌pentru i <- 1,[n/k] execută
+│┌pentru j <- 1,k execută
+││ scrie t,' '
+│└■
+│ t <- t+1
+└■
+┌pentru i <- n%k,1,-1 execută
+│ scrie t,' '
+└■
+
+
+citește x,y
+ (numere naturale nenule)
+┌dacă x>y atunci
+| x <- y
+└■
+i <- x; j <- y; s <- 0
+┌repetă
+| s <- s+(i%2)*j+(j%2)*i
+│ i <- i+1; j <- j-1
+└până când i>j
+scrie s
+
+
+citeşte n (număr natural)
+m <- 0
+┌dacă n=0 atunci
+│ m <- 10
+│altfel
+│┌repetă
+││ c <- n%10; n <- [n/10]
+││┌dacă c≥m atunci
+│││ m <- c
+│││altfel
+│││ m <- 10
+││└■
+│└până când n=0
+└■
+scrie m
+
+citește n (număr natural nenul)
+nr <- 0
+c <- 9
+┌cât timp c≥0 execută
+│ m <- n
+│┌cât timp m≠0 și m%10≠c execută
+││ m <- [m/10]
+│└■
+│┌dacă m≠0 atunci
+││ nr <- nr*10+m%10
+│└■
+│ c <- c-1
+└■
+scrie nr
+
+citeşte n (număr natural)
+p <- 1; m <- 0; k <- 0
+┌cât timp n≠0 execută
+│ citește x (număr natural)
+│ i <- k
+│┌cât timp i≠0 execută
+││ x <- [x/10]; i <- i-1
+│└■
+│┌dacă x=0 atunci c <- n%10
+││altfel c <- x%10
+│└■
+│ m <- c*p+m; n <- [n/10]
+│ p <- p*10; k <- k+1
+└■
+scrie m
+
+citește n (număr natural)
+m <- 0
+┌repetă
+│ c <- n%10; n <- [n/10]
+│┌dacă c=9 atunci c <- 1
+││altfel
+││┌dacă c%2=1 atunci
+│││c <- c+1
+││└■
+│└■
+│ m <- m*10+c
+└până când n=0
+scrie m
+
+citește n (număr natural)
+nr <- 0
+┌pentru i <- n,1,-1 execută
+│ x <- 0; y <- 1
+│ ┌pentru j <- 1,i execută
+│ │ r <- 2*x-y; x <- y; y <- r
+│ └■
+│ ┌dacă y>0 atunci
+│ │ nr <- nr+1
+│ └■
+└■
+scrie nr
+
+citește n,k
+ (numere naturale)
+┌dacă k=0 atunci nr <- -1
+│altfel
+│ nr <- 0
+│ p <- 1
+│┌repetă
+││ c <- n%10; n <- [n/10]
+││┌dacă c%2=0 atunci
+│││ nr <- nr+c*p; p <- p*10
+│││altfel k <- k-1
+││└■
+│└până când n=0 sau k=0
+└■
+scrie nr
+
+citește x,y
+ (numere naturale x≤y)
+i <- x; j <- y; s <- 0
+┌cât timp i≤j execută
+│┌dacă i%2=0 atunci
+││ s <- s+j
+│└■
+│┌dacă j%2=0 atunci
+││ s <- s+i
+│└■
+│i <- i+1; j <- j-1
+└■
+scrie s
+
+
+citește n,k
+ (numere naturale nenule)
+┌pentru i <- 1,n execută
+│┌pentru j <- k,1,-1 execută
+││ scrie j,' '
+│└■
+│┌pentru j <- 1,k execută
+││ scrie j,' '
+│└■
+│ k <- k-1
+└■
+
+
+citește n (număr natural nenul)
+┌cât timp n≠0 execută
+│ c <- n%10; n <- [n/10]
+│┌dacă c%2≠0 atunci
+││ c <- c+1
+│└■
+│┌cât timp c>0 și c<10 execută
+││ scrie c
+││ c <- c*2
+│└■
+└■
+
+
+citește n
+ (număr natural nenul)
+d <- 1; s <- 0
+┌cât timp d*d<n execută
+│┌dacă n%d=0 și d%2≠[n/d]%2 atunci
+││ s <- s+d+[n/d]
+│└■
+│ d <- d+1
+└■
+┌dacă d*d=n atunci s <- s+d
+└■
+scrie s
+
+citește n
+ (număr natural nenul)
+x <- 0; m <- 0; p <- 1
+┌cât timp x<10 execută
+│ cn <- n
+│┌cât timp cn≠0 execută
+││ c <- cn%10; cn <- [cn/10]
+││┌dacă c=x atunci
+│││ m <- c*p+m; p <- p*10
+││└■
+│└■
+│ x <- x+2
+└■
+scrie m
+
+citeşte n, k
+ (numere naturale)
+p <- 1
+┌cât timp n>0 execută
+│ c <- n%10
+│┌dacă k>0 atunci
+││ ┌dacă c%2=1 atunci
+││ │ p <- p*c
+││ └■
+│└■
+│ n <- [n/10]; k <- k-1
+└■
+scrie p
+
+citeşte x
+ (număr natural nenul)
+y <- 0
+┌repetă
+│┌dacă x>9 atunci
+││┌repetă
+│││ x <- [x/10]
+││└până când x≤9
+│└■
+│ y <- y*10+x
+│ citeşte x (număr natural)
+└până când x=0
+scrie y
+
+citește x,y
+ (numere naturale, x≤y)
+k <- 0; i <- x
+┌cât timp i≤y execută
+│ n <- i; c <- 0
+│┌cât timp n>0 și c=0 execută
+││┌dacă n%2=1 atunci c <- 1
+││└■
+││ n <- [n/10]
+│└■
+│ k <- k+c
+│ i <- i+1
+└■
+scrie k
+
+citește x (număr natural)
+n <- 0
+┌cât timp x≠0 execută
+│ y <- x; c <- 0
+│ ┌cât timp y>0 execută
+│ │ ┌dacă y%10>c atunci
+│ │ │ c <- y%10
+│ │ └■
+│ │ y <- [y/10]
+│ └■
+│ n <- n*10+c
+│ citește x (număr natural)
+└■
+scrie n
+
+citește n (număr natural)
+x <- 0
+┌pentru i <- 1,n execută
+│ ┌dacă i%2=0 atunci
+│ │ x <- x+i*i
+│ │altfel
+│ │ x <- x+(i+1)*(i+1)
+│ └■
+└■
+scrie x
+
+
+citeşte n
+ (număr natural nenul)
+┌pentru i <- 1,n execută
+│┌pentru j <- i,n execută
+││ scrie '+'
+│└■
+│┌dacă i%2≠0 atunci
+││ scrie '@'
+│└■
+└■
+
+
+citește x,y (numere naturale)
+┌dacă x<y atunci
+│ x <- x-y; y <- x+y; x <- y-x
+└■
+┌cât timp x≥y execută
+│ scrie 'A'
+│ x <- x-y
+│┌dacă x%2=0 atunci scrie 'A'
+││altfel scrie 'B'
+│└■
+└■
+
+
+citește m,n
+ (numere naturale)
+┌dacă m>n atunci
+│ n <- m
+└■
+┌dacă m%2=0 atunci
+│ m <- m+1
+└■
+┌cât timp m≤n execută
+│ m <- m+2
+│ scrie '*'
+└■
+
+
+citește n,k
+ (numere naturale nenule)
+t <- 1
+┌pentru i <- 1,[n/k] execută
+│┌pentru j <- 1,k execută
+││ scrie 2*t,' '
+│└■
+│ t <- t+1
+└■
+┌pentru i <- n%k,1,-1 execută
+│ scrie 3*t,' '
+└■
+
+

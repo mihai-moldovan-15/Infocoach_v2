@@ -2,38 +2,78 @@
 
 {% block title %}Autentificare - InfoCoach{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <style>
+        /* Ensure the container on the login page fills the height */
+        .container {
+            max-width: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-<div class="auth-container">
-    <div class="auth-header">
-        <h2>Bine ai revenit!</h2>
-        <p class="auth-subtitle">Autentifică-te pentru a continua</p>
+<div class="login-page-container">
+    <div class="welcome-section">
+        <h1>Bun venit la InfoCoach!</h1>
+        <p>Platforma ta inteligentă pentru a învăța C++, concepută pentru a simula raportul ideal de 1:1 dintre profesor și elev, disponibilă 24/7.</p>
+        <p>✨ InfoCoach adaugă un strat de inteligență și interactivitate platformei PbInfo – transformând-o într-o experiență completă de învățare pentru orice elev pasionat de informatică.</p>
+        <div class="features">
+            <div class="feature-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Asistent AI dedicat – primești explicații clare, ghid pas cu pas și feedback personalizat stilului tău de învățare.</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-laptop-code"></i>
+                <span>Exersează pe probleme de pe PbInfo într-un mediu de programare integrat, cu sprijin AI în timp real.</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Monitorizare și progres vizibil – vezi cum evoluezi, ce concepte ai stăpânit și unde mai trebuie să insiști.</span>
+            </div>
+        </div>
     </div>
-    
-    <form method="POST" action="{{ url_for('login') }}" class="auth-form">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.username.label(class="form-label") }}
-            {{ form.username(class="form-control", placeholder="Introdu numele tău de utilizator") }}
-            {% for error in form.username.errors %}
-            <span class="error">{{ error }}</span>
-            {% endfor %}
+    <div class="login-section">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Autentificare</h2>
+                <p class="auth-subtitle">Continuă către platformă</p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('login') }}" class="auth-form">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control", placeholder="Introdu numele tău de utilizator") }}
+                    {% for error in form.username.errors %}
+                    <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control", placeholder="Introdu parola ta") }}
+                    {% for error in form.password.errors %}
+                    <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary btn-block") }}
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                <p class="auth-link">
+                    Nu ai cont? <a href="{{ url_for('register') }}">Înregistrează-te aici</a>
+                </p>
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control", placeholder="Introdu parola ta") }}
-            {% for error in form.password.errors %}
-            <span class="error">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-primary btn-block") }}
-        </div>
-    </form>
-    
-    <div class="auth-footer">
-        <p class="auth-link">
-            Nu ai cont? <a href="{{ url_for('register') }}">Înregistrează-te aici</a>
-        </p>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
+
+[^1]: https://cs.harvard.edu/malan/publications/V1fp0567-liu.pdf 

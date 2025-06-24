@@ -1187,21 +1187,31 @@ def api_run_code():
                     ff.write(fcontent)
                     
         # Check for input file
-        has_in_file = any(fobj['name'].endswith('.in') for fobj in files)
-        
-        # Compile command with additional security flags
-        compile_cmd = f"g++ -O2 -std=c++17 -Wall -Wextra -Werror main.cpp -o main 2> compile_err.txt"
-        
-        # Find input file if exists
         input_file = None
         for fobj in files:
             if fobj['name'].endswith('.in'):
                 input_file = fobj['name']
                 break
-                
+        
+        # Detect if code uses cin/cout and nu ifstream
+        uses_cin = 'cin' in code
+        uses_ifstream = 'ifstream' in code
+        # If input_file exists, code uses cin, and nu ifstream, inject file as stdin
+        inject_input_as_stdin = False
+        if input_file and uses_cin and not uses_ifstream:
+            try:
+                with open(f'{tempdir}/{input_file}', 'r', encoding='utf-8') as f:
+                    custom_input = f.read()
+            except Exception:
+                custom_input = ''
+            inject_input_as_stdin = True
+        
+        # Compile command with additional security flags
+        compile_cmd = f"g++ -O2 -std=c++17 -Wall -Wextra -Werror main.cpp -o main 2> compile_err.txt"
+        
         # Run command with timeout and resource limits
         run_cmd = f"timeout 2s ./main"
-        if input_file:
+        if input_file and not inject_input_as_stdin:
             run_cmd += f" < {input_file}"
             run_cmd += " > program_out.txt 2> runtime_err.txt"
             
@@ -1212,7 +1222,7 @@ def api_run_code():
                 '--memory', '256m', '--cpus', '0.5',
                 '--security-opt', 'no-new-privileges',
                 '--cap-drop', 'ALL',
-                '-v', f'{tempdir}:/workspace:ro',
+                '-v', f'{tempdir}:/workspace:rw',
                 '-w', '/workspace',
                 'cpp-runner',
                 '/bin/bash', '-c', f"{compile_cmd} && {run_cmd}"
@@ -1288,7 +1298,7 @@ def api_run_code():
                 '--memory', '256m', '--cpus', '0.5',
                 '--security-opt', 'no-new-privileges',
                 '--cap-drop', 'ALL',
-                '-v', f'{tempdir}:/workspace:ro',
+                '-v', f'{tempdir}:/workspace:rw',
                 '-w', '/workspace',
                 'cpp-runner',
                 'g++', '-O2', '-std=c++17', '-Wall', '-Wextra', '-Werror', 'main.cpp', '-o', 'main'
@@ -1306,7 +1316,7 @@ def api_run_code():
                 result['success'] = False
                 return jsonify(result)
                 
-            # Run with custom input
+            # Run with custom input (either from user or injected from .in file)
             run_docker_cmd = [
                 'docker', 'run', '--rm',
                 '-i',
@@ -1314,21 +1324,18 @@ def api_run_code():
                 '--memory', '256m', '--cpus', '0.5',
                 '--security-opt', 'no-new-privileges',
                 '--cap-drop', 'ALL',
-                '-v', f'{tempdir}:/workspace:ro',
+                '-v', f'{tempdir}:/workspace:rw',
                 '-w', '/workspace',
                 'cpp-runner',
                 './main'
             ]
-            
             try:
                 proc = subprocess.run(run_docker_cmd, input=custom_input, capture_output=True, text=True, timeout=10)
             except subprocess.TimeoutExpired:
                 result['error'] = 'Execution timed out'
                 return jsonify(result)
-                
             prog_out = proc.stdout.strip()
             runtime_err = proc.stderr.strip()
-            
             if runtime_err:
                 result['output'] = ''
                 result['error'] = runtime_err
@@ -1337,7 +1344,6 @@ def api_run_code():
                 result['output'] = prog_out
                 result['error'] = ''
                 result['success'] = True
-                
             return jsonify(result)
             
     except Exception as e:

@@ -1,0 +1,104 @@
+/* static/login.css */
+body {
+    background: #f6f8fa;
+    margin: 0;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.login-page-container {
+    display: flex;
+    min-height: calc(100vh - 70px); /* Full height minus navbar */
+    width: 100%;
+    align-items: stretch;
+}
+
+.welcome-section {
+    background: linear-gradient(135deg, #007acc, #005999);
+    color: #fff;
+    padding: 60px 40px;
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.welcome-section h1 {
+    font-size: 2.8em;
+    margin-bottom: 20px;
+}
+
+.welcome-section p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    max-width: 500px;
+    margin-bottom: 30px;
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1em;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.feature-item i {
+    font-size: 1.5em;
+}
+
+.login-section {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: #f6f8fa;
+    box-sizing: border-box;
+}
+
+.login-section .auth-container {
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #e8e8e8;
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.login-section .auth-header h2 {
+    font-size: 2em;
+    font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .login-page-container {
+        flex-direction: column;
+    }
+
+    .welcome-section,
+    .login-section {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .welcome-section {
+        padding: 40px 20px;
+        min-height: 40vh;
+        text-align: center;
+    }
+
+    .login-section {
+        padding: 40px 20px;
+    }
+} 

@@ -1,0 +1,643 @@
+int x = -1, y = -1;
+while (n > 9)
+{
+    if (x == -1)
+    {
+        x = n % 100;
+    }
+    else
+    {
+        y = n % 100;
+    }
+    n = n / 10;
+}
+if (x < y)
+{
+    n = (n * 100 + x) * 100 + y;
+}
+else
+{
+    n = (n * 100 + y) * 100 + x;
+}
+cout << n << endl;
+
+
+
+int t = 1;
+for (int i = 1; i <= n / k; i++)
+{
+    for (int j = 1; j <= k; j++)
+    {
+        cout << 2 * t << " ";
+    }
+    t++;
+}
+for (int i = n % k; i >= 1; i--)
+{
+    cout << 3 * t << " ";
+}
+
+
+
+int p = 1, m = 0, k = 0;
+while (n != 0)
+{
+    int x;
+    cin >> x;
+    for (int i = 1; i <= k; i++)
+    {
+        x = x / 10;
+    }
+    int c;
+    if (x != 0)
+    {
+        c = x % 10;
+    }
+    else
+    {
+        c = n % 10;
+    }
+    m = c * p + m;
+    n = n / 10;
+    p = p * 10;
+    k++;
+}
+cout << m << endl;
+
+
+
+int m = 0;
+do
+{
+    int c = n % 10;
+    n = n / 10;
+    if (c == 0)
+    {
+        c = 2;
+    }
+    else
+    {
+        if (c % 2 == 0)
+        {
+            c = 0;
+        }
+    }
+    m = m * 10 + c;
+}
+while (n != 0);
+cout << m << endl;
+
+
+
+int c1 = n % 10;
+n = n / 10;
+int c2 = n % 10;
+int s;
+if (c1 == c2)
+{
+    s = 0;
+}
+else
+{
+    if (c1 > c2)
+    {
+        s = 1;
+    }
+    else
+    {
+        s = -1;
+    }
+}
+do
+{
+    c1 = n % 10;
+    n = n / 10;
+    c2 = n % 10;
+}
+while ((c1 - c2) * s <= 0);
+cout << s << " " << n << endl;
+
+
+
+do
+{
+    int c1 = n % 10;
+    n = n / 10;
+    int c2 = n % 10;
+    if (c1 > c2)
+    {
+        c2 = c1;
+        c1 = n % 10;
+    }
+    while (c1 < c2)
+    {
+        cout << c1;
+        c2 = c2 / 2;
+    }
+}
+while (n > 9);
+
+
+
+int x = 1, y = n, d = 2;
+while (x < y)
+{
+    if (n % d == 0)
+    {
+        x = d;
+        y = n / d;
+    }
+    d++;
+}
+if (x == y)
+{
+    cout << "D" << x << endl;
+}
+else
+{
+    cout << "N" << endl;
+}
+
+
+
+int nr = 0, i = 1;
+while (i <= n)
+{
+    int x = 0, y = 1, j = 1;
+    while (j < i)
+    {
+        int r = 2 * x - y;
+        x = y;
+        y = r;
+        j++;
+    }
+    i++;
+    if (y > 0)
+    {
+        nr++;
+    }
+}
+cout << nr << endl;
+
+
+
+int x = 1, m = 0, p = 1;
+while (x < 10)
+{
+    int cn = n;
+    while (cn != 0)
+    {
+        int c = cn % 10;
+        cn = cn / 10;
+        if (c == x)
+        {
+            m = c * p + m;
+            p = p * 10;
+        }
+    }
+    x += 2;
+}
+cout << m << endl;
+
+
+
+do
+{
+    int c = x % 10;
+    x = x / 10;
+    if (c != 0)
+    {
+        if (y % 10 < c)
+        {
+            y = y * 10 + c;
+        }
+        else
+        {
+            y = y * 10 - c;
+        }
+    }
+}
+while (x != 0);
+cout << y << endl;
+
+
+
+int t = 1;
+for (int i = 1; i <= n / k; i++)
+{
+    for (int j = 1; j <= k; j++)
+    {
+        cout << t << " ";
+    }
+    t++;
+}
+for (int i = n % k; i >= 1; i--)
+{
+    cout << t << " ";
+}
+
+
+
+if (x > y)
+{
+    x = y;
+}
+int i = x, j = y, s = 0;
+do
+{
+    s += (i % 2) * j + (j % 2) * i;
+    i++;
+    j--;
+}
+while (i <= j);
+cout << s << endl;
+
+
+
+int m = 0;
+if (n == 0)
+{
+    m = 10;
+}
+else
+{
+    do
+    {
+        int c = n % 10;
+        n = n / 10;
+        if (c >= m)
+        {
+            m = c;
+        }
+        else
+        {
+            m = 10;
+        }
+    }
+    while (n != 0);
+}
+cout << m << endl;
+
+
+
+int nr = 0, c = 9;
+while (c >= 0)
+{
+    int m = n;
+    while (m != 0 && m % 10 != c)
+    {
+        m = m / 10;
+    }
+    if (m != 0)
+    {
+        nr = nr * 10 + m % 10;
+    }
+    c--;
+}
+cout << nr << endl;
+
+
+
+int p = 1, m = 0, k = 0;
+while (n != 0)
+{
+    int x;
+    cin >> x;
+    int i = k;
+    while (i != 0)
+    {
+        x = x / 10;
+        i--;
+    }
+    int c;
+    if (x == 0)
+    {
+        c = n % 10;
+    }
+    else
+    {
+        c = x % 10;
+    }
+    m = c * p + m;
+    n = n / 10;
+    p = p * 10;
+    k++;
+}
+cout << m << endl;
+
+
+
+int m = 0;
+do
+{
+    int c = n % 10;
+    n = n / 10;
+    if (c == 9)
+    {
+        c = 1;
+    }
+    else
+    {
+        if (c % 2 == 1)
+        {
+            c = c + 1;
+        }
+    }
+    m = m * 10 + c;
+}
+while (n != 0);
+cout << m << endl;
+
+
+
+int nr = 0;
+for (int i = n; i >= 1; i--)
+{
+    int x = 0, y = 1;
+    for (int j = 1; j <= i; j++)
+    {
+        int r = 2 * x - y;
+        x = y;
+        y = r;
+    }
+    if (y > 0)
+    {
+        nr++;
+    }
+}
+cout << nr << endl;
+
+
+
+int nr;
+if (k == 0)
+{
+    nr = -1;
+}
+else
+{
+    nr = 0;
+    int p = 1;
+    do
+    {
+        int c = n % 10;
+        n = n / 10;
+        if (c % 2 == 0)
+        {
+            nr = nr + c * p;
+            p = p * 10;
+        }
+        else
+        {
+            k--;
+        }
+    }
+    while (n != 0 || k != 0);
+}
+cout << nr << endl;
+
+
+
+int i = x, j = y, s = 0;
+while (i <= j)
+{
+    if (i % 2 == 0)
+    {
+        s += j;
+    }
+    if (j % 2 == 0)
+    {
+        s += i;
+    }
+    i++;
+    j--;
+}
+cout << s << endl;
+
+
+
+for (int i = 1; i <= n; i++)
+{
+    for (int j = k; j >= 1; j--)
+    {
+        cout << j << " ";
+    }
+    for (int j = 1; j <= k; j++)
+    {
+        cout << j << " ";
+    }
+    k--;
+}
+
+
+
+while (n != 0)
+{
+    int c = n % 10;
+    n = n / 10;
+    if (c % 2 != 0)
+    {
+        c = c + 1;
+    }
+    while (c > 0 && c < 10)
+    {
+        cout << c;
+        c = c * 2;
+    }
+}
+
+
+
+int d = 1, s = 0;
+while (d * d < n)
+{
+    if (n % d == 0 && d % 2 != (n / d) % 2)
+    {
+        s += d + n / d;
+    }
+    d++;
+}
+if (d * d == n)
+{
+    s += d;
+}
+cout << s << endl;
+
+
+
+int x = 0, m = 0, p = 1;
+while (x < 10)
+{
+    int cn = n;
+    while (cn != 0)
+    {
+        int c = cn % 10;
+        cn = cn / 10;
+        if (c == x)
+        {
+            m = c * p + m;
+            p = p * 10;
+        }
+    }
+    x += 2;
+}
+cout << m << endl;
+
+
+
+int p = 1;
+while (n > 0)
+{
+    int c = n % 10;
+    if (k > 0)
+    {
+        if (c % 2 == 1)
+        {
+            p = p * c;
+        }
+    }
+    n = n / 10;
+    k--;
+}
+cout << p << endl;
+
+
+
+int y = 0;
+do
+{
+    if (x > 9)
+    {
+        do
+        {
+            x = x / 10;
+        }
+        while (x > 9);
+    }
+    y = y * 10 + x;
+    cin >> x;
+}
+while (x != 0);
+cout << y << endl;
+
+
+
+int k = 0, i = x;
+while (i <= y)
+{
+    int n = i, c = 0;
+    while (n > 0 && c == 0)
+    {
+        if (n % 2 == 1)
+        {
+            c = 1;
+        }
+        n = n / 10;
+    }
+    k += c;
+    i++;
+}
+cout << k << endl;
+
+
+
+int n = 0;
+while (x != 0)
+{
+    int y = x, c = 0;
+    while (y > 0)
+    {
+        if (y % 10 > c)
+        {
+            c = y % 10;
+        }
+        y = y / 10;
+    }
+    n = n * 10 + c;
+    cin >> x;
+}
+cout << n << endl;
+
+
+
+int x = 0;
+for (int i = 1; i <= n; i++)
+{
+    if (i % 2 == 0)
+    {
+        x += i * i;
+    }
+    else
+    {
+        x += (i + 1) * (i + 1);
+    }
+}
+cout << x << endl;
+
+
+
+for (int i = 1; i <= n; i++)
+{
+    for (int j = i; j <= n; j++)
+    {
+        cout << "+";
+    }
+    if (i % 2 != 0)
+    {
+        cout << "@";
+    }
+}
+
+
+
+if (x < y)
+{
+    x = x - y;
+    y = x + y;
+    x = y - x;
+}
+while (x >= y)
+{
+    cout << "A";
+    x = x - y;
+    if (x % 2 == 0)
+    {
+        cout << "A";
+    }
+    else
+    {
+        cout << "B";
+    }
+}
+
+
+
+if (m > n)
+{
+    n = m;
+}
+if (m % 2 == 0)
+{
+    m = m + 1;
+}
+while (m <= n)
+{
+    m += 2;
+    cout << "*";
+}
+
+
+
+int t = 1;
+for (int i = 1; i <= n / k; i++)
+{
+    for (int j = 1; j <= k; j++)
+    {
+        cout << 2 * t << " ";
+    }
+    t++;
+}
+for (int i = n % k; i >= 1; i--)
+{
+    cout << 3 * t << " ";
+}
