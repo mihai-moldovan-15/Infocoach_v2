@@ -3,48 +3,48 @@
     "id": "1",
     "title": "Verificarea unei reguli pentru toate elementele din vector",
     "content": "Scop: să verificăm dacă toate elementele respectă o anumită regulă. Metodă: folosim o variabilă booleană OK inițializată cu true. Parcurgem vectorul și dacă găsim un element care nu respectă regula, setăm OK = false și oprim parcurgerea.",
-    "tags": ["vector", "toate elementele", "regulă", "boolean", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "toate elementele", "regulă", "boolean"]
   },
   {
     "id": "2",
     "title": "Exemplu C++ – toate elementele respectă regula (for, cu întrerupere)",
     "content": "bool OK = true;\nfor(int i = 0; i < n && OK; i++)\n    if(X[i] - nu respectă regula)\n        OK = false;",
-    "tags": ["vector", "for", "boolean", "regulă", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "for", "boolean", "regulă"]
   },
   {
     "id": "3",
     "title": "Exemplu C++ – toate elementele respectă regula (for cu break)",
     "content": "bool OK = true;\nfor(int i = 0; i < n; i++)\n    if(X[i] - nu respectă regula)\n    {\n        OK = false;\n        break;\n    }",
-    "tags": ["vector", "for", "break", "regulă", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "for", "break", "regulă"]
   },
   {
     "id": "4",
     "title": "Exemplu C++ – toate elementele respectă regula (while)",
     "content": "bool OK = true;\nint i = 0;\nwhile(i < n && OK)\n{\n    if(X[i] - nu respectă regula)\n        OK = false;\n    else\n        i++;\n}",
-    "tags": ["vector", "while", "regulă", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "while", "regulă"]
   },
   {
     "id": "5",
     "title": "Verificarea dacă există elemente care respectă regula",
     "content": "Scop: să verificăm dacă cel puțin un element respectă o regulă. Inițializăm OK cu false. Dacă un element respectă regula, setăm OK = true și oprim căutarea.",
-    "tags": ["vector", "existență", "regulă", "boolean", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "existență", "regulă", "boolean"]
   },
   {
     "id": "6",
     "title": "Exemplu C++ – există element care respectă regula (for, cu întrerupere)",
     "content": "bool OK = false;\nfor(int i = 0; i < n && !OK; i++)\n    if(X[i] - respectă regula)\n        OK = true;",
-    "tags": ["vector", "existență", "for", "boolean", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "existență", "for", "boolean"]
   },
   {
     "id": "7",
     "title": "Exemplu C++ – există element care respectă regula (for cu break)",
     "content": "bool OK = false;\nfor(int i = 0; i < n; i++)\n    if(X[i] - respectă regula)\n    {\n        OK = true;\n        break;\n    }",
-    "tags": ["vector", "existență", "break", "regulă", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "existență", "break", "regulă"]
   },
   {
     "id": "8",
     "title": "Exemplu C++ – există element care respectă regula (while)",
     "content": "bool OK = false;\nint i = 0;\nwhile(i < n && !OK)\n{\n    if(X[i] - respectă regula)\n        OK = true;\n    else\n        i++;\n}",
-    "tags": ["vector", "existență", "while", "regulă", "c++"]
+    "tags": ["vector", "vectori", "tablou", "tablouri", "tablou unidimensional", "tablouri unidimensionale", "array", "arrays", "structura de date", "c++", "existență", "while", "regulă"]
   }
 ]
