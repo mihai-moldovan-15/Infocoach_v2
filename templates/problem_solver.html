@@ -271,18 +271,23 @@ body {
   }
 }
 .container {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
-  margin-left: 270px;
-  width: calc(100% - 270px);
-  min-width: 0;
+  margin-left: 90px !important;
+  width: 100% !important;
+  max-width: 1100px;
+  margin-right: auto;
+  padding-right: 420px; /* spațiu pentru chat sidebar */
 }
-.sidebar.collapsed ~ .container {
-  margin-left: 64px;
-  width: calc(100% - 64px);
+@media (max-width: 1400px) {
+  .container {
+    padding-right: 0;
+    max-width: 98vw;
+  }
+}
+.sidebar, .sidebar.collapsed {
+    display: none !important;
 }
 @media (max-width: 900px) {
   .container { margin-left: 0; width: 100%; }
-  .sidebar { display: none; }
   .ide-main { max-width: 100vw; }
   .ide-chat-sidebar { width: 100vw; max-width: 100vw; }
 }
@@ -292,182 +297,7 @@ body {
   .ide-problem-card, #ide-code-editor, .ide-files-section, .ide-custom-test, .ide-error-log { padding-left: 4vw; padding-right: 4vw; }
   .ide-editor-buttons, .ide-tabs, #ide-files-tabs { gap: 4px; }
 }
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 260px;
-    background: #fff;
-    border-right: 1px solid #e5e7eb;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
-    z-index: 1100;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
-    overflow: hidden;
-    min-width: 54px;
-}
-.sidebar.collapsed {
-    width: 54px;
-    min-width: 54px;
-    padding-right: 0;
-}
-.sidebar-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 1.2rem 1rem 1.2rem;
-    border-bottom: 1px solid #e5e7eb;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    min-height: 64px;
-}
-.sidebar.collapsed .sidebar-header {
-    justify-content: center;
-    padding: 0;
-    min-height: 100vh;
-}
-.sidebar-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #222;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
-    white-space: nowrap;
-    opacity: 1;
-    transform: translateX(0);
-    display: inline-block;
-}
-.sidebar.collapsed .sidebar-title {
-    opacity: 0;
-    transform: translateX(-20px);
-    width: 0;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-}
-.sidebar-toggle-btn {
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 0.3rem;
-    margin-left: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 1200;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    width: 40px;
-}
-.sidebar.collapsed .sidebar-toggle-btn {
-    margin-left: 0;
-}
-.sidebar-toggle-btn span {
-    display: block;
-    width: 22px;
-    height: 3px;
-    background: #0074d9;
-    border-radius: 2px;
-}
-.sidebar-new-conversation {
-    width: 100%;
-    padding: 1rem 0.5rem 1rem 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    box-sizing: border-box;
-}
-.conv-type-btn {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.8rem 1rem;
-    background: #f6f8fa;
-    border: 1px solid #bcdffb;
-    border-radius: 8px;
-    color: #0074d9;
-    font-weight: 500;
-    font-size: 1rem;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(0);
-    opacity: 1;
-    position: relative;
-}
-.conv-type-btn:hover {
-    background: #e6f0fa;
-    border-color: #0074d9;
-    transform: translateX(5px);
-}
-@media (max-width: 900px) {
-    .sidebar { width: 180px; }
-    .sidebar.collapsed { width: 54px; }
-}
-@media (max-width: 700px) {
-    .sidebar {
-        display: flex;
-        position: fixed;
-        z-index: 1100;
-    }
-    .sidebar.collapsed {
-        display: none;
-    }
-}
 </style>
-<div id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-        <span class="sidebar-title" id="nav-brand">InfoCoach</span>
-        <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Extinde/Restrânge bara">
-            <span></span>
-            <span></span>
-        </button>
-    </div>
-    <!-- New Conversation Button -->
-    <div class="sidebar-new-conversation" id="new-conv-container">
-        <button class="new-conversation-btn" id="main-new-conv-btn" type="button">
-            <span class="plus-icon">+</span>
-            Conversație nouă
-        </button>
-        <div id="conv-type-btns">
-            <a href="/problem_solver" id="code-link-fallback" style="flex:1 1 0; text-decoration:none;">
-                <button class="conv-type-btn code-btn" type="button" title="Chat de cod">💻 Cod</button>
-            </a>
-            <button class="conv-type-btn theory-btn" type="button" title="Chat de teorie" id="teorie-btn">📚 Teorie</button>
-        </div>
-    </div>
-    <div class="sidebar-conversations">
-        {% for conv in conversations %}
-            <div class="conversation-item-wrapper" style="display: flex; align-items: center; gap: 0.5em; position: relative;">
-                <a href="/?conversation_id={{ conv[0] }}" style="text-decoration: none; flex: 1 1 auto; display: block;">
-                    <button class="conversation-btn{% if conv[0] == selected_conversation_id %} active{% endif %}" style="width: 100%; text-align: left; position: relative;">
-                        {{ conv[6] if conv[6] else 'Conversație ' ~ loop.index }}<br>
-                        <span style="font-size: 0.8em; color: #888;">{{ conv[2][:16].replace('T', ' ') }}</span>
-                        <span class="quiz-score-indicator" id="quiz-score-{{ conv[0] }}"></span>
-                    </button>
-                </a>
-                <button class="conversation-menu-btn" tabindex="0" style="margin-left: 0.5em;">
-                    <span class="menu-dots">&#8226;&#8226;&#8226;</span>
-                </button>
-                <div class="conversation-menu">
-                    <button class="menu-item">Creare Quiz</button>
-                    <button class="menu-item">Rezumat</button>
-                    <form method="POST" action="/delete_conversation/{{ conv[0] }}" style="margin:0; padding:0; display:inline;">
-                        <button type="submit" class="menu-item delete">Ștergere</button>
-                    </form>
-                </div>
-            </div>
-        {% else %}
-            <span style="color: #888; padding: 1em;">Nicio conversație</span>
-        {% endfor %}
-    </div>
-</div>
 <div class="container">
   <div class="ide-container">
     <div class="ide-main">

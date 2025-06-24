@@ -25,6 +25,14 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    {% if request.path == '/problem_solver' %}
+    <div id="left-chat-btn" style="position:fixed;left:0;top:64px;width:auto;height:auto;z-index:100;">
+        <button onclick="window.location.href='/'" style="display:flex;align-items:center;gap:8px;background:#f4f8ff;color:#1976d2;border:none;border-radius:12px;padding:10px 22px 10px 16px;font-size:1.08em;cursor:pointer;box-shadow:none;font-weight:500;transition:background 0.2s;margin-top:12px;margin-left:12px;">
+            <span style='font-size:1.2em;font-weight:700;'>+</span>
+            Chat teorie
+        </button>
+    </div>
+    {% endif %}
     <nav class="navbar">
         <div class="nav-brand" id="nav-brand">
             <a href="{{ url_for('index') }}">InfoCoach</a>
