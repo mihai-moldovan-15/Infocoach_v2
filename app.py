@@ -297,108 +297,77 @@ def format_code_blocks(text):
     return re.sub(r'```cpp\s*([\s\S]*?)```', replacer, text)
 
 # === Function for formatting steps, paragraphs, variables and bold ===
-def format_italics_for_single_quotes(text):
-    # Nu aplica în interiorul codului sau backticks
-    def italics_replacer(match):
-        content = match.group(1)
-        # Nu aplica dacă e deja într-un tag HTML (ex: <code>, <strong>, etc)
-        if re.match(r'<[^>]+>', content):
-            return match.group(0)
-        return f"<em>{content}</em>"
-    # Înlocuiește doar 'cuvant' care nu e urmat sau precedat de backtick sau <code>
-    return re.sub(r"'([^'`<>]+)'", italics_replacer, text)
-
 def format_steps_and_paragraphs(text):
-    # Separate already formatted code blocks
     parts = re.split(r'(<pre><code class="cpp">[\s\S]*?<\/code><\/pre>)', text)
     formatted = []
     for part in parts:
         if part.startswith('<pre><code class="cpp">'):
-            # Do not modify code blocks!
             formatted.append(part)
         else:
-            # Apply regex ONLY on non-code text!
             lines = part.split('\n')
-            in_list = False
-            list_items = []
             new_lines = []
             i = 0
             while i < len(lines):
                 line = lines[i]
-                # Treat H3 headers (Explicații:) specifically
-                if line.strip().startswith('###'):
-                    new_lines.append(line)
+                # Bullet point indicator
+                if re.match(r'^\s*-+\s*$', line):
+                    # Check for bold title and explanation
+                    if i + 2 < len(lines):
+                        title_line = lines[i+1].strip()
+                        explanation_line = lines[i+2].strip()
+                        bold_match = re.match(r'^\*\*([^\*]+)\*\*$', title_line)
+                        if bold_match and explanation_line.startswith(':'):
+                            title_html = f"<strong>{bold_match.group(1)}</strong>"
+                            explanation_html = explanation_line[1:].strip()
+                            new_lines.append(f'<ul><li>{title_html}: {explanation_html}</li></ul>')
+                            i += 3
+                            continue
+                    # Fallback: collect all lines until next dash/empty
+                    bullet_content = []
+                    i += 1
+                    while i < len(lines):
+                        next_line = lines[i]
+                        if not next_line.strip() or re.match(r'^\s*-+\s*$', next_line):
+                            break
+                        bullet_content.append(next_line.strip())
+                        i += 1
+                    if bullet_content:
+                        new_lines.append('<ul><li>' + ' '.join(bullet_content) + '</li></ul>')
+                    else:
+                        pass
                     i += 1
                     continue
-                # Highlight bold text marked with **text**
+                if not line.strip():
+                    i += 1
+                    continue
                 line = re.sub(r"\*\*([^\*]+)\*\*", r"<strong>\1</strong>", line)
-                # Format italic for 'cuvant' (nu în cod)
-                line = format_italics_for_single_quotes(line)
-                # Detect list item
                 m = re.match(r'^\s*(\d+)\.\s+(.*)', line)
                 if m:
-                    # Verifică dacă următoarea linie este explicația cu ':'
-                    if i + 1 < len(lines) and lines[i+1].strip().startswith(':'):
-                        exp = lines[i+1].strip()[1:].strip()  # elimină ':'
-                        # Italic pentru '...' în explicație
-                        exp = format_italics_for_single_quotes(exp)
-                        item_text = m.group(2).strip()
-                        list_items.append(f"<li>{item_text}<br>{exp}</li><br>")
-                        i += 2
-                        continue
-                    else:
-                        item_text = m.group(2).strip()
-                        list_items.append(f"<li>{item_text}</li><br>")
-                        i += 1
-                        continue
-                # Dacă nu e listă, finalizează lista dacă era deschisă
-                if in_list and list_items:
-                    new_lines.append("<ol>" + "".join(list_items) + "</ol>")
-                    list_items = []
-                    in_list = False
-                # Adaugă ca paragraf dacă nu e gol
-                if line.strip():
+                    item_text = m.group(2).strip()
+                    new_lines.append(f"<ul><li>{item_text}</li></ul>")
+                else:
                     new_lines.append(f"<p>{line.strip()}</p>")
                 i += 1
-            # După loop, dacă lista nu e închisă
-            if list_items:
-                new_lines.append("<ol>" + "".join(list_items) + "</ol>")
             formatted.append('\n'.join(new_lines))
     result = ''.join(formatted)
-    # Elimină orice backtick gol sau cu spațiu
-    result = re.sub(r'`\s*`', '', result)
     return result
 
 # === Function for formatting words between backticks ===
 def format_inline_code(text):
-    # Check if text already contains formatted HTML
-    if '<pre><code class="cpp">' in text:
-        return text
-        
     def replacer(match):
         code = html.escape(match.group(1))
         return f'<span style="background-color: #f0f0f0; padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #333;">{code}</span>'
-    
-    # Find all occurrences of text between backticks, including special characters
     pattern = r'`([^`]+?)`'
-    
-    # Split text into parts to avoid formatting in code blocks
     parts = re.split(r'(<pre><code class="cpp">[\s\S]*?<\/code><\/pre>)', text)
     formatted = []
-    
     for part in parts:
         if part.startswith('<pre><code class="cpp">'):
-            # Do not modify code blocks
             formatted.append(part)
         else:
-            # Apply formatting for backticks in rest of text
-            # Replace special characters temporarily to avoid conflicts
             temp_part = part.replace('#', '___HASH___')
             temp_part = re.sub(pattern, replacer, temp_part)
-            # Restore special characters
             temp_part = temp_part.replace('___HASH___', '#')
             formatted.append(temp_part)
-    
     return ''.join(formatted)
 
 # === Route for login ===
@@ -497,6 +466,7 @@ def index():
             if msg['role'] == 'assistant':
                 formatted = format_code_blocks(msg['content'])
                 formatted = format_steps_and_paragraphs(formatted)
+                formatted = format_inline_code(formatted)
                 msg['content'] = formatted
 
     if request.method == 'POST':
@@ -536,6 +506,7 @@ def index():
                     # Format the output for HTML display
                     formatted_output = format_code_blocks(output)
                     formatted_output = format_steps_and_paragraphs(formatted_output)
+                    formatted_output = format_inline_code(formatted_output)
 
                     # Save message to database and get the conversation_id
                     conversation_id = save_message(conversation_id, user_input, output)
@@ -591,7 +562,7 @@ def chat_api():
         prompt_content = f"Previous conversation:\n{context_text}\n\nCurrent question: {user_input}"
 
     # Explicit instruction to use file_search
-    prompt_content += "\n\nTe rog să folosești funcția file_search și să răspunzi doar pe baza surselor găsite în vector store. Dacă nu găsești nimic relevant, spune explicit că nu există informații în surse. Nu inventa răspunsuri."
+    prompt_content += "\n\nDacă găsești informații relevante în sursele din vector store, folosește-le. Dacă nu, poți răspunde și din cunoștințele tale generale, dar niciodata nu inventa informatii"
 
     assistant = assistants[clasa]
 
@@ -616,6 +587,7 @@ def chat_api():
                 # Format the output for HTML display
                 formatted_output = format_code_blocks(output)
                 formatted_output = format_steps_and_paragraphs(formatted_output)
+                formatted_output = format_inline_code(formatted_output)
 
                 # Save message to database and get the conversation_id
                 conversation_id = save_message(conversation_id, user_input, output)
@@ -771,7 +743,6 @@ def view_feedback():
             # If it doesn't contain HTML, apply formatting
             formatted_response = format_code_blocks(entry[4])
             formatted_response = format_steps_and_paragraphs(formatted_response)
-            # Apply formatting for words between backticks
             formatted_response = format_inline_code(formatted_response)
         
         entries.append({
