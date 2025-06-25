@@ -297,6 +297,17 @@ def format_code_blocks(text):
     return re.sub(r'```cpp\s*([\s\S]*?)```', replacer, text)
 
 # === Function for formatting steps, paragraphs, variables and bold ===
+def format_italics_for_single_quotes(text):
+    # Nu aplica în interiorul codului sau backticks
+    def italics_replacer(match):
+        content = match.group(1)
+        # Nu aplica dacă e deja într-un tag HTML (ex: <code>, <strong>, etc)
+        if re.match(r'<[^>]+>', content):
+            return match.group(0)
+        return f"<em>{content}</em>"
+    # Înlocuiește doar 'cuvant' care nu e urmat sau precedat de backtick sau <code>
+    return re.sub(r"'([^'`<>]+)'", italics_replacer, text)
+
 def format_steps_and_paragraphs(text):
     # Separate already formatted code blocks
     parts = re.split(r'(<pre><code class="cpp">[\s\S]*?<\/code><\/pre>)', text)
@@ -311,47 +322,52 @@ def format_steps_and_paragraphs(text):
             in_list = False
             list_items = []
             new_lines = []
-            for line in lines:
+            i = 0
+            while i < len(lines):
+                line = lines[i]
                 # Treat H3 headers (Explicații:) specifically
                 if line.strip().startswith('###'):
-                    new_lines.append(line) # Leave header as is
-                    continue # Skip to next line after header
-
+                    new_lines.append(line)
+                    i += 1
+                    continue
                 # Highlight bold text marked with **text**
                 line = re.sub(r"\*\*([^\*]+)\*\*", r"<strong>\1</strong>", line)
-
-                # Find and format ordered list items (if any)
+                # Format italic for 'cuvant' (nu în cod)
+                line = format_italics_for_single_quotes(line)
+                # Detect list item
                 m = re.match(r'^\s*(\d+)\.\s+(.*)', line)
                 if m:
-                    # If not already in a list, start a new list
-                    if not in_list:
-                         in_list = True
-                         if new_lines and not new_lines[-1].startswith('<p>') and not new_lines[-1].startswith('<ol>'):
-                             pass
-
-                    # Add current item to list
-                    list_items.append(f"<li>{m.group(2).strip()}</li>")
-                else:
-                    # If we were in a list and current line is not a list item,
-                    # end the list and add to new_lines
-                    if in_list:
-                        new_lines.append("<ol>" + "".join(list_items) + "</ol>")
-                        list_items = []
-                        in_list = False
-                    
-                    # Add non-list line as a paragraph, if not empty
-                    if line.strip():
-                        new_lines.append(f"<p>{line.strip()}</p>")
-
-            # After loop, if ended with a list, add it
-            if in_list:
+                    # Verifică dacă următoarea linie este explicația cu ':'
+                    if i + 1 < len(lines) and lines[i+1].strip().startswith(':'):
+                        exp = lines[i+1].strip()[1:].strip()  # elimină ':'
+                        # Italic pentru '...' în explicație
+                        exp = format_italics_for_single_quotes(exp)
+                        item_text = m.group(2).strip()
+                        list_items.append(f"<li>{item_text}<br>{exp}</li><br>")
+                        i += 2
+                        continue
+                    else:
+                        item_text = m.group(2).strip()
+                        list_items.append(f"<li>{item_text}</li><br>")
+                        i += 1
+                        continue
+                # Dacă nu e listă, finalizează lista dacă era deschisă
+                if in_list and list_items:
+                    new_lines.append("<ol>" + "".join(list_items) + "</ol>")
+                    list_items = []
+                    in_list = False
+                # Adaugă ca paragraf dacă nu e gol
+                if line.strip():
+                    new_lines.append(f"<p>{line.strip()}</p>")
+                i += 1
+            # După loop, dacă lista nu e închisă
+            if list_items:
                 new_lines.append("<ol>" + "".join(list_items) + "</ol>")
-
-            # Join processed lines for this part
             formatted.append('\n'.join(new_lines))
-    
-    # Join all parts (code and non-code) back together
-    return ''.join(formatted)
+    result = ''.join(formatted)
+    # Elimină orice backtick gol sau cu spațiu
+    result = re.sub(r'`\s*`', '', result)
+    return result
 
 # === Function for formatting words between backticks ===
 def format_inline_code(text):

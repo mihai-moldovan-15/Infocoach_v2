@@ -57,22 +57,21 @@
     min-height: 100vh;
 }
 .sidebar-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #222;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
-    white-space: nowrap;
-    opacity: 1;
-    transform: translateX(0);
-    display: inline-block;
+    display: none;
 }
-.sidebar.collapsed .sidebar-title {
-    opacity: 0;
-    transform: translateX(-20px);
-    width: 0;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
+.sidebar-logo-link {
+    color: #0074d9;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: inherit;
+    letter-spacing: 0;
+    display: inline-block;
+    transition: color 0.2s;
+}
+.sidebar-logo-link:hover {
+    color: #005fa3;
+    text-decoration: underline;
 }
 .sidebar-toggle-btn {
     background: none;
@@ -672,11 +671,7 @@
 {% block content %}
 <div id="sidebar" class="sidebar">
     <div class="sidebar-header">
-        <span class="sidebar-title" id="nav-brand">InfoCoach</span>
-        <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Extinde/Restrânge bara">
-            <span></span>
-            <span></span>
-        </button>
+        <a href="/" class="sidebar-logo-link">InfoCoach</a>
     </div>
     <!-- New Conversation Button -->
     <div class="sidebar-new-conversation" id="new-conv-container">
