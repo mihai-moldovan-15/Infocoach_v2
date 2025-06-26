@@ -16,6 +16,9 @@ import subprocess
 import json
 import glob
 import openai
+import hashlib
+from datetime import timedelta
+import logging
 
 # Încarcă variabilele de mediu din .env
 load_dotenv()
@@ -347,7 +350,7 @@ def format_steps_and_paragraphs(text):
                     item_text = m.group(2).strip()
                     new_lines.append(f"<ul><li>{item_text}</li></ul>")
                 else:
-                    new_lines.append(f"<p>{line.strip()}</p>")
+                        new_lines.append(f"<p>{line.strip()}</p>")
                 i += 1
             formatted.append('\n'.join(new_lines))
     result = ''.join(formatted)
@@ -619,7 +622,7 @@ def feedback():
         ai_response = data.get('ai_response', '').strip()
         clasa = data.get('clasa', '').strip()
         fb = data.get('feedback', '').strip()
-        feedback_text = data.get('feedback_text', '').strip()
+        feedback_text = data.get('feedback_text', '').strip()        
         tip_feedback = data.get('tip_feedback', '').strip()
         app.logger.info(f"Received feedback request - Clasa: {clasa}, Feedback: {fb}, Text: {feedback_text}, Tip: {tip_feedback}")
         
@@ -1215,7 +1218,7 @@ def api_run_code():
             if fobj['name'].endswith('.in'):
                 input_file = fobj['name']
                 break
-        
+                
         # Detect if code uses cin/cout and nu ifstream
         uses_cin = 'cin' in code
         uses_ifstream = 'ifstream' in code
@@ -1230,7 +1233,7 @@ def api_run_code():
             inject_input_as_stdin = True
         
         # Compile command with additional security flags
-        compile_cmd = f"g++ -O2 -std=c++17 -Wall -Wextra -Werror main.cpp -o main 2> compile_err.txt"
+        compile_cmd = f"g++ -O2 -std=c++17 -Wall -Wextra main.cpp -o main 2> compile_err.txt"
         
         # Run command with timeout and resource limits
         run_cmd = f"timeout 2s ./main"
@@ -1324,7 +1327,7 @@ def api_run_code():
                 '-v', f'{tempdir}:/workspace:rw',
                 '-w', '/workspace',
                 'cpp-runner',
-                'g++', '-O2', '-std=c++17', '-Wall', '-Wextra', '-Werror', 'main.cpp', '-o', 'main'
+                'g++', '-O2', '-std=c++17', '-Wall', '-Wextra', 'main.cpp', '-o', 'main'
             ]
             
             try:
@@ -1508,6 +1511,10 @@ def api_problem_details():
     row = cur.fetchone()
     if not row:
         return jsonify({'error': 'Problemă inexistentă'}), 404
+    
+    # Detectează tipul problemei
+    problem_type = detect_problem_type(row['statement'])
+    
     return jsonify({
         'statement': row['statement'],
         'input_description': row['input_description'],
@@ -1518,8 +1525,390 @@ def api_problem_details():
         'example_input_name': row['example_input_name'],
         'example_output_name': row['example_output_name'],
         'time_limit': row['time_limit'],
-        'memory_limit': row['memory_limit']
+        'memory_limit': row['memory_limit'],
+        'problem_type': problem_type
     })
+
+# === Function to detect problem type ===
+def detect_problem_type(statement):
+    """
+    Detectează dacă problema cere doar un subprogram (funcție/clasă) 
+    sau un program complet cu main().
+    
+    Returns:
+        'subprogram' - dacă problema cere doar o funcție/clasă
+        'complete' - dacă problema cere un program complet
+    """
+    if not statement:
+        return 'complete'
+    
+    statement_lower = statement.lower()
+    
+    # Cuvinte cheie care indică că se cere doar un subprogram
+    subprogram_keywords = [
+        'scrie o funcție',
+        'scrie funcția',
+        'implementează o funcție',
+        'implementează funcția',
+        'defineste o funcție',
+        'defineste funcția',
+        'scrie o clasă',
+        'scrie clasa',
+        'implementează o clasă',
+        'implementează clasa',
+        'defineste o clasă',
+        'defineste clasa',
+        'să se scrie o funcție',
+        'să se scrie funcția',
+        'să se implementeze o funcție',
+        'să se implementeze funcția',
+        'să se definească o funcție',
+        'să se definească funcția',
+        'să se scrie o clasă',
+        'să se scrie clasa',
+        'să se implementeze o clasă',
+        'să se implementeze clasa',
+        'să se definească o clasă',
+        'să se definească clasa'
+    ]
+    
+    # Verifică dacă cerința conține cuvinte cheie pentru subprograme
+    for keyword in subprogram_keywords:
+        if keyword in statement_lower:
+            return 'subprogram'
+    
+    # Cuvinte cheie care indică că se cere un program complet
+    complete_program_keywords = [
+        'scrie un program',
+        'scrie programul',
+        'implementează un program',
+        'implementează programul',
+        'să se scrie un program',
+        'să se scrie programul',
+        'să se implementeze un program',
+        'să se implementeze programul',
+        'programul va citi',
+        'programul va afișa',
+        'programul va scrie'
+    ]
+    
+    # Verifică dacă cerința conține cuvinte cheie pentru programe complete
+    for keyword in complete_program_keywords:
+        if keyword in statement_lower:
+            return 'complete'
+    
+    # Dacă nu găsește cuvinte cheie clare, presupune că este un program complet
+    return 'complete'
+
+# === Function to generate test code for subprograms ===
+def generate_test_code_for_subprogram(problem_statement, user_code, problem_id):
+    """
+    Generează cod de test pentru un subprogram folosind AI.
+    Include sistem de cache pentru a evita regenerarea aceluiași cod.
+    """
+    import hashlib
+    import json
+    from datetime import datetime, timedelta
+    
+    # Generează un hash pentru codul utilizatorului și problema
+    code_hash = hashlib.md5(f"{user_code}_{problem_id}".encode()).hexdigest()
+    
+    # Verifică cache-ul
+    cache_key = f"test_code_{problem_id}_{code_hash}"
+    cache_file = f"cache/{cache_key}.json"
+    
+    # Creează directorul cache dacă nu există
+    os.makedirs("cache", exist_ok=True)
+    
+    # Verifică dacă există în cache și nu a expirat (24 ore)
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                cache_data = json.load(f)
+            
+            # Verifică dacă cache-ul nu a expirat
+            cache_time = datetime.fromisoformat(cache_data['timestamp'])
+            if datetime.now() - cache_time < timedelta(hours=24):
+                logging.info(f"Using cached test code for problem {problem_id}")
+                return cache_data['test_code']
+        except Exception as e:
+            logging.warning(f"Error reading cache: {e}")
+    
+    # Generează codul de test cu AI
+    try:
+        system_prompt = """Ești un expert în C++ care generează cod de test pentru subprograme.\n\nSarcina ta este să generezi un program C++ complet care:\n1. Include EXACT subprogramul scris de utilizator (cu toți parametrii, inclusiv cei cu valori implicite)\n2. Adaugă un main() care citește datele de intrare (fără niciun mesaj pentru utilizator) și apelează subprogramul\n3. Afișează rezultatul (fără niciun mesaj explicativ, doar rezultatul brut)\n\nREGULI IMPORTANTE:\n- NU adăuga niciun mesaj pentru utilizator (NU folosi cout << cu text explicativ sau validare)\n- NU adăuga validări suplimentare\n- Include funcția utilizatorului EXACT așa cum a fost scrisă, inclusiv parametrii cu valori implicite\n- Nu modifica semnătura funcției utilizatorului\n- Nu adăuga implementări alternative\n- Generează doar codul C++ complet, fără explicații\n\nRăspunsul tău trebuie să fie DOAR codul C++ complet, fără explicații suplimentare."""
+        
+        user_prompt = f"""
+        Problemă: {problem_statement}
+        
+        Subprogramul utilizatorului:
+        {user_code}
+        
+        Generează un program C++ complet care să testeze acest subprogram.
+        """
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.1,
+            max_tokens=1000
+        )
+        
+        test_code = response.choices[0].message.content.strip()
+        
+        # Curăță codul de markdown dacă există
+        if test_code.startswith('```'):
+            # Elimină prima linie (```cpp sau ```)
+            lines = test_code.split('\n')
+            if len(lines) > 1:
+                lines = lines[1:]
+                # Elimină ultima linie dacă este ```
+                if lines and lines[-1].strip() == '```':
+                    lines = lines[:-1]
+                test_code = '\n'.join(lines)
+        
+        # Asigură-te că codul conține main()
+        if 'main()' not in test_code:
+            logging.warning(f"Generated code doesn't contain main() for problem {problem_id}")
+            return None
+        
+        # Salvează în cache
+        cache_data = {
+            'test_code': test_code,
+            'timestamp': datetime.now().isoformat(),
+            'problem_id': problem_id,
+            'code_hash': code_hash
+        }
+        
+        with open(cache_file, 'w', encoding='utf-8') as f:
+            json.dump(cache_data, f, ensure_ascii=False, indent=2)
+        
+        logging.info(f"Generated and cached test code for problem {problem_id}")
+        return test_code
+        
+    except Exception as e:
+        logging.error(f"Error generating test code: {e}")
+        return None
+
+# === Route for testing subprograms ===
+@app.route('/api/test_subprogram', methods=['POST'])
+def api_test_subprogram():
+    """Endpoint pentru testarea subprogramelor cu generare automată de cod de test"""
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'Invalid request data'}), 400
+        
+    problem_id = data.get('problem_id')
+    user_code = data.get('code', '').strip()
+    custom_input = data.get('custom_input', '')
+    
+    if not problem_id or not user_code:
+        return jsonify({'error': 'Problem ID and code are required'}), 400
+    
+    try:
+        # Obține detaliile problemei
+        conn = sqlite3.connect('problems.db')
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT statement, example_input FROM problems WHERE id = ?", (problem_id,))
+        row = cur.fetchone()
+        conn.close()
+        
+        if not row:
+            return jsonify({'error': 'Problem not found'}), 404
+        
+        problem_statement = row['statement']
+        example_input = row['example_input'] or custom_input
+        
+        # Generează codul de test
+        test_code = generate_test_code_for_subprogram(problem_statement, user_code, problem_id)
+        
+        if not test_code:
+            return jsonify({'error': 'Failed to generate test code'}), 500
+        
+        # Rulează codul de test
+        result = {'success': False, 'output': '', 'error': ''}
+        tempdir = tempfile.mkdtemp(prefix='cpp_test_')
+        
+        try:
+            # Scrie codul de test
+            with open(f'{tempdir}/main.cpp', 'w', encoding='utf-8') as f:
+                f.write(test_code)
+            
+            # Compilează și rulează
+            compile_cmd = f"g++ -O2 -std=c++17 -Wall -Wextra main.cpp -o main 2> compile_err.txt"
+            
+            compile_docker_cmd = [
+                'docker', 'run', '--rm',
+                '--network', 'none',
+                '--memory', '256m', '--cpus', '0.5',
+                '--security-opt', 'no-new-privileges',
+                '--cap-drop', 'ALL',
+                '-v', f'{tempdir}:/workspace:rw',
+                '-w', '/workspace',
+                'cpp-runner',
+                'g++', '-O2', '-std=c++17', '-Wall', '-Wextra', 'main.cpp', '-o', 'main'
+            ]
+            
+            compile_proc = subprocess.run(compile_docker_cmd, capture_output=True, text=True, timeout=10)
+            
+            if compile_proc.returncode != 0:
+                result['error'] = compile_proc.stderr + '\n' + compile_proc.stdout
+                return jsonify(result)
+            
+            # Rulează cu input-ul de test
+            run_docker_cmd = [
+                'docker', 'run', '--rm',
+                '-i',
+                '--network', 'none',
+                '--memory', '256m', '--cpus', '0.5',
+                '--security-opt', 'no-new-privileges',
+                '--cap-drop', 'ALL',
+                '-v', f'{tempdir}:/workspace:rw',
+                '-w', '/workspace',
+                'cpp-runner',
+                './main'
+            ]
+            
+            proc = subprocess.run(run_docker_cmd, input=example_input, capture_output=True, text=True, timeout=10)
+            
+            if proc.stderr:
+                result['error'] = proc.stderr
+            else:
+                result['output'] = proc.stdout.strip()
+                result['success'] = True
+                
+        finally:
+            # Curăță directorul temporar
+            try:
+                shutil.rmtree(tempdir, ignore_errors=True)
+            except Exception:
+                pass
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logging.error(f"Error testing subprogram: {e}")
+        return jsonify({'error': f'Execution error: {str(e)}'}), 500
+
+# === Route for generating complete code ===
+@app.route('/api/generate_complete_code', methods=['POST'])
+def api_generate_complete_code():
+    """Endpoint pentru generarea codului complet cu AI"""
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'Invalid request data'}), 400
+        
+    problem_id = data.get('problem_id')
+    user_code = data.get('code', '').strip()
+    
+    if not problem_id or not user_code:
+        return jsonify({'error': 'Problem ID and code are required'}), 400
+    
+    try:
+        # Obține detaliile problemei
+        conn = sqlite3.connect('problems.db')
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT statement FROM problems WHERE id = ?", (problem_id,))
+        row = cur.fetchone()
+        conn.close()
+        
+        if not row:
+            return jsonify({'error': 'Problem not found'}), 404
+        
+        problem_statement = row['statement']
+        
+        # Generează codul complet cu AI
+        system_prompt = """Ești un expert în C++ care generează cod complet pentru probleme de programare.
+
+Sarcina ta este să generezi un program C++ complet care:
+1. Include EXACT subprogramul scris de utilizator (cu toate greșelile, fără modificări)
+2. Adaugă doar include-urile necesare și using namespace std
+3. Adaugă un main() complet care citește datele de intrare și apelează subprogramul
+4. Afișează rezultatul în formatul așteptat
+
+REGULI IMPORTANTE:
+- Include funcția utilizatorului EXACT așa cum a fost scrisă, inclusiv greșelile de sintaxă
+- NU modifica deloc subprogramul utilizatorului
+- NU corecta greșelile din subprogramul utilizatorului
+- Generează doar include-urile, using namespace std, și funcția main()
+- Generează doar codul C++ complet, fără explicații
+
+EXEMPLU:
+Input utilizator:
+int fact(int n, int p=1)
+{
+    for(int i=1;i<=n;i++)
+        p*=i
+        retun p;
+}
+
+Output așteptat:
+#include <iostream>
+using namespace std;
+
+int fact(int n, int p=1)
+{
+    for(int i=1;i<=n;i++)
+        p*=i
+        retun p;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    if (n < 0)
+        cout << "Factorialul nu este definit pentru numere negative.\\n";
+    else
+        cout << "Factorialul lui " << n << " este " << fact(n) << ".\\n";
+    return 0;
+}
+
+Răspunsul tău trebuie să fie DOAR codul C++ complet, fără explicații suplimentare."""
+        
+        user_prompt = f"""
+        Problemă: {problem_statement}
+        
+        Subprogramul utilizatorului:
+        {user_code}
+        
+        Generează un program C++ complet care să rezolve această problemă.
+        """
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.1,
+            max_tokens=1500
+        )
+        
+        complete_code = response.choices[0].message.content.strip()
+        
+        # Curăță codul de markdown dacă există
+        if complete_code.startswith('```'):
+            lines = complete_code.split('\n')
+            if len(lines) > 1:
+                lines = lines[1:]
+                if lines and lines[-1].strip() == '```':
+                    lines = lines[:-1]
+                complete_code = '\n'.join(lines)
+        
+        return jsonify({
+            'success': True,
+            'complete_code': complete_code
+        })
+        
+    except Exception as e:
+        logging.error(f"Error generating complete code: {e}")
+        return jsonify({'error': f'Failed to generate complete code: {str(e)}'}), 500
 
 # === Start application ===
 if __name__ == '__main__':

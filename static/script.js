@@ -4,6 +4,12 @@ function scrollToBottom() {
     if (chat) chat.scrollTop = chat.scrollHeight;
 }
 
+// Variabile globale pentru problem solver
+let currentProblem = null;
+window.InfoCoachApp = window.InfoCoachApp || {};
+window.InfoCoachApp.currentProblemId = null;
+window.InfoCoachApp.currentProblem = null;
+
 // Mesaje de așteptare
 const messages = [
     "Se procesează întrebarea ta...",
@@ -37,11 +43,10 @@ function addMessage(content, isUser = false, userInput = '') {
     } else {
         // Get clasa from the form
         const clasa = document.querySelector('input[name="clasa"]')?.value || '9';
-        
-        // Create the full assistant message structure with feedback form
+        // Folosește marked pentru a parsa Markdown-ul din răspunsul AI
         messageDiv.innerHTML = `
             <b>InfoCoach:</b>
-            <div class="message-content">${content}</div>
+            <div class="message-content">${window.marked ? marked.parse(content) : content}</div>
             <input type="hidden" class="user-input-hidden" value="${userInput.replace(/"/g, '&quot;')}">
             <input type="hidden" class="clasa-hidden" value="${clasa}">
             <div class="feedback-form">
@@ -275,7 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('.ide-search-input');
     const tabButtons = document.querySelectorAll('.ide-tab');
     const tabContent = document.querySelector('.ide-tab-content');
-    let currentProblem = null;
     const generateExampleBtn = document.getElementById('ide-generate-example-files-btn');
 
     if (searchForm && searchInput && tabButtons.length && tabContent) {
@@ -292,11 +296,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.error) {
                         tabContent.textContent = 'Problema nu a fost găsită!';
                         currentProblem = null;
+                        window.currentProblemId = null;
+                        console.log('Search error - reset currentProblemId to null');
                         tabButtons.forEach(btn => btn.disabled = true);
                         if (generateExampleBtn) generateExampleBtn.style.display = 'none';
                         return;
                     }
                     currentProblem = data;
+                    window.currentProblemId = data.id;
+                    window.InfoCoachApp.currentProblemId = data.id;
+                    window.InfoCoachApp.currentProblem = data;
+                    console.log('Search success - set currentProblemId to:', window.currentProblemId);
+                    console.log('Data received:', data);
                     tabButtons.forEach(btn => btn.disabled = false);
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabButtons[0].classList.add('active');
@@ -315,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(() => {
                     tabContent.textContent = 'Eroare la căutare!';
                     currentProblem = null;
+                    window.currentProblemId = null;
                     tabButtons.forEach(btn => btn.disabled = true);
                     if (generateExampleBtn) generateExampleBtn.style.display = 'none';
                 });
@@ -332,7 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (idx === 0) {
                     tabContent.textContent = currentProblem.statement || 'Fără enunț.';
                 } else if (idx === 1) {
-                    // Date de intrare și ieșire
                     let date = '';
                     if (currentProblem.input_description) date += currentProblem.input_description + '\n';
                     if (currentProblem.output_description) date += currentProblem.output_description;
@@ -342,7 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         tabContent.textContent = 'Fără date de intrare/ieșire.';
                     }
                 } else if (idx === 2) {
-                    // Restricții ca listă neordonată (bullets), chiar și pentru una singură
                     if (currentProblem.constraints) {
                         const lines = currentProblem.constraints.split('\n').filter(l => l.trim());
                         let ul = document.createElement('ul');
@@ -357,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         tabContent.textContent = 'Fără restricții.';
                     }
                 } else if (idx === 3) {
-                    // Limite de timp și memorie
                     let limHtml = '';
                     if (currentProblem.time_limit || currentProblem.memory_limit) {
                         if (currentProblem.time_limit) limHtml += `<div><b>Limită timp:</b> ${currentProblem.time_limit}</div>`;
@@ -367,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     tabContent.innerHTML = limHtml;
                 } else if (idx === 4) {
-                    // Exemplu cu etichete colorate și font mai mic pentru fișiere/intrare/ieșire
                     let ex = '';
                     let inputLabel = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola'
                         ? currentProblem.example_input_name : 'Intrare';
@@ -899,6 +907,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(data => {
                             if (!data || data.error) return;
                             currentProblem = data;
+                            window.currentProblemId = data.id;
+                            window.InfoCoachApp.currentProblemId = data.id;
+                            window.InfoCoachApp.currentProblem = data;
+                            console.log('Suggestion selected - set currentProblemId to:', window.currentProblemId);
+                            console.log('Suggestion data:', data);
                             tabButtons.forEach(btn => btn.disabled = false);
                             updateTabsWithProblem(currentProblem);
                         });
@@ -958,7 +971,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTabsWithProblem(problem) {
+        console.log('updateTabsWithProblem called with:', problem);
         if (!problem) return;
+        
+        // Setează problema globală și ID-ul
+        currentProblem = problem;
+        window.currentProblemId = problem.id;
+        window.InfoCoachApp.currentProblemId = problem.id;
+        window.InfoCoachApp.currentProblem = problem;
+        console.log('Set currentProblem:', currentProblem);
+        console.log('Set currentProblemId:', window.currentProblemId);
+        console.log('Set InfoCoachApp.currentProblemId:', window.InfoCoachApp.currentProblemId);
+        console.log('Problem ID type:', typeof window.currentProblemId);
+        console.log('currentProblemId from InfoCoachApp:', window.InfoCoachApp.currentProblemId);
+        console.log('currentProblemId from window:', window.currentProblemId);
+        console.log('currentProblem?.id:', currentProblem?.id);
+        console.log('currentProblem object keys:', Object.keys(currentProblem || {}));
+        console.log('currentProblem full object:', JSON.stringify(currentProblem, null, 2));
+        console.log('Final currentProblemId:', problem.id);
+        console.log('currentProblem:', problem);
+        
         // === ȘTERGE FIȘIERELE SUPLIMENTARE LA SCHIMBAREA PROBLEMEI ===
         localStorage.removeItem('ide_user_files');
         userFiles = [];
@@ -974,6 +1006,43 @@ document.addEventListener('DOMContentLoaded', () => {
         // Populează tab-ul Enunț
         tabContent.textContent = problem.statement || 'Fără enunț.';
 
+        // Detectează tipul problemei și adaptează interfața
+        const problemType = problem.problem_type || 'complete';
+        const runButton = document.getElementById('ide-run-code');
+        const resetButton = document.getElementById('ide-reset-code');
+        const completeCodeButton = document.getElementById('ide-complete-code');
+        
+        // Salvează tipul problemei pentru a fi folosit în alte funcții
+        window.currentProblemType = problemType;
+        
+        if (problemType === 'subprogram') {
+            // Pentru probleme de subprogram, păstrează textul 'Rulează'
+            if (runButton) {
+                runButton.className = 'ide-btn-run';
+            }
+            // Afișează butonul "Completează codul"
+            if (completeCodeButton) {
+                completeCodeButton.style.display = 'inline-block';
+                // Atașează event listener-ul când butonul devine vizibil
+                completeCodeButton.onclick = function() {
+                    console.log('Complete code button clicked!');
+                    generateCompleteCode();
+                };
+            }
+        } else {
+            // Pentru probleme complete, revino la textul normal
+            if (runButton) {
+                runButton.textContent = 'Rulează';
+                runButton.title = 'Rulează codul';
+            }
+            // Ascunde butonul "Completează codul"
+            if (completeCodeButton) {
+                completeCodeButton.style.display = 'none';
+                // Elimină event listener-ul când butonul devine invizibil
+                completeCodeButton.onclick = null;
+            }
+        }
+
         // Afișează/ascunde butonul de generare fișier exemplu corect
         const generateExampleBtn = document.getElementById('ide-generate-example-files-btn');
         if (generateExampleBtn) {
@@ -986,7 +1055,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Elimină event listener-ele vechi (prin clonare)
+        // Elimină orice mesaj informativ de subprogram adăugat dinamic sub editor
+        const oldDynamicInfo = document.querySelector('.subprogram-info');
+        if (oldDynamicInfo) oldDynamicInfo.remove();
+
+        // Afișează/ascunde mesajul informativ pentru subprogram
+        const subInfo = document.getElementById('subprogram-info-message');
+        if (problemType === 'subprogram') {
+            if (subInfo) subInfo.style.display = 'block';
+        } else {
+            if (subInfo) subInfo.style.display = 'none';
+        }
+
+        // Buton de închidere pentru mesajul informativ
+        if (subInfo && !subInfo.querySelector('.close-info-msg')) {
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.className = 'close-info-msg';
+            closeBtn.style.cssText = 'position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.5em;color:#1976d2;cursor:pointer;line-height:1;';
+            closeBtn.title = 'Închide mesajul';
+            closeBtn.onclick = function() {
+                subInfo.classList.add('fade-out-info');
+                setTimeout(() => { subInfo.style.display = 'none'; subInfo.classList.remove('fade-out-info'); }, 400);
+            };
+            subInfo.style.position = 'relative';
+            subInfo.appendChild(closeBtn);
+        }
+
+        // Reatașează event listener-ele pentru tab-uri (Enunț, Date, Restricții, Limite, Exemplu)
         let tabButtons = document.querySelectorAll('.ide-tab');
         for (let i = 0; i < tabButtons.length; i++) {
             const btn = tabButtons[i];
@@ -1099,150 +1195,182 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function runCode() {
-        const code = editor.getValue();
-        const customInput = document.getElementById('custom-input').value;
-        const files = getFiles();
+        const code = window.ideMonaco.getValue();
+        const customInput = document.querySelector('.ide-custom-test').value;
+        const currentProblemId = window.currentProblemId;
         
-        try {
-            const response = await axios.post('/api/run_code', {
-                code,
-                files,
-                custom_input: customInput
-            });
-            
-            const result = response.data;
-            if (result.success) {
-                document.getElementById('output').textContent = result.output;
-                document.getElementById('error').textContent = '';
-                showSuccess('Code executed successfully');
-            } else {
-                document.getElementById('output').textContent = '';
-                document.getElementById('error').textContent = result.error;
-                showError('Execution failed');
+        if (!currentProblemId) {
+            showError('Nu ai selectat nicio problemă!');
+            return;
+        }
+        
+        // Verifică dacă este o problemă de subprogram
+        const isSubprogram = window.currentProblemType === 'subprogram';
+        
+        if (isSubprogram) {
+            // Folosește endpoint-ul pentru subprograme
+            try {
+                const response = await fetch('/api/test_subprogram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        problem_id: currentProblemId,
+                        code: code,
+                        custom_input: customInput
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('Subprogramul funcționează corect!');
+                    document.getElementById('ide-error-log').textContent = result.output;
+                } else {
+                    showError('Eroare la testarea subprogramului: ' + result.error);
+                    document.getElementById('ide-error-log').textContent = result.error;
+                }
+            } catch (error) {
+                showError('Eroare la comunicarea cu serverul: ' + error.message);
             }
-        } catch (error) {
-            handleApiError(error);
-            document.getElementById('output').textContent = '';
-            document.getElementById('error').textContent = 'Failed to execute code';
+        } else {
+            // Folosește endpoint-ul normal pentru programe complete
+            try {
+                const response = await fetch('/api/run_code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        custom_input: customInput
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('Codul a fost executat cu succes!');
+                    document.getElementById('ide-error-log').textContent = result.output;
+                } else {
+                    showError('Eroare la executarea codului: ' + result.error);
+                    document.getElementById('ide-error-log').textContent = result.error;
+                }
+            } catch (error) {
+                showError('Eroare la comunicarea cu serverul: ' + error.message);
+            }
         }
     }
 
-    async function submitSolution() {
-        const code = editor.getValue();
-        const files = getFiles();
+    // Funcție pentru generarea codului complet
+    async function generateCompleteCode() {
+        console.log('generateCompleteCode called');
+        const code = window.ideMonaco.getValue();
+        
+        // Încearcă mai multe surse pentru ID-ul problemei
+        let currentProblemId = window.InfoCoachApp.currentProblemId || window.currentProblemId || currentProblem?.id;
+        
+        // Fallback pentru testare - dacă nu găsim ID-ul, folosește 896 (FactorialF)
+        if (!currentProblemId && currentProblem) {
+            console.log('No ID found, using fallback ID 896 for testing');
+            currentProblemId = 896;
+        }
+        
+        console.log('currentProblemId from InfoCoachApp:', window.InfoCoachApp.currentProblemId);
+        console.log('currentProblemId from window:', window.currentProblemId);
+        console.log('currentProblem?.id:', currentProblem?.id);
+        console.log('currentProblem object keys:', Object.keys(currentProblem || {}));
+        console.log('currentProblem full object:', JSON.stringify(currentProblem, null, 2));
+        console.log('Final currentProblemId:', currentProblemId);
+        console.log('currentProblem:', currentProblem);
+        
+        if (!currentProblemId) {
+            showError('Nu ai selectat nicio problemă!');
+            return;
+        }
+        
+        if (!code.trim()) {
+            showError('Nu ai scris niciun cod!');
+            return;
+        }
+        
+        // Afișează mesaj de încărcare
+        const modal = document.getElementById('complete-code-modal');
+        const display = document.getElementById('complete-code-display');
+        
+        console.log('Modal element:', modal);
+        console.log('Display element:', display);
+        
+        if (!modal || !display) {
+            showError('Eroare: Modalul nu a fost găsit!');
+            return;
+        }
+        
+        display.textContent = 'Se generează codul complet...';
+        modal.style.display = 'block';
+        console.log('Modal should be visible now');
         
         try {
-            const response = await axios.post('/api/submit', {
-                code,
-                files
+            const response = await fetch('/api/generate_complete_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    problem_id: currentProblemId,
+                    code: code
+                })
             });
             
-            const result = response.data;
+            const result = await response.json();
+            
             if (result.success) {
-                showSuccess('Solution submitted successfully');
-                updateTestResults(result.results);
+                console.log('Complete code generated successfully:', result.complete_code);
+                display.textContent = result.complete_code;
+                showSuccess('Codul complet a fost generat cu succes!');
             } else {
-                showError(result.error || 'Failed to submit solution');
+                console.log('Error generating code:', result.error);
+                display.textContent = 'Eroare la generarea codului: ' + result.error;
+                showError('Eroare la generarea codului complet: ' + result.error);
             }
         } catch (error) {
-            handleApiError(error);
+            console.log('Exception during code generation:', error);
+            display.textContent = 'Eroare la comunicarea cu serverul: ' + error.message;
+            showError('Eroare la comunicarea cu serverul: ' + error.message);
         }
     }
 
-    function updateTestResults(results) {
-        const resultsContainer = document.getElementById('test-results');
-        resultsContainer.innerHTML = '';
+    // Funcție pentru copierea codului în clipboard
+    function copyCompleteCode() {
+        const display = document.getElementById('complete-code-display');
+        const text = display.textContent;
         
-        results.forEach((result, index) => {
-            const resultDiv = document.createElement('div');
-            resultDiv.className = `test-result ${result.passed ? 'passed' : 'failed'}`;
-            
-            const status = document.createElement('div');
-            status.className = 'test-status';
-            status.textContent = result.passed ? '✓' : '✗';
-            
-            const details = document.createElement('div');
-            details.className = 'test-details';
-            details.innerHTML = `
-                <div>Test ${index + 1}</div>
-                <div>${result.passed ? 'Passed' : 'Failed'}</div>
-                ${result.message ? `<div class="test-message">${result.message}</div>` : ''}
-            `;
-            
-            resultDiv.appendChild(status);
-            resultDiv.appendChild(details);
-            resultsContainer.appendChild(resultDiv);
+        navigator.clipboard.writeText(text).then(() => {
+            showSuccess('Codul a fost copiat în clipboard!');
+        }).catch(() => {
+            // Fallback pentru browsere mai vechi
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showSuccess('Codul a fost copiat în clipboard!');
         });
     }
 
-    // Add CSS for notifications
-    const style = document.createElement('style');
-    style.textContent = `
-        .error-message, .success-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 4px;
-            color: white;
-            font-weight: 500;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-        }
+    // Funcție pentru inserarea codului în editor
+    function insertCompleteCode() {
+        const display = document.getElementById('complete-code-display');
+        const code = display.textContent;
         
-        .error-message {
-            background-color: #dc3545;
+        if (code && code !== 'Se generează codul complet...' && !code.startsWith('Eroare')) {
+            window.ideMonaco.setValue(code);
+            document.getElementById('complete-code-modal').style.display = 'none';
+            showSuccess('Codul a fost inserat în editor!');
         }
-        
-        .success-message {
-            background-color: #28a745;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        .test-result {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-        }
-        
-        .test-result.passed {
-            border-left: 4px solid #28a745;
-        }
-        
-        .test-result.failed {
-            border-left: 4px solid #dc3545;
-        }
-        
-        .test-status {
-            font-size: 1.2em;
-            margin-right: 10px;
-        }
-        
-        .test-details {
-            flex: 1;
-        }
-        
-        .test-message {
-            margin-top: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-    `;
-
-    document.head.appendChild(style);
+    }
 
     // Evidențiere automată a numelor de fișiere în secțiunile de problemă
     function highlightFilenamesInTabs() {
@@ -1262,4 +1390,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileRegex = /\b([a-zA-Z0-9_\-]+\.(in|out|txt|dat|csv|json|xml))\b/g;
         return text.replace(fileRegex, '<span class="file-name">$1</span>');
     }
+
+    // Event listeners pentru butoanele din modal
+    document.getElementById('complete-code-insert')?.addEventListener('click', insertCompleteCode);
+    document.getElementById('complete-code-close')?.addEventListener('click', () => {
+        document.getElementById('complete-code-modal').style.display = 'none';
+    });
+    document.getElementById('copy-complete-code')?.addEventListener('click', copyCompleteCode);
+    
+    // Închide modalul când se face click în afara lui
+    document.getElementById('complete-code-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'complete-code-modal') {
+            e.target.style.display = 'none';
+        }
+    });
+    
+    // Închide modalul cu tasta ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('complete-code-modal');
+            if (modal && modal.style.display === 'block') {
+                modal.style.display = 'none';
+            }
+        }
+    });
 });
