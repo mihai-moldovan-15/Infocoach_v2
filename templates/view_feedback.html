@@ -3,43 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <title>Vizualizare Feedback</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
     <style>
-        body { font-family: Arial, sans-serif; background: #f7f9fb; }
-        table { border-collapse: collapse; width: 100%; background: #fff; margin-top: 32px; }
-        th, td { border: 1px solid #bbb; padding: 8px 12px; }
-        th { background: #e6f0fa; color: #1976d2; }
-        tr:nth-child(even) { background: #f8f9fa; }
-        h2 { color: #1976d2; margin-top: 32px; }
-        .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+        body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; background: #f7f9fb; }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 32px 4px 32px 4px;
+        }
+        h2 {
+            color: #1976d2;
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        form[method="get"] {
+            margin-bottom: 32px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        form label {
+            font-weight: 500;
+            color: #1976d2;
+            font-size: 1.05em;
+        }
+        form input, form select {
+            margin-left: 6px;
+            padding: 6px 10px;
+            border-radius: 7px;
+            border: 1.5px solid #bcdffb;
+            font-size: 1em;
+            background: #f6f8fa;
+        }
+        form button[type="submit"] {
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 22px;
+            font-size: 1.08em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        form button[type="submit"]:hover {
+            background: #1251a3;
+        }
+        .feedback-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .feedback-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(30,64,175,0.10);
+            padding: 18px 32px 12px 32px;
+            max-width: 1200px;
+            min-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            transition: box-shadow 0.2s, transform 0.2s;
+            font-size: 0.98em;
+        }
+        .feedback-card:hover {
+            box-shadow: 0 8px 32px rgba(30,64,175,0.18);
+            transform: translateY(-2px) scale(1.012);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .user-input-badge {
+            background: #e6f0fa;
+            color: #1976d2;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.95em;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        .badge {
+            display: inline-block;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 2px;
+        }
+        .badge-feedback-da { background: #e0fbe0; color: #1a7f1a; }
+        .badge-feedback-nu { background: #ffeaea; color: #d32f2f; }
+        .badge-tip { background: #f0f7ff; color: #1976d2; }
+        .badge-clasa { background: #f6eaff; color: #7c3aed; }
+        .ai-response-block {
+            background: #f6f8fa;
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin: 0;
+            font-size: 0.97em;
+            color: #1a237e;
+            line-height: 1.7;
+            word-break: break-word;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .ai-response-block pre, .ai-response-block code {
+            background: #f0f0f0 !important;
+            color: #1976d2 !important;
+            font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+            font-size: 1em;
+            border-radius: 7px;
+            padding: 7px 10px;
+            margin: 8px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            display: block;
+            max-width: 100%;
+            overflow-x: auto;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            -o-tab-size: 4;
+        }
+        .ai-response-block .hljs {
+            background: #f0f0f0 !important;
+            border-radius: 7px;
+            padding: 7px 10px;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            -o-tab-size: 4;
+        }
+        /* Additional styles for HTML content */
+        .ai-response-block ul, .ai-response-block ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .ai-response-block li {
+            margin: 4px 0;
+        }
+        .ai-response-block strong {
+            font-weight: 600;
+            color: #1565c0;
+        }
+        .ai-response-block p {
+            margin: 8px 0;
+        }
+        .ai-response-block h1, .ai-response-block h2, .ai-response-block h3, 
+        .ai-response-block h4, .ai-response-block h5, .ai-response-block h6 {
+            margin: 12px 0 8px 0;
+            color: #1565c0;
+            font-weight: 600;
+        }
+        .feedback-text {
+            color: #444;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 7px;
+            padding: 6px 12px;
+            margin-top: 2px;
+            margin-bottom: 0;
+            font-size: 0.95em;
+            word-break: break-word;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.93em;
+        }
+        .timestamp {
+            color: #888;
+            font-size: 0.97em;
+            font-style: italic;
+        }
+        @media (max-width: 1300px) {
+            .feedback-card { max-width: 98vw; min-width: 320px; }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 2vw 0.5vw; }
+            .feedback-card { max-width: 100vw; padding: 10px 2vw 8px 2vw; }
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight code blocks
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+            
+            // Format C++ code with proper indentation
+            function formatCppCode(code) {
+                const lines = code.split('\n');
+                let indentLevel = 0;
+                const indentSize = 4;
+                const indentChar = ' '.repeat(indentSize);
+                
+                return lines.map(line => {
+                    const trimmedLine = line.trim();
+                    
+                    // Decrease indent for closing braces
+                    if (trimmedLine.startsWith('}')) {
+                        indentLevel = Math.max(0, indentLevel - 1);
+                    }
+                    
+                    // Add proper indentation
+                    const formattedLine = indentChar.repeat(indentLevel) + trimmedLine;
+                    
+                    // Increase indent for opening braces (but not for function definitions)
+                    if (trimmedLine.endsWith('{') && !trimmedLine.includes('(')) {
+                        indentLevel++;
+                    }
+                    
+                    return formattedLine;
+                }).join('\n');
+            }
+            
+            // Apply formatting to C++ code blocks
+            document.querySelectorAll('pre code.language-cpp').forEach(block => {
+                const originalText = block.textContent;
+                const formattedText = formatCppCode(originalText);
+                if (formattedText !== originalText) {
+                    block.textContent = formattedText;
+                    hljs.highlightElement(block);
+                }
+            });
+            
+            // Configure MathJax
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['\\(', '\\)']],
+                    displayMath: [['\\[', '\\]']],
+                    processEscapes: true
+                },
+                options: {
+                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                }
+            };
+        });
+    </script>
 </head>
 <body>
 <div class="container">
     <h2>Vizualizare Feedback</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User Input</th>
-                <th>AI Response</th>
-                <th>Clasa</th>
-                <th>Feedback</th>
-                <th>Text Feedback</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for fb in feedbacks %}
-            <tr>
-                <td>{{ fb[0] }}</td>
-                <td>{{ fb[1] }}</td>
-                <td>{{ fb[2] }}</td>
-                <td>{{ fb[3] }}</td>
-                <td>{{ fb[4] }}</td>
-                <td>{{ fb[5] }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <form method="get">
+        <label>Clasa:
+            <input type="text" name="clasa" value="{{ current_clasa }}" style="width:60px;">
+        </label>
+        <label>Feedback:
+            <select name="feedback">
+                <option value="">Toate</option>
+                <option value="da" {% if current_feedback=='da' %}selected{% endif %}>Pozitiv</option>
+                <option value="nu" {% if current_feedback=='nu' %}selected{% endif %}>Negativ</option>
+            </select>
+        </label>
+        <label>Tip:
+            <select name="tip_feedback">
+                <option value="">Toate</option>
+                <option value="quiz" {% if current_tip=='quiz' %}selected{% endif %}>Quiz</option>
+                <option value="problem" {% if current_tip=='problem' %}selected{% endif %}>Problemă</option>
+                <option value="chat" {% if current_tip=='chat' %}selected{% endif %}>Chat</option>
+                <option value="pozitiv" {% if current_tip=='pozitiv' %}selected{% endif %}>Pozitiv</option>
+                <option value="negativ" {% if current_tip=='negativ' %}selected{% endif %}>Negativ</option>
+            </select>
+        </label>
+        <button type="submit">Filtrează</button>
+    </form>
+    <div class="feedback-cards">
+    {% for fb in feedback_entries %}
+        <div class="feedback-card">
+            <div class="card-header">
+                <span class="user-input-badge" title="User Input">{{ fb.user_input }}</span>
+                <span class="badge badge-feedback-{{ fb.feedback }}">{{ fb.feedback|capitalize }}</span>
+                <span class="badge badge-tip">{{ fb.tip_feedback|capitalize }}</span>
+                <span class="badge badge-clasa">Clasa {{ fb.clasa }}</span>
+            </div>
+            <div class="ai-response-block">
+                {% if '<pre' in fb.ai_response or '<code' in fb.ai_response or '<ul' in fb.ai_response or '<ol' in fb.ai_response or '<p>' in fb.ai_response or '<strong>' in fb.ai_response or '<h' in fb.ai_response or '\\(' in fb.ai_response or '\\[' in fb.ai_response %}
+                    {{ fb.ai_response|safe }}
+                {% else %}
+                    <pre><code class="hljs language-cpp">{{ fb.ai_response }}</code></pre>
+                {% endif %}
+            </div>
+            {% if fb.feedback_text %}
+            <div class="feedback-text">{{ fb.feedback_text }}</div>
+            {% endif %}
+            <div class="card-footer">
+                <span class="timestamp">{{ fb.timestamp }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
 </div>
 </body>
 </html> 

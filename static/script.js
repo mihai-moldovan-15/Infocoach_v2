@@ -47,10 +47,28 @@ function addMessage(content, isUser = false, userInput = '') {
             <div class="feedback-form">
                 <span>Acest răspuns a fost util?</span>
                 <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
-                <button onclick="submitFeedback(this, 'nu')" class="feedback-btn">Nu</button>
+                <button onclick="openNegativeFeedbackModal(this)" class="feedback-btn">Nu</button>
                 <span id="feedback-message"></span>
             </div>
         `;
+        // Adaugă modalul pentru feedback negativ dacă nu există deja
+        if (!document.getElementById('negative-feedback-modal')) {
+            const modal = document.createElement('div');
+            modal.id = 'negative-feedback-modal';
+            modal.className = 'custom-modal';
+            modal.style.display = 'none';
+            modal.innerHTML = `
+              <div class="custom-modal-content">
+                <div class="custom-modal-message">Ce nu a funcționat sau ce ai fi vrut să primești?</div>
+                <textarea id="negative-feedback-text" rows="4" style="width:100%;margin:12px 0;"></textarea>
+                <div class="custom-modal-actions">
+                  <button onclick="sendNegativeFeedback()" class="feedback-btn">Trimite</button>
+                  <button onclick="closeNegativeFeedbackModal()" class="feedback-btn">Renunță</button>
+                </div>
+              </div>
+            `;
+            document.body.appendChild(modal);
+        }
     }
 
     chatMessages.appendChild(messageDiv);
@@ -129,8 +147,9 @@ function submitForm(event) {
 function submitFeedback(button, feedback) {
     const messageDiv = button.closest('.message.assistant');
     const messageContentDiv = messageDiv.querySelector('.message-content');
-    // Get AI response from innerHTML
-    let messageContent = messageContentDiv.innerHTML;
+    // Get AI response from original text, fallback to innerHTML
+    const aiResponseOriginal = messageDiv.querySelector('.ai-response-original');
+    let messageContent = aiResponseOriginal ? aiResponseOriginal.value : messageContentDiv.innerHTML;
     // Get user input from hidden input
     const userInputHidden = messageDiv.querySelector('.user-input-hidden');
     let userInput = userInputHidden ? userInputHidden.value : '';
@@ -147,7 +166,72 @@ function submitFeedback(button, feedback) {
     formData.append('ai_response', messageContent);
     formData.append('clasa', clasa);
     formData.append('feedback', feedback);
+    formData.append('tip_feedback', feedback === 'da' ? 'pozitiv' : 'negativ');
     // Trimite feedback la server
+    fetch('/feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (feedbackForm) {
+            if (data.error) {
+                feedbackForm.innerHTML = '<span class="feedback-thankyou" style="color:#dc3545;">Eroare la salvarea feedback-ului: ' + data.error + '</span>';
+            } else {
+                feedbackForm.innerHTML = '<span class="feedback-thankyou" style="color:#28a745;">Mulțumim pentru feedback!</span>';
+            }
+        }
+    })
+    .catch(error => {
+        if (feedbackForm) {
+            feedbackForm.innerHTML = '<span class="feedback-thankyou" style="color:#dc3545;">Eroare la trimiterea feedback-ului: ' + error.message + '</span>';
+        }
+    });
+}
+
+function openNegativeFeedbackModal(button) {
+    document.getElementById('negative-feedback-modal').style.display = 'flex';
+    window._negativeFeedbackBtn = button;
+}
+function closeNegativeFeedbackModal() {
+    document.getElementById('negative-feedback-modal').style.display = 'none';
+    window._negativeFeedbackBtn = null;
+    document.getElementById('negative-feedback-text').value = '';
+}
+function sendNegativeFeedback() {
+    const textarea = document.getElementById('negative-feedback-text');
+    const text = textarea.value.trim();
+    if (!text) { textarea.focus(); return; }
+    const button = window._negativeFeedbackBtn;
+    closeNegativeFeedbackModal();
+    const messageDiv = button.closest('.message.assistant');
+    const messageContentDiv = messageDiv.querySelector('.message-content');
+    // Get AI response from original text, fallback to innerHTML
+    const aiResponseOriginal = messageDiv.querySelector('.ai-response-original');
+    let messageContent = aiResponseOriginal ? aiResponseOriginal.value : messageContentDiv.innerHTML;
+    const userInputHidden = messageDiv.querySelector('.user-input-hidden');
+    let userInput = userInputHidden ? userInputHidden.value : '';
+    if (userInput && userInput.startsWith('"') && userInput.endsWith('"')) {
+        try { userInput = JSON.parse(userInput); } catch (e) {}
+    }
+    const clasaHidden = messageDiv.querySelector('.clasa-hidden');
+    let clasa = clasaHidden ? clasaHidden.value : (document.getElementById('clasa') ? document.getElementById('clasa').value : '9');
+    const feedbackForm = messageDiv.querySelector('.feedback-form');
+    const formData = new URLSearchParams();
+    formData.append('user_input', userInput);
+    formData.append('ai_response', messageContent);
+    formData.append('clasa', clasa);
+    formData.append('feedback', 'nu');
+    formData.append('feedback_text', text);
+    formData.append('tip_feedback', 'negativ');
     fetch('/feedback', {
         method: 'POST',
         headers: {
@@ -797,7 +881,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             suggestions.forEach((sug, idx) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span class="suggestion-title">${sug.name}</span>${sug.category ? `<span class="suggestion-tags">${sug.category}</span>` : ''}`;
+                // Compose categories and tags as badges
+                let metaBadges = '';
+                if (Array.isArray(sug.categories)) {
+                    metaBadges += sug.categories.map(cat => `<span class='suggestion-tags'>${cat}</span>`).join(' ');
+                }
+                if (Array.isArray(sug.tags)) {
+                    metaBadges += sug.tags.map(tag => `<span class='suggestion-tags'>${tag}</span>`).join(' ');
+                }
+                li.innerHTML = `<span class="suggestion-title">${sug.name}</span> ${metaBadges}`;
                 if (idx === selectedIdx) li.classList.add('active');
                 li.onclick = () => {
                     problemSearchInput.value = sug.name;

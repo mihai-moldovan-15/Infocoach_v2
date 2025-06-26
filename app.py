@@ -85,7 +85,8 @@ def init_db():
             user_input TEXT,
             ai_response TEXT,
             feedback TEXT,
-            feedback_text TEXT
+            feedback_text TEXT,
+            tip_feedback TEXT
         )
     ''')
     
@@ -292,7 +293,7 @@ def get_conversation_history(conversation_id):
 # === Function for formatting C++ code blocks ===
 def format_code_blocks(text):
     def replacer(match):
-        code = html.escape(match.group(1))
+        code = match.group(1)  # Don't escape HTML, preserve formatting
         return f'<pre><code class="cpp">{code}</code></pre>'
     return re.sub(r'```cpp\s*([\s\S]*?)```', replacer, text)
 
@@ -517,6 +518,7 @@ def index():
                     # Render the assistant message fragment and return it
                     return render_template('assistant_message.html', 
                                         output=formatted_output,
+                                        ai_response_original=output,
                                         user_input=user_input, 
                                         clasa=clasa,
                                         conversation_id=conversation_id)
@@ -595,6 +597,7 @@ def chat_api():
                 return jsonify({
                     'success': True,
                     'response': formatted_output,
+                    'response_original': output,
                     'conversation_id': conversation_id
                 })
 
@@ -616,8 +619,9 @@ def feedback():
         ai_response = data.get('ai_response', '').strip()
         clasa = data.get('clasa', '').strip()
         fb = data.get('feedback', '').strip()
-        feedback_text = data.get('feedback_text', '').strip()        
-        app.logger.info(f"Received feedback request - Clasa: {clasa}, Feedback: {fb}, Text: {feedback_text}")
+        feedback_text = data.get('feedback_text', '').strip()
+        tip_feedback = data.get('tip_feedback', '').strip()
+        app.logger.info(f"Received feedback request - Clasa: {clasa}, Feedback: {fb}, Text: {feedback_text}, Tip: {tip_feedback}")
         
         # Validate inputs
         if not user_input:
@@ -629,6 +633,9 @@ def feedback():
         if not fb:
             app.logger.warning("Missing feedback")
             return jsonify({'error': 'Lipsește feedback-ul'}), 400
+        if not tip_feedback:
+            app.logger.warning("Missing tip_feedback")
+            return jsonify({'error': 'Lipsește tip_feedback-ul'}), 400
             
         # Sanitize inputs
         user_input = html.escape(user_input)
@@ -636,6 +643,7 @@ def feedback():
         clasa = html.escape(clasa)
         fb = html.escape(fb)
         feedback_text = html.escape(feedback_text)
+        tip_feedback = html.escape(tip_feedback)
         
         # Ensure feedback directory exists
         feedback_dir = os.path.join(os.path.dirname(__file__), 'feedback')
@@ -673,7 +681,8 @@ def feedback():
                     user_input TEXT,
                     ai_response TEXT,
                     feedback TEXT,
-                    feedback_text TEXT
+                    feedback_text TEXT,
+                    tip_feedback TEXT
                 )
             ''')
             conn.commit()
@@ -682,9 +691,9 @@ def feedback():
         # Insert feedback
         app.logger.info("Inserting feedback")
         c.execute('''
-            INSERT INTO feedback (timestamp, clasa, user_input, ai_response, feedback, feedback_text)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (datetime.now().isoformat(), clasa, user_input, ai_response, fb, feedback_text))
+            INSERT INTO feedback (timestamp, clasa, user_input, ai_response, feedback, feedback_text, tip_feedback)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (datetime.now().isoformat(), clasa, user_input, ai_response, fb, feedback_text, tip_feedback))
         
         conn.commit()
         conn.close()
@@ -706,6 +715,7 @@ def view_feedback():
     # Get filtering parameters from query string
     clasa_filter = request.args.get('clasa', '')
     feedback_filter = request.args.get('feedback', '')
+    tip_filter = request.args.get('tip_feedback', '')
     
     # Connect to database
     conn = sqlite3.connect('feedback/feedback.db', check_same_thread=False)
@@ -723,6 +733,10 @@ def view_feedback():
         query += ' AND feedback = ?'
         params.append(feedback_filter)
     
+    if tip_filter:
+        query += ' AND tip_feedback = ?'
+        params.append(tip_filter)
+    
     query += ' ORDER BY timestamp DESC'
     
     # Execute query with parameters
@@ -735,8 +749,8 @@ def view_feedback():
     # Convert results to format easily used in template
     entries = []
     for entry in feedback_entries:
-        # Check if response already contains HTML
-        if '<pre><code class="cpp">' in entry[4]:
+        # Check if response already contains HTML formatting
+        if '<pre><code class="cpp">' in entry[4] or '<ul>' in entry[4] or '<p>' in entry[4] or '<strong>' in entry[4]:
             # If it already contains HTML, use it directly
             formatted_response = entry[4]
         else:
@@ -746,18 +760,21 @@ def view_feedback():
             formatted_response = format_inline_code(formatted_response)
         
         entries.append({
+            'id': entry[0],
             'timestamp': entry[1],
             'clasa': entry[2],
             'user_input': entry[3],
             'ai_response': formatted_response,
             'feedback': entry[5],
-            'feedback_text': entry[6] if len(entry) > 6 else ''
+            'feedback_text': entry[6] if len(entry) > 6 else '',
+            'tip_feedback': entry[7] if len(entry) > 7 else ''
         })
     
     return render_template('view_feedback.html', 
                          feedback_entries=entries,
                          current_clasa=clasa_filter,
-                         current_feedback=feedback_filter)
+                         current_feedback=feedback_filter,
+                         current_tip=tip_filter)
 
 # === Route for profile ===
 @app.route('/profile', methods=['GET', 'POST'])
@@ -1118,16 +1135,35 @@ def api_problem_search():
     cur = conn.cursor()
     # Caută problemele care conțin toți termenii din query în nume sau categorie
     terms = q.split()
-    sql = "SELECT id, name, category FROM problems"
+    sql = "SELECT id, name, category, tags, categories FROM problems"
     cur.execute(sql)
     all_problems = cur.fetchall()
     def score(problem):
         name = problem['name'].lower()
         category = problem['category'].lower() if problem['category'] else ''
-        return sum(1 for term in terms if term in name or term in category)
+        tags = problem['tags'].lower() if 'tags' in problem.keys() and problem['tags'] else ''
+        categories = problem['categories'].lower() if 'categories' in problem.keys() and problem['categories'] else ''
+        return sum(1 for term in terms if term in name or term in category or term in tags or term in categories)
     filtered_problems = [p for p in all_problems if score(p) > 0]
     filtered_problems.sort(key=score, reverse=True)
-    return jsonify({'problems': [{'id': p['id'], 'name': p['name'], 'category': p['category']} for p in filtered_problems[:10]]})
+    def parse_json_field(field):
+        import json
+        if not field:
+            return []
+        try:
+            return json.loads(field)
+        except Exception:
+            return [field] if isinstance(field, str) else []
+    return jsonify({'problems': [
+        {
+            'id': p['id'],
+            'name': p['name'],
+            'category': p['category'],
+            'tags': parse_json_field(p['tags']) if 'tags' in p.keys() else [],
+            'categories': parse_json_field(p['categories']) if 'categories' in p.keys() else []
+        }
+        for p in filtered_problems[:10]
+    ]})
 
 # === Route for running code ===
 @app.route('/api/run_code', methods=['POST'])

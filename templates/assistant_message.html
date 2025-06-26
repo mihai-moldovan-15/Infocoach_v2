@@ -4,12 +4,23 @@
     {% if user_input %}
     <input type="hidden" class="user-input-hidden" value="{{ user_input }}">
     <input type="hidden" class="ai-response-hidden" value="{{ output }}">
+    <input type="hidden" class="ai-response-original" value="{{ ai_response_original }}">
     <input type="hidden" class="clasa-hidden" value="{{ clasa }}">
     <div class="feedback-form">
         <span>Acest răspuns a fost util?</span>
-        <button onclick="submitFeedback(this, 'da')" class="feedback-btn">Da</button>
-        <button onclick="submitFeedback(this, 'nu')" class="feedback-btn">Nu</button>
+        <button onclick="submitFeedback(this, 'da', 'pozitiv')" class="feedback-btn">Da</button>
+        <button onclick="openNegativeFeedbackModal(this)" class="feedback-btn">Nu</button>
         <span id="feedback-message"></span>
+    </div>
+    <div id="negative-feedback-modal" class="custom-modal" style="display:none;">
+      <div class="custom-modal-content">
+        <div class="custom-modal-message">Ce nu a funcționat sau ce ai fi vrut să primești?</div>
+        <textarea id="negative-feedback-text" rows="4" style="width:100%;margin:12px 0;"></textarea>
+        <div class="custom-modal-actions">
+          <button onclick="sendNegativeFeedback(this)" class="feedback-btn">Trimite</button>
+          <button onclick="closeNegativeFeedbackModal()" class="feedback-btn">Renunță</button>
+        </div>
+      </div>
     </div>
     {% else %}
     <div class="feedback-form">
@@ -21,7 +32,7 @@
 </div>
 
 <script>
-function submitFeedback(button, feedback) {
+function submitFeedback(button, feedback, tip_feedback) {
     if (button.disabled) return;
     if (button.nextElementSibling) {
         button.nextElementSibling.disabled = true;
@@ -30,7 +41,7 @@ function submitFeedback(button, feedback) {
     const feedbackMsg = feedbackForm.querySelector('#feedback-message');
     feedbackMsg.textContent = 'Se trimite feedback-ul...';
     const userInput = document.querySelector('.user-input-hidden')?.value;
-    const aiResponse = document.querySelector('.ai-response-hidden')?.value;
+    const aiResponse = document.querySelector('.ai-response-original')?.value || document.querySelector('.ai-response-hidden')?.value;
     const clasa = document.querySelector('.clasa-hidden')?.value;
     if (!userInput || !aiResponse) {
         feedbackMsg.textContent = 'Eroare: Date incomplete pentru feedback.';
@@ -46,6 +57,7 @@ function submitFeedback(button, feedback) {
     formData.append('clasa', clasa);
     formData.append('feedback', feedback);
     formData.append('feedback_text', '');
+    formData.append('tip_feedback', tip_feedback);
     fetch('/feedback', {
         method: 'POST',
         body: formData
@@ -57,9 +69,6 @@ function submitFeedback(button, feedback) {
         return response.json();
     })
     .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
         feedbackForm.querySelectorAll('button').forEach(btn => {
             btn.style.display = 'none';
         });
@@ -72,6 +81,55 @@ function submitFeedback(button, feedback) {
         if (button.nextElementSibling) {
             button.nextElementSibling.disabled = false;
         }
+    });
+}
+function openNegativeFeedbackModal(button) {
+    document.getElementById('negative-feedback-modal').style.display = 'flex';
+    window._negativeFeedbackBtn = button;
+}
+function closeNegativeFeedbackModal() {
+    document.getElementById('negative-feedback-modal').style.display = 'none';
+    window._negativeFeedbackBtn = null;
+}
+function sendNegativeFeedback(btn) {
+    const textarea = document.getElementById('negative-feedback-text');
+    const text = textarea.value.trim();
+    if (!text) { textarea.focus(); return; }
+    const button = window._negativeFeedbackBtn;
+    closeNegativeFeedbackModal();
+    // Trimite feedback negativ cu text
+    const feedbackForm = button.parentElement;
+    const feedbackMsg = feedbackForm.querySelector('#feedback-message');
+    feedbackMsg.textContent = 'Se trimite feedback-ul...';
+    const userInput = document.querySelector('.user-input-hidden')?.value;
+    const aiResponse = document.querySelector('.ai-response-original')?.value || document.querySelector('.ai-response-hidden')?.value;
+    const clasa = document.querySelector('.clasa-hidden')?.value;
+    const formData = new FormData();
+    formData.append('user_input', userInput);
+    formData.append('ai_response', aiResponse);
+    formData.append('clasa', clasa);
+    formData.append('feedback', 'nu');
+    formData.append('feedback_text', text);
+    formData.append('tip_feedback', 'negativ');
+    fetch('/feedback', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        feedbackForm.querySelectorAll('button').forEach(btn => {
+            btn.style.display = 'none';
+        });
+        feedbackMsg.textContent = 'Mulțumim pentru feedback!';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        feedbackMsg.textContent = `Eroare: ${error.message}`;
     });
 }
 </script>

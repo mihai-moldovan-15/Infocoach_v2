@@ -12,7 +12,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('scraper.log'),
+        logging.FileHandler('scraper.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
@@ -110,58 +110,103 @@ class PbinfoScraper:
 
             problem_content = soup.find('article', id='enunt')
             if problem_content:
-                current_section = None
-                found_intro = False
-                found_example_input = False
-                found_example_output = False
-                for tag in problem_content.find_all(['h1', 'p', 'pre', 'ul', 'li']):
-                    text = self.clean_text(tag.text)
-                    text_norm = self.normalize_text(text)
-                    if tag.name == 'h1':
-                        if "cerin" in text_norm:
-                            current_section = "cerinta"
-                        elif "datedeintrare" in text_norm:
-                            current_section = "input"
-                        elif "datedeiesire" in text_norm:
-                            current_section = "output"
-                        elif (
-                            "restrict" in text_norm or
-                            "preciz" in text_norm or
-                            "observa" in text_norm
-                        ):
-                            current_section = "constraints"
-                        elif "exemplu" in text_norm:
-                            current_section = "example"
-                        else:
-                            current_section = None
-                    elif tag.name in ['p', 'pre']:
-                        if not found_intro and tag.name == 'p':
-                            intro = text
-                            found_intro = True
-                        elif current_section == "cerinta":
-                            cerinta += text + "\n"
-                        elif current_section == "input":
-                            input_desc += text + "\n"
-                        elif current_section == "output":
-                            output_desc += text + "\n"
-                        elif current_section == "constraints":
-                            constraints += text + "\n"
-                        elif current_section == "example":
-                            if tag.name == 'p':
-                                if '.in' in text_norm:
-                                    example_input_name = text
-                                elif '.out' in text_norm:
-                                    example_output_name = text
-                            elif tag.name == 'pre':
-                                if not found_example_input:
+                # Verifică dacă este format nou (cu h1) sau format vechi
+                h1_sections = problem_content.find_all('h1')
+                if h1_sections:
+                    # Format nou - folosește h1 pentru secțiuni
+                    current_section = None
+                    for tag in problem_content.find_all(['h1', 'p', 'pre', 'ul', 'li']):
+                        text = self.clean_text(tag.text)
+                        text_norm = self.normalize_text(text)
+                        
+                        if tag.name == 'h1':
+                            if "cerin" in text_norm:
+                                current_section = "cerinta"
+                            elif "restrict" in text_norm or "preciz" in text_norm:
+                                current_section = "constraints"
+                            elif "exemplu" in text_norm:
+                                current_section = "example"
+                            elif "important" in text_norm:
+                                current_section = "important"
+                            else:
+                                current_section = None
+                        elif tag.name in ['p', 'pre']:
+                            if current_section == "cerinta":
+                                cerinta += text + "\n"
+                            elif current_section == "constraints":
+                                constraints += text + "\n"
+                            elif current_section == "example":
+                                if tag.name == 'pre':
                                     example_input = text
-                                    found_example_input = True
-                                elif not found_example_output:
+                                else:
+                                    # Pentru exemple simple, folosește ca input și output
+                                    example_input = text
                                     example_output = text
-                                    found_example_output = True
-                    elif tag.name == 'ul' and current_section == "constraints":
-                        for li in tag.find_all('li'):
-                            constraints += self.clean_text(li.text) + "\n"
+                            elif current_section == "important":
+                                # Adaugă la cerință sau restricții
+                                if not cerinta.strip():
+                                    cerinta += text + "\n"
+                                else:
+                                    constraints += text + "\n"
+                        elif tag.name == 'ul' and current_section == "constraints":
+                            for li in tag.find_all('li'):
+                                constraints += self.clean_text(li.text) + "\n"
+                        elif tag.name == 'li' and current_section == "constraints":
+                            constraints += self.clean_text(tag.text) + "\n"
+                else:
+                    # Format vechi - folosește logica originală
+                    current_section = None
+                    found_intro = False
+                    found_example_input = False
+                    found_example_output = False
+                    for tag in problem_content.find_all(['h1', 'p', 'pre', 'ul', 'li']):
+                        text = self.clean_text(tag.text)
+                        text_norm = self.normalize_text(text)
+                        if tag.name == 'h1':
+                            if "cerin" in text_norm:
+                                current_section = "cerinta"
+                            elif "datedeintrare" in text_norm:
+                                current_section = "input"
+                            elif "datedeiesire" in text_norm:
+                                current_section = "output"
+                            elif (
+                                "restrict" in text_norm or
+                                "preciz" in text_norm or
+                                "observa" in text_norm
+                            ):
+                                current_section = "constraints"
+                            elif "exemplu" in text_norm:
+                                current_section = "example"
+                            else:
+                                current_section = None
+                        elif tag.name in ['p', 'pre']:
+                            if not found_intro and tag.name == 'p':
+                                intro = text
+                                found_intro = True
+                            elif current_section == "cerinta":
+                                cerinta += text + "\n"
+                            elif current_section == "input":
+                                input_desc += text + "\n"
+                            elif current_section == "output":
+                                output_desc += text + "\n"
+                            elif current_section == "constraints":
+                                constraints += text + "\n"
+                            elif current_section == "example":
+                                if tag.name == 'p':
+                                    if '.in' in text_norm:
+                                        example_input_name = text
+                                    elif '.out' in text_norm:
+                                        example_output_name = text
+                                elif tag.name == 'pre':
+                                    if not found_example_input:
+                                        example_input = text
+                                        found_example_input = True
+                                    elif not found_example_output:
+                                        example_output = text
+                                        found_example_output = True
+                        elif tag.name == 'ul' and current_section == "constraints":
+                            for li in tag.find_all('li'):
+                                constraints += self.clean_text(li.text) + "\n"
 
             # Fallback la "consola" dacă nu există nume de fișier
             if not example_input_name:
@@ -197,7 +242,28 @@ class PbinfoScraper:
                         difficulty = self.clean_text(cells[7].text)
                         # category și altele pot fi extrase din breadcrumb sau altă logică
 
-            logging.info(f"Grade: {grade}, Category: {category}, Difficulty: {difficulty}")
+            # Extragere categorii din breadcrumb (fără clasa)
+            categories = []
+            breadcrumb = soup.find('ol', class_='breadcrumb')
+            if breadcrumb:
+                breadcrumb_items = breadcrumb.find_all('li', class_='breadcrumb-item')
+                # Sar primul (clasa), restul sunt categorii
+                for item in breadcrumb_items[1:]:
+                    cat_text = self.clean_text(item.text)
+                    if cat_text and cat_text != name:
+                        categories.append(cat_text)
+
+            # Extragere taguri (etichete)
+            tags = []
+            tag_container = soup.find('span', id='container-etichete')
+            if tag_container:
+                tag_links = tag_container.find_all('a', class_='badge')
+                for tag_link in tag_links:
+                    tag_text = self.clean_text(tag_link.text)
+                    if tag_text:
+                        tags.append(tag_text)
+
+            logging.info(f"Grade: {grade}, Category: {category}, Difficulty: {difficulty}, Tags: {tags}, Categories: {categories}")
 
             return {
                 'id': problem_id,
@@ -213,6 +279,8 @@ class PbinfoScraper:
                 'grade': grade,
                 'category': category,
                 'difficulty': difficulty,
+                'tags': tags,
+                'categories': categories,
                 'subcategories': '',
                 'time_limit': time_limit,
                 'memory_limit': memory_limit,

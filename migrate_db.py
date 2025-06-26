@@ -38,6 +38,16 @@ try:
 except Exception as e:
     print("Coloana source există deja sau altă eroare:", e)
 
+try:
+    c.execute("ALTER TABLE problems ADD COLUMN categories TEXT;")
+except Exception as e:
+    print("Coloana categories există deja sau altă eroare:", e)
+
+try:
+    c.execute("ALTER TABLE problems ADD COLUMN tags TEXT;")
+except Exception as e:
+    print("Coloana tags există deja sau altă eroare:", e)
+
 conn.commit()
 conn.close()
 print("Migrare finalizată.") 
