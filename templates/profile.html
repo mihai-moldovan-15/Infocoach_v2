@@ -3,55 +3,185 @@
 {% block title %}Profil - InfoCoach{% endblock %}
 
 {% block content %}
-<div class="profile-container">
-    <h1>Profilul meu</h1>
-    
-    <div class="profile-section">
-        <h2>Informații personale</h2>
-        <div class="info-group">
+<style>
+.profile-modern-card {
+    max-width: 420px;
+    margin: 3.5rem auto 0 auto;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 4px 24px rgba(30,64,175,0.08);
+    padding: 2.5rem 2.2rem 2.2rem 2.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+}
+.profile-modern-header {
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+.profile-modern-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e6f0fa 60%, #b3d8fd 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.3em;
+    color: #1976d2;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(30,64,175,0.07);
+}
+.profile-modern-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+.profile-modern-info label {
+    color: #4b5563;
+    font-weight: 600;
+    font-size: 1.05em;
+    margin-bottom: 0.1em;
+}
+.profile-modern-info span {
+    color: #1f2937;
+    font-size: 1.13em;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+.profile-modern-section-title {
+    font-size: 1.18em;
+    font-weight: 700;
+    color: #1976d2;
+    margin-bottom: 0.7em;
+    margin-top: 0.2em;
+}
+.profile-modern-form-group {
+    margin-bottom: 1.3em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+}
+.profile-modern-form-group label {
+    font-weight: 500;
+    color: #444;
+    font-size: 1.05em;
+}
+.profile-modern-form-group select,
+.profile-modern-form-group input[type="password"] {
+    width: 100%;
+    padding: 0.45em 0.8em;
+    font-size: 0.98em;
+    border: 2px solid #1976d2;
+    border-radius: 8px;
+    background: #e6f0fa;
+    margin-top: 0.1em;
+    color: #1976d2;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+.profile-modern-form-group select:focus {
+    outline: none;
+    border-color: #1251a3;
+    background: #d0e6fa;
+    color: #1251a3;
+}
+.profile-modern-form-group select option {
+    background: #e6f0fa;
+    color: #1976d2;
+    font-weight: 600;
+}
+.profile-modern-form-group select option:checked {
+    background: #b3d8fd;
+    color: #1251a3;
+    font-weight: 700;
+}
+.profile-modern-form-group select::-ms-expand {
+    background: transparent;
+}
+.profile-modern-form-group select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='%231976d2' stroke-width='2' viewBox='0 0 24 24' width='20' height='20' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1em center;
+    background-size: 1.2em;
+    cursor: pointer;
+}
+.profile-modern-form-group select:disabled {
+    background: #e6e6e6;
+    color: #aaa;
+}
+.profile-modern-form-group input[type="password"]:focus {
+    outline: none;
+    border-color: #1251a3;
+    background: #f8f9fa;
+}
+.profile-modern-btn {
+    width: 100%;
+    padding: 0.9em 0;
+    border-radius: 10px;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    font-size: 1.13em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.2em;
+}
+.profile-modern-btn:hover {
+    background: #1251a3;
+}
+@media (max-width: 600px) {
+    .profile-modern-card {
+        padding: 1.2rem 0.5rem;
+        max-width: 98vw;
+    }
+    .profile-modern-header {
+        gap: 0.7rem;
+    }
+    .profile-modern-avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5em;
+    }
+}
+</style>
+<div class="profile-modern-card">
+    <div class="profile-modern-header">
+        <div class="profile-modern-avatar">{{ current_user.username[0]|upper }}</div>
+        <div class="profile-modern-info">
             <label>Nume utilizator:</label>
             <span>{{ current_user.username }}</span>
-        </div>
-        <div class="info-group">
             <label>Email:</label>
             <span>{{ current_user.email }}</span>
         </div>
     </div>
-
-    <div class="profile-section">
-        <form method="POST" action="{{ url_for('profile') }}" class="settings-form" id="classForm">
-            {{ form.csrf_token }}
-            <div class="form-group">
-                {{ form.clasa.label }}
-                {{ form.clasa(class="form-control") }}
-            </div>
-        </form>
-        <div style="text-align:center; margin-top: 2rem;">
-            <button type="submit" form="classForm" class="save-profile-btn">Salvează modificările</button>
+    <form method="POST" action="{{ url_for('profile') }}" class="profile-modern-form" id="classForm">
+        {{ form.csrf_token }}
+        <div class="profile-modern-section-title">Clasa</div>
+        <div class="profile-modern-form-group">
+            {{ form.clasa(class="form-control") }}
         </div>
-    </div>
-
-    <div class="profile-section">
-        <h2>Schimbă parola</h2>
-        <form method="POST" action="{{ url_for('change_password') }}" class="password-form" id="passwordForm">
-            {{ form.csrf_token }}
-            <div class="form-group">
-                <label for="current_password">Parola actuală:</label>
-                <input type="password" name="current_password" id="current_password" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="new_password">Parola nouă:</label>
-                <input type="password" name="new_password" id="new_password" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirmă parola nouă:</label>
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
-            </div>
-        </form>
-    </div>
-
-    <div style="text-align:center; margin-top: 2rem;">
-        <button type="submit" form="passwordForm" class="save-profile-btn">Modifică parola</button>
-    </div>
+        <button type="submit" class="profile-modern-btn">Salvează modificările</button>
+    </form>
+    <form method="POST" action="{{ url_for('change_password') }}" class="profile-modern-form" id="passwordForm">
+        <div class="profile-modern-section-title">Schimbă parola</div>
+        {{ form.csrf_token }}
+        <div class="profile-modern-form-group">
+            <label for="current_password">Parola actuală:</label>
+            <input type="password" name="current_password" id="current_password" required>
+        </div>
+        <div class="profile-modern-form-group">
+            <label for="new_password">Parola nouă:</label>
+            <input type="password" name="new_password" id="new_password" required>
+        </div>
+        <div class="profile-modern-form-group">
+            <label for="confirm_password">Confirmă parola nouă:</label>
+            <input type="password" name="confirm_password" id="confirm_password" required>
+        </div>
+        <button type="submit" class="profile-modern-btn">Modifică parola</button>
+    </form>
 </div>
 {% endblock %} 

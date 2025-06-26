@@ -4,43 +4,48 @@
 
 {% block content %}
 <div class="auth-container">
-    <h2>Înregistrare</h2>
-    <form method="POST" action="{{ url_for('register') }}">
+    <div class="auth-header">
+        <h2>Înregistrare</h2>
+        <p class="auth-subtitle">Creează-ți un cont nou pentru a accesa toate funcționalitățile InfoCoach.</p>
+    </div>
+    <form method="POST" action="{{ url_for('register') }}" class="auth-form">
         {{ form.hidden_tag() }}
         <div class="form-group">
-            {{ form.username.label }}
-            {{ form.username(class="form-control") }}
+            <label class="form-label">{{ form.username.label.text }}</label>
+            {{ form.username(class="form-control", placeholder="Nume utilizator") }}
             {% for error in form.username.errors %}
             <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.email.label }}
-            {{ form.email(class="form-control") }}
+            <label class="form-label">{{ form.email.label.text }}</label>
+            {{ form.email(class="form-control", placeholder="Email") }}
             {% for error in form.email.errors %}
             <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.password.label }}
-            {{ form.password(class="form-control") }}
+            <label class="form-label">{{ form.password.label.text }}</label>
+            {{ form.password(class="form-control", placeholder="Parolă") }}
             {% for error in form.password.errors %}
             <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.password2.label }}
-            {{ form.password2(class="form-control") }}
+            <label class="form-label">{{ form.password2.label.text }}</label>
+            {{ form.password2(class="form-control", placeholder="Confirmă parola") }}
             {% for error in form.password2.errors %}
             <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary btn-block", value="Înregistrare") }}
         </div>
     </form>
-    <p class="auth-link">
-        Ai deja un cont? <a href="{{ url_for('login') }}">Autentifică-te aici</a>
-    </p>
+    <div class="auth-footer">
+        <p class="auth-link">
+            Ai deja un cont? <a href="{{ url_for('login') }}">Autentifică-te aici</a>
+        </p>
+    </div>
 </div>
 {% endblock %} 

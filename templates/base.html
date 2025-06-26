@@ -39,9 +39,18 @@
         </div>
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                <span class="welcome-text">Bună, {{ current_user.username }}!</span>
-                <a href="{{ url_for('profile') }}" class="nav-link">Profil</a>
-                <a href="{{ url_for('logout') }}" class="nav-link">Deconectare</a>
+                <a href="{{ url_for('profile') }}" class="nav-profile-avatar-link" style="display:inline-block;vertical-align:middle;margin:0 10px;">
+                    <span class="nav-profile-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#e6f0fa 60%,#b3d8fd 100%);box-shadow:0 1px 4px rgba(30,64,175,0.07);font-size:1.25em;font-weight:700;color:#1976d2;">
+                        {{ current_user.username[0]|upper }}
+                    </span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-logout-icon" title="Deconectare" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:transparent;margin-left:2px;transition:background 0.15s;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="nav-link">Autentificare</a>
                 <a href="{{ url_for('register') }}" class="nav-link">Înregistrare</a>

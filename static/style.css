@@ -303,6 +303,57 @@ strong {
     font-size: 0.95em;
 }
 
+/* === Navbar avatar & logout responsive === */
+.nav-profile-avatar-link, .nav-logout-icon {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 0 6px;
+    transition: background 0.18s, box-shadow 0.18s;
+    position: relative;
+}
+.nav-profile-avatar-link:focus, .nav-profile-avatar-link:hover,
+.nav-logout-icon:focus, .nav-logout-icon:hover {
+    background: #e6f0fa;
+    box-shadow: 0 2px 8px rgba(30,64,175,0.10);
+    outline: none;
+}
+.nav-profile-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 1.25em;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#e6f0fa 60%,#b3d8fd 100%);
+    color: #1976d2;
+    box-shadow: 0 1px 4px rgba(30,64,175,0.07);
+    transition: box-shadow 0.18s;
+    border-bottom: none !important;
+    text-decoration: none !important;
+}
+
+@media (max-width: 600px) {
+    .nav-links {
+        gap: 0.3rem !important;
+    }
+    .nav-profile-avatar-link, .nav-logout-icon {
+        width: 36px;
+        height: 36px;
+        margin: 0 2px;
+    }
+    .nav-profile-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 1em;
+    }
+}
+
 /* Authentication Forms */
 .auth-container {
     max-width: 400px;
