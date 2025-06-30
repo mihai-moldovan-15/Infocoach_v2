@@ -27,4 +27,9 @@ instance/
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Debug files (specific to local development)
+debug_*.html
+debug_files/
+scraper.log 

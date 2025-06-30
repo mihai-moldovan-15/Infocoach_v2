@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 import re
 import unicodedata
+import os
 
 # Configurare logging
 logging.basicConfig(
@@ -122,6 +123,10 @@ class PbinfoScraper:
                         if tag.name == 'h1':
                             if "cerin" in text_norm:
                                 current_section = "cerinta"
+                            elif "datedeintrare" in text_norm:
+                                current_section = "input"
+                            elif "datedeiesire" in text_norm:
+                                current_section = "output"
                             elif "restrict" in text_norm or "preciz" in text_norm:
                                 current_section = "constraints"
                             elif "exemplu" in text_norm:
@@ -133,6 +138,10 @@ class PbinfoScraper:
                         elif tag.name in ['p', 'pre']:
                             if current_section == "cerinta":
                                 cerinta += text + "\n"
+                            elif current_section == "input":
+                                input_desc += text + "\n"
+                            elif current_section == "output":
+                                output_desc += text + "\n"
                             elif current_section == "constraints":
                                 constraints += text + "\n"
                             elif current_section == "example":
@@ -151,62 +160,38 @@ class PbinfoScraper:
                         elif tag.name == 'ul' and current_section == "constraints":
                             for li in tag.find_all('li'):
                                 constraints += self.clean_text(li.text) + "\n"
+                        elif tag.name == 'ul' and current_section == "input":
+                            for li in tag.find_all('li'):
+                                input_desc += self.clean_text(li.text) + "\n"
+                        elif tag.name == 'ul' and current_section == "output":
+                            for li in tag.find_all('li'):
+                                output_desc += self.clean_text(li.text) + "\n"
                         elif tag.name == 'li' and current_section == "constraints":
                             constraints += self.clean_text(tag.text) + "\n"
+                        elif tag.name == 'li' and current_section == "input":
+                            input_desc += self.clean_text(tag.text) + "\n"
+                        elif tag.name == 'li' and current_section == "output":
+                            output_desc += self.clean_text(tag.text) + "\n"
                 else:
-                    # Format vechi - folosește logica originală
-                    current_section = None
-                    found_intro = False
-                    found_example_input = False
-                    found_example_output = False
-                    for tag in problem_content.find_all(['h1', 'p', 'pre', 'ul', 'li']):
-                        text = self.clean_text(tag.text)
-                        text_norm = self.normalize_text(text)
-                        if tag.name == 'h1':
-                            if "cerin" in text_norm:
-                                current_section = "cerinta"
-                            elif "datedeintrare" in text_norm:
-                                current_section = "input"
-                            elif "datedeiesire" in text_norm:
-                                current_section = "output"
-                            elif (
-                                "restrict" in text_norm or
-                                "preciz" in text_norm or
-                                "observa" in text_norm
-                            ):
-                                current_section = "constraints"
-                            elif "exemplu" in text_norm:
-                                current_section = "example"
-                            else:
-                                current_section = None
-                        elif tag.name in ['p', 'pre']:
-                            if not found_intro and tag.name == 'p':
-                                intro = text
-                                found_intro = True
-                            elif current_section == "cerinta":
-                                cerinta += text + "\n"
-                            elif current_section == "input":
-                                input_desc += text + "\n"
-                            elif current_section == "output":
-                                output_desc += text + "\n"
-                            elif current_section == "constraints":
-                                constraints += text + "\n"
-                            elif current_section == "example":
-                                if tag.name == 'p':
-                                    if '.in' in text_norm:
-                                        example_input_name = text
-                                    elif '.out' in text_norm:
-                                        example_output_name = text
-                                elif tag.name == 'pre':
-                                    if not found_example_input:
-                                        example_input = text
-                                        found_example_input = True
-                                    elif not found_example_output:
-                                        example_output = text
-                                        found_example_output = True
-                        elif tag.name == 'ul' and current_section == "constraints":
-                            for li in tag.find_all('li'):
-                                constraints += self.clean_text(li.text) + "\n"
+                    # Format vechi - folosește logica robustă pentru orice tag după Intrare/Ieșire
+                    in_example_input = False
+                    in_example_output = False
+                    for tag in problem_content.find_all(['h1', 'p', 'pre', 'span', 'b', 'div', 'code']):
+                        text = self.clean_text(tag.text).lower()
+                        if text == 'intrare':
+                            in_example_input = True
+                            in_example_output = False
+                            continue
+                        if text == 'ieșire' or text == 'iesire':
+                            in_example_output = True
+                            in_example_input = False
+                            continue
+                        if in_example_input and tag.text.strip():
+                            example_input = tag.text.strip()
+                            in_example_input = False
+                        elif in_example_output and tag.text.strip():
+                            example_output = tag.text.strip()
+                            in_example_output = False
 
             # Fallback la "consola" dacă nu există nume de fișier
             if not example_input_name:
@@ -342,14 +327,20 @@ class PbinfoScraper:
             return False
 
     def scrape_pbinfo(self):
-        """Scrape primele 10 probleme de pe pbinfo.ro și le adaugă în baza de date."""
+        """Scrape primele 25 probleme de pe pbinfo.ro și le adaugă în baza de date. Salvează fișierele de debug în debug_files/."""
+        debug_dir = 'debug_files'
+        if not os.path.exists(debug_dir):
+            os.makedirs(debug_dir)
         base_url = "https://www.pbinfo.ro/probleme/"
-        for problem_id in range(1, 11):
+        for problem_id in range(1, 26):
             url = f"{base_url}{problem_id}"
             try:
                 response = requests.get(url)
                 if response.status_code == 200:
                     soup = BeautifulSoup(response.text, 'html.parser')
+                    # Salvează fișierul de debug în folderul separat
+                    with open(os.path.join(debug_dir, f'debug_{problem_id}.html'), 'w', encoding='utf-8') as f:
+                        f.write(response.text)
                     problem_data = self.extract_problem_data(problem_id)
                     if problem_data:
                         problem_data['id'] = problem_id
