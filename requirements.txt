@@ -10,3 +10,4 @@ flask-login
 flask-wtf
 requests==2.31.0
 beautifulsoup4==4.12.2
+email_validator

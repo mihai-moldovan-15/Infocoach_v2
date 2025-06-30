@@ -672,7 +672,7 @@ class AdvancedPbinfoScraper:
 
 if __name__ == "__main__":
     scraper = AdvancedPbinfoScraper()
-    problem_ids = list(range(27, 31))
+    problem_ids = list(range(1, 31))
     for pid in SPECIAL_PROBLEM_IDS:
         if pid not in problem_ids:
             problem_ids.append(pid)

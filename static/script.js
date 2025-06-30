@@ -1151,28 +1151,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (idx === 4) {
                     let ex = '';
                     const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
-                    const hasInputFile = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola';
-                    const hasOutputFile = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola';
-                    let inputLabel = hasInputFile ? currentProblem.example_input_name : 'Intrare';
-                    let outputLabel = hasOutputFile ? currentProblem.example_output_name : 'Ieșire';
-                    console.log('EXEMPLU DEBUG:', {inputLabel, hasInputFile, outputLabel, hasOutputFile, example_input: currentProblem.example_input, example_output: currentProblem.example_output});
-                    if (currentProblem.example_input) {
+                    const hasInputFile = problem.example_input_name && problem.example_input_name !== 'consola';
+                    const hasOutputFile = problem.example_output_name && problem.example_output_name !== 'consola';
+                    let inputLabel = hasInputFile ? problem.example_input_name : 'Intrare';
+                    let outputLabel = hasOutputFile ? problem.example_output_name : 'Ieșire';
+                    // Ascunde badge-ul Intrare pentru subprograme
+                    if (problem.problem_type === 'subprogram') inputLabel = '';
+                    if (problem.example_input) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
-                        if (!hasInputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        } else if (hasInputFile) {
+                        if (inputLabel) {
                             ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
                         }
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${problem.example_input}</pre></div>`;
                     }
-                    if (currentProblem.example_output) {
+                    if (problem.example_output) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
                         if (!hasOutputFile) {
                             ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
                         } else if (hasOutputFile) {
                             ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
                         }
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_output}</pre></div>`;
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${problem.example_output}</pre></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
