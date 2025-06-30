@@ -1801,26 +1801,28 @@ def api_generate_complete_code():
     data = request.get_json()
     if not data:
         return jsonify({'error': 'Invalid request data'}), 400
-        
+    
     problem_id = data.get('problem_id')
     user_code = data.get('code', '').strip()
+    statement = data.get('statement', '').strip()
     
     if not problem_id or not user_code:
         return jsonify({'error': 'Problem ID and code are required'}), 400
     
     try:
-        # Obține detaliile problemei
-        conn = sqlite3.connect('problems.db')
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
-        cur.execute("SELECT statement FROM problems WHERE id = ?", (problem_id,))
-        row = cur.fetchone()
-        conn.close()
-        
-        if not row:
-            return jsonify({'error': 'Problem not found'}), 404
-        
-        problem_statement = row['statement']
+        # Folosește statementul din request dacă există, altfel din baza de date
+        if statement:
+            problem_statement = statement
+        else:
+            conn = sqlite3.connect('problems.db')
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            cur.execute("SELECT statement FROM problems WHERE id = ?", (problem_id,))
+            row = cur.fetchone()
+            conn.close()
+            if not row:
+                return jsonify({'error': 'Problem not found'}), 404
+            problem_statement = row['statement']
         
         # Generează codul complet cu AI
         system_prompt = """Ești un expert în C++ care generează cod complet pentru probleme de programare.

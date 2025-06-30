@@ -1293,77 +1293,61 @@ document.addEventListener('DOMContentLoaded', () => {
     async function generateCompleteCode() {
         console.log('generateCompleteCode called');
         const code = window.ideMonaco.getValue();
-        
         // Încearcă mai multe surse pentru ID-ul problemei
         let currentProblemId = window.InfoCoachApp.currentProblemId || window.currentProblemId || currentProblem?.id;
-        
-        // Fallback pentru testare - dacă nu găsim ID-ul, folosește 896 (FactorialF)
         if (!currentProblemId && currentProblem) {
-            console.log('No ID found, using fallback ID 896 for testing');
             currentProblemId = 896;
         }
-        
-        console.log('currentProblemId from InfoCoachApp:', window.InfoCoachApp.currentProblemId);
-        console.log('currentProblemId from window:', window.currentProblemId);
-        console.log('currentProblem?.id:', currentProblem?.id);
-        console.log('currentProblem object keys:', Object.keys(currentProblem || {}));
-        console.log('currentProblem full object:', JSON.stringify(currentProblem, null, 2));
-        console.log('Final currentProblemId:', currentProblemId);
-        console.log('currentProblem:', currentProblem);
-        
         if (!currentProblemId) {
             showError('Nu ai selectat nicio problemă!');
             return;
         }
-        
         if (!code.trim()) {
             showError('Nu ai scris niciun cod!');
             return;
         }
-        
+        // Citește enunțul din tabul Enunț (sau toate taburile)
+        let enunt = '';
+        const tabButtons = document.querySelectorAll('.ide-tab');
+        const tabContents = document.querySelectorAll('.ide-tab-content, .ide-tab-content > div');
+        tabButtons.forEach((btn, idx) => {
+            const tabName = btn.textContent.trim().toLowerCase();
+            let content = '';
+            if (tabContents[idx]) {
+                content = tabContents[idx].textContent.trim();
+            } else if (tabContents.length === 1) {
+                content = tabContents[0].textContent.trim();
+            }
+            if (tabName === 'enunț') enunt = content;
+        });
         // Afișează mesaj de încărcare
         const modal = document.getElementById('complete-code-modal');
         const display = document.getElementById('complete-code-display');
-        
-        console.log('Modal element:', modal);
-        console.log('Display element:', display);
-        
         if (!modal || !display) {
             showError('Eroare: Modalul nu a fost găsit!');
             return;
         }
-        
         display.textContent = 'Se generează codul complet...';
         modal.style.display = 'block';
-        console.log('Modal should be visible now');
-        
+        // Trimite request cu statement
         try {
-            const response = await fetch('/api/generate_complete_code', {
+            const resp = await fetch('/api/generate_complete_code', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     problem_id: currentProblemId,
-                    code: code
+                    code: code,
+                    statement: enunt
                 })
             });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                console.log('Complete code generated successfully:', result.complete_code);
-                display.textContent = result.complete_code;
-                showSuccess('Codul complet a fost generat cu succes!');
+            const data = await resp.json();
+            if (data.success && data.complete_code) {
+                display.textContent = data.complete_code;
             } else {
-                console.log('Error generating code:', result.error);
-                display.textContent = 'Eroare la generarea codului: ' + result.error;
-                showError('Eroare la generarea codului complet: ' + result.error);
+                display.textContent = data.error || 'Eroare la generarea codului complet.';
             }
-        } catch (error) {
-            console.log('Exception during code generation:', error);
-            display.textContent = 'Eroare la comunicarea cu serverul: ' + error.message;
-            showError('Eroare la comunicarea cu serverul: ' + error.message);
+        } catch (e) {
+            display.textContent = 'Eroare la comunicarea cu serverul.';
         }
     }
 

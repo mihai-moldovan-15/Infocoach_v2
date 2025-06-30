@@ -347,7 +347,7 @@ class AdvancedPbinfoScraper:
                 if text:
                     intro_text += text + "\n\n"
         statement = re.sub(r'\n{3,}', '\n\n', intro_text.strip())
-        # --- NOU: extragere robustă pentru secțiuni ---
+        # --- extragere robustă pentru secțiuni ---
         input_desc = self.extract_section(
             problem_content,
             'date de intrare',
@@ -363,34 +363,18 @@ class AdvancedPbinfoScraper:
             'restric',
             ['exemplu']
         )
-        example = self.extract_section(
-            problem_content,
-            'exemplu',
-            []
-        )
-        # --- NOU: extragere robustă exemplu ---
+        # --- extragere exemplu robustă: DOAR extract_examples_from_article ---
         example_input, example_output, example_input_name, example_output_name = self.extract_examples_from_article(problem_content)
-        problem_data['example_input'] = example_input
-        problem_data['example_output'] = example_output
-        problem_data['example_input_name'] = example_input_name
-        problem_data['example_output_name'] = example_output_name
-        # Organizează datele
-        problem_data['statement'] = statement
-        problem_data['input_description'] = input_desc
-        problem_data['output_description'] = output_desc
-        problem_data['constraints'] = self.clean_constraints(constraints.strip())
-        # --- extragere exemplu dacă există heading ---
-        example_input = self.extract_example_section(problem_content)
         # Elimină exemplul din restricții dacă există
         constraints_cleaned = constraints.replace(example_input, '').strip()
         problem_data['statement'] = statement.strip()
         problem_data['constraints'] = self.clean_constraints(constraints_cleaned)
-        problem_data['input_description'] = input_desc if 'input_desc' in locals() else ''
-        problem_data['output_description'] = output_desc if 'output_desc' in locals() else ''
+        problem_data['input_description'] = input_desc
+        problem_data['output_description'] = output_desc
         problem_data['example_input'] = example_input
-        problem_data['example_output'] = ''
-        problem_data['example_input_name'] = 'consola'
-        problem_data['example_output_name'] = 'consola'
+        problem_data['example_output'] = example_output
+        problem_data['example_input_name'] = example_input_name
+        problem_data['example_output_name'] = example_output_name
         return problem_data
     
     def extract_subprogram_problem(self, soup, problem_id):
@@ -469,9 +453,9 @@ class AdvancedPbinfoScraper:
             'time_limit': '',
             'memory_limit': '',
             'categories': [],
-            'tags': []
+            'tags': [],
+            'subcategories': []
         }
-        
         # Tabelul de informații
         info_table = soup.find('table', class_='table')
         if info_table:
@@ -488,19 +472,31 @@ class AdvancedPbinfoScraper:
                     metadata['time_limit'] = self.clean_text(cells[3].text)
                     metadata['memory_limit'] = self.clean_text(cells[4].text)
                     metadata['difficulty'] = self.clean_text(cells[7].text)
-        
         # Breadcrumb pentru categorii
         breadcrumb = soup.find('ol', class_='breadcrumb')
         if breadcrumb:
             items = breadcrumb.find_all('li', class_='breadcrumb-item')
-            metadata['categories'] = [self.clean_text(item.text) for item in items[1:] if item.text.strip()]
-        
+            categories = [self.clean_text(item.text) for item in items[1:] if item.text.strip()]
+            # Păstrează doar prima categorie dacă există
+            if categories:
+                metadata['categories'] = [categories[0]]
+                # Subcategoriile sunt restul, fără titlul problemei
+                subcats = categories[1:]
+                # Elimină subcategoria identică cu titlul problemei (case-insensitive)
+                title = ''
+                title_tag = soup.find('h1', class_='text-primary')
+                if title_tag:
+                    title = self.clean_text(title_tag.text).lower()
+                subcats = [c for c in subcats if c.lower() != title]
+                metadata['subcategories'] = subcats
+            else:
+                metadata['categories'] = []
+                metadata['subcategories'] = []
         # Taguri
         tag_container = soup.find('span', id='container-etichete')
         if tag_container:
             tags = tag_container.find_all('a', class_='badge')
             metadata['tags'] = [self.clean_text(tag.text) for tag in tags if tag.text.strip()]
-        
         return metadata
     
     def extract_problem_data(self, problem_id):
@@ -553,7 +549,7 @@ class AdvancedPbinfoScraper:
                 'memory_limit': metadata['memory_limit'],
                 'tags': json.dumps(metadata['tags']),
                 'categories': json.dumps(metadata['categories']),
-                'subcategories': '',
+                'subcategories': json.dumps(metadata['subcategories']),
                 'author': '',
                 'source': '',
                 'last_updated': datetime.now().isoformat(),
@@ -572,7 +568,7 @@ class AdvancedPbinfoScraper:
             return False
         
         # Asigură-te că images, tags și categories sunt stringuri JSON
-        for key in ['images', 'tags', 'categories']:
+        for key in ['images', 'tags', 'categories', 'subcategories']:
             if isinstance(problem_data.get(key), list):
                 problem_data[key] = json.dumps(problem_data[key])
         
@@ -676,7 +672,7 @@ class AdvancedPbinfoScraper:
 
 if __name__ == "__main__":
     scraper = AdvancedPbinfoScraper()
-    problem_ids = list(range(1, 26))
+    problem_ids = list(range(27, 31))
     for pid in SPECIAL_PROBLEM_IDS:
         if pid not in problem_ids:
             problem_ids.append(pid)
