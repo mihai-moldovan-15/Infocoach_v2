@@ -32,4 +32,5 @@ Thumbs.db
 # Debug files (specific to local development)
 debug_*.html
 debug_files/
+debug_problems/
 scraper.log 

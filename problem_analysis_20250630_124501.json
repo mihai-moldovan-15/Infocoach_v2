@@ -1,0 +1,139 @@
+{
+  "complete": [],
+  "subprogram": [],
+  "with_images": [
+    {
+      "id": 106,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 2178,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 3,
+      "images": [
+        "https://www.gravatar.com/avatar/d10ac014013e74fb61f03c8eab612c03?d=wavatar&s=32",
+        "https://www.pbinfo.ro/resurse/2d6f58/Furnica/1.png",
+        "https://www.pbinfo.ro/resurse/2d6f58/Furnica/2.png"
+      ]
+    },
+    {
+      "id": 207,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 3521,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/8d918685980cd74e15ca2d91fa3421bc?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 3387,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 3,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32",
+        "/resurse/9dc152/p-2600/veverita.png",
+        "/resurse/9dc152/p-2600/veverita-expl.png"
+      ]
+    },
+    {
+      "id": 4576,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/b5e282665951cc309637baab6713412b?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 1024,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 2893,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 2,
+      "images": [
+        "https://www.gravatar.com/avatar/0c787a00b969efe3e51dbebd0ad2ec69?d=wavatar&s=32",
+        "/resurse/16a4b0/modernizare.jpg"
+      ]
+    },
+    {
+      "id": 672,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 2,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32",
+        "/resurse/probleme/651-700/arbore-binar.png"
+      ]
+    },
+    {
+      "id": 4271,
+      "type": "subprogram",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/0c787a00b969efe3e51dbebd0ad2ec69?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 3798,
+      "type": "subprogram",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/0c787a00b969efe3e51dbebd0ad2ec69?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 40,
+      "type": "subprogram",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 805,
+      "type": "subprogram",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32"
+      ]
+    },
+    {
+      "id": 895,
+      "type": "subprogram",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        "https://www.gravatar.com/avatar/529e246d070445d00b4c98ced6152ca7?d=wavatar&s=32"
+      ]
+    }
+  ],
+  "analysis_summary": {}
+}

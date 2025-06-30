@@ -377,16 +377,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     tabContent.innerHTML = limHtml;
                 } else if (idx === 4) {
                     let ex = '';
-                    let inputLabel = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola'
-                        ? currentProblem.example_input_name : 'Intrare';
-                    let outputLabel = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola'
-                        ? currentProblem.example_output_name : 'Ieșire';
-                    const labelStyle = 'color:#1976d2;font-size:0.95em;font-weight:500;';
+                    const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                    const hasInputFile = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola';
+                    const hasOutputFile = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola';
+                    let inputLabel = hasInputFile ? currentProblem.example_input_name : 'Intrare';
+                    let outputLabel = hasOutputFile ? currentProblem.example_output_name : 'Ieșire';
+                    console.log('EXEMPLU DEBUG:', {inputLabel, hasInputFile, outputLabel, hasOutputFile, example_input: currentProblem.example_input, example_output: currentProblem.example_output});
                     if (currentProblem.example_input) {
-                        ex += `<span style=\"${labelStyle}\">${inputLabel}</span><br>` + currentProblem.example_input + '<br>';
+                        ex += `<div style=\"margin-bottom:6px;\">`;
+                        if (!hasInputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                        } else if (hasInputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                        }
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
                     }
                     if (currentProblem.example_output) {
-                        ex += `<span style=\"${labelStyle}\">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
+                        ex += `<div style=\"margin-bottom:6px;\">`;
+                        if (!hasOutputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                        } else if (hasOutputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                        }
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_output}</pre></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
@@ -1137,16 +1150,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     tabContent.innerHTML = limHtml;
                 } else if (idx === 4) {
                     let ex = '';
-                    let inputLabel = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola'
-                        ? currentProblem.example_input_name : 'Intrare';
-                    let outputLabel = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola'
-                        ? currentProblem.example_output_name : 'Ieșire';
-                    const labelStyle = 'color:#1976d2;font-size:0.95em;font-weight:500;';
+                    const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                    const hasInputFile = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola';
+                    const hasOutputFile = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola';
+                    let inputLabel = hasInputFile ? currentProblem.example_input_name : 'Intrare';
+                    let outputLabel = hasOutputFile ? currentProblem.example_output_name : 'Ieșire';
+                    console.log('EXEMPLU DEBUG:', {inputLabel, hasInputFile, outputLabel, hasOutputFile, example_input: currentProblem.example_input, example_output: currentProblem.example_output});
                     if (currentProblem.example_input) {
-                        ex += `<span style=\"${labelStyle}\">${inputLabel}</span><br>` + currentProblem.example_input + '<br>';
+                        ex += `<div style=\"margin-bottom:6px;\">`;
+                        if (!hasInputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                        } else if (hasInputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                        }
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
                     }
                     if (currentProblem.example_output) {
-                        ex += `<span style=\"${labelStyle}\">${outputLabel}</span><br>` + currentProblem.example_output + '<br>';
+                        ex += `<div style=\"margin-bottom:6px;\">`;
+                        if (!hasOutputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                        } else if (hasOutputFile) {
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                        }
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_output}</pre></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }

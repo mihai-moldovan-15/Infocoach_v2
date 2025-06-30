@@ -378,7 +378,7 @@ def format_inline_code(text):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('problem_solver'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -389,7 +389,7 @@ def login():
             db.session.commit()
             flash('Autentificare reușită!', 'success')
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('index'))
+            return redirect(next_page or url_for('problem_solver'))
         flash('Nume de utilizator sau parolă incorectă', 'danger')
     return render_template('login.html', form=form)
 

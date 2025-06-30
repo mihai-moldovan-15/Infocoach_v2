@@ -1,0 +1,963 @@
+{
+  "complete": [
+    {
+      "id": 106,
+      "type": "complete",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/106",
+      "title": "#106\n\n\t\t\tminim3",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Calculaţi minimul celor 3 numere date.\n",
+        "date_intrare": "Programul citeşte de la tastatură 3 numere întregi separate prin spaţii.\n",
+        "date_iesire": "",
+        "restrictii": "valoare absolută a numerelor citite va fi mai mică decât 1.000.000.000\nvaloare absolută a numerelor citite va fi mai mică decât 1.000.000.000\n",
+        "exemplu": "Intrare\nIeşire\n",
+        "exemplu_intrare": "125 68 200",
+        "exemplu_iesire": "68",
+        "important": "",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerinţa",
+            "normalized_text": "cerinţa",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de intrare",
+            "normalized_text": "date de intrare",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de ieşire",
+            "normalized_text": "date de ieşire",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricţii şi precizări",
+            "normalized_text": "restricţii şi precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "p": 6,
+          "code": 4,
+          "h1": 5,
+          "ul": 1,
+          "li": 1,
+          "strong": 2,
+          "pre": 2
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "program",
+          "intrare",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "125 68 200",
+          "68"
+        ],
+        "lists": [
+          "valoare absolută a numerelor citite va fi mai mică decât 1.000.000.000"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 9,
+        "difficulty": "ușoară",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Elemente de baza ale limbajului",
+          "Structura de decizie",
+          "minim3"
+        ],
+        "tags": []
+      }
+    },
+    {
+      "id": 207,
+      "type": "complete",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/207",
+      "title": "#207\n\n\t\t\tGenMat2",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Scrieţi un program care citeşte de la tastatură un număr natural n şi construieşte în memorie o matrice cu n linii şi n coloane ale cărei elemente vor primi valori după cum urmează:\nelementele aflate pe diagonala principală a matricei vor primi valoarea 0\nelementele de pe prima coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea n\nelementele de pe a doua coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea n-1\n…\nelementele de pe ultima coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea 1\nelementele aflate pe diagonala principală a matricei vor primi valoarea 0\nelementele de pe prima coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea n\nelementele de pe a doua coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea n-1\n…\nelementele de pe ultima coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea 1\n",
+        "date_intrare": "Programul citește de la tastatură numărul n.\n",
+        "date_iesire": "",
+        "restrictii": "2≤n≤24\n2≤n≤24\n",
+        "exemplu": "Intrare\nIeșire\n",
+        "exemplu_intrare": "4",
+        "exemplu_iesire": "0 3 2 1\n4 0 2 1\n4 3 0 1\n4 3 2 0",
+        "important": "",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerinţa",
+            "normalized_text": "cerinţa",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de intrare",
+            "normalized_text": "date de intrare",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de ieşire",
+            "normalized_text": "date de ieşire",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricţii şi precizări",
+            "normalized_text": "restricţii şi precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 5,
+          "p": 5,
+          "code": 9,
+          "ul": 2,
+          "li": 5,
+          "br": 1,
+          "strong": 2,
+          "pre": 2
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "program",
+          "afișează",
+          "intrare",
+          "ieșire",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "4",
+          "0 3 2 1\n4 0 2 1\n4 3 0 1\n4 3 2 0"
+        ],
+        "lists": [
+          "elementele aflate pe diagonala principală a matricei vor primi valoarea 0\nelementele de pe prima coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea n\nelementele de pe a doua coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea n-1\n…\nelementele de pe ultima coloană, cu excepţia celui aflat pe diagonala principală vor primi valoarea 1",
+          "2≤n≤24"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 9,
+        "difficulty": "ușoară",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Tablouri bidimensionale (matrice)",
+          "Generări de matrice",
+          "GenMat2"
+        ],
+        "tags": [
+          "Bacalaureat",
+          "Bacalaureat 2009"
+        ]
+      }
+    },
+    {
+      "id": 3521,
+      "type": "complete",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/3521",
+      "title": "#3521\n\n\t\t\tUp",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Mario, curios din fire, vrea să afle care este scorul maxim pe care l-ar putea obține în joc.\n",
+        "date_intrare": "Fișierul de intrare up.in conține pe prima linie numărul n, iar pe a doua linie n numere naturale separate prin spații.\n",
+        "date_iesire": "",
+        "restrictii": "1 ≤ n ≤ 100.000\nnumerele de pe a doua linie a fișierului de intrare vor fi mai mici decât 1.000.000\n1 ≤ n ≤ 100.000\nnumerele de pe a doua linie a fișierului de intrare vor fi mai mici decât 1.000.000\n",
+        "exemplu": "up.in\nup.out\n",
+        "exemplu_intrare": "10\n10 2 7 5 4 6 7 1 8 9",
+        "exemplu_iesire": "6",
+        "important": "",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerința",
+            "normalized_text": "cerința",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de intrare",
+            "normalized_text": "date de intrare",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de ieșire",
+            "normalized_text": "date de ieșire",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricții și precizări",
+            "normalized_text": "restricții și precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          },
+          {
+            "type": "h3",
+            "text": "Explicație",
+            "normalized_text": "explicație",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "p": 7,
+          "code": 25,
+          "sub": 3,
+          "h1": 5,
+          "ul": 1,
+          "li": 2,
+          "pre": 2,
+          "h3": 1
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "intrare",
+          "ieșire",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "10\n10 2 7 5 4 6 7 1 8 9",
+          "6"
+        ],
+        "lists": [
+          "1 ≤ n ≤ 100.000\nnumerele de pe a doua linie a fișierului de intrare vor fi mai mici decât 1.000.000"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 11,
+        "difficulty": "medie",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "4 MB / 2 MB",
+        "categories": [
+          "Programare dinamică",
+          "Probleme diverse de programare dinamică",
+          "Up"
+        ],
+        "tags": [
+          "Subșir crescător de lungime maximă"
+        ]
+      }
+    },
+    {
+      "id": 4576,
+      "type": "complete",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/4576",
+      "title": "#4576\n\n\t\t\tBilboB",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Să se scrie un program care citește două numere naturale n și m și apoi de pe n linii căte m numere naturale  reprezentând cantitatea de aur din fiecare cameră din Muntele Singuratic și care calculează și afișează cantitatea maximă de aur pe care o poate colecta Bilbo.\n",
+        "date_intrare": "Fișierul de intrare bilbob.in conține pe prima linie numerele n și m. Fiecare dintre următoarele n linii conține câte m numere, reprezentând cantitatea de aur din fiecare cameră.\n",
+        "date_iesire": "",
+        "restrictii": "2 ≤ n,m ≤ 200\ncantitatea de aur din fiecare cameră este mai mică decât 1000\n2 ≤ n,m ≤ 200\ncantitatea de aur din fiecare cameră este mai mică decât 1000\n",
+        "exemplu": "bilbob.in\nbilbob.out\n",
+        "exemplu_intrare": "4 5\n5 8 3 1 7\n1 1 4 5 1\n5 8 9 1 7\n5 8 6 6 9",
+        "exemplu_iesire": "29",
+        "important": "",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerința",
+            "normalized_text": "cerința",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de intrare",
+            "normalized_text": "date de intrare",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de ieşire",
+            "normalized_text": "date de ieşire",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricții și precizări",
+            "normalized_text": "restricții și precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Explicație",
+            "normalized_text": "explicație",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "p": 9,
+          "code": 28,
+          "h1": 6,
+          "ul": 1,
+          "li": 2,
+          "pre": 2,
+          "br": 4,
+          "strong": 5
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "program",
+          "afișează",
+          "intrare",
+          "ieșire",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "4 5\n5 8 3 1 7\n1 1 4 5 1\n5 8 9 1 7\n5 8 6 6 9",
+          "29"
+        ],
+        "lists": [
+          "2 ≤ n,m ≤ 200\ncantitatea de aur din fiecare cameră este mai mică decât 1000"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 11,
+        "difficulty": "medie",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Programare dinamică",
+          "Probleme diverse de programare dinamică",
+          "BilboB"
+        ],
+        "tags": []
+      }
+    },
+    {
+      "id": 1024,
+      "type": "complete",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/1024",
+      "title": "#1024\n\n\t\t\tQuickSort",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Se dă un șir cu n elemente, numere întregi. Folosind metoda QuickSort (Sortare Rapidă), ordonați crescător elementele acestui șir.\n",
+        "date_intrare": "Programul citește de la tastatură numărul n, iar apoi cele n elemente ale șirului.\n",
+        "date_iesire": "",
+        "restrictii": "1 ≤ n ≤ 100.000\nelementele șirului vor fi cuprinse între -1.000.000.000 și 1.000.000.000\n1 ≤ n ≤ 100.000\nelementele șirului vor fi cuprinse între -1.000.000.000 și 1.000.000.000\n",
+        "exemplu": "Intrare\nIeșire\n",
+        "exemplu_intrare": "12\n10 0 -1 -3 1 -4 9 3 -1 -4 3 -4",
+        "exemplu_iesire": "-4 -4 -4 -3 -1 -1 0 1 3 3 9 10",
+        "important": "",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerința",
+            "normalized_text": "cerința",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de intrare",
+            "normalized_text": "date de intrare",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Date de ieșire",
+            "normalized_text": "date de ieșire",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricții și precizări",
+            "normalized_text": "restricții și precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 5,
+          "p": 5,
+          "code": 6,
+          "ul": 1,
+          "li": 2,
+          "strong": 2,
+          "pre": 2
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "program",
+          "intrare",
+          "ieșire",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "12\n10 0 -1 -3 1 -4 9 3 -1 -4 3 -4",
+          "-4 -4 -4 -3 -1 -1 0 1 3 3 9 10"
+        ],
+        "lists": [
+          "1 ≤ n ≤ 100.000\nelementele șirului vor fi cuprinse între -1.000.000.000 și 1.000.000.000"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 10,
+        "difficulty": "medie",
+        "time_limit": "0.3 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Divide et Impera",
+          "Algoritmi de sortare",
+          "QuickSort"
+        ],
+        "tags": []
+      }
+    }
+  ],
+  "subprogram": [
+    {
+      "id": 4271,
+      "type": "subprogram",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/4271",
+      "title": "#4271\n\n\t\t\tIntercalate",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Scrieți funcția cu următorul antet:\nvoid Intercalate(char a[], char b[], char c[])\nFuncția primește ca parametri trei șiruri de caractere a, b și c. Inițial c este vid și se vor depune în el caracterele din a și b astfel: întâi primul caracter din a, apoi primul caracter din b, apoi al doilea caracter din a, al doilea din b și procedeul continuă până când fie se termină caracterele din a, fie caracterele din b, fie ambele. Dacă au mai rămas caractere nedepuse din a sau din b, acestea se adaugă la final în c.\n",
+        "date_intrare": "",
+        "date_iesire": "",
+        "restrictii": "Este garantat că vor încăpea în c toate caracterele din a și b.\nEste garantat că vor încăpea în c toate caracterele din a și b.\n",
+        "exemplu": "Dacă a = abcdefg și b = XYZ, atunci după apelul Intercalate(a, b, c), șirul c va deveni c = aXbYcZdefg. Dacă a = xy și b = AABBCCDD atunci după apelul Intercalate(a, b, c), șirul c va deveni c = xAyABBCCDD.\n",
+        "exemplu_intrare": "",
+        "exemplu_iesire": "",
+        "important": "Soluţia propusă va conţine doar definiţia subprogramului cerut. Prezenţa în soluţie a altor instrucţiuni poate duce erori de compilare sau de execuţie care vor avea ca efect depunctarea soluţiei.\n",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerința",
+            "normalized_text": "cerința",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu",
+            "normalized_text": "exemplu",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricții și precizări",
+            "normalized_text": "restricții și precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Important",
+            "normalized_text": "important",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 4,
+          "p": 4,
+          "pre": 1,
+          "code": 28,
+          "ul": 1,
+          "li": 1
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "funcția",
+          "program",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "void Intercalate(char a[], char b[], char c[])"
+        ],
+        "lists": [
+          "Este garantat că vor încăpea în c toate caracterele din a și b."
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 10,
+        "difficulty": "ușoară",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Subprograme",
+          "Subprograme cu siruri de caractere",
+          "Intercalate"
+        ],
+        "tags": []
+      }
+    },
+    {
+      "id": 3798,
+      "type": "subprogram",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/3798",
+      "title": "#3798\n\n\t\t\tNrMinMaxAp",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Scrieți funcția care are antetul:\nint NrMinMaxAp(vector<int> &a)\nFuncția va returna numărul care apare de cele mai multe ori în a. Dacă există mai multe numere care apar de număr maxim de ori, se va returna minimul dintre ele.\n",
+        "date_intrare": "",
+        "date_iesire": "",
+        "restrictii": "a conține cel puțin un element\nPuteți utiliza în rezolvare orice structură de date\na conține cel puțin un element\nPuteți utiliza în rezolvare orice structură de date\n",
+        "exemplu": "Dacă a = (1,2,2,1,1,7,5,7,5,7,7,5,5), atunci funcția va returna valoarea 5, care apare de 4 ori, la fel ca și 7, dar 5 este mai mic.\n",
+        "exemplu_intrare": "",
+        "exemplu_iesire": "",
+        "important": "Soluţia propusă va conţine doar funcţia cerută. Prezenţa în soluţie a altor instrucţiuni poate duce la erori de compilare sau de execuţie care vor avea ca efect depunctarea soluţiei.\n",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerința",
+            "normalized_text": "cerința",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricții și precizări",
+            "normalized_text": "restricții și precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          },
+          {
+            "type": "h3",
+            "text": "Important",
+            "normalized_text": "important",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 3,
+          "p": 4,
+          "pre": 1,
+          "code": 7,
+          "ul": 1,
+          "li": 2,
+          "h3": 1
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "funcția",
+          "exemplu"
+        ],
+        "code_blocks": [
+          "int NrMinMaxAp(vector<int> &a)"
+        ],
+        "lists": [
+          "a conține cel puțin un element\nPuteți utiliza în rezolvare orice structură de date"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 10,
+        "difficulty": "medie",
+        "time_limit": "0.3 secunde",
+        "memory_limit": "256 MB / 128 MB",
+        "categories": [
+          "Subprograme",
+          "STL",
+          "NrMinMaxAp"
+        ],
+        "tags": [
+          "unordered_map"
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "type": "subprogram",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/40",
+      "title": "#40\n\n\t\t\tVectorMaxMinSum",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Scrieți definiția completă a subprogramului P care primeşte prin intermediul parametrului n un număr natural nenul (n≤100), iar prin intermediul parametrului  x un tablou unidimensional cu  n componente întregi, de maximum opt cifre fiecare.\nSubprogramul furnizează prin intermediul parametrului  mini valoarea minimă din tabloul x, prin intermediul parametrului maxi valoarea maximă din x, iar prin intermediul parametrului sum suma elementelor din tabloul x.\n",
+        "date_intrare": "",
+        "date_iesire": "",
+        "restrictii": "0 < n <= 100\nnumele subprogramului cerut este P\nparametrii sunt, în această ordine: x, n, mini, maxi, sum\nelementele vectorului x sunt indexate de la 0\n0 < n <= 100\nnumele subprogramului cerut este P\nparametrii sunt, în această ordine: x, n, mini, maxi, sum\nelementele vectorului x sunt indexate de la 0\n",
+        "exemplu": "Dacă n=6 și x= (12, 7, 6, 3, 8, 5), după apel mini=3, maxi=12 și sum=41.\n",
+        "exemplu_intrare": "",
+        "exemplu_iesire": "",
+        "important": "Soluţia propusă va conţine doar definiţia subprogramului cerut. Prezenţa în soluţie a altor instrucţiuni poate duce erori de compilare sau de execuţie care vor avea ca efect depunctarea soluţiei.\n",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerinţa",
+            "normalized_text": "cerinţa",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricţii şi precizări",
+            "normalized_text": "restricţii şi precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Important",
+            "normalized_text": "important",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 4,
+          "p": 4,
+          "code": 25,
+          "ul": 1,
+          "li": 4
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "program",
+          "exemplu"
+        ],
+        "code_blocks": [],
+        "lists": [
+          "0 < n <= 100\nnumele subprogramului cerut este P\nparametrii sunt, în această ordine: x, n, mini, maxi, sum\nelementele vectorului x sunt indexate de la 0"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 10,
+        "difficulty": "ușoară",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Subprograme",
+          "Subprograme care prelucrează tablouri unidimensionale",
+          "VectorMaxMinSum"
+        ],
+        "tags": [
+          "Bacalaureat",
+          "Bacalaureat 2009",
+          "Maxime și minime"
+        ]
+      }
+    },
+    {
+      "id": 805,
+      "type": "subprogram",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/805",
+      "title": "#805\n\n\t\t\tValuri",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Scrieţi definiția completă a subprogramului C++ valuri care are 2 parametri: n – prin care primește un număr natural, v, prin care furnizează un tablou unidimensional cu 2*n elemente, valori naturale distincte din intervalul [1,2*n].\nSubprogramul construieşte tabloul v astfel încât, în acesta, şirul elementelor impare să fie strict crescător, iar şirul elementelor pare să fie strict descrescător. Primul element al tabloului este impar, iar două elemente cu aceeaşi paritate nu pot ocupa poziţii consecutive în tablou.\n",
+        "date_intrare": "",
+        "date_iesire": "",
+        "restrictii": "2<n<50\nnumele subprogramului cerut este valuri\nparametrii sunt, în această ordine: n, v\nelementele tabloului v sunt indexate de la zero\n2<n<50\nnumele subprogramului cerut este valuri\nparametrii sunt, în această ordine: n, v\nelementele tabloului v sunt indexate de la zero\n",
+        "exemplu": "Dacă n=4 atunci, după apel, v=( 1, 8, 3, 6, 5, 4, 7, 2).\n",
+        "exemplu_intrare": "",
+        "exemplu_iesire": "",
+        "important": "Soluţia propusă va conţine doar definiţia subprogramului cerut. Prezenţa în soluţie a altor instrucţiuni poate duce erori de compilare sau de execuţie care vor avea ca efect depunctarea soluţiei.\n",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerinţa",
+            "normalized_text": "cerinţa",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricţii şi precizări",
+            "normalized_text": "restricţii şi precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Important",
+            "normalized_text": "important",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 4,
+          "p": 4,
+          "code": 14,
+          "ul": 1,
+          "li": 4
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "program",
+          "exemplu"
+        ],
+        "code_blocks": [],
+        "lists": [
+          "2<n<50\nnumele subprogramului cerut este valuri\nparametrii sunt, în această ordine: n, v\nelementele tabloului v sunt indexate de la zero"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 10,
+        "difficulty": "ușoară",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Subprograme",
+          "Subprograme care prelucrează tablouri unidimensionale",
+          "Valuri"
+        ],
+        "tags": [
+          "Bacalaureat",
+          "Bacalaureat 2013"
+        ]
+      }
+    },
+    {
+      "id": 895,
+      "type": "subprogram",
+      "has_images": false,
+      "url": "https://www.pbinfo.ro/probleme/895",
+      "title": "#895\n\n\t\t\tPermutarePF",
+      "structure": {
+        "enunt": "",
+        "cerinta": "Se numește permutare a unei mulțimi o aranjare a elementelor mulțimii în altă ordine. De exemplu, permutările mulțimii {1,2,3} sunt: (1,2,3), (1,3,2), (2,1,3), (2,3,1), (3,1,2), (3,2,1).\nFie (p1, p2, ..., pn) o permutare a mulțimii {1,2,...,n}. Se numește punct fix al permutării o valoare k din mulțime cu proprietatea că pk = k.\nScrieţi definiția completă a subprogramului C++ permutare care are 2 parametri:  a, prin care primeşte un tablou unidimensional  cu maximum 100 de numere naturale mai mici decât 1000 și n, numărul efectiv de elemente ale tabloului.\nSubprogramul verifică dacă elementele vectorului a reprezintă o permutare fără puncte fixe a mulțimii {1,2,...,n} și returnează valoarea 1 în caz afirmativ, respectiv 0 în caz negativ.\n",
+        "date_intrare": "",
+        "date_iesire": "",
+        "restrictii": "0 < n <= 100\nnumele subprogramului cerut este permutare\nparametrii sunt, în această ordine: a, n, cu semnificația de mai sus\nelementele vectorului a sunt indexate de la zero\n0 < n <= 100\nnumele subprogramului cerut este permutare\nparametrii sunt, în această ordine: a, n, cu semnificația de mai sus\nelementele vectorului a sunt indexate de la zero\n",
+        "exemplu": "Dacă n=6 și a=(2,3,1,6,4,5) subprogramul va returna valoarea 1.\nDacă n=4 și a=(2,3,1,4) subprogramul va returna valoarea 0, deoarece permutarea are un punct fix.\n",
+        "exemplu_intrare": "",
+        "exemplu_iesire": "",
+        "important": "Soluţia propusă va conţine doar definiţia subprogramului cerut. Prezenţa în soluţie a altor instrucţiuni poate duce erori de compilare sau de execuţie care vor avea ca efect depunctarea soluţiei.\n",
+        "limite": {}
+      },
+      "html_structure": {
+        "sections": [
+          {
+            "type": "h1",
+            "text": "Cerinţa",
+            "normalized_text": "cerinţa",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Restricţii şi precizări",
+            "normalized_text": "restricţii şi precizări",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Exemplu:",
+            "normalized_text": "exemplu:",
+            "has_content_after": true
+          },
+          {
+            "type": "h1",
+            "text": "Important",
+            "normalized_text": "important",
+            "has_content_after": true
+          }
+        ],
+        "tags_used": {
+          "h1": 4,
+          "p": 7,
+          "em": 1,
+          "code": 39,
+          "sub": 4,
+          "ul": 1,
+          "li": 4
+        },
+        "hierarchy": []
+      },
+      "content_patterns": {
+        "keywords": [
+          "scrie",
+          "program",
+          "exemplu"
+        ],
+        "code_blocks": [],
+        "lists": [
+          "0 < n <= 100\nnumele subprogramului cerut este permutare\nparametrii sunt, în această ordine: a, n, cu semnificația de mai sus\nelementele vectorului a sunt indexate de la zero"
+        ],
+        "tables": []
+      },
+      "metadata": {
+        "grade": 10,
+        "difficulty": "medie",
+        "time_limit": "0.1 secunde",
+        "memory_limit": "64 MB / 8 MB",
+        "categories": [
+          "Subprograme",
+          "Subprograme care prelucrează tablouri unidimensionale",
+          "PermutarePF"
+        ],
+        "tags": []
+      }
+    }
+  ],
+  "with_images": [
+    {
+      "id": 2178,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 2,
+      "images": [
+        {
+          "src": "https://www.pbinfo.ro/resurse/2d6f58/Furnica/1.png",
+          "alt": "",
+          "class": []
+        },
+        {
+          "src": "https://www.pbinfo.ro/resurse/2d6f58/Furnica/2.png",
+          "alt": "",
+          "class": []
+        }
+      ]
+    },
+    {
+      "id": 3387,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 2,
+      "images": [
+        {
+          "src": "/resurse/9dc152/p-2600/veverita.png",
+          "alt": "",
+          "class": []
+        },
+        {
+          "src": "/resurse/9dc152/p-2600/veverita-expl.png",
+          "alt": "",
+          "class": []
+        }
+      ]
+    },
+    {
+      "id": 2893,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        {
+          "src": "/resurse/16a4b0/modernizare.jpg",
+          "alt": "",
+          "class": []
+        }
+      ]
+    },
+    {
+      "id": 672,
+      "type": "complete",
+      "has_images": true,
+      "image_count": 1,
+      "images": [
+        {
+          "src": "/resurse/probleme/651-700/arbore-binar.png",
+          "alt": "",
+          "class": []
+        }
+      ]
+    }
+  ],
+  "analysis_summary": {}
+}
