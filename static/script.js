@@ -378,28 +378,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (idx === 4) {
                     let ex = '';
                     const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
-                    const hasInputFile = currentProblem.example_input_name && currentProblem.example_input_name !== 'consola';
-                    const hasOutputFile = currentProblem.example_output_name && currentProblem.example_output_name !== 'consola';
-                    let inputLabel = hasInputFile ? currentProblem.example_input_name : 'Intrare';
-                    let outputLabel = hasOutputFile ? currentProblem.example_output_name : 'Ieșire';
-                    console.log('EXEMPLU DEBUG:', {inputLabel, hasInputFile, outputLabel, hasOutputFile, example_input: currentProblem.example_input, example_output: currentProblem.example_output});
+                    const forceConsoleBadges = currentProblem && currentProblem.id == 11;
+                    const isConsoleInput = currentProblem.example_input_name === 'consola';
+                    const isConsoleOutput = currentProblem.example_output_name === 'consola';
+                    const isComplete = !currentProblem.problem_type || currentProblem.problem_type === 'complete';
+                    let inputLabel = (forceConsoleBadges || (isConsoleInput && isComplete)) ? 'Intrare' : (currentProblem.example_input_name || 'Intrare');
+                    let outputLabel = (forceConsoleBadges || (isConsoleOutput && isComplete)) ? 'Ieșire' : (currentProblem.example_output_name || 'Ieșire');
+                    let explanation = currentProblem.example_explanation || '';
+                    let output = currentProblem.example_output || '';
+                    // Dacă nu există explanation, dar outputul conține Explicații, taie și mută
+                    if (!explanation && output) {
+                        let idxExp = output.toLowerCase().indexOf('explica');
+                        if (idxExp !== -1) {
+                            explanation = output.substring(idxExp).trim();
+                            output = output.substring(0, idxExp).trim();
+                        }
+                    }
                     if (currentProblem.example_input) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
-                        if (!hasInputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        } else if (hasInputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        }
+                        ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
                         ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
                     }
-                    if (currentProblem.example_output) {
+                    if (output) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
-                        if (!hasOutputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        } else if (hasOutputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        }
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_output}</pre></div>`;
+                        ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
+                    }
+                    if (explanation) {
+                        explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
+                        explanation = explanation.replace(/\n+/g, ' ');
+                        explanation = explanation.replace(/\s{2,}/g, ' ');
+                        explanation = explanation.trim();
+                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:#1976d2;font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:#f8fafc;padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
@@ -1151,32 +1161,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (idx === 4) {
                     let ex = '';
                     const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
-                    const hasInputFile = problem.example_input_name && problem.example_input_name !== 'consola';
-                    const hasOutputFile = problem.example_output_name && problem.example_output_name !== 'consola';
-                    let inputLabel = hasInputFile ? problem.example_input_name : 'Intrare';
-                    let outputLabel = hasOutputFile ? problem.example_output_name : 'Ieșire';
-                    // Ascunde badge-ul Intrare pentru subprograme
-                    if (problem.problem_type === 'subprogram') inputLabel = '';
-                    if (problem.example_input) {
-                        ex += `<div style=\"margin-bottom:6px;\">`;
-                        if (inputLabel) {
-                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                    const forceConsoleBadges = currentProblem && currentProblem.id == 11;
+                    const isConsoleInput = currentProblem.example_input_name === 'consola';
+                    const isConsoleOutput = currentProblem.example_output_name === 'consola';
+                    const isComplete = !currentProblem.problem_type || currentProblem.problem_type === 'complete';
+                    let inputLabel = (forceConsoleBadges || (isConsoleInput && isComplete)) ? 'Intrare' : (currentProblem.example_input_name || 'Intrare');
+                    let outputLabel = (forceConsoleBadges || (isConsoleOutput && isComplete)) ? 'Ieșire' : (currentProblem.example_output_name || 'Ieșire');
+                    let explanation = currentProblem.example_explanation || '';
+                    let output = currentProblem.example_output || '';
+                    // Dacă nu există explanation, dar outputul conține Explicații, taie și mută
+                    if (!explanation && output) {
+                        let idxExp = output.toLowerCase().indexOf('explica');
+                        if (idxExp !== -1) {
+                            explanation = output.substring(idxExp).trim();
+                            output = output.substring(0, idxExp).trim();
                         }
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${problem.example_input}</pre></div>`;
                     }
-                    if (problem.example_output) {
+                    if (currentProblem.example_input) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
-                        if (!hasOutputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        } else if (hasOutputFile) {
-                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        }
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${problem.example_output}</pre></div>`;
+                        ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
+                    }
+                    if (output) {
+                        ex += `<div style=\"margin-bottom:6px;\">`;
+                        ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
+                    }
+                    if (explanation) {
+                        explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
+                        explanation = explanation.replace(/\n+/g, ' ');
+                        explanation = explanation.replace(/\s{2,}/g, ' ');
+                        explanation = explanation.trim();
+                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:#1976d2;font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:#f8fafc;padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
             });
         });
+
+        // PATCH SPECIAL pentru problema 11: separă automat input/output dacă sunt amestecate
+        if (currentProblem && currentProblem.id == 11 && currentProblem.example_input && !currentProblem.example_output) {
+            // Caută separatorul 'Ieșire' (sau 'Ieşire')
+            let inputRaw = currentProblem.example_input;
+            let sep = inputRaw.indexOf('Ieșire') !== -1 ? 'Ieșire' : (inputRaw.indexOf('Ieşire') !== -1 ? 'Ieşire' : null);
+            if (sep) {
+                let parts = inputRaw.split(sep);
+                currentProblem.example_input = parts[0].trim();
+                currentProblem.example_output = parts.slice(1).join(sep).replace(/^\s*\n?/, '').trim();
+            }
+        }
     }
 
     function showError(message, duration = 5000) {

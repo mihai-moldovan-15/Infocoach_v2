@@ -219,6 +219,8 @@ class AdvancedPbinfoScraper:
         input_name = ''
         output_name = ''
         current = None
+        explanation_lines = []
+        after_output = False
         for tag in article.find_all(['h1','h2','h3','b','strong','span','p','pre','div']):
             text = tag.get_text(separator='\n').strip()
             text_norm = self.normalize_text(text)
@@ -226,30 +228,40 @@ class AdvancedPbinfoScraper:
                 input_name = text
                 current = 'input'
                 found_example = True
+                after_output = False
                 continue
             if re.match(r'.+\.out$', text):
                 output_name = text
                 current = 'output'
                 found_example = True
+                after_output = False
                 continue
             if text_norm in ['exemplu','exemplu:','exemple','exemple:']:
                 found_example = True
                 current = None
+                after_output = False
                 continue
             if text_norm in ['intrare','intrare:']:
                 found_input = True
                 found_output = False
                 current = 'input'
+                after_output = False
                 continue
             if text_norm in ['ieșire','iesire','ieșire:','iesire:']:
                 found_output = True
                 found_input = False
                 current = 'output'
+                after_output = False
                 continue
             if found_example and current == 'input' and text and not re.match(r'.+\.in$', text):
                 input_lines.append(text)
             if found_example and current == 'output' and text and not re.match(r'.+\.out$', text):
                 output_lines.append(text)
+                after_output = True
+                continue
+            # După output, dacă mai există text și nu e heading nou, colectează ca explicație
+            if found_example and after_output and not re.match(r'.+\.out$', text) and not text_norm in ['exemplu','exemplu:','exemple','exemple:','intrare','intrare:','ieșire','iesire','ieșire:','iesire:'] and text:
+                explanation_lines.append(text)
         if input_name:
             example_input_name = input_name
         if output_name:
@@ -283,7 +295,8 @@ class AdvancedPbinfoScraper:
             example_input = '\n'.join(input_lines).strip()
         if not example_output and output_lines:
             example_output = '\n'.join(output_lines).strip()
-        return example_input, example_output, example_input_name or 'consola', example_output_name or 'consola'
+        example_explanation = '\n'.join(explanation_lines).strip()
+        return example_input, example_output, example_input_name or 'consola', example_output_name or 'consola', example_explanation
     
     def extract_example_section(self, article):
         example_lines = []
@@ -313,6 +326,7 @@ class AdvancedPbinfoScraper:
             'example_output': '',
             'example_input_name': 'consola',
             'example_output_name': 'consola',
+            'example_explanation': '',
             'problem_type': 'complete',
             'has_images': False,
             'image_count': 0,
@@ -364,7 +378,7 @@ class AdvancedPbinfoScraper:
             ['exemplu']
         )
         # --- extragere exemplu robustă: DOAR extract_examples_from_article ---
-        example_input, example_output, example_input_name, example_output_name = self.extract_examples_from_article(problem_content)
+        example_input, example_output, example_input_name, example_output_name, example_explanation = self.extract_examples_from_article(problem_content)
         # Elimină exemplul din restricții dacă există
         constraints_cleaned = constraints.replace(example_input, '').strip()
         problem_data['statement'] = statement.strip()
@@ -375,6 +389,7 @@ class AdvancedPbinfoScraper:
         problem_data['example_output'] = example_output
         problem_data['example_input_name'] = example_input_name
         problem_data['example_output_name'] = example_output_name
+        problem_data['example_explanation'] = example_explanation
         return problem_data
     
     def extract_subprogram_problem(self, soup, problem_id):
