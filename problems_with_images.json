@@ -1,15 +1,952 @@
 [
   {
-    "id": 3387,
+    "id": 148,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/matrice1/matrice.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 150,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "./resurse/probleme/shift1/112_shift.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 151,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/urm-moisil-2013/9_drum.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 154,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/urm-moisil-2013/xor.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 392,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/9dc152/p-1-1000/392/3x3.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 393,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/descarca-fisier.php?hash=9f6eec53499db97d9d6834596270949fec94d3df",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 565,
     "image_count": 2,
     "images": [
       {
-        "src": "/resurse/9dc152/p-2600/veverita.png",
+        "src": "/resurse/probleme/565/celule.png",
         "alt": "",
         "class": []
       },
       {
-        "src": "/resurse/9dc152/p-2600/veverita-expl.png",
+        "src": "/resurse/probleme/565/acoperire.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 600,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/600/romb.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/600/romb-2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 601,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/601-explicatii.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 602,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/602-regine.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 603,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/603-vraja.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 604,
+    "image_count": 5,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/602-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/600-650/602-2.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/600-650/602-3.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/600-650/602-4.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/600-650/602-5.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 617,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/tabla-4-4.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 624,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/sah1.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 627,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/600-650/tripar-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/600-650/tripar-2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 670,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 671,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 672,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 673,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 674,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 675,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 676,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 677,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/arbore-binar.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 685,
+    "image_count": 9,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/ij.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/ji.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/f1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/ij.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/ji.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/f2.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/f3.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/f4.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/f5.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 688,
+    "image_count": 6,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/pixy.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/pixy-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/pixy-2.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/pixy-3.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/pixy-4.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/pixy-5.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 690,
+    "image_count": 4,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/39.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/93.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/domino1-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/domino1-2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 692,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/692-rosie.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/692-etajera.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 696,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/696-mario.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/651-700/696-explicatie.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 700,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/651-700/700-labir.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 702,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/702-pascal.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 705,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/705-2d.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 707,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/707-sumk1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/707-sumk2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 708,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/708-cerc.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 712,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/712-pirati.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 716,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/716-cmin.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 718,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/718-sah.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 725,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/725-rege.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 726,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/726-acoperire1.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 735,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/735-piatra.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 740,
+    "image_count": 5,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/740-horse1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/740-horse2.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/740-horse3.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/740-horse4-partial.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/740-horse4-final.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 741,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/741-mins.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 743,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/743-operatii1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/743-operatii2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 747,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/747-turism.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 749,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/749-cerc.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/749-cerc1.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 750,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/701-750/750-smin1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/701-750/750-smin2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 752,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 753,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 754,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 755,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 756,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 757,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 758,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/758-arbore.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 759,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 760,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 761,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 791,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 792,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/751-800/752-arbore.jpg",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 837,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/801-850/837-fill.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 841,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/801-850/841-bomber.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 845,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/801-850/845-pattern.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 870,
+    "image_count": 3,
+    "images": [
+      {
+        "src": "/resurse/probleme/851-900/depou.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/851-900/depou-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/851-900/depou-2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 950,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/cerc3-enunt.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 953,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/deedee-enunt-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/950-1000/deedee-enunt-2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 954,
+    "image_count": 3,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/joc2-enunt-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/950-1000/joc2-enunt-2.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/950-1000/joc2-enunt-3.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 957,
+    "image_count": 2,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/zana-enunt-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/950-1000/zana-enunt-2.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 962,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/cerc4-enunt.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 965,
+    "image_count": 3,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/joc3-enunt-1.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/950-1000/joc3-enunt-2.png",
+        "alt": "",
+        "class": []
+      },
+      {
+        "src": "/resurse/probleme/950-1000/joc3-enunt-3.png",
+        "alt": "",
+        "class": []
+      }
+    ]
+  },
+  {
+    "id": 969,
+    "image_count": 1,
+    "images": [
+      {
+        "src": "/resurse/probleme/950-1000/culori1-enunt.png",
         "alt": "",
         "class": []
       }
