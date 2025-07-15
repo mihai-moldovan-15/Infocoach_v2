@@ -266,6 +266,81 @@ function sendNegativeFeedback() {
     });
 }
 
+// InfoPaste integration
+function checkInfoPasteCode() {
+    const infopasteCode = localStorage.getItem('infopaste_code');
+    const infopasteTitle = localStorage.getItem('infopaste_title');
+    
+    if (infopasteCode && window.ideMonaco) {
+        // Set the code in the editor
+        window.ideMonaco.setValue(infopasteCode);
+        
+        // Try to find and select the problem based on title
+        if (infopasteTitle) {
+            const searchInput = document.getElementById('problem-search');
+            if (searchInput) {
+                // Set the search input value
+                searchInput.value = infopasteTitle;
+                
+                // Trigger the input event to show suggestions
+                const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+                searchInput.dispatchEvent(inputEvent);
+                
+                // Wait a bit for suggestions to load, then select the first one
+                setTimeout(() => {
+                    const suggestionsList = document.getElementById('problem-suggestions');
+                    if (suggestionsList && suggestionsList.children.length > 0) {
+                        // Select the first suggestion
+                        const firstSuggestion = suggestionsList.children[0];
+                        if (firstSuggestion.onclick) {
+                            firstSuggestion.onclick();
+                        }
+                    }
+                }, 300);
+            }
+        }
+        
+        // Clear localStorage
+        localStorage.removeItem('infopaste_code');
+        localStorage.removeItem('infopaste_title');
+        
+        // Show success message
+        if (infopasteTitle) {
+            showSuccess(`Cod din InfoPaste încărcat: ${infopasteTitle}`);
+        } else {
+            showSuccess('Cod din InfoPaste încărcat cu succes!');
+        }
+    }
+}
+
+// Monaco Editor init
+window.addEventListener('DOMContentLoaded', function() {
+  const savedCode = localStorage.getItem('ide_code');
+  const defaultCode = '#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}';
+  window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+  window.require(['vs/editor/editor.main'], function() {
+    window.ideMonaco = monaco.editor.create(document.getElementById('ide-code-editor'), {
+      value: savedCode !== null ? savedCode : defaultCode,
+      language: 'cpp',
+      theme: 'vs',
+      fontSize: 15,
+      minimap: { enabled: false },
+      automaticLayout: true,
+      lineNumbers: 'on',
+      wordWrap: 'on',
+      scrollBeyondLastLine: false,
+      roundedSelection: false,
+      scrollbar: { vertical: 'auto', horizontal: 'auto' }
+    });
+    window.ideMonaco.onDidChangeModelContent(function() {
+      localStorage.setItem('ide_code', window.ideMonaco.getValue());
+    });
+    
+    // Check for InfoPaste code after editor is initialized
+    checkInfoPasteCode();
+  });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     // Initial scroll to bottom
     scrollToBottom();

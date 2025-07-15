@@ -296,32 +296,7 @@ body {
     <button type="submit">Trimite</button>
   </form>
 </div>
-<script>
-// Monaco Editor init
-window.addEventListener('DOMContentLoaded', function() {
-  const savedCode = localStorage.getItem('ide_code');
-  const defaultCode = '#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}';
-  window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
-  window.require(['vs/editor/editor.main'], function() {
-    window.ideMonaco = monaco.editor.create(document.getElementById('ide-code-editor'), {
-      value: savedCode !== null ? savedCode : defaultCode,
-      language: 'cpp',
-      theme: 'vs',
-      fontSize: 15,
-      minimap: { enabled: false },
-      automaticLayout: true,
-      lineNumbers: 'on',
-      wordWrap: 'on',
-      scrollBeyondLastLine: false,
-      roundedSelection: false,
-      scrollbar: { vertical: 'auto', horizontal: 'auto' }
-    });
-    window.ideMonaco.onDidChangeModelContent(function() {
-      localStorage.setItem('ide_code', window.ideMonaco.getValue());
-    });
-  });
-});
-</script>
+
 {% endblock %}
 
 {% block scripts %}

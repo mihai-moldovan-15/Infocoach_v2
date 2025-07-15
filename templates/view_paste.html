@@ -1,0 +1,523 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+  background: #f7f9fb;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.paste-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(30,64,175,0.07), 0 1.5px 8px rgba(0,0,0,0.04);
+  padding: 44px 48px 40px 48px;
+  margin: 20px auto 20px auto;
+  max-width: 95vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.paste-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.paste-title {
+  font-size: 2em;
+  font-weight: 700;
+  color: #1976d2;
+  margin: 0;
+}
+
+.paste-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.paste-author {
+  color: #666;
+  font-size: 1.1em;
+}
+
+.paste-stats {
+  display: flex;
+  gap: 15px;
+  color: #888;
+  font-size: 0.9em;
+}
+
+.paste-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-primary {
+  background: #1976d2;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1251a3;
+}
+
+.btn-secondary {
+  background: #e3e8ef;
+  color: #1976d2;
+}
+
+.btn-secondary:hover {
+  background: #d0d7e6;
+}
+
+.btn-success {
+  background: #43a047;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #388e3c;
+}
+
+.btn-warning {
+  background: #ff9800;
+  color: white;
+}
+
+.btn-warning:hover {
+  background: #f57c00;
+}
+
+.code-section {
+  margin-bottom: 30px;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.code-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #333;
+}
+
+.code-container {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8f9fa;
+  min-height: 300px;
+}
+
+.premium-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 30px 0;
+  color: white;
+  text-align: center;
+}
+
+.premium-title {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.premium-description {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.premium-features {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.premium-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.premium-feature-icon {
+  font-size: 2em;
+}
+
+.premium-feature-text {
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+.explanation-preview {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+  color: #333;
+}
+
+.explanation-step {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.explanation-step:before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.comments-section {
+  margin-top: 30px;
+}
+
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.comments-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #333;
+}
+
+.comment-form {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1em;
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 15px;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comment {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.comment-date {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.comment-content {
+  color: #333;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .paste-container {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+  
+  .paste-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .paste-meta {
+    align-items: flex-start;
+  }
+  
+  .premium-features {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .paste-container {
+    max-width: 98vw;
+    margin: 15px auto;
+  }
+}
+</style>
+
+<div class="paste-container">
+  <div class="paste-header">
+    <div>
+      <h1 class="paste-title">{{ paste.title or 'Fără titlu' }}</h1>
+      <div class="paste-author">
+        👤 de {{ paste.username or 'Anonim' }} • {{ paste.created_at[:10] if paste.created_at else 'Data necunoscută' }}
+      </div>
+    </div>
+    
+    <div class="paste-meta">
+      <div class="paste-stats">
+        <span>👁️ {{ paste.views }} vizualizări</span>
+        <span>❤️ {{ paste.likes }} aprecieri</span>
+      </div>
+      
+      <div class="paste-actions">
+        <button class="btn btn-primary" onclick="likePaste()">❤️ Apreciază</button>
+        <a href="#" class="btn btn-secondary" onclick="sharePaste()">📤 Share</a>
+        {% if current_user.is_authenticated %}
+          <button class="btn btn-success" onclick="openInEditor()">🚀 Deschide în Editor</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="code-section">
+    <div class="code-header">
+      <h3 class="code-title">💻 Codul</h3>
+      <span style="color: #666;">{{ paste.language.upper() }}</span>
+    </div>
+    
+    <div class="code-container" id="code-display"></div>
+  </div>
+
+  {% if paste.description %}
+  <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+    <strong>📝 Descriere:</strong> {{ paste.description }}
+  </div>
+  {% endif %}
+
+  <div class="premium-section">
+    <h3 class="premium-title">🔒 Upgrade la Premium</h3>
+    <p class="premium-description">
+      Deblochează explicații AI detaliate și funcționalități avansate
+    </p>
+    
+    <div class="premium-features">
+      <div class="premium-feature">
+        <div class="premium-feature-icon">🤖</div>
+        <div class="premium-feature-text">Explicații AI</div>
+      </div>
+      <div class="premium-feature">
+        <div class="premium-feature-icon">⚡</div>
+        <div class="premium-feature-text">Optimizări</div>
+      </div>
+      <div class="premium-feature">
+        <div class="premium-feature-icon">📊</div>
+        <div class="premium-feature-text">Analiză Complexitate</div>
+      </div>
+    </div>
+    
+    <div class="explanation-preview">
+      <h4>📖 Preview Explicații:</h4>
+      <div class="explanation-step">Pasul 1: Citim numărul n de la utilizator</div>
+      <div class="explanation-step">Pasul 2: Inițializăm suma cu 0</div>
+      <div class="explanation-step">Pasul 3: Parcurgem numerele pare până la n</div>
+      <div class="explanation-step">Pasul 4: Adăugăm fiecare număr la sumă</div>
+      <div class="explanation-step">Pasul 5: Afișăm rezultatul</div>
+      <br>
+      <div style="color: #666; font-size: 0.9em;">
+        ⚡ Complexitate: O(n) temporal, O(1) spațial<br>
+        Algoritm: Iterativ cu buclă for
+      </div>
+    </div>
+  </div>
+
+  <div class="comments-section">
+    <div class="comments-header">
+      <h3 class="comments-title">💬 Comentarii ({{ comments|length }})</h3>
+    </div>
+    
+    {% if current_user.is_authenticated %}
+    <div class="comment-form">
+      <textarea class="comment-input" id="comment-input" placeholder="Scrie un comentariu..."></textarea>
+      <button class="btn btn-primary" onclick="addComment()">Adaugă Comentariu</button>
+    </div>
+    {% else %}
+    <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; color: #666;">
+      <a href="{{ url_for('login') }}" style="color: #1976d2; text-decoration: none; font-weight: 600;">Autentifică-te</a> pentru a adăuga comentarii
+    </div>
+    {% endif %}
+    
+    <div class="comments-list">
+      {% for comment in comments %}
+      <div class="comment">
+        <div class="comment-header">
+          <span class="comment-author">{{ comment.username or 'Anonim' }}</span>
+          <span class="comment-date">{{ comment.created_at[:10] if comment.created_at else 'Data necunoscută' }}</span>
+        </div>
+        <div class="comment-content">{{ comment.comment }}</div>
+      </div>
+      {% endfor %}
+      
+      {% if not comments %}
+      <div style="text-align: center; color: #666; padding: 20px;">
+        Nu există comentarii încă. Fii primul care comentează!
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+<script>
+let editor;
+
+// Initialize Monaco Editor for code display
+window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+window.require(['vs/editor/editor.main'], function() {
+    editor = monaco.editor.create(document.getElementById('code-display'), {
+        value: `{{ paste.code|safe }}`,
+        language: '{{ paste.language }}',
+        theme: 'vs',
+        fontSize: 14,
+        minimap: { enabled: false },
+        automaticLayout: true,
+        lineNumbers: 'on',
+        wordWrap: 'on',
+        scrollBeyondLastLine: false,
+        roundedSelection: false,
+        scrollbar: { vertical: 'auto', horizontal: 'auto' },
+        readOnly: true
+    });
+});
+
+function likePaste() {
+    fetch('/api/like_paste/{{ paste.id }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Apreciere adăugată!');
+            location.reload();
+        } else {
+            alert('Eroare la adăugarea aprecierii');
+        }
+    })
+    .catch(error => {
+        alert('Eroare la comunicarea cu serverul');
+    });
+}
+
+function sharePaste() {
+    const url = window.location.href;
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ paste.title or "Cod pe InfoPaste" }}',
+            text: 'Uită-te la acest cod pe InfoPaste',
+            url: url
+        });
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Link copiat în clipboard!');
+        });
+    }
+}
+
+function openInEditor() {
+    fetch('/api/open_in_editor/{{ paste.id }}')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Store code in localStorage for problem_solver
+            localStorage.setItem('infopaste_code', data.code);
+            localStorage.setItem('infopaste_title', data.title);
+            window.location.href = data.redirect_url;
+        } else {
+            alert('Eroare la deschiderea în editor');
+        }
+    })
+    .catch(error => {
+        alert('Eroare la comunicarea cu serverul');
+    });
+}
+
+function addComment() {
+    const comment = document.getElementById('comment-input').value.trim();
+    if (!comment) {
+        alert('Te rog să introduci un comentariu');
+        return;
+    }
+    
+    fetch('/api/comment_paste/{{ paste.id }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment: comment })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('comment-input').value = '';
+            location.reload();
+        } else {
+            alert('Eroare la adăugarea comentariului');
+        }
+    })
+    .catch(error => {
+        alert('Eroare la comunicarea cu serverul');
+    });
+}
+</script>
+{% endblock %} 

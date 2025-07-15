@@ -1,0 +1,813 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+  background: #f7f9fb;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.infopaste-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(30,64,175,0.07), 0 1.5px 8px rgba(0,0,0,0.04);
+  padding: 30px 48px 30px 48px;
+  margin: 20px 10px 20px 10px;
+  max-width: calc(100vw - 20px);
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-sizing: border-box;
+}
+
+.infopaste-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.infopaste-title {
+  font-size: 2em;
+  font-weight: 700;
+  color: #1976d2;
+  margin: 0;
+}
+
+.infopaste-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.form-input {
+  padding: 10px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.form-textarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1em;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.form-select {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1em;
+  background: white;
+  color: #333;
+  font-weight: 500;
+  transition: border-color 0.2s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.form-select option {
+  background: white;
+  color: #333;
+  padding: 8px 12px;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.form-select option:hover {
+  background: #f8f9fa;
+  color: #1976d2;
+}
+
+.form-select option:checked {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  accent-color: #1976d2;
+}
+
+.editor-container {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 250px;
+  background: #f8f9fa;
+}
+
+.editor-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #1251a3;
+}
+
+.btn-secondary {
+  background: #e3e8ef;
+  color: #1976d2;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #d0d7e6;
+}
+
+.btn-success {
+  background: #43a047;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-success:hover {
+  background: #388e3c;
+}
+
+.share-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  display: none;
+}
+
+.share-url {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: monospace;
+  font-size: 0.85em;
+  color: #333;
+  width: 100%;
+  margin-bottom: 10px;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.share-btn.whatsapp {
+  background: #25d366;
+  color: white;
+}
+
+.share-btn.telegram {
+  background: #0088cc;
+  color: white;
+}
+
+.share-btn.email {
+  background: #ea4335;
+  color: white;
+}
+
+.share-btn.copy {
+  background: #6c757d;
+  color: white;
+}
+
+.share-btn:hover {
+  opacity: 0.8;
+}
+
+.ai-section {
+  background: #f0f8ff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  display: none;
+}
+
+.ai-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.ai-btn {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ai-btn:hover {
+  background: #f57c00;
+}
+
+.ai-explanation {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+  white-space: pre-wrap;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+.problem-search-autocomplete {
+  position: relative;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.autocomplete-suggestions li {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  list-style: none;
+}
+
+.autocomplete-suggestions li:hover {
+  background: #f8f9fa;
+}
+
+.autocomplete-suggestions li:last-child {
+  border-bottom: none;
+}
+
+.problem-suggestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.problem-suggestion .problem-id {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.problem-suggestion .problem-name {
+  flex: 1;
+  margin-left: 8px;
+}
+
+.problem-suggestion .problem-category {
+  font-size: 0.9em;
+  color: #666;
+  margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+  .infopaste-container {
+    margin: 20px 10px;
+    padding: 20px;
+    max-width: calc(100vw - 20px);
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .editor-buttons {
+    flex-direction: column;
+  }
+  
+  .ai-buttons {
+    flex-direction: column;
+  }
+}
+</style>
+
+<div class="infopaste-container">
+  <div class="infopaste-header">
+  </div>
+
+  <form class="infopaste-form" id="infopaste-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">🎯 Problema</label>
+        <div class="problem-search-autocomplete">
+          <input type="text" name="problem_search" id="problem-search" class="form-input" placeholder="Caută problemă după titlu, tag sau cuvinte cheie..." autocomplete="off">
+          <ul id="problem-suggestions" class="autocomplete-suggestions" style="display: none;"></ul>
+        </div>
+        <input type="hidden" name="problem_id" id="problem_id">
+        <input type="hidden" name="problem_title" id="problem_title">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">👤 Autor</label>
+        <input type="text" name="author" class="form-input" placeholder="Numele tău" value="{{ current_user.username if current_user.is_authenticated else '' }}" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">📝 Descriere</label>
+        <input type="text" name="description" class="form-input" placeholder="Scurtă descriere a codului">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">🔒 Privat</label>
+      <div class="checkbox-group">
+        <input type="checkbox" name="is_public" id="is_public" class="checkbox-input" checked>
+        <label for="is_public">Paste public (vizibil pentru toți)</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">💻 Codul tău</label>
+      <div class="editor-container" id="code-editor"></div>
+    </div>
+
+    <div class="editor-buttons">
+      <button type="submit" class="btn-primary">💾 Salvează Paste</button>
+      <button type="button" class="btn-secondary" onclick="clearEditor()">🗑️ Curăță</button>
+      <button type="button" class="btn-success" onclick="explainCode()">🤖 Explicații AI</button>
+      <button type="button" class="btn-success" onclick="optimizeCode()">⚡ Optimizează</button>
+    </div>
+  </form>
+
+  <div class="share-section" id="share-section">
+    <h3>🔗 Link de share</h3>
+    <input type="text" class="share-url" id="share-url" readonly>
+    <div class="share-buttons">
+      <button type="button" class="share-btn whatsapp" onclick="shareWhatsApp()">WhatsApp</button>
+      <button type="button" class="share-btn telegram" onclick="shareTelegram()">Telegram</button>
+      <button type="button" class="share-btn email" onclick="shareEmail()">Email</button>
+      <button type="button" class="share-btn copy" onclick="copyLink()">Copiază Link</button>
+    </div>
+  </div>
+
+  <div class="ai-section" id="ai-section">
+    <h3>🤖 Explicații AI</h3>
+    <div class="ai-buttons">
+      <button type="button" class="ai-btn" onclick="generateExplanation()">📖 Generează Explicații</button>
+      <button type="button" class="ai-btn" onclick="generateOptimization()">⚡ Sugerează Optimizări</button>
+      <button type="button" class="ai-btn" onclick="analyzeComplexity()">📊 Analizează Complexitatea</button>
+    </div>
+    <div class="ai-explanation" id="ai-explanation"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+<script>
+let editor;
+let currentPasteId = null;
+
+// Initialize Monaco Editor
+window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+window.require(['vs/editor/editor.main'], function() {
+    editor = monaco.editor.create(document.getElementById('code-editor'), {
+        value: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}',
+        language: 'cpp',
+        theme: 'vs',
+        fontSize: 14,
+        minimap: { enabled: false },
+        automaticLayout: true,
+        lineNumbers: 'on',
+        wordWrap: 'on',
+        scrollBeyondLastLine: false,
+        roundedSelection: false,
+        scrollbar: { vertical: 'auto', horizontal: 'auto' }
+    });
+    
+
+});
+
+// Problem search functionality
+let searchTimeout;
+const problemSearchInput = document.getElementById('problem-search');
+const problemSuggestions = document.getElementById('problem-suggestions');
+
+problemSearchInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    const query = this.value.trim();
+    
+    if (query.length < 2) {
+        problemSuggestions.style.display = 'none';
+        return;
+    }
+    
+    searchTimeout = setTimeout(() => {
+        fetch(`/api/problem_search?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.problems && data.problems.length > 0) {
+                    // Afișează doar prima problemă cea mai relevantă
+                    const problem = data.problems[0];
+                    problemSuggestions.innerHTML = `
+                        <li onclick="selectProblem('${problem.id}', '${problem.name.replace(/'/g, "\\'")}', '${problem.category || ''}')">
+                            <div class="problem-suggestion">
+                                <span class="problem-name">${problem.name}</span>
+                                <span class="problem-category">${problem.category || ''}</span>
+                            </div>
+                        </li>
+                    `;
+                    problemSuggestions.style.display = 'block';
+                } else {
+                    problemSuggestions.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error searching problems:', error);
+                problemSuggestions.style.display = 'none';
+            });
+    }, 300);
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', function(e) {
+    if (!problemSearchInput.contains(e.target) && !problemSuggestions.contains(e.target)) {
+        problemSuggestions.style.display = 'none';
+    }
+});
+
+function selectProblem(problemId, problemName, problemCategory) {
+    document.getElementById('problem_id').value = problemId;
+    document.getElementById('problem_title').value = problemName;
+    problemSearchInput.value = `${problemName}`;
+    problemSuggestions.style.display = 'none';
+}
+
+// Form submission
+document.getElementById('infopaste-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    const problemId = document.getElementById('problem_id').value;
+    const problemTitle = document.getElementById('problem_title').value;
+    
+    // Folosește titlul problemei ca titlu pentru paste
+    formData.append('title', problemTitle || 'Paste fără problemă asociată');
+    formData.append('problem_id', problemId);
+    formData.append('code', editor.getValue());
+    formData.append('language', 'cpp'); // C++ implicit pentru InfoPaste
+    formData.append('description', document.querySelector('input[name="description"]').value);
+    formData.append('is_public', document.querySelector('input[name="is_public"]').checked ? '1' : '0');
+    
+    fetch('/infopaste/create', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentPasteId = data.paste_id;
+            document.getElementById('share-url').value = data.share_url;
+            document.getElementById('share-section').style.display = 'block';
+            // Scroll la secțiunea de share pentru o experiență mai bună
+            setTimeout(() => {
+                document.getElementById('share-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        } else {
+            showError(data.error || 'Eroare la salvarea paste-ului');
+        }
+    })
+    .catch(error => {
+        showError('Eroare la comunicarea cu serverul');
+    });
+});
+
+function showSuccess(message) {
+    // Nu mai afișăm alert, doar scrollăm la secțiunea de share
+    document.getElementById('share-section').style.display = 'block';
+    document.getElementById('share-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showError(message) {
+    // Modal pentru erori
+    showModal('Eroare', message, 'error');
+}
+
+function showModal(title, message, type = 'info') {
+    // Creează modal dacă nu există
+    let modal = document.getElementById('custom-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'custom-modal';
+        modal.className = 'custom-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        `;
+        
+        modal.innerHTML = `
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 400px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            ">
+                <h3 style="margin: 0 0 15px 0; color: ${type === 'error' ? '#dc3545' : '#1976d2'};">
+                    ${title}
+                </h3>
+                <p style="margin: 0 0 20px 0; color: #333; line-height: 1.5;">
+                    ${message}
+                </p>
+                <button onclick="closeModal()" style="
+                    background: ${type === 'error' ? '#dc3545' : '#1976d2'};
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-weight: 600;
+                ">
+                    OK
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    } else {
+        modal.style.display = 'flex';
+        modal.querySelector('h3').textContent = title;
+        modal.querySelector('p').textContent = message;
+        modal.querySelector('h3').style.color = type === 'error' ? '#dc3545' : '#1976d2';
+        modal.querySelector('button').style.background = type === 'error' ? '#dc3545' : '#1976d2';
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('custom-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function clearEditor() {
+    editor.setValue('#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}');
+}
+
+function explainCode() {
+    const code = editor.getValue();
+    if (!code.trim()) {
+        showError('Te rog să introduci codul înainte de a cere explicații');
+        return;
+    }
+    
+    document.getElementById('ai-section').style.display = 'block';
+    document.getElementById('ai-explanation').textContent = '🤖 Generez explicații...';
+    
+    fetch('/api/explain_paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('ai-explanation').textContent = data.explanation;
+        } else {
+            document.getElementById('ai-explanation').textContent = 'Eroare la generarea explicațiilor: ' + data.error;
+        }
+    })
+    .catch(error => {
+        document.getElementById('ai-explanation').textContent = 'Eroare la comunicarea cu serverul';
+    });
+}
+
+function optimizeCode() {
+    const code = editor.getValue();
+    if (!code.trim()) {
+        showError('Te rog să introduci codul înainte de a cere optimizări');
+        return;
+    }
+    
+    document.getElementById('ai-section').style.display = 'block';
+    document.getElementById('ai-explanation').textContent = '⚡ Generez optimizări...';
+    
+    fetch('/api/optimize_paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('ai-explanation').textContent = data.optimization;
+        } else {
+            document.getElementById('ai-explanation').textContent = 'Eroare la generarea optimizărilor: ' + data.error;
+        }
+    })
+    .catch(error => {
+        document.getElementById('ai-explanation').textContent = 'Eroare la comunicarea cu serverul';
+    });
+}
+
+function generateExplanation() {
+    explainCode();
+}
+
+function generateOptimization() {
+    optimizeCode();
+}
+
+function analyzeComplexity() {
+    const code = editor.getValue();
+    if (!code.trim()) {
+        showError('Te rog să introduci codul înainte de a analiza complexitatea');
+        return;
+    }
+    
+    document.getElementById('ai-section').style.display = 'block';
+    document.getElementById('ai-explanation').textContent = '📊 Analizez complexitatea...';
+    
+    // Similar to explainCode but with different prompt
+    fetch('/api/explain_paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('ai-explanation').textContent = data.explanation;
+        } else {
+            document.getElementById('ai-explanation').textContent = 'Eroare la analiza complexității: ' + data.error;
+        }
+    })
+    .catch(error => {
+        document.getElementById('ai-explanation').textContent = 'Eroare la comunicarea cu serverul';
+    });
+}
+
+function copyLink() {
+    const urlInput = document.getElementById('share-url');
+    const copyButton = document.querySelector('.share-btn.copy');
+    
+    urlInput.select();
+    document.execCommand('copy');
+    
+    // Creează mesajul de confirmare
+    let successMessage = document.getElementById('copy-success-message');
+    if (!successMessage) {
+        successMessage = document.createElement('span');
+        successMessage.id = 'copy-success-message';
+        successMessage.style.cssText = `
+            color: #28a745;
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 1.5em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        `;
+        copyButton.parentNode.appendChild(successMessage);
+    }
+    
+    // Afișează mesajul
+    successMessage.innerHTML = '✓';
+    successMessage.style.opacity = '1';
+    
+    // Ascunde mesajul după 1.5 secunde
+    setTimeout(() => {
+        successMessage.style.opacity = '0';
+    }, 1500);
+}
+
+function shareWhatsApp() {
+    const url = document.getElementById('share-url').value;
+    const text = encodeURIComponent('Uită-te la acest cod pe InfoPaste: ');
+    window.open(`https://wa.me/?text=${text}${encodeURIComponent(url)}`);
+}
+
+function shareTelegram() {
+    const url = document.getElementById('share-url').value;
+    const text = encodeURIComponent('Uită-te la acest cod pe InfoPaste: ');
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${text}`);
+}
+
+function shareEmail() {
+    const url = document.getElementById('share-url').value;
+    const subject = encodeURIComponent('Cod pe InfoPaste');
+    const body = encodeURIComponent(`Uită-te la acest cod pe InfoPaste: ${url}`);
+    window.open(`mailto:?subject=${subject}&body=${body}`);
+}
+
+function showSuccess(message) {
+    // Simple success notification
+    alert(message);
+}
+
+function showError(message) {
+    // Simple error notification
+    alert('Eroare: ' + message);
+}
+</script>
+{% endblock %} 

@@ -1912,6 +1912,376 @@ Răspunsul tău trebuie să fie DOAR codul C++ complet, fără explicații supli
         logging.error(f"Error generating complete code: {e}")
         return jsonify({'error': f'Failed to generate complete code: {str(e)}'}), 500
 
+# === Initialize InfoPaste database ===
+def init_infopaste_db():
+    """Initialize InfoPaste database tables"""
+    conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+    c = conn.cursor()
+    
+    # Code pastes table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS code_pastes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            title TEXT,
+            code TEXT NOT NULL,
+            language TEXT DEFAULT 'cpp',
+            description TEXT,
+            is_public BOOLEAN DEFAULT 1,
+            views INTEGER DEFAULT 0,
+            likes INTEGER DEFAULT 0,
+            created_at TEXT,
+            updated_at TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+    
+    # Paste explanations table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS paste_explanations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            paste_id INTEGER,
+            explanation_type TEXT, -- 'comments', 'suggestions', 'complexity'
+            content TEXT,
+            is_premium BOOLEAN DEFAULT 1,
+            created_at TEXT,
+            FOREIGN KEY (paste_id) REFERENCES code_pastes(id)
+        )
+    ''')
+    
+    # Paste comments table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS paste_comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            paste_id INTEGER,
+            user_id INTEGER,
+            comment TEXT,
+            created_at TEXT,
+            FOREIGN KEY (paste_id) REFERENCES code_pastes(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+    
+    # Add subscription fields to users if not exist
+    c.execute("PRAGMA table_info(users)")
+    user_columns = [col[1] for col in c.fetchall()]
+    
+    new_user_columns = {
+        'subscription_type': 'TEXT DEFAULT "free"',
+        'subscription_expires': 'TEXT',
+        'premium_features_enabled': 'BOOLEAN DEFAULT 0'
+    }
+    
+    for col_name, col_type in new_user_columns.items():
+        if col_name not in user_columns:
+            try:
+                c.execute(f'ALTER TABLE users ADD COLUMN {col_name} {col_type}')
+            except Exception as e:
+                print(f"Error adding {col_name} to users: {e}")
+    
+    conn.commit()
+    conn.close()
+
+# Initialize InfoPaste database
+init_infopaste_db()
+
+# === InfoPaste Routes ===
+
+@app.route('/infopaste')
+def infopaste_editor():
+    """Editor principal pentru InfoPaste"""
+    return render_template('infopaste_editor.html')
+
+@app.route('/infopaste/create', methods=['POST'])
+@login_required
+def create_paste():
+    """Creează un nou paste"""
+    try:
+        title = request.form.get('title', '').strip()
+        code = request.form.get('code', '').strip()
+        language = request.form.get('language', 'cpp')
+        description = request.form.get('description', '').strip()
+        is_public = request.form.get('is_public', '1') == '1'
+        
+        if not code:
+            return jsonify({'error': 'Codul este obligatoriu'}), 400
+        
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        c = conn.cursor()
+        
+        timestamp = datetime.now().isoformat()
+        c.execute('''
+            INSERT INTO code_pastes (user_id, title, code, language, description, is_public, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (current_user.id, title, code, language, description, is_public, timestamp, timestamp))
+        
+        paste_id = c.lastrowid
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'paste_id': paste_id,
+            'share_url': url_for('view_paste', paste_id=paste_id, _external=True)
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la salvarea paste-ului: {str(e)}'}), 500
+
+@app.route('/paste/<string:paste_id>')
+def view_paste(paste_id):
+    """Vizualizare paste public"""
+    try:
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        
+        # Get paste details
+        c.execute('''
+            SELECT cp.* 
+            FROM code_pastes cp 
+            WHERE cp.id = ? AND cp.is_public = 1
+        ''', (paste_id,))
+        paste = c.fetchone()
+        
+        if not paste:
+            return "Paste-ul nu a fost găsit sau nu este public", 404
+        
+        # Get username from main users database
+        username = "Anonim"
+        if paste['user_id']:
+            try:
+                user = User.query.get(paste['user_id'])
+                if user:
+                    username = user.username
+            except:
+                pass
+        
+        # Create a new dict with username
+        paste_dict = dict(paste)
+        paste_dict['username'] = username
+        
+        # Increment views
+        c.execute('UPDATE code_pastes SET views = views + 1 WHERE id = ?', (paste_id,))
+        
+        # Get comments
+        c.execute('''
+            SELECT pc.* 
+            FROM paste_comments pc 
+            WHERE pc.paste_id = ? 
+            ORDER BY pc.created_at ASC
+        ''', (paste_id,))
+        comments_raw = c.fetchall()
+        
+        # Get usernames for comments
+        comments = []
+        for comment in comments_raw:
+            comment_dict = dict(comment)
+            comment_username = "Anonim"
+            if comment['user_id']:
+                try:
+                    user = User.query.get(comment['user_id'])
+                    if user:
+                        comment_username = user.username
+                except:
+                    pass
+            comment_dict['username'] = comment_username
+            comments.append(comment_dict)
+        
+        # Get explanations (premium feature)
+        c.execute('SELECT * FROM paste_explanations WHERE paste_id = ?', (paste_id,))
+        explanations = c.fetchall()
+        
+        conn.commit()
+        conn.close()
+        
+        return render_template('view_paste.html', 
+                             paste=paste_dict, 
+                             comments=comments, 
+                             explanations=explanations)
+        
+    except Exception as e:
+        return f"Eroare la încărcarea paste-ului: {str(e)}", 500
+
+@app.route('/api/explain_paste', methods=['POST'])
+@login_required
+def explain_paste():
+    """Generează explicații AI pentru paste"""
+    try:
+        data = request.get_json()
+        paste_id = data.get('paste_id')
+        code = data.get('code', '').strip()
+        
+        if not code:
+            return jsonify({'error': 'Codul este obligatoriu'}), 400
+        
+        # Generează explicații AI
+        prompt = f"""
+        Analizează acest cod C++ și oferă explicații detaliate:
+        
+        {code}
+        
+        Te rog să incluzi:
+        1. Explicații line-by-line pentru fiecare secțiune importantă
+        2. Complexitatea algoritmică (temporală și spațială)
+        3. Sugestii de optimizare
+        4. Best practices pentru acest tip de cod
+        
+        Răspunsul să fie structurat și clar pentru elevi de liceu.
+        """
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "Ești un expert în C++ care explică codul pentru elevi de liceu. Răspunsurile tale trebuie să fie clare, structurate și educaționale."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=1000
+        )
+        
+        explanation = response.choices[0].message.content.strip()
+        
+        # Salvează explicația în baza de date
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        c = conn.cursor()
+        
+        timestamp = datetime.now().isoformat()
+        c.execute('''
+            INSERT INTO paste_explanations (paste_id, explanation_type, content, created_at)
+            VALUES (?, ?, ?, ?)
+        ''', (paste_id, 'full_explanation', explanation, timestamp))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'explanation': explanation
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la generarea explicației: {str(e)}'}), 500
+
+@app.route('/api/optimize_paste', methods=['POST'])
+@login_required
+def optimize_paste():
+    """Sugerează optimizări pentru paste"""
+    try:
+        data = request.get_json()
+        code = data.get('code', '').strip()
+        
+        if not code:
+            return jsonify({'error': 'Codul este obligatoriu'}), 400
+        
+        # Generează sugestii de optimizare
+        prompt = f"""
+        Analizează acest cod C++ și sugerează optimizări:
+        
+        {code}
+        
+        Te rog să incluzi:
+        1. Optimizări de performanță
+        2. Îmbunătățiri de cod și best practices
+        3. Validări suplimentare dacă sunt necesare
+        4. Sugestii pentru lizibilitate
+        
+        Răspunsul să fie practic și aplicabil pentru elevi de liceu.
+        """
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "Ești un expert în optimizarea codului C++ pentru elevi de liceu. Sugerează îmbunătățiri practice și aplicabile."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=800
+        )
+        
+        optimization = response.choices[0].message.content.strip()
+        
+        return jsonify({
+            'success': True,
+            'optimization': optimization
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la generarea optimizărilor: {str(e)}'}), 500
+
+@app.route('/api/open_in_editor/<string:paste_id>')
+@login_required
+def open_in_editor(paste_id):
+    """Deschide paste-ul în problem_solver"""
+    try:
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        
+        c.execute('SELECT * FROM code_pastes WHERE id = ?', (paste_id,))
+        paste = c.fetchone()
+        conn.close()
+        
+        if not paste:
+            return jsonify({'error': 'Paste-ul nu a fost găsit'}), 404
+        
+        # Redirect către problem_solver cu codul pre-completat
+        return jsonify({
+            'success': True,
+            'redirect_url': url_for('problem_solver'),
+            'code': paste['code'],
+            'title': paste['title']
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la deschiderea în editor: {str(e)}'}), 500
+
+@app.route('/api/like_paste/<string:paste_id>', methods=['POST'])
+@login_required
+def like_paste(paste_id):
+    """Like/unlike un paste"""
+    try:
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        c = conn.cursor()
+        
+        # Increment likes
+        c.execute('UPDATE code_pastes SET likes = likes + 1 WHERE id = ?', (paste_id,))
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la like: {str(e)}'}), 500
+
+@app.route('/api/comment_paste/<string:paste_id>', methods=['POST'])
+@login_required
+def comment_paste(paste_id):
+    """Adaugă comentariu la un paste"""
+    try:
+        data = request.get_json()
+        comment = data.get('comment', '').strip()
+        
+        if not comment:
+            return jsonify({'error': 'Comentariul este obligatoriu'}), 400
+        
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        c = conn.cursor()
+        
+        timestamp = datetime.now().isoformat()
+        c.execute('''
+            INSERT INTO paste_comments (paste_id, user_id, comment, created_at)
+            VALUES (?, ?, ?, ?)
+        ''', (paste_id, current_user.id, comment, timestamp))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la adăugarea comentariului: {str(e)}'}), 500
+
 # === Start application ===
 if __name__ == '__main__':
     migrate_set_titles_for_old_conversations()
