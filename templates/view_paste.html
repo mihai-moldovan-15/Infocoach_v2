@@ -23,82 +23,173 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 20px;
+  padding: 18px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.paste-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1976d2, #42a5f5, #1976d2);
 }
 
 .paste-title {
-  font-size: 2em;
-  font-weight: 700;
-  color: #1976d2;
-  margin: 0;
+  font-size: 1.8em;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 25px 0;
+  line-height: 1.2;
 }
 
 .paste-meta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 25px;
 }
 
 .paste-author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: #666;
-  font-size: 1.1em;
+  font-size: 0.9em;
+  font-weight: 400;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-left: -8px;
+}
+
+.paste-author::before {
+  content: '👤';
+  font-size: 1.2em;
 }
 
 .paste-stats {
   display: flex;
   gap: 15px;
-  color: #888;
-  font-size: 0.9em;
+  color: #666;
+  font-size: 0.85em;
+  font-weight: 500;
+  background: white;
+  padding: 8px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.paste-stats span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #f8f9fa;
+  transition: background 0.2s;
+}
+
+.paste-stats span:hover {
+  background: #e9ecef;
 }
 
 .paste-actions {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 25px;
+  flex-wrap: wrap;
 }
 
 .btn {
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 6px;
-  font-size: 0.9em;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 0.85em;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn-primary {
-  background: #1976d2;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
   color: white;
+  box-shadow: 0 4px 15px rgba(25,118,210,0.3);
 }
 
 .btn-primary:hover {
-  background: #1251a3;
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25,118,210,0.4);
 }
 
 .btn-secondary {
-  background: #e3e8ef;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   color: #1976d2;
+  border: 1px solid #e5e7eb;
 }
 
 .btn-secondary:hover {
-  background: #d0d7e6;
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .btn-success {
-  background: #43a047;
+  background: linear-gradient(135deg, #43a047, #66bb6a);
   color: white;
+  box-shadow: 0 4px 15px rgba(67,160,71,0.3);
 }
 
 .btn-success:hover {
-  background: #388e3c;
+  background: linear-gradient(135deg, #388e3c, #43a047);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(67,160,71,0.4);
 }
 
 .btn-warning {
@@ -312,7 +403,7 @@ body {
     <div>
       <h1 class="paste-title">{{ paste.title or 'Fără titlu' }}</h1>
       <div class="paste-author">
-        👤 de {{ paste.username or 'Anonim' }} • {{ paste.created_at[:10] if paste.created_at else 'Data necunoscută' }}
+        de {{ paste.username or 'Anonim' }} • {{ paste.created_at[:10] if paste.created_at else 'Data necunoscută' }}
       </div>
     </div>
     
@@ -347,6 +438,7 @@ body {
   </div>
   {% endif %}
 
+  {% if not current_user.is_authenticated or not current_user.is_premium_active() %}
   <div class="premium-section">
     <h3 class="premium-title">🔒 Upgrade la Premium</h3>
     <p class="premium-description">
@@ -381,7 +473,14 @@ body {
         Algoritm: Iterativ cu buclă for
       </div>
     </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="{{ url_for('premium') }}" class="btn btn-primary" style="font-size: 1.2em; padding: 15px 30px;">
+        🚀 Upgrade la Premium
+      </a>
+    </div>
   </div>
+  {% endif %}
 
   <div class="comments-section">
     <div class="comments-header">
@@ -443,23 +542,49 @@ window.require(['vs/editor/editor.main'], function() {
 });
 
 function likePaste() {
+    console.log('likePaste function called'); // Debug log
     fetch('/api/like_paste/{{ paste.id }}', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status); // Debug log
+        if (response.status === 401) {
+            // Utilizatorul nu este autentificat
+            console.log('User not authenticated, showing alert'); // Debug log
+            alert('Trebuie să fii autentificat pentru a aprecia o soluție. Te rog să te înregistrezi sau să te autentifici.');
+            return Promise.reject('Unauthorized');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
-            alert('Apreciere adăugată!');
+            if (data.action === 'liked') {
+                alert('Apreciere adăugată!');
+            } else {
+                alert('Apreciere eliminată!');
+            }
             location.reload();
         } else {
             alert('Eroare la adăugarea aprecierii');
         }
     })
     .catch(error => {
+        if (error === 'Unauthorized') {
+            // Eroarea de autentificare a fost deja gestionată
+            return;
+        }
         alert('Eroare la comunicarea cu serverul');
     });
 }
+
+// Set session cookie for anonymous users
+document.addEventListener('DOMContentLoaded', function() {
+    if (!document.cookie.includes('session_id=')) {
+        const sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        document.cookie = `session_id=${sessionId}; path=/; max-age=86400`; // 24 hours
+    }
+});
 
 function sharePaste() {
     const url = window.location.href;
@@ -478,7 +603,14 @@ function sharePaste() {
 
 function openInEditor() {
     fetch('/api/open_in_editor/{{ paste.id }}')
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401) {
+            // Utilizatorul nu este autentificat
+            alert('Trebuie să fii autentificat pentru a deschide codul în editor. Te rog să te înregistrezi sau să te autentifici.');
+            return Promise.reject('Unauthorized');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             // Store code in localStorage for problem_solver
@@ -490,6 +622,10 @@ function openInEditor() {
         }
     })
     .catch(error => {
+        if (error === 'Unauthorized') {
+            // Eroarea de autentificare a fost deja gestionată
+            return;
+        }
         alert('Eroare la comunicarea cu serverul');
     });
 }
@@ -506,7 +642,14 @@ function addComment() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ comment: comment })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401) {
+            // Utilizatorul nu este autentificat
+            alert('Trebuie să fii autentificat pentru a adăuga comentarii. Te rog să te înregistrezi sau să te autentifici.');
+            return Promise.reject('Unauthorized');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             document.getElementById('comment-input').value = '';
@@ -516,6 +659,10 @@ function addComment() {
         }
     })
     .catch(error => {
+        if (error === 'Unauthorized') {
+            // Eroarea de autentificare a fost deja gestionată
+            return;
+        }
         alert('Eroare la comunicarea cu serverul');
     });
 }

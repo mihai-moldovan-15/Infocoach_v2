@@ -4,7 +4,7 @@ import os
 import sqlite3
 from dotenv import load_dotenv
 from openai import OpenAI
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import re
 import html
@@ -171,6 +171,62 @@ def ensure_schema_updates():
 
 # Run schema updates
 ensure_schema_updates()
+
+# === Premium system schema updates ===
+def ensure_premium_schema():
+    """Ensure premium fields exist in User table"""
+    with app.app_context():
+        # Check if premium columns exist
+        inspector = db.inspect(db.engine)
+        columns = [col['name'] for col in inspector.get_columns('user')]
+        
+        # Add premium columns if they don't exist
+        with db.engine.connect() as conn:
+            if 'is_premium' not in columns:
+                conn.execute(db.text('ALTER TABLE user ADD COLUMN is_premium BOOLEAN DEFAULT FALSE'))
+            if 'premium_until' not in columns:
+                conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_until DATETIME'))
+            if 'premium_granted_by' not in columns:
+                conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_granted_by INTEGER'))
+            if 'premium_granted_at' not in columns:
+                conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_granted_at DATETIME'))
+            if 'premium_reason' not in columns:
+                conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_reason VARCHAR(200)'))
+            conn.commit()
+        
+        # Grant premium to all existing users
+        existing_users = User.query.all()
+        for user in existing_users:
+            if not user.is_premium:
+                user.grant_premium(
+                    granted_by_id=1,  # Assuming admin user ID is 1
+                    duration_days=365,
+                    reason="existing_user_migration"
+                )
+                print(f"Granted premium to user: {user.username}")
+
+# Run premium schema updates
+ensure_premium_schema()
+
+# === Premium helper functions ===
+def is_user_premium(user_id):
+    """Check if user has active premium subscription"""
+    user = User.query.get(user_id)
+    if not user:
+        return False
+    return user.is_premium_active()
+
+def require_premium(f):
+    """Decorator to require premium subscription"""
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Authentication required'}), 401
+        if not current_user.is_premium_active():
+            return jsonify({'error': 'Premium subscription required'}), 403
+        return f(*args, **kwargs)
+    return decorated_function
 
 # === Helper functions for context management ===
 def estimate_tokens(text):
@@ -1962,6 +2018,33 @@ def init_infopaste_db():
         )
     ''')
     
+    # Paste views tracking table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS paste_views (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            paste_id INTEGER,
+            user_id INTEGER, -- NULL for anonymous users
+            session_id TEXT, -- For anonymous users
+            ip_address TEXT,
+            viewed_at TEXT,
+            FOREIGN KEY (paste_id) REFERENCES code_pastes(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+    
+    # Paste likes tracking table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS paste_likes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            paste_id INTEGER,
+            user_id INTEGER,
+            liked_at TEXT,
+            FOREIGN KEY (paste_id) REFERENCES code_pastes(id),
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            UNIQUE(paste_id, user_id)
+        )
+    ''')
+    
     # Add subscription fields to users if not exist
     c.execute("PRAGMA table_info(users)")
     user_columns = [col[1] for col in c.fetchall()]
@@ -2061,8 +2144,42 @@ def view_paste(paste_id):
         paste_dict = dict(paste)
         paste_dict['username'] = username
         
-        # Increment views
-        c.execute('UPDATE code_pastes SET views = views + 1 WHERE id = ?', (paste_id,))
+        # Track view with session/IP tracking
+        session_id = request.cookies.get('session_id')
+        if not session_id:
+            session_id = hashlib.md5(f"{request.remote_addr}_{datetime.now().isoformat()}".encode()).hexdigest()
+        
+        # Check if this view should be counted
+        should_count_view = True
+        
+        if current_user.is_authenticated:
+            # For logged in users, check if they've viewed this paste before
+            c.execute('''
+                SELECT id FROM paste_views 
+                WHERE paste_id = ? AND user_id = ?
+            ''', (paste_id, current_user.id))
+            if c.fetchone():
+                should_count_view = False
+        else:
+            # For anonymous users, check if they've viewed this paste in the last 24 hours
+            yesterday = (datetime.now() - timedelta(days=1)).isoformat()
+            c.execute('''
+                SELECT id FROM paste_views 
+                WHERE paste_id = ? AND session_id = ? AND viewed_at > ?
+            ''', (paste_id, session_id, yesterday))
+            if c.fetchone():
+                should_count_view = False
+        
+        # Only increment views if this is a new view
+        if should_count_view:
+            c.execute('UPDATE code_pastes SET views = views + 1 WHERE id = ?', (paste_id,))
+            
+            # Record the view
+            c.execute('''
+                INSERT INTO paste_views (paste_id, user_id, session_id, ip_address, viewed_at)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (paste_id, current_user.id if current_user.is_authenticated else None, 
+                  session_id, request.remote_addr, datetime.now().isoformat()))
         
         # Get comments
         c.execute('''
@@ -2105,39 +2222,58 @@ def view_paste(paste_id):
 
 @app.route('/api/explain_paste', methods=['POST'])
 @login_required
+@require_premium
 def explain_paste():
     """Generează explicații AI pentru paste"""
     try:
         data = request.get_json()
         paste_id = data.get('paste_id')
         code = data.get('code', '').strip()
+        analysis_type = data.get('analysis_type', 'explanation')
         
         if not code:
             return jsonify({'error': 'Codul este obligatoriu'}), 400
         
-        # Generează explicații AI
-        prompt = f"""
-        Analizează acest cod C++ și oferă explicații detaliate:
-        
-        {code}
-        
-        Te rog să incluzi:
-        1. Explicații line-by-line pentru fiecare secțiune importantă
-        2. Complexitatea algoritmică (temporală și spațială)
-        3. Sugestii de optimizare
-        4. Best practices pentru acest tip de cod
-        
-        Răspunsul să fie structurat și clar pentru elevi de liceu.
-        """
+        # Generează explicații AI în funcție de tipul de analiză
+        if analysis_type == 'explanation':
+            prompt = f"""
+            Explică acest cod C++ pe scurt și structurat:
+            
+            {code}
+            
+            Răspunsul să conțină:
+            • Ce face codul (1-2 propoziții)
+            • Concepte C++ importante folosite
+            • Cum funcționează algoritmul (pe scurt)
+            
+            Fii concis și direct.
+            """
+            system_prompt = "Ești un expert C++ care explică codul pe scurt și clar pentru elevi de liceu. Fii concis și direct."
+        elif analysis_type == 'complexity':
+            prompt = f"""
+            Analizează complexitatea acestui cod C++:
+            
+            {code}
+            
+            Răspunsul să conțină:
+            • Complexitatea temporală (Big O)
+            • Complexitatea spațială
+            • Cazul cel mai rău
+            
+            Fii concis și tehnic.
+            """
+            system_prompt = "Ești expert în analiza algoritmilor. Oferă analize concise și precise pentru elevi de liceu."
+        else:
+            return jsonify({'error': 'Tip de analiză necunoscut'}), 400
         
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "Ești un expert în C++ care explică codul pentru elevi de liceu. Răspunsurile tale trebuie să fie clare, structurate și educaționale."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.3,
-            max_tokens=1000
+            max_tokens=400
         )
         
         explanation = response.choices[0].message.content.strip()
@@ -2150,14 +2286,19 @@ def explain_paste():
         c.execute('''
             INSERT INTO paste_explanations (paste_id, explanation_type, content, created_at)
             VALUES (?, ?, ?, ?)
-        ''', (paste_id, 'full_explanation', explanation, timestamp))
+        ''', (paste_id, analysis_type, explanation, timestamp))
         
         conn.commit()
         conn.close()
         
+        # Format the explanation for HTML display
+        formatted_explanation = format_code_blocks(explanation)
+        formatted_explanation = format_steps_and_paragraphs(formatted_explanation)
+        formatted_explanation = format_inline_code(formatted_explanation)
+        
         return jsonify({
             'success': True,
-            'explanation': explanation
+            'explanation': formatted_explanation
         })
         
     except Exception as e:
@@ -2165,45 +2306,69 @@ def explain_paste():
 
 @app.route('/api/optimize_paste', methods=['POST'])
 @login_required
+@require_premium
 def optimize_paste():
     """Sugerează optimizări pentru paste"""
     try:
         data = request.get_json()
         code = data.get('code', '').strip()
+        analysis_type = data.get('analysis_type', 'optimization')
         
         if not code:
             return jsonify({'error': 'Codul este obligatoriu'}), 400
         
-        # Generează sugestii de optimizare
-        prompt = f"""
-        Analizează acest cod C++ și sugerează optimizări:
-        
-        {code}
-        
-        Te rog să incluzi:
-        1. Optimizări de performanță
-        2. Îmbunătățiri de cod și best practices
-        3. Validări suplimentare dacă sunt necesare
-        4. Sugestii pentru lizibilitate
-        
-        Răspunsul să fie practic și aplicabil pentru elevi de liceu.
-        """
+        # Generează sugestii de optimizare în funcție de tipul de analiză
+        if analysis_type == 'optimization':
+            prompt = f"""
+            Sugerează optimizări pentru acest cod C++:
+            
+            {code}
+            
+            Răspunsul să conțină:
+            • Principalele optimizări de performanță
+            • Best practices C++ importante
+            • Cod optimizat (pe scurt)
+            
+            Fii practic și concis.
+            """
+            system_prompt = "Ești expert în optimizarea C++. Sugerează îmbunătățiri practice și concise pentru elevi de liceu."
+        elif analysis_type == 'complexity':
+            prompt = f"""
+            Analizează complexitatea acestui cod C++:
+            
+            {code}
+            
+            Răspunsul să conțină:
+            • Complexitatea temporală (Big O)
+            • Complexitatea spațială
+            • Cazul cel mai rău
+            
+            Fii concis și tehnic.
+            """
+            system_prompt = "Ești expert în analiza algoritmilor. Oferă analize concise și precise pentru elevi de liceu."
+        else:
+            return jsonify({'error': 'Tip de analiză necunoscut'}), 400
         
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "Ești un expert în optimizarea codului C++ pentru elevi de liceu. Sugerează îmbunătățiri practice și aplicabile."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.3,
-            max_tokens=800
+            max_tokens=400
         )
         
         optimization = response.choices[0].message.content.strip()
         
+        # Format the optimization for HTML display
+        formatted_optimization = format_code_blocks(optimization)
+        formatted_optimization = format_steps_and_paragraphs(formatted_optimization)
+        formatted_optimization = format_inline_code(formatted_optimization)
+        
         return jsonify({
             'success': True,
-            'optimization': optimization
+            'optimization': formatted_optimization
         })
         
     except Exception as e:
@@ -2244,15 +2409,97 @@ def like_paste(paste_id):
         conn = sqlite3.connect('infopaste.db', check_same_thread=False)
         c = conn.cursor()
         
-        # Increment likes
-        c.execute('UPDATE code_pastes SET likes = likes + 1 WHERE id = ?', (paste_id,))
+        # Check if user already liked this paste
+        c.execute('''
+            SELECT id FROM paste_likes 
+            WHERE paste_id = ? AND user_id = ?
+        ''', (paste_id, current_user.id))
+        
+        if c.fetchone():
+            # User already liked this paste, unlike it
+            c.execute('DELETE FROM paste_likes WHERE paste_id = ? AND user_id = ?', (paste_id, current_user.id))
+            c.execute('UPDATE code_pastes SET likes = likes - 1 WHERE id = ?', (paste_id,))
+            action = 'unliked'
+        else:
+            # User hasn't liked this paste, like it
+            c.execute('''
+                INSERT INTO paste_likes (paste_id, user_id, liked_at)
+                VALUES (?, ?, ?)
+            ''', (paste_id, current_user.id, datetime.now().isoformat()))
+            c.execute('UPDATE code_pastes SET likes = likes + 1 WHERE id = ?', (paste_id,))
+            action = 'liked'
+        
         conn.commit()
         conn.close()
         
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'action': action})
         
     except Exception as e:
         return jsonify({'error': f'Eroare la like: {str(e)}'}), 500
+
+@app.route('/premium')
+def premium():
+    """Premium upgrade page"""
+    return render_template('premium.html')
+
+# === Admin routes for premium management ===
+@app.route('/admin/grant_premium/<int:user_id>')
+@login_required
+def admin_grant_premium(user_id):
+    """Grant premium to a user (admin only)"""
+    # For now, allow any authenticated user to grant premium
+    # In production, you'd want proper admin checks
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    user.grant_premium(
+        granted_by_id=current_user.id,
+        duration_days=365,
+        reason="admin_grant"
+    )
+    
+    return jsonify({
+        'success': True,
+        'message': f'Premium granted to {user.username}'
+    })
+
+@app.route('/admin/revoke_premium/<int:user_id>')
+@login_required
+def admin_revoke_premium(user_id):
+    """Revoke premium from a user (admin only)"""
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    user.revoke_premium()
+    
+    return jsonify({
+        'success': True,
+        'message': f'Premium revoked from {user.username}'
+    })
+
+@app.route('/admin/premium_users')
+@login_required
+def admin_premium_users():
+    """List all premium users (admin only)"""
+    premium_users = User.query.filter_by(is_premium=True).all()
+    users_data = []
+    
+    for user in premium_users:
+        users_data.append({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'is_premium': user.is_premium,
+            'premium_until': user.premium_until.isoformat() if user.premium_until else None,
+            'premium_reason': user.premium_reason
+        })
+    
+    return jsonify({
+        'success': True,
+        'users': users_data
+    })
 
 @app.route('/api/comment_paste/<string:paste_id>', methods=['POST'])
 @login_required

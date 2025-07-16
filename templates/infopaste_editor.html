@@ -296,9 +296,46 @@ body {
   border-radius: 8px;
   padding: 20px;
   margin-top: 15px;
-  white-space: pre-wrap;
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
+}
+
+/* Formatare pentru output-ul AI */
+.ai-explanation pre {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+  font-size: 0.9em;
+}
+
+.ai-explanation code {
+  background: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+  font-size: 0.9em;
+}
+
+.ai-explanation ul, .ai-explanation ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.ai-explanation li {
+  margin: 4px 0;
+}
+
+.ai-explanation strong {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.ai-explanation p {
+  margin: 8px 0;
 }
 
 .problem-search-autocomplete {
@@ -426,6 +463,7 @@ body {
       <button type="button" class="btn-secondary" onclick="clearEditor()">🗑️ Curăță</button>
       <button type="button" class="btn-success" onclick="explainCode()">🤖 Explicații AI</button>
       <button type="button" class="btn-success" onclick="optimizeCode()">⚡ Optimizează</button>
+      <button type="button" class="btn-success" onclick="analyzeComplexity()">📊 Analizează Complexitatea</button>
     </div>
   </form>
 
@@ -441,12 +479,7 @@ body {
   </div>
 
   <div class="ai-section" id="ai-section">
-    <h3>🤖 Explicații AI</h3>
-    <div class="ai-buttons">
-      <button type="button" class="ai-btn" onclick="generateExplanation()">📖 Generează Explicații</button>
-      <button type="button" class="ai-btn" onclick="generateOptimization()">⚡ Sugerează Optimizări</button>
-      <button type="button" class="ai-btn" onclick="analyzeComplexity()">📊 Analizează Complexitatea</button>
-    </div>
+    <h3>🤖 Rezultat AI</h3>
     <div class="ai-explanation" id="ai-explanation"></div>
   </div>
 </div>
@@ -649,7 +682,27 @@ function closeModal() {
 }
 
 function clearEditor() {
+    // Resetează codul la template-ul default
     editor.setValue('#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}');
+    
+    // Șterge câmpurile din formular, cu excepția autorului dacă utilizatorul este autentificat
+    document.querySelector('input[name="description"]').value = '';
+    document.querySelector('input[name="problem_search"]').value = '';
+    document.querySelector('input[name="problem_id"]').value = '';
+    document.querySelector('input[name="problem_title"]').value = '';
+    
+    // Resetează checkbox-ul pentru public
+    document.querySelector('input[name="is_public"]').checked = true;
+    
+    // Șterge secțiunile AI și share dacă sunt vizibile
+    document.getElementById('ai-section').style.display = 'none';
+    document.getElementById('share-section').style.display = 'none';
+    
+    // Șterge sugestiile de probleme
+    document.getElementById('problem-suggestions').style.display = 'none';
+    
+    // Focus pe editor
+    editor.focus();
 }
 
 function explainCode() {
@@ -665,12 +718,15 @@ function explainCode() {
     fetch('/api/explain_paste', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code })
+        body: JSON.stringify({ 
+            code: code,
+            analysis_type: 'explanation'
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            document.getElementById('ai-explanation').textContent = data.explanation;
+            document.getElementById('ai-explanation').innerHTML = data.explanation;
         } else {
             document.getElementById('ai-explanation').textContent = 'Eroare la generarea explicațiilor: ' + data.error;
         }
@@ -693,12 +749,15 @@ function optimizeCode() {
     fetch('/api/optimize_paste', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code })
+        body: JSON.stringify({ 
+            code: code,
+            analysis_type: 'optimization'
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            document.getElementById('ai-explanation').textContent = data.optimization;
+            document.getElementById('ai-explanation').innerHTML = data.optimization;
         } else {
             document.getElementById('ai-explanation').textContent = 'Eroare la generarea optimizărilor: ' + data.error;
         }
@@ -708,13 +767,7 @@ function optimizeCode() {
     });
 }
 
-function generateExplanation() {
-    explainCode();
-}
 
-function generateOptimization() {
-    optimizeCode();
-}
 
 function analyzeComplexity() {
     const code = editor.getValue();
@@ -726,16 +779,19 @@ function analyzeComplexity() {
     document.getElementById('ai-section').style.display = 'block';
     document.getElementById('ai-explanation').textContent = '📊 Analizez complexitatea...';
     
-    // Similar to explainCode but with different prompt
+    // Folosește endpoint-ul pentru explicații cu prompt specific pentru complexitate
     fetch('/api/explain_paste', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code })
+        body: JSON.stringify({ 
+            code: code,
+            analysis_type: 'complexity'
+        })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            document.getElementById('ai-explanation').textContent = data.explanation;
+            document.getElementById('ai-explanation').innerHTML = data.explanation;
         } else {
             document.getElementById('ai-explanation').textContent = 'Eroare la analiza complexității: ' + data.error;
         }

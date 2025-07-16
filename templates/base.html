@@ -45,8 +45,13 @@
         </div>
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
+                {% if request.path not in ['/login', '/register'] %}
+                    <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
+                {% endif %}
                 <a href="{{ url_for('problem_solver') }}" class="nav-link" style="margin-right: 15px;">💻 Editor</a>
+                {% if not current_user.is_premium_active() %}
+                    <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
+                {% endif %}
                 <a href="{{ url_for('profile') }}" class="nav-profile-avatar-link" style="display:inline-block;vertical-align:middle;margin:0 10px;">
                     <span class="nav-profile-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#e6f0fa 60%,#b3d8fd 100%);box-shadow:0 1px 4px rgba(30,64,175,0.07);font-size:1.25em;font-weight:700;color:#1976d2;">
                         {{ current_user.username[0]|upper }}
@@ -60,7 +65,10 @@
                     </svg>
                 </a>
             {% else %}
-                <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
+                {% if request.path not in ['/login', '/register'] %}
+                    <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
+                {% endif %}
+                <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
                 <a href="{{ url_for('login') }}" class="nav-link">Autentificare</a>
                 <a href="{{ url_for('register') }}" class="nav-link">Înregistrare</a>
             {% endif %}

@@ -1,0 +1,513 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.premium-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.premium-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 60px;
+}
+
+.premium-title {
+  font-size: 3.5em;
+  font-weight: 900;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  background: linear-gradient(45deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.premium-subtitle {
+  font-size: 1.4em;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+
+.premium-description {
+  font-size: 1.1em;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.pricing-section {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.plan-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+}
+
+.plan-card.featured {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.05);
+  border: 3px solid #fff;
+}
+
+.plan-card.featured::before {
+  content: 'MOST POPULAR';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff6b6b;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.plan-name {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.plan-price {
+  font-size: 3em;
+  font-weight: 900;
+  margin-bottom: 5px;
+}
+
+.plan-price .currency {
+  font-size: 0.5em;
+  vertical-align: top;
+}
+
+.plan-period {
+  font-size: 1em;
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.plan-features li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  font-size: 1em;
+}
+
+.plan-card.featured .plan-features li {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.plan-features li:last-child {
+  border-bottom: none;
+}
+
+.plan-features li::before {
+  content: '✓';
+  color: #4CAF50;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.plan-card.featured .plan-features li::before {
+  color: #fff;
+}
+
+.btn-upgrade {
+  width: 100%;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-upgrade.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+}
+
+.btn-upgrade.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(102,126,234,0.4);
+}
+
+.btn-upgrade.secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-upgrade.secondary:hover {
+  background: #667eea;
+  color: white;
+}
+
+.features-section {
+  background: white;
+  border-radius: 20px;
+  padding: 60px 40px;
+  margin-bottom: 60px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.feature-icon {
+  font-size: 2.5em;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.feature-content h3 {
+  font-size: 1.4em;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.feature-content p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.testimonials-section {
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 60px 40px;
+  margin-bottom: 60px;
+  backdrop-filter: blur(10px);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.testimonial-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.testimonial-text {
+  font-style: italic;
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.testimonial-author {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.fomo-section {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.fomo-title {
+  font-size: 2em;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.fomo-text {
+  font-size: 1.2em;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+.countdown {
+  font-size: 1.5em;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 15px 30px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .pricing-section {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .plan-card.featured {
+    transform: none;
+  }
+  
+  .premium-title {
+    font-size: 2.5em;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div class="premium-container">
+  <!-- Header Section -->
+  <div class="premium-header">
+    <h1 class="premium-title">🚀 Upgrade la Premium</h1>
+    <p class="premium-subtitle">Deblochează tot potențialul InfoCoach</p>
+    <p class="premium-description">
+      Accesează explicații AI detaliate, optimizări avansate și analize de complexitate pentru a-ți îmbunătăți semnificativ înțelegerea programării.
+    </p>
+  </div>
+
+  <!-- FOMO Section -->
+  <div class="fomo-section">
+    <h2 class="fomo-title">⚡ Oferta Limită!</h2>
+    <p class="fomo-text">
+      Primești premium gratuit pentru 30 de zile! Nu rata această șansă de a-ți îmbunătăți abilitățile de programare.
+    </p>
+    <div class="countdown">⏰ Ofertă valabilă doar astăzi</div>
+  </div>
+
+  <!-- Pricing Section -->
+  <div class="pricing-section">
+    <!-- Free Plan -->
+    <div class="plan-card">
+      <h3 class="plan-name">Gratuit</h3>
+      <div class="plan-price">
+        <span class="currency">0</span> Lei
+      </div>
+      <div class="plan-period">pentru totdeauna</div>
+      <ul class="plan-features">
+        <li>Acces la chat AI de bază</li>
+        <li>Rezolvări de probleme</li>
+        <li>Comunitate de utilizatori</li>
+        <li>Resurse educaționale</li>
+      </ul>
+      <button class="btn-upgrade secondary" disabled>Planul tău actual</button>
+    </div>
+
+    <!-- Premium Plan -->
+    <div class="plan-card featured">
+      <h3 class="plan-name">Premium</h3>
+      <div class="plan-price">
+        <span class="currency">0</span> Lei
+      </div>
+      <div class="plan-period">prima lună, apoi 29 Lei/lună</div>
+      <ul class="plan-features">
+        <li>✅ Explicații AI detaliate și personalizate</li>
+        <li>✅ Optimizări de cod avansate</li>
+        <li>✅ Analiză de complexitate algoritmică</li>
+        <li>✅ Explicații pas cu pas pentru fiecare problemă</li>
+        <li>✅ Acces la toate resursele premium</li>
+        <li>✅ Suport prioritar</li>
+        <li>✅ Fără reclame</li>
+      </ul>
+      <button class="btn-upgrade primary" onclick="upgradeToPremium()">
+        🚀 Începe gratuit 30 zile
+      </button>
+    </div>
+
+    <!-- Pro Plan -->
+    <div class="plan-card">
+      <h3 class="plan-name">Pro</h3>
+      <div class="plan-price">
+        <span class="currency">49</span> Lei
+      </div>
+      <div class="plan-period">pe lună</div>
+      <ul class="plan-features">
+        <li>Toate funcționalitățile Premium</li>
+        <li>Sesiuni private cu mentor</li>
+        <li>Acces la probleme exclusive</li>
+        <li>Certificări de competență</li>
+        <li>Analiză progres personalizată</li>
+      </ul>
+      <button class="btn-upgrade secondary" onclick="upgradeToPro()">
+        Upgrade la Pro
+      </button>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 20px; color: #333;">
+      🎯 De ce să alegi Premium?
+    </h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-content">
+          <h3>Explicații AI Detaliate</h3>
+          <p>Primești explicații personalizate pentru fiecare problemă, adaptate la nivelul tău de înțelegere și stilul tău de învățare.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-content">
+          <h3>Optimizări Avansate</h3>
+          <p>Descoperă cum să-ți îmbunătățești codul cu sugestii de optimizare și best practices de programare.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-content">
+          <h3>Analiză Complexitate</h3>
+          <p>Înțelege complexitatea temporală și spațială a algoritmilor pentru a scrie cod mai eficient.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-content">
+          <h3>Înțelegere Profundă</h3>
+          <p>Nu doar soluții, ci explicații complete care te ajută să înțelegi de ce și cum funcționează fiecare pas.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">🚀</div>
+        <div class="feature-content">
+          <h3>Progres Accelerat</h3>
+          <p>Învață mai rapid și mai eficient cu ajutorul AI-ului care se adaptează la stilul tău de învățare.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">🏆</div>
+        <div class="feature-content">
+          <h3>Competiții și Olimpiade</h3>
+          <p>Pregătește-te pentru competiții de programare cu probleme speciale și strategii avansate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials Section -->
+  <div class="testimonials-section">
+    <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 20px; color: white;">
+      💬 Ce spun utilizatorii noștri
+    </h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "InfoCoach Premium mi-a schimbat complet modul în care înțeleg programarea. Explicațiile AI sunt incredibile!"
+        </p>
+        <div class="testimonial-author">- Maria D., clasa a 11-a</div>
+      </div>
+      
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "În 3 luni cu Premium am reușit să înțeleg concepte pe care le-am învățat 2 ani. Recomand cu încredere!"
+        </p>
+        <div class="testimonial-author">- Alexandru M., clasa a 10-a</div>
+      </div>
+      
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "Optimizările de cod m-au ajutat să înțeleg eficiența algoritmilor. Acum scriu cod mult mai bun!"
+        </p>
+        <div class="testimonial-author">- Andrei P., clasa a 12-a</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function upgradeToPremium() {
+  // For now, just show a message
+  alert('Funcționalitatea de upgrade va fi implementată în curând! Pentru moment, toți utilizatorii existenți au acces premium gratuit.');
+}
+
+function upgradeToPro() {
+  alert('Planul Pro va fi disponibil în curând!');
+}
+
+// Add some interactive effects
+document.addEventListener('DOMContentLoaded', function() {
+  // Add hover effects to feature items
+  const featureItems = document.querySelectorAll('.feature-item');
+  featureItems.forEach(item => {
+    item.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateX(10px)';
+      this.style.transition = 'transform 0.3s ease';
+    });
+    
+    item.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateX(0)';
+    });
+  });
+  
+  // Add click effects to buttons
+  const buttons = document.querySelectorAll('.btn-upgrade');
+  buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 150);
+    });
+  });
+});
+</script>
+{% endblock %} 
