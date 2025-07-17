@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Toggle in App</title>
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-button {
+            background: #0074d9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h2>Test Toggle Functionality</h2>
+        
+        <button class="test-button" onclick="testToggleFunction()">
+            Test Toggle Function
+        </button>
+        
+        <button class="test-button" onclick="testEditorElement()">
+            Test Editor Element
+        </button>
+        
+        <button class="test-button" onclick="testMonacoEditor()">
+            Test Monaco Editor
+        </button>
+        
+        <div class="test-result" id="test-result">
+            Test results will appear here...
+        </div>
+    </div>
+
+    <script>
+        function logResult(message) {
+            const resultDiv = document.getElementById('test-result');
+            const timestamp = new Date().toLocaleTimeString();
+            resultDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            console.log(message);
+        }
+        
+        function testToggleFunction() {
+            logResult('=== Testing Toggle Function ===');
+            
+            if (typeof window.toggleEditorSize === 'function') {
+                logResult('✓ toggleEditorSize function exists');
+                
+                // Test if elements exist
+                const editorElement = document.getElementById('ide-code-editor');
+                const toggleBtn = document.getElementById('editor-toggle-btn');
+                const toggleIcon = document.getElementById('editor-toggle-icon');
+                const toggleText = document.getElementById('editor-toggle-text');
+                
+                logResult(`Editor element: ${editorElement ? '✓ found' : '✗ not found'}`);
+                logResult(`Toggle button: ${toggleBtn ? '✓ found' : '✗ not found'}`);
+                logResult(`Toggle icon: ${toggleIcon ? '✓ found' : '✗ not found'}`);
+                logResult(`Toggle text: ${toggleText ? '✓ found' : '✗ not found'}`);
+                
+                if (editorElement && toggleBtn) {
+                    logResult('✓ All required elements found');
+                    logResult(`Current editor height: ${editorElement.style.height || 'not set'}`);
+                    logResult(`Current computed height: ${window.getComputedStyle(editorElement).height}`);
+                } else {
+                    logResult('✗ Missing required elements');
+                }
+            } else {
+                logResult('✗ toggleEditorSize function not found');
+            }
+        }
+        
+        function testEditorElement() {
+            logResult('=== Testing Editor Element ===');
+            
+            const editorElement = document.getElementById('ide-code-editor');
+            if (editorElement) {
+                logResult('✓ Editor element found');
+                logResult(`ID: ${editorElement.id}`);
+                logResult(`Classes: ${editorElement.className}`);
+                logResult(`Style height: ${editorElement.style.height}`);
+                logResult(`Computed height: ${window.getComputedStyle(editorElement).height}`);
+                logResult(`Inline style: ${editorElement.getAttribute('style') || 'none'}`);
+            } else {
+                logResult('✗ Editor element not found');
+            }
+        }
+        
+        function testMonacoEditor() {
+            logResult('=== Testing Monaco Editor ===');
+            
+            if (window.ideMonaco) {
+                logResult('✓ ideMonaco editor found');
+                logResult(`Editor type: ${typeof window.ideMonaco}`);
+                logResult(`Has layout method: ${typeof window.ideMonaco.layout === 'function'}`);
+            } else if (window.editor) {
+                logResult('✓ editor found (fallback)');
+                logResult(`Editor type: ${typeof window.editor}`);
+                logResult(`Has layout method: ${typeof window.editor.layout === 'function'}`);
+            } else {
+                logResult('✗ No Monaco editor found');
+            }
+        }
+        
+        // Auto-test on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                logResult('=== Auto-test on page load ===');
+                testToggleFunction();
+                testEditorElement();
+                testMonacoEditor();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

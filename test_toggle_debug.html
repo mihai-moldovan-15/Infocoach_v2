@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Toggle Test</title>
+    <style>
+        .editor {
+            height: 600px;
+            border: 2px solid #ccc;
+            background: #f0f0f0;
+            transition: height 0.4s ease;
+            margin: 10px 0;
+        }
+        .toggle-btn {
+            background: #0074d9;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .debug-info {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Debug Toggle Test</h2>
+    
+    <button class="toggle-btn" id="toggle-btn">
+        <span id="toggle-icon">📋</span>
+        <span id="toggle-text">Restrânge</span>
+    </button>
+    
+    <div class="debug-info" id="debug-info">
+        Debug info will appear here...
+    </div>
+    
+    <div class="editor" id="editor">
+        <p>Editor content here...</p>
+    </div>
+
+    <script>
+        let isExpanded = true;
+        
+        function updateDebugInfo() {
+            const editor = document.getElementById('editor');
+            const debugInfo = document.getElementById('debug-info');
+            const computedStyle = window.getComputedStyle(editor);
+            
+            const info = `
+State: ${isExpanded ? 'EXPANDED' : 'COLLAPSED'}
+Style height: ${editor.style.height || 'not set'}
+Computed height: ${computedStyle.height}
+Inline style: ${editor.getAttribute('style') || 'none'}
+            `.trim();
+            
+            debugInfo.textContent = info;
+        }
+        
+        function toggleEditor() {
+            const editor = document.getElementById('editor');
+            const icon = document.getElementById('toggle-icon');
+            const text = document.getElementById('toggle-text');
+            
+            console.log('=== TOGGLE CALLED ===');
+            console.log('Current state:', isExpanded);
+            console.log('Current height:', editor.style.height);
+            console.log('Computed height:', window.getComputedStyle(editor).height);
+            
+            if (isExpanded) {
+                // Collapse
+                editor.style.height = '380px';
+                icon.textContent = '📄';
+                text.textContent = 'Extinde';
+                isExpanded = false;
+                console.log('COLLAPSED to 380px');
+            } else {
+                // Expand
+                editor.style.height = '600px';
+                icon.textContent = '📋';
+                text.textContent = 'Restrânge';
+                isExpanded = true;
+                console.log('EXPANDED to 600px');
+            }
+            
+            // Force repaint
+            editor.offsetHeight;
+            
+            setTimeout(() => {
+                updateDebugInfo();
+                console.log('Final height:', editor.style.height);
+                console.log('Final computed height:', window.getComputedStyle(editor).height);
+            }, 50);
+        }
+        
+        document.getElementById('toggle-btn').addEventListener('click', toggleEditor);
+        updateDebugInfo();
+        
+        // Test if function is globally available
+        window.testToggle = toggleEditor;
+        console.log('Toggle function available globally as window.testToggle');
+    </script>
+</body>
+</html> 

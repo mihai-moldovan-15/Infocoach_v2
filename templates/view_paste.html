@@ -419,6 +419,148 @@ body {
   }
 }
 
+/* AI Features Section */
+.ai-features-section {
+  margin: 30px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid #e5e7eb;
+}
+
+.ai-features-header {
+  margin-bottom: 20px;
+}
+
+.ai-features-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.ai-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.ai-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.ai-btn:hover::before {
+  left: 100%;
+}
+
+.ai-explain {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.ai-explain:hover {
+  background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+}
+
+.ai-optimize {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.ai-optimize:hover {
+  background: linear-gradient(135deg, #e085e8, #e54b5f);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(240,147,251,0.4);
+}
+
+.ai-analyze {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.ai-analyze:hover {
+  background: linear-gradient(135deg, #3e9be8, #00d8e0);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(79,172,254,0.4);
+}
+
+.ai-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.ai-result {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.ai-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ai-result-header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.ai-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.ai-close-btn:hover {
+  background: #f0f0f0;
+}
+
+.ai-result-content {
+  color: #333;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
 @media (min-width: 1400px) {
   .paste-container {
     max-width: 98vw;
@@ -451,6 +593,39 @@ body {
       </div>
     </div>
   </div>
+
+  {% if current_user.is_authenticated and current_user.is_premium_active() %}
+  <div class="ai-features-section">
+    <div class="ai-features-header">
+      <h3 class="ai-features-title">🤖 Funcționalități AI</h3>
+    </div>
+    
+    <div class="ai-buttons">
+      <button class="ai-btn ai-explain" onclick="generateAIExplanation()">
+        <span class="ai-icon">🤖</span>
+        <span class="ai-text">Explicații AI</span>
+      </button>
+      
+      <button class="ai-btn ai-optimize" onclick="optimizeCode()">
+        <span class="ai-icon">⚡</span>
+        <span class="ai-text">Optimizează</span>
+      </button>
+      
+      <button class="ai-btn ai-analyze" onclick="analyzeComplexity()">
+        <span class="ai-icon">📊</span>
+        <span class="ai-text">Analizează Complexitatea</span>
+      </button>
+    </div>
+    
+    <div id="ai-result" class="ai-result" style="display: none;">
+      <div class="ai-result-header">
+        <h4 id="ai-result-title">Rezultat AI</h4>
+        <button class="ai-close-btn" onclick="closeAIResult()">✕</button>
+      </div>
+      <div id="ai-result-content" class="ai-result-content"></div>
+    </div>
+  </div>
+  {% endif %}
 
   <div class="code-section">
     <div class="code-header">
@@ -762,6 +937,136 @@ function toggleCodeExpand() {
             console.log('Editor layout updated for expand');
         }
     }
+}
+
+// AI Functions
+let isProcessing = false;
+
+function disableAIButtons() {
+    const aiButtons = document.querySelectorAll('.ai-btn');
+    aiButtons.forEach(btn => {
+        btn.disabled = true;
+    });
+    isProcessing = true;
+}
+
+function enableAIButtons() {
+    const aiButtons = document.querySelectorAll('.ai-btn');
+    aiButtons.forEach(btn => {
+        btn.disabled = false;
+    });
+    isProcessing = false;
+}
+
+function showAIResult(title, content) {
+    const resultDiv = document.getElementById('ai-result');
+    const titleElement = document.getElementById('ai-result-title');
+    const contentElement = document.getElementById('ai-result-content');
+    
+    titleElement.textContent = title;
+    contentElement.textContent = content;
+    resultDiv.style.display = 'block';
+    
+    // Scroll to result
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeAIResult() {
+    const resultDiv = document.getElementById('ai-result');
+    resultDiv.style.display = 'none';
+}
+
+function generateAIExplanation() {
+    if (isProcessing) return;
+    
+    disableAIButtons();
+    const code = editor ? editor.getValue() : '';
+    
+    fetch('/api/explain_paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            code: code,
+            language: '{{ paste.language }}',
+            paste_id: '{{ paste.id }}'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        enableAIButtons();
+        if (data.success) {
+            showAIResult('Explicație AI', data.explanation);
+        } else {
+            alert('Eroare la generarea explicației: ' + data.error);
+        }
+    })
+    .catch(error => {
+        enableAIButtons();
+        console.error('Error:', error);
+        alert('Eroare la comunicarea cu serverul');
+    });
+}
+
+function optimizeCode() {
+    if (isProcessing) return;
+    
+    disableAIButtons();
+    const code = editor ? editor.getValue() : '';
+    
+    fetch('/api/optimize_paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            code: code,
+            language: '{{ paste.language }}',
+            paste_id: '{{ paste.id }}'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        enableAIButtons();
+        if (data.success) {
+            showAIResult('Cod Optimizat', data.optimization);
+        } else {
+            alert('Eroare la optimizarea codului: ' + data.error);
+        }
+    })
+    .catch(error => {
+        enableAIButtons();
+        console.error('Error:', error);
+        alert('Eroare la comunicarea cu serverul');
+    });
+}
+
+function analyzeComplexity() {
+    if (isProcessing) return;
+    
+    disableAIButtons();
+    const code = editor ? editor.getValue() : '';
+    
+    fetch('/api/analyze_paste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            code: code,
+            language: '{{ paste.language }}',
+            paste_id: '{{ paste.id }}'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        enableAIButtons();
+        if (data.success) {
+            showAIResult('Analiză Complexitate', data.analysis);
+        } else {
+            alert('Eroare la analizarea complexității: ' + data.error);
+        }
+    })
+    .catch(error => {
+        enableAIButtons();
+        console.error('Error:', error);
+        alert('Eroare la comunicarea cu serverul');
+    });
 }
 </script>
 {% endblock %} 

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Toggle Simple</title>
+    <style>
+        .editor {
+            height: 600px;
+            border: 2px solid #ccc;
+            background: #f0f0f0;
+            transition: height 0.4s ease;
+            margin: 10px 0;
+        }
+        .toggle-btn {
+            background: #0074d9;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Test Toggle Editor</h2>
+    
+    <button class="toggle-btn" id="toggle-btn">
+        <span id="toggle-icon">📋</span>
+        <span id="toggle-text">Restrânge</span>
+    </button>
+    
+    <div class="status" id="status">
+        Status: Editor expanded (600px)
+    </div>
+    
+    <div class="editor" id="editor">
+        <p>Editor content here...</p>
+        <p>Height: <span id="height-display">600px</span></p>
+    </div>
+
+    <script>
+        let isExpanded = true;
+        
+        function updateStatus() {
+            const status = document.getElementById('status');
+            const heightDisplay = document.getElementById('height-display');
+            const currentHeight = document.getElementById('editor').style.height || '600px';
+            
+            status.textContent = `Status: Editor ${isExpanded ? 'expanded' : 'collapsed'} (${currentHeight})`;
+            heightDisplay.textContent = currentHeight;
+        }
+        
+        function toggleEditor() {
+            const editor = document.getElementById('editor');
+            const icon = document.getElementById('toggle-icon');
+            const text = document.getElementById('toggle-text');
+            
+            console.log('Toggle called, current state:', isExpanded);
+            
+            if (isExpanded) {
+                editor.style.height = '380px';
+                icon.textContent = '📄';
+                text.textContent = 'Extinde';
+                isExpanded = false;
+                console.log('Collapsed to 380px');
+            } else {
+                editor.style.height = '600px';
+                icon.textContent = '📋';
+                text.textContent = 'Restrânge';
+                isExpanded = true;
+                console.log('Expanded to 600px');
+            }
+            
+            updateStatus();
+        }
+        
+        document.getElementById('toggle-btn').addEventListener('click', toggleEditor);
+        updateStatus();
+    </script>
+</body>
+</html> 
