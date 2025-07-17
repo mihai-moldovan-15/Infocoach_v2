@@ -35,7 +35,7 @@
     {% endif %}
     <nav class="navbar">
         <div class="nav-brand" id="nav-brand">
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('problem_solver') }}">
                 {% if request.path == '/infopaste' %}
                     📒InfoPaste - by InfoCoach
                 {% else %}
@@ -45,7 +45,7 @@
         </div>
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                {% if request.path not in ['/login', '/register'] %}
+                {% if request.path not in ['/login', '/register', '/premium'] %}
                     <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
                 {% endif %}
                 <a href="{{ url_for('problem_solver') }}" class="nav-link" style="margin-right: 15px;">💻 Editor</a>
@@ -65,7 +65,7 @@
                     </svg>
                 </a>
             {% else %}
-                {% if request.path not in ['/login', '/register'] %}
+                {% if request.path not in ['/login', '/register', '/premium'] %}
                     <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
                 {% endif %}
                 <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>

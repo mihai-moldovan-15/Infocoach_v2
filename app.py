@@ -194,16 +194,7 @@ def ensure_premium_schema():
                 conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_reason VARCHAR(200)'))
             conn.commit()
         
-        # Grant premium to all existing users
-        existing_users = User.query.all()
-        for user in existing_users:
-            if not user.is_premium:
-                user.grant_premium(
-                    granted_by_id=1,  # Assuming admin user ID is 1
-                    duration_days=365,
-                    reason="existing_user_migration"
-                )
-                print(f"Granted premium to user: {user.username}")
+
 
 # Run premium schema updates
 ensure_premium_schema()

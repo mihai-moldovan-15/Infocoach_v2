@@ -47,9 +47,12 @@ body {
 
 .pricing-section {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-columns: 1fr 1.2fr;
   gap: 30px;
   margin-bottom: 60px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .plan-card {
@@ -73,6 +76,12 @@ body {
   color: white;
   transform: scale(1.05);
   border: 3px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.plan-card.featured:hover {
+  transform: scale(1.08) translateY(-5px);
+  box-shadow: 0 35px 70px rgba(0,0,0,0.2);
 }
 
 .plan-card.featured::before {
@@ -101,9 +110,17 @@ body {
   margin-bottom: 5px;
 }
 
-.plan-price .currency {
+.price .currency-value {
+  font-size: 1em;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.price .currency {
   font-size: 0.5em;
+  font-weight: 500;
   vertical-align: top;
+  margin-left: 0.25em;
 }
 
 .plan-period {
@@ -293,6 +310,7 @@ body {
   .pricing-section {
     grid-template-columns: 1fr;
     gap: 20px;
+    max-width: 100%;
   }
   
   .plan-card.featured {
@@ -334,14 +352,17 @@ body {
     <div class="plan-card">
       <h3 class="plan-name">Gratuit</h3>
       <div class="plan-price">
-        <span class="currency">0</span> Lei
+        <span class="price">
+          <span class="currency-value">0</span>
+          <span class="currency">Lei</span>
+        </span>
       </div>
       <div class="plan-period">pentru totdeauna</div>
       <ul class="plan-features">
-        <li>Acces la chat AI de bază</li>
-        <li>Rezolvări de probleme</li>
-        <li>Comunitate de utilizatori</li>
-        <li>Resurse educaționale</li>
+        <li>Editor de cod online conceput special pentru problemele de pe pbInfo</li>
+        <li>Opțiunea de a distribui codul cu alți utilizatori</li>
+        <li>Analiza progresului și recomandări de probleme...</li>
+        <li>5 completări de subprogram pe săptămână</li>
       </ul>
       <button class="btn-upgrade secondary" disabled>Planul tău actual</button>
     </div>
@@ -350,41 +371,29 @@ body {
     <div class="plan-card featured">
       <h3 class="plan-name">Premium</h3>
       <div class="plan-price">
-        <span class="currency">0</span> Lei
+        <span class="price">
+          <span class="currency-value">0</span>
+          <span class="currency">Lei</span>
+        </span>
       </div>
       <div class="plan-period">prima lună, apoi 29 Lei/lună</div>
       <ul class="plan-features">
-        <li>✅ Explicații AI detaliate și personalizate</li>
-        <li>✅ Optimizări de cod avansate</li>
-        <li>✅ Analiză de complexitate algoritmică</li>
-        <li>✅ Explicații pas cu pas pentru fiecare problemă</li>
-        <li>✅ Acces la toate resursele premium</li>
-        <li>✅ Suport prioritar</li>
-        <li>✅ Fără reclame</li>
+        <li> Explicații AI detaliate și personalizate</li>
+        <li> Acces la InfoCoach Chat</li>
+        <li> Optimizări de cod avansate</li>
+        <li> Număr nelimitat de completări de subprogram</li>
+        <li> Analiză de complexitate algoritmică</li>
+        <li> Explicații pas cu pas pentru fiecare problemă partajată</li>
+        <li> Acces la toate resursele premium</li>
+        <li> Suport prioritar</li>
+        <li> Fără reclame</li>
       </ul>
       <button class="btn-upgrade primary" onclick="upgradeToPremium()">
         🚀 Începe gratuit 30 zile
       </button>
     </div>
 
-    <!-- Pro Plan -->
-    <div class="plan-card">
-      <h3 class="plan-name">Pro</h3>
-      <div class="plan-price">
-        <span class="currency">49</span> Lei
-      </div>
-      <div class="plan-period">pe lună</div>
-      <ul class="plan-features">
-        <li>Toate funcționalitățile Premium</li>
-        <li>Sesiuni private cu mentor</li>
-        <li>Acces la probleme exclusive</li>
-        <li>Certificări de competență</li>
-        <li>Analiză progres personalizată</li>
-      </ul>
-      <button class="btn-upgrade secondary" onclick="upgradeToPro()">
-        Upgrade la Pro
-      </button>
-    </div>
+
   </div>
 
   <!-- Features Section -->
@@ -394,50 +403,50 @@ body {
     </h2>
     <div class="features-grid">
       <div class="feature-item">
-        <div class="feature-icon">🤖</div>
+        <div class="feature-icon">💬</div>
         <div class="feature-content">
-          <h3>Explicații AI Detaliate</h3>
-          <p>Primești explicații personalizate pentru fiecare problemă, adaptate la nivelul tău de înțelegere și stilul tău de învățare.</p>
+          <h3>InfoCoach Chat Ilimit</h3>
+          <p>Accesează chat-ul AI fără restricții pentru a-ți rezolva orice problemă de programare. Primești răspunsuri detaliate și personalizate pentru fiecare întrebare, indiferent de complexitatea problemei.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">🔧</div>
+        <div class="feature-content">
+          <h3>Completări de Subprogram Nelimitate</h3>
+          <p>Nu mai ești limitat la 5 completări pe săptămână. Scrie cod mai rapid cu sugestii AI avansate pentru orice tip de subprogram, de la funcții simple până la algoritmi complecși.</p>
+        </div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">📝</div>
+        <div class="feature-content">
+          <h3>Explicații Pas cu Pas Detaliate</h3>
+          <p>Pentru fiecare problemă partajată, primești explicații complete care îți arată nu doar soluția, ci și logica din spatele fiecărui pas. Înțelegi de ce și cum funcționează fiecare linie de cod.</p>
         </div>
       </div>
       
       <div class="feature-item">
         <div class="feature-icon">⚡</div>
         <div class="feature-content">
-          <h3>Optimizări Avansate</h3>
-          <p>Descoperă cum să-ți îmbunătățești codul cu sugestii de optimizare și best practices de programare.</p>
+          <h3>Optimizări de Cod Avansate</h3>
+          <p>Descoperă cum să-ți îmbunătățești eficiența algoritmilor cu sugestii de optimizare personalizate. Învață să scrii cod mai rapid și mai eficient din punct de vedere al memoriei.</p>
         </div>
       </div>
       
       <div class="feature-item">
         <div class="feature-icon">📊</div>
         <div class="feature-content">
-          <h3>Analiză Complexitate</h3>
-          <p>Înțelege complexitatea temporală și spațială a algoritmilor pentru a scrie cod mai eficient.</p>
-        </div>
-      </div>
-      
-      <div class="feature-item">
-        <div class="feature-icon">🎯</div>
-        <div class="feature-content">
-          <h3>Înțelegere Profundă</h3>
-          <p>Nu doar soluții, ci explicații complete care te ajută să înțelegi de ce și cum funcționează fiecare pas.</p>
+          <h3>Analiză de Complexitate Algoritmică</h3>
+          <p>Înțelege complexitatea temporală și spațială a soluțiilor tale. Primești explicații despre O(n), O(n²) și alte notări Big O pentru a-ți îmbunătăți înțelegerea algoritmilor.</p>
         </div>
       </div>
       
       <div class="feature-item">
         <div class="feature-icon">🚀</div>
         <div class="feature-content">
-          <h3>Progres Accelerat</h3>
-          <p>Învață mai rapid și mai eficient cu ajutorul AI-ului care se adaptează la stilul tău de învățare.</p>
-        </div>
-      </div>
-      
-      <div class="feature-item">
-        <div class="feature-icon">🏆</div>
-        <div class="feature-content">
-          <h3>Competiții și Olimpiade</h3>
-          <p>Pregătește-te pentru competiții de programare cu probleme speciale și strategii avansate.</p>
+          <h3>Editor de Cod Specializat</h3>
+          <p>Folosește editorul online conceput special pentru problemele de pe pbInfo. Cu autocompletare și debugging integrat, scrii cod mai eficient și mai rapid.</p>
         </div>
       </div>
     </div>
@@ -479,9 +488,7 @@ function upgradeToPremium() {
   alert('Funcționalitatea de upgrade va fi implementată în curând! Pentru moment, toți utilizatorii existenți au acces premium gratuit.');
 }
 
-function upgradeToPro() {
-  alert('Planul Pro va fi disponibil în curând!');
-}
+
 
 // Add some interactive effects
 document.addEventListener('DOMContentLoaded', function() {

@@ -198,6 +198,12 @@ body {
   background: #388e3c;
 }
 
+.btn-success:disabled {
+  background: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
 .share-section {
   background: #f8f9fa;
   border-radius: 12px;
@@ -479,7 +485,7 @@ body {
   </div>
 
   <div class="ai-section" id="ai-section">
-    <h3>🤖 Rezultat AI</h3>
+    <h3>InfoCoach</h3>
     <div class="ai-explanation" id="ai-explanation"></div>
   </div>
 </div>
@@ -488,6 +494,7 @@ body {
 <script>
 let editor;
 let currentPasteId = null;
+let isProcessing = false; // Variabilă pentru a ține evidența stării de procesare
 
 // Initialize Monaco Editor
 window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
@@ -614,6 +621,21 @@ function showError(message) {
     showModal('Eroare', message, 'error');
 }
 
+function setButtonsState(disabled) {
+    // Setează starea butoanelor AI
+    const aiButtons = document.querySelectorAll('button[onclick*="explainCode"], button[onclick*="optimizeCode"], button[onclick*="analyzeComplexity"]');
+    aiButtons.forEach(button => {
+        button.disabled = disabled;
+        if (disabled) {
+            button.style.opacity = '0.6';
+            button.style.cursor = 'not-allowed';
+        } else {
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+        }
+    });
+}
+
 function showModal(title, message, type = 'info') {
     // Creează modal dacă nu există
     let modal = document.getElementById('custom-modal');
@@ -706,14 +728,29 @@ function clearEditor() {
 }
 
 function explainCode() {
+    // Verifică dacă utilizatorul are premium
+    {% if not current_user.is_authenticated or not current_user.is_premium_active() %}
+        window.location.href = '/premium';
+        return;
+    {% endif %}
+    
+    // Verifică dacă este deja în procesare
+    if (isProcessing) {
+        return;
+    }
+    
     const code = editor.getValue();
     if (!code.trim()) {
         showError('Te rog să introduci codul înainte de a cere explicații');
         return;
     }
     
+    // Blochează butoanele și setează starea de procesare
+    isProcessing = true;
+    setButtonsState(true);
+    
     document.getElementById('ai-section').style.display = 'block';
-    document.getElementById('ai-explanation').textContent = '🤖 Generez explicații...';
+    document.getElementById('ai-explanation').textContent = 'Generez explicații...';
     
     fetch('/api/explain_paste', {
         method: 'POST',
@@ -733,18 +770,38 @@ function explainCode() {
     })
     .catch(error => {
         document.getElementById('ai-explanation').textContent = 'Eroare la comunicarea cu serverul';
+    })
+    .finally(() => {
+        // Deblochează butoanele și resetează starea de procesare
+        isProcessing = false;
+        setButtonsState(false);
     });
 }
 
 function optimizeCode() {
+    // Verifică dacă utilizatorul are premium
+    {% if not current_user.is_authenticated or not current_user.is_premium_active() %}
+        window.location.href = '/premium';
+        return;
+    {% endif %}
+    
+    // Verifică dacă este deja în procesare
+    if (isProcessing) {
+        return;
+    }
+    
     const code = editor.getValue();
     if (!code.trim()) {
         showError('Te rog să introduci codul înainte de a cere optimizări');
         return;
     }
     
+    // Blochează butoanele și setează starea de procesare
+    isProcessing = true;
+    setButtonsState(true);
+    
     document.getElementById('ai-section').style.display = 'block';
-    document.getElementById('ai-explanation').textContent = '⚡ Generez optimizări...';
+    document.getElementById('ai-explanation').textContent = 'Generez optimizări...';
     
     fetch('/api/optimize_paste', {
         method: 'POST',
@@ -764,20 +821,40 @@ function optimizeCode() {
     })
     .catch(error => {
         document.getElementById('ai-explanation').textContent = 'Eroare la comunicarea cu serverul';
+    })
+    .finally(() => {
+        // Deblochează butoanele și resetează starea de procesare
+        isProcessing = false;
+        setButtonsState(false);
     });
 }
 
 
 
 function analyzeComplexity() {
+    // Verifică dacă utilizatorul are premium
+    {% if not current_user.is_authenticated or not current_user.is_premium_active() %}
+        window.location.href = '/premium';
+        return;
+    {% endif %}
+    
+    // Verifică dacă este deja în procesare
+    if (isProcessing) {
+        return;
+    }
+    
     const code = editor.getValue();
     if (!code.trim()) {
         showError('Te rog să introduci codul înainte de a analiza complexitatea');
         return;
     }
     
+    // Blochează butoanele și setează starea de procesare
+    isProcessing = true;
+    setButtonsState(true);
+    
     document.getElementById('ai-section').style.display = 'block';
-    document.getElementById('ai-explanation').textContent = '📊 Analizez complexitatea...';
+    document.getElementById('ai-explanation').textContent = 'Analizez complexitatea...';
     
     // Folosește endpoint-ul pentru explicații cu prompt specific pentru complexitate
     fetch('/api/explain_paste', {
@@ -798,6 +875,11 @@ function analyzeComplexity() {
     })
     .catch(error => {
         document.getElementById('ai-explanation').textContent = 'Eroare la comunicarea cu serverul';
+    })
+    .finally(() => {
+        // Deblochează butoanele și resetează starea de procesare
+        isProcessing = false;
+        setButtonsState(false);
     });
 }
 
