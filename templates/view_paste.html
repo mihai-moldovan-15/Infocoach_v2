@@ -224,6 +224,35 @@ body {
   overflow: hidden;
   background: #f8f9fa;
   min-height: 300px;
+  height: 400px;
+  transition: height 0.3s ease;
+}
+
+.expand-button {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #1976d2;
+  border: 1px solid #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.expand-button:hover {
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.code-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .premium-section {
@@ -426,7 +455,13 @@ body {
   <div class="code-section">
     <div class="code-header">
       <h3 class="code-title">💻 Codul</h3>
-      <span style="color: #666;">{{ paste.language.upper() }}</span>
+      <div class="code-actions">
+        <span style="color: #666;">{{ paste.language.upper() }}</span>
+        <button class="expand-button" id="expand-btn">
+          <span id="expand-icon">📄</span>
+          <span id="expand-text">Extinde</span>
+        </button>
+      </div>
     </div>
     
     <div class="code-container" id="code-display"></div>
@@ -584,6 +619,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         document.cookie = `session_id=${sessionId}; path=/; max-age=86400`; // 24 hours
     }
+    
+    // Add event listener for expand button
+    const expandBtn = document.getElementById('expand-btn');
+    if (expandBtn) {
+        console.log('Expand button found, adding event listener');
+        expandBtn.addEventListener('click', function() {
+            console.log('Expand button clicked');
+            toggleCodeExpand();
+        });
+    } else {
+        console.error('Expand button not found');
+    }
 });
 
 function sharePaste() {
@@ -665,6 +712,56 @@ function addComment() {
         }
         alert('Eroare la comunicarea cu serverul');
     });
+}
+
+function toggleCodeExpand() {
+    console.log('toggleCodeExpand function called');
+    
+    const codeContainer = document.getElementById('code-display');
+    const expandBtn = document.getElementById('expand-btn');
+    const expandIcon = document.getElementById('expand-icon');
+    const expandText = document.getElementById('expand-text');
+    
+    if (!codeContainer || !expandBtn || !expandIcon || !expandText) {
+        console.error('Required elements not found');
+        return;
+    }
+    
+    console.log('All elements found, proceeding with toggle');
+    
+    if (codeContainer.classList.contains('expanded')) {
+        // Collapse
+        codeContainer.classList.remove('expanded');
+        expandIcon.textContent = '📄';
+        expandText.textContent = 'Extinde';
+        expandBtn.style.background = 'linear-gradient(135deg, #f8f9fa, #e9ecef)';
+        console.log('Code collapsed');
+        
+        // Set container height back to 400px
+        codeContainer.style.height = '400px';
+        
+        // Update Monaco editor
+        if (editor) {
+            editor.layout();
+            console.log('Editor layout updated for collapse');
+        }
+    } else {
+        // Expand
+        codeContainer.classList.add('expanded');
+        expandIcon.textContent = '📋';
+        expandText.textContent = 'Restrânge';
+        expandBtn.style.background = 'linear-gradient(135deg, #e9ecef, #dee2e6)';
+        console.log('Code expanded');
+        
+        // Set container height to 600px
+        codeContainer.style.height = '600px';
+        
+        // Update Monaco editor
+        if (editor) {
+            editor.layout();
+            console.log('Editor layout updated for expand');
+        }
+    }
 }
 </script>
 {% endblock %} 
