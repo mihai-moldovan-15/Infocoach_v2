@@ -391,12 +391,22 @@ def format_steps_and_paragraphs(text):
                 if not line.strip():
                     i += 1
                     continue
-                line = re.sub(r"\*\*([^\*]+)\*\*", r"<strong>\1</strong>", line)
-                m = re.match(r'^\s*(\d+)\.\s+(.*)', line)
-                if m:
-                    item_text = m.group(2).strip()
-                    new_lines.append(f"<ul><li>{item_text}</li></ul>")
+                
+                # Handle ### headers - make text bold until newline
+                if line.strip().startswith('###'):
+                    # Extract text after ### and make it bold
+                    header_text = line.strip()[3:].strip()  # Remove ### and whitespace
+                    if header_text:
+                        new_lines.append(f"<p><strong>{header_text}</strong></p>")
+                    else:
+                        new_lines.append(f"<p>{line.strip()}</p>")
                 else:
+                    line = re.sub(r"\*\*([^\*]+)\*\*", r"<strong>\1</strong>", line)
+                    m = re.match(r'^\s*(\d+)\.\s+(.*)', line)
+                    if m:
+                        item_text = m.group(2).strip()
+                        new_lines.append(f"<ul><li>{item_text}</li></ul>")
+                    else:
                         new_lines.append(f"<p>{line.strip()}</p>")
                 i += 1
             formatted.append('\n'.join(new_lines))
@@ -2318,9 +2328,9 @@ def optimize_paste():
             Răspunsul să conțină:
             • Principalele optimizări de performanță
             • Best practices C++ importante
-            • Cod optimizat (pe scurt)
+            • Explicații concise despre ce să schimbi și de ce
             
-            Fii practic și concis.
+            Fii practic și concis. Nu genera cod complet, doar explicații și sugestii.
             """
             system_prompt = "Ești expert în optimizarea C++. Sugerează îmbunătățiri practice și concise pentru elevi de liceu."
         elif analysis_type == 'complexity':
