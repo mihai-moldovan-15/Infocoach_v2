@@ -2,13 +2,14 @@
 {% block content %}
 <style>
 body {
-  background: #f7f9fb;
+  background: var(--bg-primary);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: var(--text-primary);
 }
 .leetcode-card {
-  background: #fff;
+  background: var(--bg-secondary);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(30,64,175,0.07), 0 1.5px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 24px var(--shadow-light), 0 1.5px 8px var(--shadow-medium);
   padding: 44px 48px 40px 48px;
   margin: 38px auto 32px auto;
   max-width: 1200px;
@@ -30,33 +31,33 @@ body {
   font-size: 1.13em;
   padding: 12px 38px;
   border-radius: 12px 12px 0 0;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.04);
-  background: #e6f0fa;
-  color: #1976d2;
+  box-shadow: 0 2px 8px var(--shadow-light);
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
   border: none;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
 .ide-tab.active, .ide-tab:hover {
-  background: #fff;
-  color: #1976d2;
-  border-bottom: 3px solid #1976d2;
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  border-bottom: 3px solid var(--accent-primary);
   font-weight: 700;
 }
 .ide-tab-content {
   margin-bottom: 18px;
   font-size: 1.13em;
-  color: #222;
+  color: var(--text-primary);
 }
 #ide-code-editor {
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--border-color);
   border-radius: 12px;
-  background: #f8f9fa;
+  background: var(--bg-tertiary);
   min-height: 600px;
   font-size: 16px;
   margin-bottom: 0;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.04);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 .ide-editor-buttons {
   margin-top: 22px;
@@ -65,21 +66,22 @@ body {
   flex-wrap: wrap;
 }
 .ide-btn-run {
-  background: #1976d2;
+  background: var(--accent-primary);
   font-size: 1.13em;
   padding: 14px 44px;
   border-radius: 10px;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.07);
+  box-shadow: 0 2px 8px var(--shadow-light);
   border: none;
   transition: background 0.2s;
+  color: #fff;
 }
 .ide-btn-run:hover {
-  background: #1251a3;
+  background: var(--accent-secondary);
 }
 .ide-btn-reset {
-  background: #e3e8ef;
-  color: #1976d2;
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
   font-size: 1.13em;
   padding: 14px 32px;
   border-radius: 10px;
@@ -88,19 +90,19 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 .ide-btn-reset:hover {
-  background: #d0d7e6;
-  color: #0d47a1;
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
 }
 .ide-error-log {
-  background: #f4f7fa;
+  background: var(--bg-tertiary);
   border-radius: 12px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--border-color);
   margin-top: 22px;
   font-size: 1.13em;
-  color: #b71c1c;
+  color: var(--error-color);
   padding: 22px 28px;
   min-height: 56px;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.04);
+  box-shadow: 0 2px 8px var(--shadow-light);
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -109,14 +111,14 @@ body {
   content: '🖥️';
   font-size: 1.3em;
   margin-right: 10px;
-  color: #1976d2;
+  color: var(--accent-primary);
 }
 .ide-custom-test {
   margin-bottom: 18px;
   border-radius: 8px;
-  border: 1.5px solid #e5e7eb;
-  background: #fff;
-  color: #222;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 12px 18px;
   font-size: 1.08em;
   min-height: 44px;
@@ -124,7 +126,7 @@ body {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.03);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 .problem-search-autocomplete {
   margin-bottom: 18px;
@@ -134,27 +136,27 @@ body {
   width: 100%;
   padding: 12px 18px;
   border-radius: 8px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--border-color);
   font-size: 1.08em;
-  background: #fff;
-  color: #222;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   outline: none;
   margin-bottom: 0;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.03);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 .ide-search-input::placeholder {
-  color: #888;
+  color: var(--text-secondary);
 }
 #ide-files-section {
   margin-bottom: 18px;
-  background: #f8f9fa;
+  background: var(--bg-tertiary);
   border-radius: 10px;
   padding: 18px 18px 10px 18px;
-  box-shadow: 0 2px 8px rgba(30,64,175,0.03);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 #ide-files-tabs button {
-  background: #e6f0fa;
-  color: #1976d2;
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
   border: none;
   border-radius: 6px 6px 0 0;
   padding: 7px 18px;
@@ -164,12 +166,217 @@ body {
   transition: background 0.2s;
 }
 #ide-files-tabs button.active, #ide-files-tabs button:hover {
-  background: #fff;
-  color: #1976d2;
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
 }
 #ide-files-editors {
   margin-top: 10px;
 }
+
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  display: none;
+}
+
+.autocomplete-suggestions li {
+  padding: 12px 18px;
+  cursor: pointer;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s;
+}
+
+.autocomplete-suggestions li:hover {
+  background: var(--bg-tertiary);
+}
+
+.autocomplete-suggestions li:last-child {
+  border-bottom: none;
+}
+
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.custom-modal-content {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 8px 32px var(--shadow-heavy);
+  border: 1px solid var(--border-color);
+}
+
+.custom-modal-message {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.custom-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* AI Assistant Styles */
+.ai-assistant-fab {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  transition: all 0.3s ease;
+}
+
+.ai-assistant-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px var(--shadow-heavy);
+}
+
+.ai-assistant-sidebar {
+  position: fixed;
+  top: 60px;
+  right: -400px;
+  width: 400px;
+  height: calc(100vh - 60px);
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  z-index: 1001;
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-assistant-sidebar.open {
+  right: 0;
+}
+
+.ai-assistant-header {
+  background: var(--bg-tertiary);
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-assistant-header span {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.ai-assistant-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.ai-assistant-close:hover {
+  color: var(--text-primary);
+}
+
+.ai-assistant-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+
+.ai-assistant-message {
+  margin-bottom: 15px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  max-width: 85%;
+  word-wrap: break-word;
+}
+
+.ai-assistant-message.user {
+  background: var(--accent-primary);
+  color: white;
+  margin-left: auto;
+  text-align: right;
+}
+
+.ai-assistant-message.assistant {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.ai-assistant-form {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  display: flex;
+  gap: 10px;
+}
+
+.ai-assistant-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  resize: none;
+  font-family: inherit;
+}
+
+.ai-assistant-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.ai-assistant-form button {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.ai-assistant-form button:hover {
+  background: var(--accent-secondary);
+}
+
 @media (max-width: 1300px) {
   .leetcode-card { max-width: 98vw; margin-right: 0; padding: 24px 2vw 24px 2vw; }
 }
@@ -182,7 +389,7 @@ body {
     border-radius: 0;
     z-index: 2000;
     margin: 0;
-    box-shadow: 0 -2px 16px rgba(30,64,175,0.09);
+    box-shadow: 0 -2px 16px var(--shadow-dark);
   }
   .ide-editor-buttons { flex-direction: column; gap: 10px; }
 }
@@ -213,30 +420,32 @@ body {
             Aici va fi enunțul problemei...
           </div>
         </div>
-        <div id="subprogram-info-message" style="display:none; margin: 0 0 10px 0; padding: 12px 18px; background: #e3f2fd; color: #1565c0; border-radius: 8px; font-size: 1.08em; font-weight: 500;">
+        <div id="subprogram-info-message" style="display:none; margin: 0 0 10px 0; padding: 12px 18px; background: var(--bg-info); color: var(--info-color); border-radius: 8px; font-size: 1.08em; font-weight: 500;">
           💡 <b>Problemă de subprogram:</b> Scrie <b>doar funcția sau clasa cerută</b> în editor.<br>
           Sistemul va genera automat codul de test pentru a verifica implementarea ta.<br>
-          <span style="font-weight:400; color:#1976d2;">Dacă vrei să testezi funcția cu anumite valori, scrie <b>datele de intrare</b> în zona <i>Input de test personalizat</i> de mai jos!</span>
+          <span style="font-weight:400; color:var(--accent-primary);">Dacă vrei să testezi funcția cu anumite valori, scrie <b>datele de intrare</b> în zona <i>Input de test personalizat</i> de mai jos!</span>
         </div>
-        <div id="ide-code-editor" style="height:600px;border:1.5px solid #bbb;border-radius:8px;background:#f8f9fa;margin-bottom:12px;"></div>
+        <div id="ide-code-editor" style="height:600px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-tertiary);margin-bottom:12px;"></div>
         <div id="ide-files-section" style="margin-bottom:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
             <div id="ide-files-tabs" style="display:flex;gap:8px;"></div>
-            <button id="ide-generate-example-files-btn" style="display:none;background:#43a047;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;margin-right:8px;">Generează fișier exemplu</button>
-            <button id="ide-add-file-btn" style="background:#0074d9;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;">Adaugă fișier</button>
+            <button id="ide-generate-example-files-btn" style="display:none;background:var(--success-color);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-weight:600;cursor:pointer;font-size:1em;margin-right:8px;box-shadow:none;opacity:1;transition:none;letter-spacing:0.5px;">
+              📄 Generează fișier exemplu
+            </button>
+            <button id="ide-add-file-btn" style="background:var(--accent-primary);color:#fff;border:none;border-radius:6px;padding:6px 18px;font-weight:500;cursor:pointer;font-size:1em;">Adaugă fișier</button>
           </div>
-          <form id="ide-add-file-form" style="display:none;margin-top:10px;background:#f8f9fa;padding:12px 16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-            <input type="text" id="ide-new-file-name" placeholder="Nume fișier (ex: sum.in)" style="padding:6px 10px;border-radius:4px;border:1px solid #bbb;font-size:1em;width:180px;">
-            <textarea id="ide-new-file-content" placeholder="Conținut fișier..." style="margin-left:8px;padding:6px 10px;border-radius:4px;border:1px solid #bbb;font-size:1em;width:260px;vertical-align:middle;"></textarea>
-            <button type="submit" style="background:#0074d9;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:500;cursor:pointer;font-size:1em;margin-left:8px;">Salvează</button>
-            <button type="button" id="ide-cancel-add-file" style="background:#eee;color:#333;border:none;border-radius:6px;padding:6px 16px;font-weight:500;cursor:pointer;font-size:1em;margin-left:8px;">Anulează</button>
+          <form id="ide-add-file-form" style="display:none;margin-top:10px;background:var(--bg-tertiary);padding:12px 16px;border-radius:8px;box-shadow:0 2px 8px var(--shadow-light);">
+            <input type="text" id="ide-new-file-name" placeholder="Nume fișier (ex: sum.in)" style="padding:6px 10px;border-radius:4px;border:1px solid var(--border-color);font-size:1em;width:180px;">
+            <textarea id="ide-new-file-content" placeholder="Conținut fișier..." style="margin-left:8px;padding:6px 10px;border-radius:4px;border:1px solid var(--border-color);font-size:1em;width:260px;vertical-align:middle;"></textarea>
+            <button type="submit" style="background:var(--accent-primary);color:#fff;border:none;border-radius:6px;padding:6px 16px;font-weight:500;cursor:pointer;font-size:1em;margin-left:8px;">Salvează</button>
+            <button type="button" id="ide-cancel-add-file" style="background:var(--bg-secondary);color:var(--text-primary);border:none;border-radius:6px;padding:6px 16px;font-weight:500;cursor:pointer;font-size:1em;margin-left:8px;">Anulează</button>
           </form>
           <div id="ide-files-editors"></div>
         </div>
         <textarea class="ide-custom-test" placeholder="Input de test personalizat..."></textarea>
         <div class="ide-editor-buttons">
           <button id="ide-run-code" class="ide-btn-run">Rulează</button>
-          <button id="ide-complete-code" class="ide-btn-run" style="background: #43a047; display: none;">Completează codul</button>
+          <button id="ide-complete-code" class="ide-btn-run" style="background: var(--accent-success); display: none;">Completează codul</button>
           <button id="ide-reset-code" class="ide-btn-reset">Resetează</button>
         </div>
         <div class="ide-error-log" id="ide-error-log">
@@ -273,8 +482,8 @@ body {
       <p>Copiază acest cod și lipește-l în editor:</p>
     </div>
     <div style="position: relative;">
-      <pre id="complete-code-display"></pre>
-      <button id="copy-complete-code">Copiază</button>
+      <pre id="complete-code-display" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; color: var(--text-primary); font-family: monospace; font-size: 14px; max-height: 300px; overflow-y: auto; margin-bottom: 15px;"></pre>
+      <button id="copy-complete-code" style="background: var(--accent-primary); color: white; border: none; border-radius: 6px; padding: 8px 16px; cursor: pointer; font-size: 14px;">Copiază</button>
     </div>
     <div class="custom-modal-actions">
       <button id="complete-code-insert">Lipește în editor</button>
@@ -304,4 +513,34 @@ body {
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   {{ super() }}
+  <script>
+    // Sincronizare tema Monaco Editor cu tema site-ului
+    function getMonacoTheme() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        return theme === 'dark' ? 'vs-dark' : 'vs';
+    }
+    
+    // Funcție pentru actualizarea temei Monaco
+    function updateMonacoTheme() {
+        if (window.monaco && window.monaco.editor) {
+            monaco.editor.setTheme(getMonacoTheme());
+        }
+    }
+    
+    // Ascultă schimbarea temei site-ului
+    const observer = new MutationObserver(() => {
+        updateMonacoTheme();
+    });
+    
+    // Pornește observer-ul când se încarcă pagina
+    document.addEventListener('DOMContentLoaded', function() {
+        observer.observe(document.documentElement, { 
+            attributes: true, 
+            attributeFilter: ['data-theme'] 
+        });
+        
+        // Actualizează tema la inițializare
+        setTimeout(updateMonacoTheme, 1000);
+    });
+  </script>
 {% endblock %} 

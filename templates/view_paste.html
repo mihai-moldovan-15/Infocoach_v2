@@ -2,16 +2,17 @@
 {% block content %}
 <style>
 body {
-  background: #f7f9fb;
+  background: var(--bg-primary);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   margin: 0;
   padding: 0;
+  color: var(--text-primary);
 }
 
 .paste-container {
-  background: #fff;
+  background: var(--bg-secondary);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(30,64,175,0.07), 0 1.5px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 24px var(--shadow-light), 0 1.5px 8px var(--shadow-medium);
   padding: 44px 48px 40px 48px;
   margin: 20px auto 20px auto;
   max-width: 95vw;
@@ -25,9 +26,9 @@ body {
   align-items: flex-start;
   margin-bottom: 20px;
   padding: 18px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   position: relative;
   overflow: hidden;
   animation: fadeInUp 0.6s ease-out;
@@ -63,6 +64,7 @@ body {
   background-clip: text;
   margin: 0 0 25px 0;
   line-height: 1.2;
+  color: var(--accent-primary);
 }
 
 .paste-meta {
@@ -76,13 +78,13 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9em;
   font-weight: 400;
-  background: white;
+  background: var(--bg-secondary);
   padding: 6px 12px;
   border-radius: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px var(--shadow-medium);
   margin-left: -8px;
 }
 
@@ -94,13 +96,13 @@ body {
 .paste-stats {
   display: flex;
   gap: 15px;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.85em;
   font-weight: 500;
-  background: white;
+  background: var(--bg-secondary);
   padding: 8px 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
 .paste-stats span {
@@ -109,12 +111,12 @@ body {
   gap: 6px;
   padding: 4px 8px;
   border-radius: 6px;
-  background: #f8f9fa;
+  background: var(--bg-tertiary);
   transition: background 0.2s;
 }
 
 .paste-stats span:hover {
-  background: #e9ecef;
+  background: var(--border-color);
 }
 
 .paste-actions {
@@ -215,23 +217,23 @@ body {
 .code-title {
   font-size: 1.3em;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .code-container {
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
-  background: #f8f9fa;
+  background: var(--bg-tertiary);
   min-height: 300px;
   height: 400px;
   transition: height 0.3s ease;
 }
 
 .expand-button {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  color: #1976d2;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-color);
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 0.85em;
@@ -244,9 +246,9 @@ body {
 }
 
 .expand-button:hover {
-  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  background: var(--bg-secondary);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
 .code-actions {
@@ -301,11 +303,11 @@ body {
 }
 
 .explanation-preview {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 8px;
   padding: 20px;
   margin-top: 15px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .explanation-step {
@@ -336,11 +338,11 @@ body {
 .comments-title {
   font-size: 1.3em;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .comment-form {
-  background: #f8f9fa;
+  background: var(--bg-tertiary);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
@@ -369,8 +371,8 @@ body {
 }
 
 .comment {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 15px;
 }
@@ -389,11 +391,11 @@ body {
 
 .comment-date {
   font-size: 0.9em;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .comment-content {
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -422,10 +424,10 @@ body {
 /* AI Features Section */
 .ai-features-section {
   margin: 30px 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--border-color) 100%);
   border-radius: 12px;
   padding: 25px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
 }
 
 .ai-features-header {
@@ -435,7 +437,7 @@ body {
 .ai-features-title {
   font-size: 1.3em;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -478,36 +480,36 @@ body {
 }
 
 .ai-explain {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: var(--gradient-primary);
   color: white;
 }
 
 .ai-explain:hover {
-  background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+  background: linear-gradient(135deg, #1565c0, #1976d2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  box-shadow: 0 4px 15px rgba(25,118,210,0.4);
 }
 
 .ai-optimize {
-  background: linear-gradient(135deg, #f093fb, #f5576c);
+  background: var(--gradient-success);
   color: white;
 }
 
 .ai-optimize:hover {
-  background: linear-gradient(135deg, #e085e8, #e54b5f);
+  background: linear-gradient(135deg, #388e3c, #43a047);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(240,147,251,0.4);
+  box-shadow: 0 4px 15px rgba(67,160,71,0.4);
 }
 
 .ai-analyze {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: var(--gradient-secondary);
   color: white;
 }
 
 .ai-analyze:hover {
-  background: linear-gradient(135deg, #3e9be8, #00d8e0);
+  background: linear-gradient(135deg, #5a6fd8, #6a4c93);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(79,172,254,0.4);
+  box-shadow: 0 4px 15px rgba(102,126,234,0.4);
 }
 
 .ai-btn:disabled {
@@ -517,12 +519,12 @@ body {
 }
 
 .ai-result {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 8px;
   padding: 20px;
   margin-top: 20px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
 .ai-result-header {
@@ -531,12 +533,12 @@ body {
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .ai-result-header h4 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.1em;
 }
 
@@ -545,18 +547,18 @@ body {
   border: none;
   font-size: 1.2em;
   cursor: pointer;
-  color: #666;
+  color: var(--text-secondary);
   padding: 5px;
   border-radius: 4px;
   transition: background 0.2s;
 }
 
 .ai-close-btn:hover {
-  background: #f0f0f0;
+  background: var(--bg-tertiary);
 }
 
 .ai-result-content {
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.6;
   white-space: pre-wrap;
 }
@@ -649,9 +651,9 @@ body {
   </div>
 
   {% if paste.description %}
-  <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-    <strong>📝 Descriere:</strong> {{ paste.description }}
-  </div>
+          <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 15px; margin-bottom: 20px; color: var(--text-primary);">
+          <strong>📝 Descriere:</strong> {{ paste.description }}
+        </div>
   {% endif %}
 
   {% if not current_user.is_authenticated or not current_user.is_premium_active() %}
@@ -684,7 +686,7 @@ body {
       <div class="explanation-step">Pasul 4: Adăugăm fiecare număr la sumă</div>
       <div class="explanation-step">Pasul 5: Afișăm rezultatul</div>
       <br>
-      <div style="color: #666; font-size: 0.9em;">
+      <div style="color: var(--text-secondary); font-size: 0.9em;">
         ⚡ Complexitate: O(n) temporal, O(1) spațial<br>
         Algoritm: Iterativ cu buclă for
       </div>
@@ -709,8 +711,8 @@ body {
       <button class="btn btn-primary" onclick="addComment()">Adaugă Comentariu</button>
     </div>
     {% else %}
-    <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; color: #666;">
-      <a href="{{ url_for('login') }}" style="color: #1976d2; text-decoration: none; font-weight: 600;">Autentifică-te</a> pentru a adăuga comentarii
+    <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 15px; text-align: center; color: var(--text-secondary);">
+      <a href="{{ url_for('login') }}" style="color: var(--accent-primary); text-decoration: none; font-weight: 600;">Autentifică-te</a> pentru a adăuga comentarii
     </div>
     {% endif %}
     
@@ -726,7 +728,7 @@ body {
       {% endfor %}
       
       {% if not comments %}
-      <div style="text-align: center; color: #666; padding: 20px;">
+      <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
         Nu există comentarii încă. Fii primul care comentează!
       </div>
       {% endif %}
@@ -741,10 +743,14 @@ let editor;
 // Initialize Monaco Editor for code display
 window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
 window.require(['vs/editor/editor.main'], function() {
+    function getMonacoTheme() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        return theme === 'dark' ? 'vs-dark' : 'vs';
+    }
     editor = monaco.editor.create(document.getElementById('code-display'), {
         value: `{{ paste.code|safe }}`,
         language: '{{ paste.language }}',
-        theme: 'vs',
+        theme: getMonacoTheme(),
         fontSize: 14,
         minimap: { enabled: false },
         automaticLayout: true,
@@ -755,6 +761,11 @@ window.require(['vs/editor/editor.main'], function() {
         scrollbar: { vertical: 'auto', horizontal: 'auto' },
         readOnly: true
     });
+    // Ascultă schimbarea temei site-ului
+    const observer = new MutationObserver(() => {
+        monaco.editor.setTheme(getMonacoTheme());
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 });
 
 function likePaste() {

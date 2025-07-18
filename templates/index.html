@@ -13,9 +13,9 @@
     left: 0;
     height: 100vh;
     width: 260px;
-    background: #fff;
-    border-right: 1px solid #e5e7eb;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 8px var(--shadow-light);
     z-index: 1100;
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem 1.2rem 1rem 1.2rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1.2);
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -60,7 +60,7 @@
     display: none;
 }
 .sidebar-logo-link {
-    color: #0074d9;
+    color: var(--accent-primary);
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: bold;
@@ -70,7 +70,7 @@
     transition: color 0.2s;
 }
 .sidebar-logo-link:hover {
-    color: #005fa3;
+    color: var(--accent-secondary);
     text-decoration: underline;
 }
 .sidebar-toggle-btn {
@@ -96,7 +96,7 @@
     display: block;
     width: 22px;
     height: 3px;
-    background: #0074d9;
+    background: var(--accent-primary);
     border-radius: 2px;
 }
 .sidebar-conversations {
@@ -127,10 +127,10 @@
     width: 100%;
     box-sizing: border-box;
     padding: 0.8rem 1rem;
-    background: #f6f8fa;
-    border: 1px solid #bcdffb;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    color: #0074d9;
+    color: var(--text-primary);
     font-weight: 500;
     font-size: 1rem;
     text-align: left;
@@ -141,14 +141,14 @@
     position: relative;
 }
 .conversation-btn:hover {
-    background: #e6f0fa;
-    border-color: #0074d9;
+    background: var(--bg-secondary);
+    border-color: var(--accent-primary);
     transform: translateX(5px);
 }
 .quiz-score-indicator {
     position: static;
-    background: #e6f0fa;
-    color: #0074d9;
+    background: var(--bg-secondary);
+    color: var(--accent-primary);
     padding: 2px 8px;
     border-radius: 8px;
     font-size: 0.85em;
@@ -208,9 +208,9 @@
     margin-right: 40px;
     margin-top: 20px;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
-    background: white;
+    background: var(--bg-secondary);
 }
 @media (max-width: 900px) {
     .chat-container {
@@ -230,7 +230,7 @@
     padding: 20px;
     max-height: 60vh;
     overflow-y: auto;
-    background: #f8f9fa;
+    background: var(--bg-tertiary);
 }
 
 .message {
@@ -241,35 +241,35 @@
 }
 
 .message.user {
-    background: #e3f2fd;
+    background: var(--bg-secondary);
     margin-left: auto;
-    border: 1px solid #bbdefb;
+    border: 1px solid var(--border-color);
 }
 
 .message.assistant {
-    background: white;
+    background: var(--bg-primary);
     margin-right: auto;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
 }
 
 .message strong {
-    color: #1976d2;
+    color: var(--accent-primary);
     display: block;
     margin-bottom: 5px;
 }
 
 .conversation-btn.active {
-    background: #0074d9;
+    background: var(--accent-primary);
     color: #fff;
-    border-color: #0074d9;
+    border-color: var(--accent-primary);
 }
 
 .conversation-stats {
     margin-top: 10px;
     padding: 10px;
-    background: #f8f9fa;
+    background: var(--bg-tertiary);
     border-radius: 8px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-color);
 }
 .stats-panel {
     display: flex;
@@ -283,12 +283,12 @@
     gap: 8px;
 }
 .stat-label {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9em;
 }
 .stat-value {
     font-weight: 500;
-    color: #0074d9;
+    color: var(--accent-primary);
 }
 .context-controls {
     display: flex;
@@ -1411,6 +1411,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 // --- AJAX Conversation Switching ---
+// Add fade transition for conversation switching
+function showLoadingTransition() {
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) {
+        // Create loading overlay if it doesn't exist
+        let overlay = document.getElementById('loading-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: var(--bg-primary);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            `;
+            overlay.innerHTML = '<div style="color: var(--text-primary); font-size: 1.2em;">Se încarcă...</div>';
+            document.body.appendChild(overlay);
+        }
+        
+        // Show overlay
+        overlay.style.opacity = '0.8';
+        
+        // Also fade chat messages
+        chatMessages.style.opacity = '0.3';
+        chatMessages.style.transition = 'opacity 0.2s ease';
+    }
+}
+
+function hideLoadingTransition() {
+    const chatMessages = document.getElementById('chat-messages');
+    const overlay = document.getElementById('loading-overlay');
+    
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        }, 200);
+    }
+    
+    if (chatMessages) {
+        chatMessages.style.opacity = '1';
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     // Intercept conversation button clicks (not the menu)
     document.querySelectorAll('.conversation-item-wrapper .conversation-btn').forEach(function(btn) {
@@ -1429,6 +1482,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update hidden input
             const convInput = document.querySelector('input[name="conversation_id"]');
             if (convInput) convInput.value = convId;
+            // Show loading transition
+            showLoadingTransition();
+            
             // Fetch messages via AJAX
             fetch(`/?conversation_id=${convId}`)
                 .then(response => response.text())
@@ -1442,6 +1498,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     // Optionally update stats
                     if (typeof updateStats === 'function') setTimeout(updateStats, 500);
+                    
+                    // Hide loading transition
+                    setTimeout(hideLoadingTransition, 100);
+                })
+                .catch(error => {
+                    console.error('Error loading conversation:', error);
+                    hideLoadingTransition();
                 });
         });
     });

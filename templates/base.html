@@ -1,14 +1,140 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="ro" data-theme="{{ theme|default('light') }}">
 <head>
+    <script>
+    (function() {
+        var lsTheme = localStorage.getItem('theme');
+        var serverTheme = '{{ theme|default("light") }}';
+        var cookies = document.cookie.split(';').map(x => x.trim());
+        var hasThemeCookie = cookies.some(x => x.startsWith('theme='));
+        
+        // If localStorage has a theme but cookie doesn't, sync them
+        if (lsTheme && !hasThemeCookie) {
+            document.cookie = "theme=" + lsTheme + "; path=/; max-age=31536000";
+            if (!window.__themeReloaded) {
+                window.__themeReloaded = true;
+                location.reload();
+            }
+        }
+        
+        // If server theme is different from localStorage, update localStorage
+        if (lsTheme && lsTheme !== serverTheme) {
+            localStorage.setItem('theme', serverTheme);
+        }
+        
+        // If no localStorage theme but server has one, set localStorage
+        if (!lsTheme && serverTheme) {
+            localStorage.setItem('theme', serverTheme);
+        }
+    })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}InfoCoach{% endblock %}</title>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+    html { 
+        visibility: hidden !important; 
+        opacity: 0 !important; 
+        transition: opacity 0.3s ease-in !important;
+    }
+    body { 
+        visibility: inherit !important; 
+        opacity: inherit !important; 
+    }
+    html.theme-loaded {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    </style>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+    :root {
+        /* Light theme variables */
+        --bg-primary: #f7f9fb;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #f8f9fa;
+        --text-primary: #333333;
+        --text-secondary: #666666;
+        --text-muted: #888888;
+        --border-color: #e5e7eb;
+        --shadow-light: rgba(0,0,0,0.04);
+        --shadow-medium: rgba(0,0,0,0.08);
+        --shadow-heavy: rgba(0,0,0,0.1);
+        --accent-primary: #1976d2;
+        --accent-secondary: #42a5f5;
+        --success-color: #43a047;
+        --warning-color: #ff9800;
+        --error-color: #dc3545;
+        --gradient-primary: linear-gradient(135deg, #1976d2, #42a5f5);
+        --gradient-secondary: linear-gradient(135deg, #667eea, #764ba2);
+        --gradient-success: linear-gradient(135deg, #43a047, #66bb6a);
+        --nav-bg: #ffffff;
+        --nav-text: #1976d2;
+        --card-bg: #ffffff;
+        --input-bg: #ffffff;
+        --input-border: #e5e7eb;
+        --input-focus: #1976d2;
+    }
+
+    [data-theme="dark"] {
+        /* Dark theme variables */
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #3a3a3a;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-muted: #999999;
+        --border-color: #404040;
+        --shadow-light: rgba(0,0,0,0.2);
+        --shadow-medium: rgba(0,0,0,0.3);
+        --shadow-heavy: rgba(0,0,0,0.4);
+        --accent-primary: #42a5f5;
+        --accent-secondary: #64b5f6;
+        --success-color: #66bb6a;
+        --warning-color: #ffb74d;
+        --error-color: #ef5350;
+        --gradient-primary: linear-gradient(135deg, #42a5f5, #64b5f6);
+        --gradient-secondary: linear-gradient(135deg, #7c4dff, #b388ff);
+        --gradient-success: linear-gradient(135deg, #66bb6a, #81c784);
+        --nav-bg: #2d2d2d;
+        --nav-text: #ffffff;
+        --card-bg: #2d2d2d;
+        --input-bg: #3a3a3a;
+        --input-border: #404040;
+        --input-focus: #42a5f5;
+    }
+
+    /* Prevent flash of unstyled content */
+    html {
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transition: opacity 0.3s ease-in !important;
+    }
+    
+    html.theme-loaded {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Ensure body inherits the hidden state */
+    body {
+        visibility: inherit !important;
+        opacity: inherit !important;
+    }
+    
+    body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
     .nav-brand {
         transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
         margin-left: 64px; /* Always offset for collapsed sidebar */
+        margin-right: 40px; /* ADDED: more space between InfoCoach and theme button */
     }
     .nav-brand.shifted {
         margin-left: 270px;
@@ -21,13 +147,68 @@
         .nav-brand { margin-left: 0; }
         .nav-brand.shifted { margin-left: 0; }
     }
+
+    /* Dark mode toggle */
+    .theme-toggle {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        cursor: pointer;
+        padding: 10px 16px;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+        box-shadow: 0 2px 8px var(--shadow-light);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .theme-toggle:hover {
+        background: var(--bg-tertiary);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--shadow-medium);
+    }
+
+    .theme-toggle:active {
+        transform: translateY(0);
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .theme-toggle:hover svg {
+        color: var(--accent-primary);
+    }
+
+    /* Navbar dark mode */
+    .navbar {
+        background-color: var(--nav-bg);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-link {
+        color: var(--nav-text);
+    }
+
+    .nav-link:hover {
+        color: var(--accent-primary);
+    }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     {% if request.path == '/problem_solver' %}
     <div id="left-chat-btn" style="position:fixed;left:32px;bottom:38px;width:auto;height:auto;z-index:100;">
-        <button onclick="window.location.href='/'" style="display:flex;align-items:center;gap:10px;background:#1976d2;color:#fff;border:none;border-radius:50px;padding:16px 28px 16px 22px;font-size:1.13em;cursor:pointer;box-shadow:0 4px 18px rgba(30,64,175,0.10);font-weight:600;transition:background 0.2s;">
+        <button onclick="window.location.href='/'" style="display:flex;align-items:center;gap:10px;background:var(--accent-primary);color:#fff;border:none;border-radius:50px;padding:16px 28px 16px 22px;font-size:1.13em;cursor:pointer;box-shadow:0 4px 18px rgba(30,64,175,0.10);font-weight:600;transition:background 0.2s;">
             <span style='font-size:1.3em;font-weight:700;'>+</span>
             Chat teorie
         </button>
@@ -44,21 +225,39 @@
             </a>
         </div>
         <div class="nav-links">
+            <!-- Dark mode toggle -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Schimbă tema">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2"/>
+                    <path d="M12 20v2"/>
+                    <path d="m4.93 4.93 1.41 1.41"/>
+                    <path d="m17.66 17.66 1.41 1.41"/>
+                    <path d="M2 12h2"/>
+                    <path d="M20 12h2"/>
+                    <path d="m6.34 17.66-1.41 1.41"/>
+                    <path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+                <svg class="moon-icon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+            </button>
+            
             {% if current_user.is_authenticated %}
                 {% if request.path not in ['/login', '/register', '/premium'] %}
-                    <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
+                    <a href="{{ url_for('infopaste_editor') }}" class="nav-link{% if request.path == '/infopaste' %} active{% endif %}" style="margin-right: 15px;">📝 InfoPaste</a>
                 {% endif %}
-                <a href="{{ url_for('problem_solver') }}" class="nav-link" style="margin-right: 15px;">💻 Editor</a>
+                <a href="{{ url_for('problem_solver') }}" class="nav-link{% if request.path == '/problem_solver' or request.path == '/' %} active{% endif %}" style="margin-right: 15px;">💻 Editor</a>
                 {% if not current_user.is_premium_active() %}
-                    <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
+                    <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: var(--gradient-secondary); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
                 {% endif %}
                 <a href="{{ url_for('profile') }}" class="nav-profile-avatar-link" style="display:inline-block;vertical-align:middle;margin:0 10px;">
-                    <span class="nav-profile-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#e6f0fa 60%,#b3d8fd 100%);box-shadow:0 1px 4px rgba(30,64,175,0.07);font-size:1.25em;font-weight:700;color:#1976d2;">
+                    <span class="nav-profile-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--gradient-primary);box-shadow:0 1px 4px var(--shadow-light);font-size:1.25em;font-weight:700;color:#fff;">
                         {{ current_user.username[0]|upper }}
                     </span>
                 </a>
                 <a href="{{ url_for('logout') }}" class="nav-logout-icon" title="Deconectare" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:transparent;margin-left:2px;transition:background 0.15s;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
                         <line x1="21" y1="12" x2="9" y2="12"/>
@@ -66,11 +265,11 @@
                 </a>
             {% else %}
                 {% if request.path not in ['/login', '/register', '/premium'] %}
-                    <a href="{{ url_for('infopaste_editor') }}" class="nav-link" style="margin-right: 15px;">📝 InfoPaste</a>
+                    <a href="{{ url_for('infopaste_editor') }}" class="nav-link{% if request.path == '/infopaste' %} active{% endif %}" style="margin-right: 15px;">📝 InfoPaste</a>
                 {% endif %}
-                <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
-                <a href="{{ url_for('login') }}" class="nav-link">Autentificare</a>
-                <a href="{{ url_for('register') }}" class="nav-link">Înregistrare</a>
+                <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: var(--gradient-secondary); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
+                <a href="{{ url_for('login') }}" class="nav-link{% if request.path == '/login' %} active{% endif %}">Autentificare</a>
+                <a href="{{ url_for('register') }}" class="nav-link{% if request.path == '/register' %} active{% endif %}">Înregistrare</a>
             {% endif %}
         </div>
     </nav>
@@ -88,6 +287,57 @@
 
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+    // Theme management
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        // Set cookie pentru server-side
+        document.cookie = "theme=" + newTheme + "; path=/; max-age=31536000";
+        
+        // Update toggle icons
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        
+        if (newTheme === 'dark') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+    }
+
+    // Initialize theme on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const serverTheme = '{{ theme|default("light") }}';
+        
+        // Ensure theme consistency
+        if (savedTheme !== serverTheme) {
+            localStorage.setItem('theme', serverTheme);
+        }
+        
+        // Set initial icon state
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        if (serverTheme === 'dark') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+        
+        // Show content
+        document.documentElement.classList.add('theme-loaded');
+    });
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>

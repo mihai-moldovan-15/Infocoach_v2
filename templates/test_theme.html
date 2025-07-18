@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+    <script>
+    (function() {
+        var lsTheme = localStorage.getItem('theme');
+        var cookies = document.cookie.split(';').map(x => x.trim());
+        var hasThemeCookie = cookies.some(x => x.startsWith('theme='));
+        if (lsTheme && !hasThemeCookie) {
+            document.cookie = "theme=" + lsTheme + "; path=/; max-age=31536000";
+            if (!window.__themeReloaded) {
+                window.__themeReloaded = true;
+                location.reload();
+            }
+        }
+    })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Test</title>
+    
+    <style>
+    :root {
+        /* Light theme variables */
+        --bg-primary: #f7f9fb;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #f8f9fa;
+        --text-primary: #333333;
+        --text-secondary: #666666;
+        --text-muted: #888888;
+        --border-color: #e5e7eb;
+        --shadow-light: rgba(0,0,0,0.04);
+        --shadow-medium: rgba(0,0,0,0.08);
+        --shadow-heavy: rgba(0,0,0,0.1);
+        --accent-primary: #1976d2;
+        --accent-secondary: #42a5f5;
+        --success-color: #43a047;
+        --warning-color: #ff9800;
+        --error-color: #dc3545;
+        --gradient-primary: linear-gradient(135deg, #1976d2, #42a5f5);
+        --gradient-secondary: linear-gradient(135deg, #667eea, #764ba2);
+        --gradient-success: linear-gradient(135deg, #43a047, #66bb6a);
+        --nav-bg: #ffffff;
+        --nav-text: #1976d2;
+        --card-bg: #ffffff;
+        --input-bg: #ffffff;
+        --input-border: #e5e7eb;
+        --input-focus: #1976d2;
+    }
+
+    [data-theme="dark"] {
+        /* Dark theme variables */
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #3a3a3a;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-muted: #999999;
+        --border-color: #404040;
+        --shadow-light: rgba(0,0,0,0.2);
+        --shadow-medium: rgba(0,0,0,0.3);
+        --shadow-heavy: rgba(0,0,0,0.4);
+        --accent-primary: #42a5f5;
+        --accent-secondary: #64b5f6;
+        --success-color: #66bb6a;
+        --warning-color: #ffb74d;
+        --error-color: #ef5350;
+        --gradient-primary: linear-gradient(135deg, #42a5f5, #64b5f6);
+        --gradient-secondary: linear-gradient(135deg, #7c4dff, #b388ff);
+        --gradient-success: linear-gradient(135deg, #66bb6a, #81c784);
+        --nav-bg: #2d2d2d;
+        --nav-text: #ffffff;
+        --card-bg: #2d2d2d;
+        --input-bg: #3a3a3a;
+        --input-border: #404040;
+        --input-focus: #42a5f5;
+    }
+
+    body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .test-container {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .theme-toggle {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        cursor: pointer;
+        padding: 10px 16px;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        margin: 10px 0;
+        box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .theme-toggle:hover {
+        background: var(--bg-tertiary);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--shadow-medium);
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover svg {
+        color: var(--accent-primary);
+    }
+
+    .status {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-family: monospace;
+    }
+    </style>
+</head>
+<body>
+    <h1>Theme Test Page</h1>
+    
+    <div class="test-container">
+        <h2>Current Theme Status</h2>
+        <div class="status" id="theme-status">
+            Loading...
+        </div>
+        
+        <button class="theme-toggle" onclick="toggleTheme()" title="Schimbă tema">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2"/>
+                <path d="M12 20v2"/>
+                <path d="m4.93 4.93 1.41 1.41"/>
+                <path d="m17.66 17.66 1.41 1.41"/>
+                <path d="M2 12h2"/>
+                <path d="M20 12h2"/>
+                <path d="m6.34 17.66-1.41 1.41"/>
+                <path d="m19.07 4.93-1.41 1.41"/>
+            </svg>
+            <svg class="moon-icon" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="test-container">
+        <h2>Theme Variables Test</h2>
+        <p>This text should be visible in both light and dark themes.</p>
+        <p style="color: var(--text-secondary);">This is secondary text.</p>
+        <p style="color: var(--text-muted);">This is muted text.</p>
+        <div style="background: var(--accent-primary); color: white; padding: 10px; border-radius: 4px; margin: 10px 0;">
+            This is an accent-colored element.
+        </div>
+    </div>
+
+    <script>
+    // Theme management
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        // Set cookie pentru server-side
+        document.cookie = "theme=" + newTheme + "; path=/; max-age=31536000";
+        
+        // Update toggle icons
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        
+        if (newTheme === 'dark') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+        
+        updateStatus();
+    }
+
+    function updateStatus() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const savedTheme = localStorage.getItem('theme');
+        const cookies = document.cookie.split(';').map(x => x.trim());
+        const themeCookie = cookies.find(x => x.startsWith('theme='));
+        
+        const status = document.getElementById('theme-status');
+        status.innerHTML = `
+            <strong>Current Theme:</strong> ${currentTheme}<br>
+            <strong>localStorage theme:</strong> ${savedTheme}<br>
+            <strong>Cookie theme:</strong> ${themeCookie ? themeCookie.split('=')[1] : 'not set'}<br>
+            <strong>data-theme attribute:</strong> ${html.getAttribute('data-theme')}
+        `;
+    }
+
+    // Initialize theme on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        // Set initial icon state
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        if (savedTheme === 'dark') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+        
+        updateStatus();
+    });
+    </script>
+</body>
+</html> 

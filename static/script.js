@@ -319,10 +319,16 @@ window.addEventListener('DOMContentLoaded', function() {
   const defaultCode = '#include <iostream>\nusing namespace std;\n\nint main() {\n    // scrie codul aici\n    return 0;\n}';
   window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
   window.require(['vs/editor/editor.main'], function() {
+    // Funcție pentru determinarea temei Monaco
+    function getMonacoTheme() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        return theme === 'dark' ? 'vs-dark' : 'vs';
+    }
+    
     window.ideMonaco = monaco.editor.create(document.getElementById('ide-code-editor'), {
       value: savedCode !== null ? savedCode : defaultCode,
       language: 'cpp',
-      theme: 'vs',
+      theme: getMonacoTheme(),
       fontSize: 15,
       minimap: { enabled: false },
       automaticLayout: true,
@@ -331,6 +337,17 @@ window.addEventListener('DOMContentLoaded', function() {
       scrollBeyondLastLine: false,
       roundedSelection: false,
       scrollbar: { vertical: 'auto', horizontal: 'auto' }
+    });
+    
+    // Sincronizare tema Monaco cu tema site-ului
+    const observer = new MutationObserver(() => {
+        if (window.ideMonaco) {
+            monaco.editor.setTheme(getMonacoTheme());
+        }
+    });
+    observer.observe(document.documentElement, { 
+        attributes: true, 
+        attributeFilter: ['data-theme'] 
     });
     window.ideMonaco.onDidChangeModelContent(function() {
       localStorage.setItem('ide_code', window.ideMonaco.getValue());
@@ -472,19 +489,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentProblem.example_input) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
                         ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
+                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
                     }
                     if (output) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
                         ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
+                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
                     }
                     if (explanation) {
                         explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
                         explanation = explanation.replace(/\n+/g, ' ');
                         explanation = explanation.replace(/\s{2,}/g, ' ');
                         explanation = explanation.trim();
-                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:#1976d2;font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:#f8fafc;padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
+                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:var(--accent-primary);font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:var(--bg-secondary);color:var(--text-primary);padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
@@ -657,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.ideFileMonaco = monaco.editor.create(editorDiv, {
                 value: file.content,
                 language: lang,
-                theme: 'vs',
+                theme: getMonacoTheme(),
                 fontSize: 15,
                 minimap: { enabled: false },
                 automaticLayout: true,
@@ -1255,19 +1272,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentProblem.example_input) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
                         ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
+                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
                     }
                     if (output) {
                         ex += `<div style=\"margin-bottom:6px;\">`;
                         ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        ex += `<pre style=\"background:#f4f7fa;padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
+                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
                     }
                     if (explanation) {
                         explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
                         explanation = explanation.replace(/\n+/g, ' ');
                         explanation = explanation.replace(/\s{2,}/g, ' ');
                         explanation = explanation.trim();
-                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:#1976d2;font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:#f8fafc;padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
+                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:var(--accent-primary);font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:var(--bg-secondary);color:var(--text-primary);padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
                     }
                     tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }

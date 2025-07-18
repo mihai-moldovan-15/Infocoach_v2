@@ -19,6 +19,7 @@ import openai
 import hashlib
 from datetime import timedelta
 import logging
+from functools import wraps
 
 # Încarcă variabilele de mediu din .env
 load_dotenv()
@@ -195,10 +196,7 @@ def ensure_premium_schema():
             if 'has_used_trial' not in columns:
                 conn.execute(db.text('ALTER TABLE user ADD COLUMN has_used_trial BOOLEAN DEFAULT FALSE'))
             conn.commit()
-        
 
-
-# Premium schema updates will be run when app starts
 # Run premium schema updates
 ensure_premium_schema()
 
@@ -420,7 +418,7 @@ def format_steps_and_paragraphs(text):
 def format_inline_code(text):
     def replacer(match):
         code = html.escape(match.group(1))
-        return f'<span style="background-color: #f0f0f0; padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #333;">{code}</span>'
+        return f'<span style="background-color: var(--bg-tertiary); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: var(--accent-primary);">{code}</span>'
     pattern = r'`([^`]+?)`'
     parts = re.split(r'(<pre><code class="cpp">[\s\S]*?<\/code><\/pre>)', text)
     formatted = []
@@ -2804,6 +2802,15 @@ def comment_paste(paste_id):
         
     except Exception as e:
         return jsonify({'error': f'Eroare la adăugarea comentariului: {str(e)}'}), 500
+
+@app.context_processor
+def inject_theme():
+    theme = request.cookies.get('theme', 'light')
+    return dict(theme=theme)
+
+@app.route('/test_theme')
+def test_theme():
+    return render_template('test_theme.html')
 
 # === Start application ===
 if __name__ == '__main__':

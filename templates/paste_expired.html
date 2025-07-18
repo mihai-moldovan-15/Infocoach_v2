@@ -2,7 +2,7 @@
 {% block content %}
 <style>
 body {
-  background: #f7f9fb;
+  background: var(--bg-primary);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -13,9 +13,9 @@ body {
 }
 
 .error-container {
-  background: #fff;
+  background: var(--bg-secondary);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(30,64,175,0.07), 0 1.5px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 24px var(--shadow-light), 0 1.5px 8px var(--shadow-medium);
   padding: 60px 48px;
   margin: 20px;
   max-width: 500px;
@@ -45,14 +45,14 @@ body {
 .error-title {
   font-size: 1.8em;
   font-weight: 700;
-  color: #dc3545;
+  color: var(--error-color, #dc3545);
   margin: 0 0 15px 0;
   line-height: 1.2;
 }
 
 .error-message {
   font-size: 1.1em;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0 0 30px 0;
   line-height: 1.5;
 }
@@ -76,30 +76,30 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  background: var(--gradient-primary);
   color: white;
 }
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #1565c0, #1976d2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(25,118,210,0.3);
+  box-shadow: 0 4px 15px var(--shadow-medium);
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  color: #1976d2;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  background: var(--bg-secondary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px var(--shadow-light);
 }
 
 @media (max-width: 768px) {
