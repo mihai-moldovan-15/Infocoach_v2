@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
     last_login = db.Column(db.DateTime)
     clasa = db.Column(db.String(10), default='9')
     
@@ -19,7 +19,8 @@ class User(UserMixin, db.Model):
     premium_until = db.Column(db.DateTime)
     premium_granted_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     premium_granted_at = db.Column(db.DateTime)
-    premium_reason = db.Column(db.String(200))  # "admin_grant", "existing_user", etc.
+    premium_reason = db.Column(db.String(200))  # "admin_grant", "existing_user", "trial_used", etc.
+    has_used_trial = db.Column(db.Boolean, default=False)  # Track if user has used free trial
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -31,7 +32,7 @@ class User(UserMixin, db.Model):
         """Check if user has active premium subscription"""
         if not self.is_premium:
             return False
-        if self.premium_until and datetime.utcnow() > self.premium_until:
+        if self.premium_until and datetime.now() > self.premium_until:
             self.is_premium = False
             db.session.commit()
             return False
@@ -41,9 +42,9 @@ class User(UserMixin, db.Model):
         """Grant premium to user"""
         from datetime import timedelta
         self.is_premium = True
-        self.premium_until = datetime.utcnow() + timedelta(days=duration_days)
+        self.premium_until = datetime.now() + timedelta(days=duration_days)
         self.premium_granted_by = granted_by_id
-        self.premium_granted_at = datetime.utcnow()
+        self.premium_granted_at = datetime.now()
         self.premium_reason = reason
         db.session.commit()
     
@@ -51,6 +52,15 @@ class User(UserMixin, db.Model):
         """Revoke premium from user"""
         self.is_premium = False
         self.premium_until = None
+        db.session.commit()
+    
+    def can_use_trial(self):
+        """Check if user can use free trial (hasn't used it before)"""
+        return not self.has_used_trial
+    
+    def mark_trial_used(self):
+        """Mark that user has used their free trial"""
+        self.has_used_trial = True
         db.session.commit()
 
     def __repr__(self):

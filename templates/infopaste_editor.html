@@ -198,6 +198,54 @@ body {
   background: #388e3c;
 }
 
+/* Auto-generate button styles */
+.description-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.description-input-group .form-input {
+  flex: 1;
+}
+
+.btn-auto-generate {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-auto-generate:hover {
+  background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-auto-generate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .description-input-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn-auto-generate {
+    width: 100%;
+  }
+}
+
 .btn-success:disabled {
   background: #6c757d !important;
   cursor: not-allowed !important;
@@ -369,7 +417,14 @@ body {
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">📝 Descriere</label>
-        <input type="text" name="description" class="form-input" placeholder="Scurtă descriere a codului">
+        <div class="description-input-group">
+          <input type="text" name="description" id="description-input" class="form-input" placeholder="Scurtă descriere a codului">
+          {% if current_user.is_authenticated and current_user.is_premium_active() %}
+            <button type="button" class="btn-auto-generate" onclick="generateAutoDescription()">
+              Generare automată
+            </button>
+          {% endif %}
+        </div>
       </div>
     </div>
 
@@ -425,6 +480,12 @@ body {
 <script>
 let editor;
 let currentPasteId = null;
+let lastGeneratedCode = null; // Pentru a ține evidența ultimului cod pentru care s-a generat descrierea
+
+// Funcție pentru a normaliza codul (elimină spațiile albe și caracterele blank)
+function normalizeCode(code) {
+    return code.replace(/\s+/g, '').trim();
+}
 
 // Initialize Monaco Editor
 window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
@@ -441,6 +502,18 @@ window.require(['vs/editor/editor.main'], function() {
         scrollBeyondLastLine: false,
         roundedSelection: false,
         scrollbar: { vertical: 'auto', horizontal: 'auto' }
+    });
+    
+    // Adaugă event listener pentru modificări în editor
+    editor.onDidChangeModelContent(() => {
+        // Resetează lastGeneratedCode doar când codul normalizat se schimbă
+        const currentCode = editor.getValue();
+        const currentNormalized = normalizeCode(currentCode);
+        const lastNormalized = lastGeneratedCode ? normalizeCode(lastGeneratedCode) : null;
+        
+        if (currentNormalized !== lastNormalized) {
+            lastGeneratedCode = null;
+        }
     });
     
 
@@ -568,22 +641,27 @@ function showModal(title, message, type = 'info') {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         `;
         
         modal.innerHTML = `
             <div style="
-                background: white;
+                background: rgba(255,255,255,0.95);
+                backdrop-filter: blur(10px);
                 padding: 30px;
                 border-radius: 12px;
                 max-width: 400px;
                 width: 90%;
                 text-align: center;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                transform: scale(0.8);
+                transition: transform 0.3s ease;
             ">
                 <h3 style="margin: 0 0 15px 0; color: ${type === 'error' ? '#dc3545' : '#1976d2'};">
                     ${title}
@@ -599,6 +677,7 @@ function showModal(title, message, type = 'info') {
                     border-radius: 6px;
                     cursor: pointer;
                     font-weight: 600;
+                    transition: all 0.2s ease;
                 ">
                     OK
                 </button>
@@ -606,20 +685,91 @@ function showModal(title, message, type = 'info') {
         `;
         
         document.body.appendChild(modal);
+        
+        // Închide la click pe fundal (dar nu pe casetă)
+        modal.addEventListener('mousedown', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        // Animație de apariție
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            modal.querySelector('div').style.transform = 'scale(1)';
+        }, 10);
     } else {
         modal.style.display = 'flex';
         modal.querySelector('h3').textContent = title;
         modal.querySelector('p').textContent = message;
         modal.querySelector('h3').style.color = type === 'error' ? '#dc3545' : '#1976d2';
         modal.querySelector('button').style.background = type === 'error' ? '#dc3545' : '#1976d2';
+        
+        // Animație de apariție
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            modal.querySelector('div').style.transform = 'scale(1)';
+        }, 10);
     }
 }
 
 function closeModal() {
     const modal = document.getElementById('custom-modal');
     if (modal) {
-        modal.style.display = 'none';
+        // Animație de dispariție
+        modal.style.opacity = '0';
+        modal.querySelector('div').style.transform = 'scale(0.8)';
+        
+        // Ascunde modal-ul după animație
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
     }
+}
+
+function generateAutoDescription() {
+    const button = document.querySelector('.btn-auto-generate');
+    const descriptionInput = document.getElementById('description-input');
+    const code = editor.getValue();
+    
+    const normalizedCode = normalizeCode(code);
+    const normalizedLastCode = lastGeneratedCode ? normalizeCode(lastGeneratedCode) : null;
+    
+    // Verifică dacă codul normalizat s-a schimbat față de ultima generare
+    if (normalizedLastCode === normalizedCode) {
+        showModal('Info', 'Descrierea pentru acest cod a fost deja generată. Modifică codul pentru a genera o nouă descriere.', 'info');
+        return;
+    }
+    
+    // Disable button and show loading state
+    button.disabled = true;
+    button.innerHTML = 'Generare...';
+    
+    fetch('/api/generate_description', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            code: code,
+            language: 'cpp'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            descriptionInput.value = data.description;
+            lastGeneratedCode = code; // Salvează codul original pentru care s-a generat descrierea
+        } else {
+            showError(data.error || 'Eroare la generarea descrierii');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showError('Eroare la comunicarea cu serverul');
+    })
+    .finally(() => {
+        // Re-enable button
+        button.disabled = false;
+        button.innerHTML = 'Generare automată';
+    });
 }
 
 function clearEditor() {

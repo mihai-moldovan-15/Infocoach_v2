@@ -192,10 +192,13 @@ def ensure_premium_schema():
                 conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_granted_at DATETIME'))
             if 'premium_reason' not in columns:
                 conn.execute(db.text('ALTER TABLE user ADD COLUMN premium_reason VARCHAR(200)'))
+            if 'has_used_trial' not in columns:
+                conn.execute(db.text('ALTER TABLE user ADD COLUMN has_used_trial BOOLEAN DEFAULT FALSE'))
             conn.commit()
         
 
 
+# Premium schema updates will be run when app starts
 # Run premium schema updates
 ensure_premium_schema()
 
@@ -442,7 +445,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            user.last_login = datetime.utcnow()
+            user.last_login = datetime.now()
             db.session.commit()
             flash('Autentificare reușită!', 'success')
             next_page = request.args.get('next')
@@ -470,16 +473,17 @@ def register():
             user.premium_until = datetime.now() + timedelta(days=30)  # 30 days trial
             user.premium_granted_at = datetime.now()
             user.premium_reason = "registration_premium"
+            user.has_used_trial = True  # Mark trial as used
         
         db.session.add(user)
         db.session.commit()
         
         if selected_plan == 'premium':
-            flash('Înregistrare reușită! Ai acces Premium pentru 30 de zile. Te rugăm să te autentifici.', 'success')
+            # Redirect to payment page for premium users
+            return redirect(url_for('payment'))
         else:
             flash('Înregistrare reușită! Te rugăm să te autentifici.', 'success')
-        
-        return redirect(url_for('login'))
+            return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
 # === Route for logout ===
@@ -2526,6 +2530,74 @@ def optimize_paste():
     except Exception as e:
         return jsonify({'error': f'Eroare la generarea optimizărilor: {str(e)}'}), 500
 
+@app.route('/api/generate_description', methods=['POST'])
+@login_required
+@require_premium
+def generate_description():
+    """Generează o descriere scurtă automată pentru cod"""
+    try:
+        data = request.get_json()
+        code = data.get('code', '').strip()
+        language = data.get('language', 'cpp')
+        
+        if not code:
+            return jsonify({'error': 'Codul este obligatoriu'}), 400
+        
+        # Generează o descriere scurtă automată
+        prompt = f"""
+        Generează o descriere FOARTE SCURTĂ (maxim 50 de caractere) pentru acest cod {language.upper()}:
+        
+        {code}
+        
+        Descrierea să fie:
+        • Foarte scurtă (maxim 50 de caractere)
+        • Să explice pe scurt ce face programul
+        • Să nu fie prea detaliată pentru a nu avantaja prea mult utilizatorii non-premium
+        • Să fie în română
+        
+        Exemple de descrieri scurte:
+        - "Calculează suma numerelor pare"
+        - "Găsește elementul maxim"
+        - "Sortează vectorul"
+        - "Verifică dacă numărul este prim"
+        
+        Răspunde doar cu descrierea, fără explicații suplimentare.
+        """
+        
+        system_prompt = "Ești expert în programare. Generează descrieri scurte și concise pentru cod."
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=100
+        )
+        
+        description = response.choices[0].message.content.strip()
+        
+        # Elimină ghilimelele dacă există
+        if description.startswith('"') and description.endswith('"'):
+            description = description[1:-1]
+        elif description.startswith('"'):
+            description = description[1:]
+        elif description.endswith('"'):
+            description = description[:-1]
+        
+        # Asigură-te că descrierea nu depășește 50 de caractere
+        if len(description) > 50:
+            description = description[:47] + "..."
+        
+        return jsonify({
+            'success': True,
+            'description': description
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Eroare la generarea descrierii: {str(e)}'}), 500
+
 @app.route('/api/open_in_editor/<string:paste_id>')
 def open_in_editor(paste_id):
     """Deschide paste-ul în problem_solver"""
@@ -2598,7 +2670,33 @@ def like_paste(paste_id):
 @app.route('/premium')
 def premium():
     """Premium upgrade page"""
-    return render_template('premium.html')
+    if current_user.is_authenticated:
+        can_use_trial = current_user.can_use_trial()
+        has_used_trial = current_user.has_used_trial
+        is_premium_active = current_user.is_premium_active()
+    else:
+        can_use_trial = True  # Allow trial for non-authenticated users
+        has_used_trial = False
+        is_premium_active = False
+    
+    return render_template('premium.html', 
+                         can_use_trial=can_use_trial,
+                         has_used_trial=has_used_trial,
+                         is_premium_active=is_premium_active)
+
+@app.route('/payment')
+def payment():
+    """Payment simulation page"""
+    if current_user.is_authenticated:
+        can_use_trial = current_user.can_use_trial()
+        is_premium_active = current_user.is_premium_active()
+    else:
+        can_use_trial = True  # Allow trial for non-authenticated users
+        is_premium_active = False
+    
+    return render_template('payment.html', 
+                         can_use_trial=can_use_trial,
+                         is_premium_active=is_premium_active)
 
 # === Admin routes for premium management ===
 @app.route('/admin/grant_premium/<int:user_id>')

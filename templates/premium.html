@@ -340,10 +340,17 @@ body {
   <!-- FOMO Section -->
   <div class="fomo-section">
     <h2 class="fomo-title">⚡ Oferta Limită!</h2>
-    <p class="fomo-text">
-      Primești premium gratuit pentru 30 de zile! Nu rata această șansă de a-ți îmbunătăți abilitățile de programare.
-    </p>
-    <div class="countdown">⏰ Ofertă valabilă doar astăzi</div>
+    {% if can_use_trial %}
+      <p class="fomo-text">
+        Primești premium gratuit pentru 30 de zile! Nu rata această șansă de a-ți îmbunătăți abilitățile de programare.
+      </p>
+      <div class="countdown">⏰ Ofertă valabilă doar astăzi</div>
+    {% else %}
+      <p class="fomo-text">
+        Ai folosit deja trial-ul gratuit. Upgrade la Premium pentru acces complet!
+      </p>
+      <div class="countdown">💎 Acces complet la toate funcționalitățile</div>
+    {% endif %}
   </div>
 
   <!-- Pricing Section -->
@@ -372,11 +379,22 @@ body {
       <h3 class="plan-name">Premium</h3>
       <div class="plan-price">
         <span class="price">
-          <span class="currency-value">0</span>
-          <span class="currency">Lei</span>
+          {% if can_use_trial %}
+            <span class="currency-value">0</span>
+            <span class="currency">Lei</span>
+          {% else %}
+            <span class="currency-value">29</span>
+            <span class="currency">Lei</span>
+          {% endif %}
         </span>
       </div>
-      <div class="plan-period">prima lună, apoi 29 Lei/lună</div>
+      <div class="plan-period">
+        {% if can_use_trial %}
+          prima lună, apoi 29 Lei/lună
+        {% else %}
+          pe lună
+        {% endif %}
+      </div>
       <ul class="plan-features">
         <li> Explicații AI detaliate și personalizate</li>
         <li> Acces la InfoCoach Chat</li>
@@ -388,9 +406,19 @@ body {
         <li> Suport prioritar</li>
         <li> Fără reclame</li>
       </ul>
-      <button class="btn-upgrade primary" onclick="upgradeToPremium()">
-        🚀 Începe gratuit 30 zile
-      </button>
+      {% if is_premium_active %}
+        <button class="btn-upgrade secondary" disabled>
+          ✅ Planul tău actual
+        </button>
+      {% elif can_use_trial %}
+        <button class="btn-upgrade primary" onclick="upgradeToPremium()">
+          🚀 Începe gratuit 30 zile
+        </button>
+      {% else %}
+        <button class="btn-upgrade primary" onclick="upgradeToPremium()">
+          💎 Upgrade la Premium
+        </button>
+      {% endif %}
     </div>
 
 
@@ -484,8 +512,8 @@ body {
 
 <script>
 function upgradeToPremium() {
-  // For now, just show a message
-  alert('Funcționalitatea de upgrade va fi implementată în curând! Pentru moment, toți utilizatorii existenți au acces premium gratuit.');
+  // Redirect to payment page
+  window.location.href = '/payment';
 }
 
 

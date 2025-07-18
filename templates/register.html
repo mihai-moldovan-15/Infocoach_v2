@@ -272,6 +272,32 @@ body {
     line-height: 1.4;
 }
 
+.plan-action {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.btn-learn-more {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-learn-more:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
 .plan-option.premium .plan-name,
 .plan-option.premium .plan-price,
 .plan-option.premium .plan-features {
@@ -365,59 +391,59 @@ body {
     <!-- Form Section -->
     <div class="register-form-section">
         <div class="register-header">
-            <h2>Înregistrare</h2>
+        <h2>Înregistrare</h2>
             <p class="register-subtitle">Creează-ți un cont nou pentru a accesa toate funcționalitățile InfoCoach.</p>
-        </div>
+    </div>
         
         <form method="POST" action="{{ url_for('register') }}" class="auth-form" id="register-form">
-            {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}
             
-            <div class="form-group">
-                <label class="form-label">{{ form.username.label.text }}</label>
-                {{ form.username(class="form-control", placeholder="Nume utilizator") }}
-                {% for error in form.username.errors %}
-                <span class="error">{{ error }}</span>
-                {% endfor %}
-            </div>
+        <div class="form-group">
+            <label class="form-label">{{ form.username.label.text }}</label>
+            {{ form.username(class="form-control", placeholder="Nume utilizator") }}
+            {% for error in form.username.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
             
-            <div class="form-group">
-                <label class="form-label">{{ form.email.label.text }}</label>
-                {{ form.email(class="form-control", placeholder="Email") }}
-                {% for error in form.email.errors %}
-                <span class="error">{{ error }}</span>
-                {% endfor %}
-            </div>
+        <div class="form-group">
+            <label class="form-label">{{ form.email.label.text }}</label>
+            {{ form.email(class="form-control", placeholder="Email") }}
+            {% for error in form.email.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
             
-            <div class="form-group">
-                <label class="form-label">{{ form.password.label.text }}</label>
-                {{ form.password(class="form-control", placeholder="Parolă") }}
-                {% for error in form.password.errors %}
-                <span class="error">{{ error }}</span>
-                {% endfor %}
-            </div>
+        <div class="form-group">
+            <label class="form-label">{{ form.password.label.text }}</label>
+            {{ form.password(class="form-control", placeholder="Parolă") }}
+            {% for error in form.password.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
             
-            <div class="form-group">
-                <label class="form-label">{{ form.password2.label.text }}</label>
-                {{ form.password2(class="form-control", placeholder="Confirmă parola") }}
-                {% for error in form.password2.errors %}
-                <span class="error">{{ error }}</span>
-                {% endfor %}
-            </div>
+        <div class="form-group">
+            <label class="form-label">{{ form.password2.label.text }}</label>
+            {{ form.password2(class="form-control", placeholder="Confirmă parola") }}
+            {% for error in form.password2.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
             
             <!-- Hidden plan selection field -->
             <input type="hidden" name="plan" id="selected-plan" value="free">
             
-            <div class="form-group">
+        <div class="form-group">
                 {{ form.submit(class="btn btn-primary btn-block", value="Creează Cont") }}
-            </div>
-        </form>
-        
-        <div class="auth-footer">
-            <p class="auth-link">
-                Ai deja un cont? <a href="{{ url_for('login') }}">Autentifică-te aici</a>
-            </p>
         </div>
+    </form>
+        
+    <div class="auth-footer">
+        <p class="auth-link">
+            Ai deja un cont? <a href="{{ url_for('login') }}">Autentifică-te aici</a>
+        </p>
     </div>
+</div>
     
     <!-- Plan Selection Section -->
     <div class="plan-selection-section">
@@ -461,6 +487,9 @@ body {
                             • Analiză complexitate algoritmi<br>
                             • InfoPaste cu funcții AI<br>
                             • Suport prioritar
+                        </div>
+                        <div class="plan-action">
+                            <a href="{{ url_for('premium') }}" class="btn-learn-more">🔍 Află mai multe</a>
                         </div>
                     </div>
                 </div>
