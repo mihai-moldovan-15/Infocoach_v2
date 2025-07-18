@@ -3,49 +3,515 @@
 {% block title %}Înregistrare{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-header">
-        <h2>Înregistrare</h2>
-        <p class="auth-subtitle">Creează-ți un cont nou pentru a accesa toate funcționalitățile InfoCoach.</p>
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.register-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.register-form-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.register-header h2 {
+    color: #1a1a1a;
+    font-size: 2.2rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.register-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.auth-form {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #444;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    border: 2px solid #e1e4e8;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+.form-control::placeholder {
+    color: #999;
+    font-size: 1rem;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    min-height: 60px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.auth-link {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.auth-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.auth-link a:hover {
+    color: #5a6fd8;
+    text-decoration: underline;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
+    font-weight: 500;
+}
+
+/* Plan Selection Section */
+.plan-selection-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    animation: slideInRight 0.6s ease-out;
+}
+
+.plan-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.plan-header h3 {
+    color: #1a1a1a;
+    font-size: 1.8rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+}
+
+.plan-subtitle {
+    color: #666;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.plan-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.plan-option {
+    border: 2px solid #e1e4e8;
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: #fff;
+}
+
+.plan-option:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.plan-option.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.plan-option.premium {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    transform: scale(1.02);
+}
+
+.plan-option.premium:hover {
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.3);
+}
+
+.plan-option.premium.selected {
+    background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.plan-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.plan-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.plan-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.plan-option.premium .plan-icon {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.plan-details {
+    flex: 1;
+}
+
+.plan-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+}
+
+.plan-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    opacity: 0.9;
+}
+
+.plan-features {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+.plan-option.premium .plan-name,
+.plan-option.premium .plan-price,
+.plan-option.premium .plan-features {
+    color: #fff;
+}
+
+.plan-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+/* Animations */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .register-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    .register-form-section,
+    .plan-selection-section {
+        padding: 2rem;
+    }
+    
+    .register-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .plan-header h3 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        margin: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .register-form-section,
+    .plan-selection-section {
+        padding: 1.5rem;
+    }
+    
+    .plan-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .plan-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+</style>
+
+<div class="register-container">
+    <!-- Form Section -->
+    <div class="register-form-section">
+        <div class="register-header">
+            <h2>Înregistrare</h2>
+            <p class="register-subtitle">Creează-ți un cont nou pentru a accesa toate funcționalitățile InfoCoach.</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('register') }}" class="auth-form" id="register-form">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                <label class="form-label">{{ form.username.label.text }}</label>
+                {{ form.username(class="form-control", placeholder="Nume utilizator") }}
+                {% for error in form.username.errors %}
+                <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">{{ form.email.label.text }}</label>
+                {{ form.email(class="form-control", placeholder="Email") }}
+                {% for error in form.email.errors %}
+                <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">{{ form.password.label.text }}</label>
+                {{ form.password(class="form-control", placeholder="Parolă") }}
+                {% for error in form.password.errors %}
+                <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">{{ form.password2.label.text }}</label>
+                {{ form.password2(class="form-control", placeholder="Confirmă parola") }}
+                {% for error in form.password2.errors %}
+                <span class="error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            
+            <!-- Hidden plan selection field -->
+            <input type="hidden" name="plan" id="selected-plan" value="free">
+            
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary btn-block", value="Creează Cont") }}
+            </div>
+        </form>
+        
+        <div class="auth-footer">
+            <p class="auth-link">
+                Ai deja un cont? <a href="{{ url_for('login') }}">Autentifică-te aici</a>
+            </p>
+        </div>
     </div>
-    <form method="POST" action="{{ url_for('register') }}" class="auth-form">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            <label class="form-label">{{ form.username.label.text }}</label>
-            {{ form.username(class="form-control", placeholder="Nume utilizator") }}
-            {% for error in form.username.errors %}
-            <span class="error">{{ error }}</span>
-            {% endfor %}
+    
+    <!-- Plan Selection Section -->
+    <div class="plan-selection-section">
+        <div class="plan-header">
+            <h3>🎯 Alege Planul Tău</h3>
+            <p class="plan-subtitle">Selectează planul care se potrivește cel mai bine nevoilor tale</p>
         </div>
-        <div class="form-group">
-            <label class="form-label">{{ form.email.label.text }}</label>
-            {{ form.email(class="form-control", placeholder="Email") }}
-            {% for error in form.email.errors %}
-            <span class="error">{{ error }}</span>
-            {% endfor %}
+        
+        <div class="plan-options">
+            <!-- Free Plan -->
+            <div class="plan-option selected" data-plan="free">
+                <input type="radio" name="plan" value="free" class="plan-radio" id="plan-free" checked>
+                <div class="plan-content">
+                    <div class="plan-icon">🆓</div>
+                    <div class="plan-details">
+                        <div class="plan-name">Plan Gratuit</div>
+                        <div class="plan-price">0 RON/lună</div>
+                        <div class="plan-features">
+                            • Acces la funcționalități de bază<br>
+                            • Chat cu AI pentru probleme<br>
+                            • Editor de cod integrat<br>
+                            • Suport pentru probleme C++
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Premium Plan -->
+            <div class="plan-option premium" data-plan="premium">
+                <div class="plan-badge">RECOMANDAT</div>
+                <input type="radio" name="plan" value="premium" class="plan-radio" id="plan-premium">
+                <div class="plan-content">
+                    <div class="plan-icon">⭐</div>
+                    <div class="plan-details">
+                        <div class="plan-name">Plan Premium</div>
+                        <div class="plan-price">19.99 RON/lună</div>
+                        <div class="plan-features">
+                            • Toate funcționalitățile gratuite<br>
+                            • Explicații AI detaliate<br>
+                            • Optimizări de cod AI<br>
+                            • Analiză complexitate algoritmi<br>
+                            • InfoPaste cu funcții AI<br>
+                            • Suport prioritar
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label class="form-label">{{ form.password.label.text }}</label>
-            {{ form.password(class="form-control", placeholder="Parolă") }}
-            {% for error in form.password.errors %}
-            <span class="error">{{ error }}</span>
-            {% endfor %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                💡 <strong>Recomandare:</strong> Planul Premium îți oferă accesul complet la toate funcționalitățile AI avansate!
+            </p>
         </div>
-        <div class="form-group">
-            <label class="form-label">{{ form.password2.label.text }}</label>
-            {{ form.password2(class="form-control", placeholder="Confirmă parola") }}
-            {% for error in form.password2.errors %}
-            <span class="error">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-primary btn-block", value="Înregistrare") }}
-        </div>
-    </form>
-    <div class="auth-footer">
-        <p class="auth-link">
-            Ai deja un cont? <a href="{{ url_for('login') }}">Autentifică-te aici</a>
-        </p>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const planOptions = document.querySelectorAll('.plan-option');
+    const selectedPlanInput = document.getElementById('selected-plan');
+    
+    // Set premium as default focus (but not selected)
+    const premiumPlan = document.querySelector('.plan-option[data-plan="premium"]');
+    premiumPlan.style.transform = 'scale(1.02)';
+    
+    planOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            planOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            this.classList.add('selected');
+            
+            // Update hidden input
+            const planValue = this.getAttribute('data-plan');
+            selectedPlanInput.value = planValue;
+            
+            // Update radio button
+            const radio = this.querySelector('.plan-radio');
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+    });
+    
+    // Form submission
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+        const selectedPlan = selectedPlanInput.value;
+        console.log('Selected plan:', selectedPlan);
+        
+        // You can add additional validation here if needed
+        // For now, the form will submit with the selected plan
+    });
+});
+</script>
 {% endblock %} 

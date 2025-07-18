@@ -373,11 +373,26 @@ body {
       </div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label">🔒 Privat</label>
-      <div class="checkbox-group">
-        <input type="checkbox" name="is_public" id="is_public" class="checkbox-input" checked>
-        <label for="is_public">Paste public (vizibil pentru toți)</label>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">⏰ Expirare</label>
+        <select name="expiration" id="expiration" class="form-select">
+          <option value="1_hour">1 oră</option>
+          <option value="6_hours">6 ore</option>
+          <option value="1_day">1 zi</option>
+          <option value="3_days">3 zile</option>
+          <option value="1_week" selected>1 săptămână</option>
+          <option value="1_month">1 lună</option>
+          <option value="never">Niciodată</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">👁️ Vizualizare</label>
+        <div class="checkbox-group">
+          <input type="checkbox" name="one_view_only" id="one_view_only" class="checkbox-input">
+          <label for="one_view_only">One view only (link-ul poate fi accesat o singură dată)</label>
+        </div>
       </div>
     </div>
 
@@ -500,7 +515,9 @@ document.getElementById('infopaste-form').addEventListener('submit', function(e)
     formData.append('code', editor.getValue());
     formData.append('language', 'cpp'); // C++ implicit pentru InfoPaste
     formData.append('description', document.querySelector('input[name="description"]').value);
-    formData.append('is_public', document.querySelector('input[name="is_public"]').checked ? '1' : '0');
+    formData.append('is_public', '1'); // Toate paste-urile sunt publice
+    formData.append('expiration', document.querySelector('select[name="expiration"]').value);
+    formData.append('one_view_only', document.querySelector('input[name="one_view_only"]').checked ? '1' : '0');
     
     fetch('/infopaste/create', {
         method: 'POST',
@@ -615,8 +632,9 @@ function clearEditor() {
     document.querySelector('input[name="problem_id"]').value = '';
     document.querySelector('input[name="problem_title"]').value = '';
     
-    // Resetează checkbox-ul pentru public
-    document.querySelector('input[name="is_public"]').checked = true;
+    // Resetează câmpurile pentru expirare și one view only
+    document.querySelector('select[name="expiration"]').value = '1_week';
+    document.querySelector('input[name="one_view_only"]').checked = false;
     
     // Șterge secțiunea share dacă este vizibilă
     document.getElementById('share-section').style.display = 'none';

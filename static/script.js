@@ -276,7 +276,7 @@ function checkInfoPasteCode() {
         window.ideMonaco.setValue(infopasteCode);
         
         // Try to find and select the problem based on title
-        if (infopasteTitle) {
+        if (infopasteTitle && infopasteTitle !== 'Paste fără problemă asociată') {
             const searchInput = document.getElementById('problem-search');
             if (searchInput) {
                 // Set the search input value

@@ -458,11 +458,27 @@ def register():
     
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Get selected plan
+        selected_plan = request.form.get('plan', 'free')
+        
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
+        
+        # Set premium if selected
+        if selected_plan == 'premium':
+            user.is_premium = True
+            user.premium_until = datetime.now() + timedelta(days=30)  # 30 days trial
+            user.premium_granted_at = datetime.now()
+            user.premium_reason = "registration_premium"
+        
         db.session.add(user)
         db.session.commit()
-        flash('Înregistrare reușită! Te rugăm să te autentifici.', 'success')
+        
+        if selected_plan == 'premium':
+            flash('Înregistrare reușită! Ai acces Premium pentru 30 de zile. Te rugăm să te autentifici.', 'success')
+        else:
+            flash('Înregistrare reușită! Te rugăm să te autentifici.', 'success')
+        
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
@@ -1970,6 +1986,55 @@ Răspunsul tău trebuie să fie DOAR codul C++ complet, fără explicații supli
         return jsonify({'error': f'Failed to generate complete code: {str(e)}'}), 500
 
 # === Initialize InfoPaste database ===
+def cleanup_expired_pastes():
+    """Șterge paste-urile expirate din baza de date"""
+    try:
+        conn = sqlite3.connect('infopaste.db', check_same_thread=False)
+        c = conn.cursor()
+        
+        # Șterge paste-urile expirate
+        c.execute('''
+            DELETE FROM code_pastes 
+            WHERE expires_at IS NOT NULL 
+            AND expires_at < ?
+        ''', (datetime.now().isoformat(),))
+        
+        deleted_count = c.rowcount
+        
+        # Șterge și înregistrările de vizualizări pentru paste-urile șterse
+        c.execute('''
+            DELETE FROM paste_views 
+            WHERE paste_id NOT IN (SELECT id FROM code_pastes)
+        ''')
+        
+        # Șterge comentariile pentru paste-urile șterse
+        c.execute('''
+            DELETE FROM paste_comments 
+            WHERE paste_id NOT IN (SELECT id FROM code_pastes)
+        ''')
+        
+        # Șterge explicațiile pentru paste-urile șterse
+        c.execute('''
+            DELETE FROM paste_explanations 
+            WHERE paste_id NOT IN (SELECT id FROM code_pastes)
+        ''')
+        
+        # Șterge aprecierile pentru paste-urile șterse
+        c.execute('''
+            DELETE FROM paste_likes 
+            WHERE paste_id NOT IN (SELECT id FROM code_pastes)
+        ''')
+        
+        conn.commit()
+        conn.close()
+        
+        print(f"Cleanup completed: {deleted_count} expired pastes removed")
+        return deleted_count
+        
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
+        return 0
+
 def init_infopaste_db():
     """Initialize InfoPaste database tables"""
     conn = sqlite3.connect('infopaste.db', check_same_thread=False)
@@ -1987,11 +2052,31 @@ def init_infopaste_db():
             is_public BOOLEAN DEFAULT 1,
             views INTEGER DEFAULT 0,
             likes INTEGER DEFAULT 0,
+            expiration_type TEXT DEFAULT '1_week',
+            expires_at TEXT,
+            one_view_only BOOLEAN DEFAULT 0,
             created_at TEXT,
             updated_at TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     ''')
+    
+    # Add new columns to existing table if they don't exist
+    c.execute("PRAGMA table_info(code_pastes)")
+    paste_columns = [col[1] for col in c.fetchall()]
+    
+    new_paste_columns = {
+        'expiration_type': 'TEXT DEFAULT "1_week"',
+        'expires_at': 'TEXT',
+        'one_view_only': 'BOOLEAN DEFAULT 0'
+    }
+    
+    for col_name, col_type in new_paste_columns.items():
+        if col_name not in paste_columns:
+            try:
+                c.execute(f'ALTER TABLE code_pastes ADD COLUMN {col_name} {col_type}')
+            except Exception as e:
+                print(f"Error adding {col_name} to code_pastes: {e}")
     
     # Paste explanations table
     c.execute('''
@@ -2069,6 +2154,9 @@ def init_infopaste_db():
 # Initialize InfoPaste database
 init_infopaste_db()
 
+# Run initial cleanup
+cleanup_expired_pastes()
+
 # === InfoPaste Routes ===
 
 @app.route('/infopaste')
@@ -2086,22 +2174,55 @@ def create_paste():
         language = request.form.get('language', 'cpp')
         description = request.form.get('description', '').strip()
         is_public = request.form.get('is_public', '1') == '1'
+        expiration_type = request.form.get('expiration', '1_week')
+        one_view_only = request.form.get('one_view_only', '0') == '1'
         
         if not code:
             return jsonify({'error': 'Codul este obligatoriu'}), 400
+        
+        # Calculate expiration date
+        expires_at = None
+        if expiration_type != 'never':
+            from datetime import timedelta
+            now = datetime.now()
+            
+            if expiration_type == '1_hour':
+                expires_at = (now + timedelta(hours=1)).isoformat()
+            elif expiration_type == '6_hours':
+                expires_at = (now + timedelta(hours=6)).isoformat()
+            elif expiration_type == '1_day':
+                expires_at = (now + timedelta(days=1)).isoformat()
+            elif expiration_type == '3_days':
+                expires_at = (now + timedelta(days=3)).isoformat()
+            elif expiration_type == '1_week':
+                expires_at = (now + timedelta(weeks=1)).isoformat()
+            elif expiration_type == '1_month':
+                expires_at = (now + timedelta(days=30)).isoformat()
         
         conn = sqlite3.connect('infopaste.db', check_same_thread=False)
         c = conn.cursor()
         
         timestamp = datetime.now().isoformat()
         c.execute('''
-            INSERT INTO code_pastes (user_id, title, code, language, description, is_public, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (current_user.id, title, code, language, description, is_public, timestamp, timestamp))
+            INSERT INTO code_pastes (user_id, title, code, language, description, is_public, 
+                                   expiration_type, expires_at, one_view_only, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (current_user.id, title, code, language, description, is_public, 
+              expiration_type, expires_at, one_view_only, timestamp, timestamp))
         
         paste_id = c.lastrowid
         conn.commit()
         conn.close()
+        
+        # Run cleanup periodically (every 10th paste creation)
+        # This is a simple way to run cleanup without external schedulers
+        try:
+            c.execute('SELECT COUNT(*) FROM code_pastes')
+            total_pastes = c.fetchone()[0]
+            if total_pastes % 10 == 0:  # Run cleanup every 10 paste creations
+                cleanup_expired_pastes()
+        except:
+            pass  # Don't fail if cleanup fails
         
         return jsonify({
             'success': True,
@@ -2130,6 +2251,36 @@ def view_paste(paste_id):
         
         if not paste:
             return "Paste-ul nu a fost găsit sau nu este public", 404
+        
+        # Check if paste has expired
+        if paste['expires_at']:
+            try:
+                expires_at = datetime.fromisoformat(paste['expires_at'])
+                if datetime.now() > expires_at:
+                    return render_template('paste_expired.html', 
+                                        title="Paste-ul a expirat",
+                                        message="Acest paste a expirat și nu mai este disponibil.",
+                                        icon="⏰"), 410
+            except:
+                pass  # If date parsing fails, continue anyway
+        
+        # Check one view only
+        if paste['one_view_only']:
+            session_id = request.cookies.get('session_id')
+            if not session_id:
+                session_id = hashlib.md5(f"{request.remote_addr}_{datetime.now().isoformat()}".encode()).hexdigest()
+            
+            # Check if this paste has been viewed before
+            c.execute('''
+                SELECT id FROM paste_views 
+                WHERE paste_id = ?
+            ''', (paste_id,))
+            
+            if c.fetchone():
+                return render_template('paste_expired.html', 
+                                    title="Paste-ul a fost deja vizualizat",
+                                    message="Acest paste poate fi accesat o singură dată și a fost deja vizualizat.",
+                                    icon="🔒"), 410
         
         # Get username from main users database
         username = "Anonim"
@@ -2376,10 +2527,13 @@ def optimize_paste():
         return jsonify({'error': f'Eroare la generarea optimizărilor: {str(e)}'}), 500
 
 @app.route('/api/open_in_editor/<string:paste_id>')
-@login_required
 def open_in_editor(paste_id):
     """Deschide paste-ul în problem_solver"""
     try:
+        # Check if user is authenticated
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Authentication required'}), 401
+        
         conn = sqlite3.connect('infopaste.db', check_same_thread=False)
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
@@ -2403,10 +2557,13 @@ def open_in_editor(paste_id):
         return jsonify({'error': f'Eroare la deschiderea în editor: {str(e)}'}), 500
 
 @app.route('/api/like_paste/<string:paste_id>', methods=['POST'])
-@login_required
 def like_paste(paste_id):
     """Like/unlike un paste"""
     try:
+        # Check if user is authenticated
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Authentication required'}), 401
+        
         conn = sqlite3.connect('infopaste.db', check_same_thread=False)
         c = conn.cursor()
         
@@ -2502,11 +2659,31 @@ def admin_premium_users():
         'users': users_data
     })
 
-@app.route('/api/comment_paste/<string:paste_id>', methods=['POST'])
+@app.route('/admin/cleanup_expired_pastes')
 @login_required
+def admin_cleanup_pastes():
+    """Endpoint pentru curățenia manuală a paste-urilor expirate"""
+    try:
+        deleted_count = cleanup_expired_pastes()
+        return jsonify({
+            'success': True,
+            'message': f'Curățenie completă: {deleted_count} paste-uri expirate au fost șterse',
+            'deleted_count': deleted_count
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Eroare la curățenie: {str(e)}'
+        }), 500
+
+@app.route('/api/comment_paste/<string:paste_id>', methods=['POST'])
 def comment_paste(paste_id):
     """Adaugă comentariu la un paste"""
     try:
+        # Check if user is authenticated
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Authentication required'}), 401
+        
         data = request.get_json()
         comment = data.get('comment', '').strip()
         

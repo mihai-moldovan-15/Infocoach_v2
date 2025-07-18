@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+body {
+  background: #f7f9fb;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(30,64,175,0.07), 0 1.5px 8px rgba(0,0,0,0.04);
+  padding: 60px 48px;
+  margin: 20px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 4em;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.error-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #dc3545;
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+}
+
+.error-message {
+  font-size: 1.1em;
+  color: #666;
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+}
+
+.error-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(25,118,210,0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #1976d2;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+  .error-container {
+    margin: 20px 10px;
+    padding: 40px 20px;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+  }
+}
+</style>
+
+<div class="error-container">
+  <span class="error-icon">{{ icon }}</span>
+  <h1 class="error-title">{{ title }}</h1>
+  <p class="error-message">{{ message }}</p>
+  
+  <div class="error-actions">
+    <a href="{{ url_for('infopaste_editor') }}" class="btn btn-primary">
+      📝 Creează Paste Nou
+    </a>
+    <a href="{{ url_for('problem_solver') }}" class="btn btn-secondary">
+      🏠 Pagina Principală
+    </a>
+  </div>
+</div>
+{% endblock %} 

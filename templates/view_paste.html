@@ -582,6 +582,12 @@ body {
       <div class="paste-stats">
         <span>👁️ {{ paste.views }} vizualizări</span>
         <span>❤️ {{ paste.likes }} aprecieri</span>
+        {% if paste.expires_at %}
+          <span>⏰ Expiră: {{ paste.expires_at[:10] if paste.expires_at else 'Niciodată' }}</span>
+        {% endif %}
+        {% if paste.one_view_only %}
+          <span>🔒 One view only</span>
+        {% endif %}
       </div>
       
       <div class="paste-actions">
@@ -760,15 +766,20 @@ function likePaste() {
     .then(response => {
         console.log('Response status:', response.status); // Debug log
         if (response.status === 401) {
-            // Utilizatorul nu este autentificat
-            console.log('User not authenticated, showing alert'); // Debug log
-            alert('Trebuie să fii autentificat pentru a aprecia o soluție. Te rog să te înregistrezi sau să te autentifici.');
-            return Promise.reject('Unauthorized');
+            // Utilizatorul nu este autentificat - redirecționează la login
+            console.log('User not authenticated, redirecting to login'); // Debug log
+            window.location.href = '/login';
+            return null; // Return null to prevent further processing
         }
         return response.json();
     })
     .then(data => {
-        if (data.success) {
+        // Skip processing if we got null (401 case)
+        if (data === null) {
+            return;
+        }
+        
+        if (data && data.success) {
             if (data.action === 'liked') {
                 alert('Apreciere adăugată!');
             } else {
@@ -780,11 +791,11 @@ function likePaste() {
         }
     })
     .catch(error => {
-        if (error === 'Unauthorized') {
-            // Eroarea de autentificare a fost deja gestionată
-            return;
+        console.error('Error in likePaste:', error);
+        // Nu afișa alert pentru erori de autentificare deoarece s-au gestionat deja
+        if (error !== 'Unauthorized') {
+            alert('Eroare la comunicarea cu serverul');
         }
-        alert('Eroare la comunicarea cu serverul');
     });
 }
 
@@ -827,14 +838,19 @@ function openInEditor() {
     fetch('/api/open_in_editor/{{ paste.id }}')
     .then(response => {
         if (response.status === 401) {
-            // Utilizatorul nu este autentificat
-            alert('Trebuie să fii autentificat pentru a deschide codul în editor. Te rog să te înregistrezi sau să te autentifici.');
-            return Promise.reject('Unauthorized');
+            // Utilizatorul nu este autentificat - redirecționează la login
+            window.location.href = '/login';
+            return null; // Return null to prevent further processing
         }
         return response.json();
     })
     .then(data => {
-        if (data.success) {
+        // Skip processing if we got null (401 case)
+        if (data === null) {
+            return;
+        }
+        
+        if (data && data.success) {
             // Store code in localStorage for problem_solver
             localStorage.setItem('infopaste_code', data.code);
             localStorage.setItem('infopaste_title', data.title);
@@ -844,11 +860,11 @@ function openInEditor() {
         }
     })
     .catch(error => {
-        if (error === 'Unauthorized') {
-            // Eroarea de autentificare a fost deja gestionată
-            return;
+        console.error('Error in openInEditor:', error);
+        // Nu afișa alert pentru erori de autentificare deoarece s-au gestionat deja
+        if (error !== 'Unauthorized') {
+            alert('Eroare la comunicarea cu serverul');
         }
-        alert('Eroare la comunicarea cu serverul');
     });
 }
 
@@ -866,14 +882,19 @@ function addComment() {
     })
     .then(response => {
         if (response.status === 401) {
-            // Utilizatorul nu este autentificat
-            alert('Trebuie să fii autentificat pentru a adăuga comentarii. Te rog să te înregistrezi sau să te autentifici.');
-            return Promise.reject('Unauthorized');
+            // Utilizatorul nu este autentificat - redirecționează la login
+            window.location.href = '/login';
+            return null; // Return null to prevent further processing
         }
         return response.json();
     })
     .then(data => {
-        if (data.success) {
+        // Skip processing if we got null (401 case)
+        if (data === null) {
+            return;
+        }
+        
+        if (data && data.success) {
             document.getElementById('comment-input').value = '';
             location.reload();
         } else {
@@ -881,11 +902,11 @@ function addComment() {
         }
     })
     .catch(error => {
-        if (error === 'Unauthorized') {
-            // Eroarea de autentificare a fost deja gestionată
-            return;
+        console.error('Error in addComment:', error);
+        // Nu afișa alert pentru erori de autentificare deoarece s-au gestionat deja
+        if (error !== 'Unauthorized') {
+            alert('Eroare la comunicarea cu serverul');
         }
-        alert('Eroare la comunicarea cu serverul');
     });
 }
 
