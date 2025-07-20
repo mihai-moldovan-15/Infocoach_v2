@@ -2,7 +2,7 @@
 {% block content %}
 <style>
 body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-secondary);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -25,17 +25,16 @@ body {
   font-size: 3.5em;
   font-weight: 900;
   margin-bottom: 20px;
-  text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  background: linear-gradient(45deg, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6);
+  color: white;
 }
 
 .premium-subtitle {
   font-size: 1.4em;
   opacity: 0.9;
   margin-bottom: 10px;
+  color: #333;
+  text-shadow: none;
 }
 
 .premium-description {
@@ -43,6 +42,19 @@ body {
   opacity: 0.8;
   max-width: 600px;
   margin: 0 auto;
+  color: #333;
+  text-shadow: none;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .premium-subtitle {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+}
+
+[data-theme="dark"] .premium-description {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7);
 }
 
 .pricing-section {
@@ -56,32 +68,34 @@ body {
 }
 
 .plan-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 20px;
   padding: 40px 30px;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px var(--shadow-heavy);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
 .plan-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  box-shadow: 0 30px 60px var(--shadow-heavy);
 }
 
 .plan-card.featured {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-secondary);
   color: white;
   transform: scale(1.05);
-  border: 3px solid #fff;
+  border: 3px solid white;
   transition: all 0.3s ease;
 }
 
 .plan-card.featured:hover {
   transform: scale(1.08) translateY(-5px);
-  box-shadow: 0 35px 70px rgba(0,0,0,0.2);
+  box-shadow: 0 35px 70px var(--shadow-heavy);
 }
 
 .plan-card.featured::before {
@@ -137,7 +151,7 @@ body {
 
 .plan-features li {
   padding: 12px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border-color);
   font-size: 1em;
 }
 
@@ -151,13 +165,13 @@ body {
 
 .plan-features li::before {
   content: '✓';
-  color: #4CAF50;
+  color: var(--success-color);
   font-weight: bold;
   margin-right: 10px;
 }
 
 .plan-card.featured .plan-features li::before {
-  color: #fff;
+  color: white;
 }
 
 .btn-upgrade {
@@ -175,33 +189,34 @@ body {
 }
 
 .btn-upgrade.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-secondary);
   color: white;
-  box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+  box-shadow: 0 8px 20px var(--shadow-medium);
 }
 
 .btn-upgrade.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(102,126,234,0.4);
+  box-shadow: 0 12px 30px var(--shadow-heavy);
 }
 
 .btn-upgrade.secondary {
-  background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  background: var(--card-bg);
+  color: var(--accent-primary);
+  border: 2px solid var(--accent-primary);
 }
 
 .btn-upgrade.secondary:hover {
-  background: #667eea;
+  background: var(--accent-primary);
   color: white;
 }
 
 .features-section {
-  background: white;
+  background: var(--card-bg);
   border-radius: 20px;
   padding: 60px 40px;
   margin-bottom: 60px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px var(--shadow-heavy);
+  border: 1px solid var(--border-color);
 }
 
 .features-grid {
@@ -219,7 +234,7 @@ body {
 
 .feature-icon {
   font-size: 2.5em;
-  color: #667eea;
+  color: var(--accent-primary);
   flex-shrink: 0;
 }
 
@@ -227,11 +242,11 @@ body {
   font-size: 1.4em;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .feature-content p {
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -251,22 +266,23 @@ body {
 }
 
 .testimonial-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px var(--shadow-medium);
+  border: 1px solid var(--border-color);
 }
 
 .testimonial-text {
   font-style: italic;
   margin-bottom: 20px;
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .testimonial-author {
   font-weight: 600;
-  color: #667eea;
+  color: var(--accent-primary);
 }
 
 .fomo-section {
@@ -426,7 +442,7 @@ body {
 
   <!-- Features Section -->
   <div class="features-section">
-    <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 20px; color: #333;">
+    <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 20px; color: var(--text-primary);">
       🎯 De ce să alegi Premium?
     </h2>
     <div class="features-grid">

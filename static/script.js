@@ -468,42 +468,66 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     tabContent.innerHTML = limHtml;
                 } else if (idx === 4) {
-                    let ex = '';
-                    const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
-                    const forceConsoleBadges = currentProblem && currentProblem.id == 11;
-                    const isConsoleInput = currentProblem.example_input_name === 'consola';
-                    const isConsoleOutput = currentProblem.example_output_name === 'consola';
-                    const isComplete = !currentProblem.problem_type || currentProblem.problem_type === 'complete';
-                    let inputLabel = (forceConsoleBadges || (isConsoleInput && isComplete)) ? 'Intrare' : (currentProblem.example_input_name || 'Intrare');
-                    let outputLabel = (forceConsoleBadges || (isConsoleOutput && isComplete)) ? 'Ieșire' : (currentProblem.example_output_name || 'Ieșire');
-                    let explanation = currentProblem.example_explanation || '';
-                    let output = currentProblem.example_output || '';
-                    // Dacă nu există explanation, dar outputul conține Explicații, taie și mută
-                    if (!explanation && output) {
-                        let idxExp = output.toLowerCase().indexOf('explica');
-                        if (idxExp !== -1) {
-                            explanation = output.substring(idxExp).trim();
-                            output = output.substring(0, idxExp).trim();
+                    // Folosește exemplele multiple dacă există
+                    if (window.currentExamples && window.currentExamples.length > 0) {
+                        const currentExample = window.currentExamples[window.currentExampleIndex || 0];
+                        let ex = '';
+                        const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                        
+                        let inputLabel = currentExample.input_file_name || 'Intrare';
+                        let outputLabel = currentExample.output_file_name || 'Ieșire';
+                        
+                        if (currentExample.input) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentExample.input}</pre></div>`;
                         }
+                        if (currentExample.output) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentExample.output}</pre></div>`;
+                        }
+                        
+                        tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
+                    } else {
+                        // Fallback la exemplul vechi dacă nu există exemple multiple
+                        let ex = '';
+                        const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                        const forceConsoleBadges = currentProblem && currentProblem.id == 11;
+                        const isConsoleInput = currentProblem.example_input_name === 'consola';
+                        const isConsoleOutput = currentProblem.example_output_name === 'consola';
+                        const isComplete = !currentProblem.problem_type || currentProblem.problem_type === 'complete';
+                        let inputLabel = (forceConsoleBadges || (isConsoleInput && isComplete)) ? 'Intrare' : (currentProblem.example_input_name || 'Intrare');
+                        let outputLabel = (forceConsoleBadges || (isConsoleOutput && isComplete)) ? 'Ieșire' : (currentProblem.example_output_name || 'Ieșire');
+                        let explanation = currentProblem.example_explanation || '';
+                        let output = currentProblem.example_output || '';
+                        // Dacă nu există explanation, dar outputul conține Explicații, taie și mută
+                        if (!explanation && output) {
+                            let idxExp = output.toLowerCase().indexOf('explica');
+                            if (idxExp !== -1) {
+                                explanation = output.substring(idxExp).trim();
+                                output = output.substring(0, idxExp).trim();
+                            }
+                        }
+                        if (currentProblem.example_input) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
+                        }
+                        if (output) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
+                        }
+                        if (explanation) {
+                            explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
+                            explanation = explanation.replace(/\n+/g, ' ');
+                            explanation = explanation.replace(/\s{2,}/g, ' ');
+                            explanation = explanation.trim();
+                            ex += `<div style=\"margin-top:8px;\"><span style=\"color:var(--accent-primary);font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:var(--bg-secondary);color:var(--text-primary);padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
+                        }
+                        tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                     }
-                    if (currentProblem.example_input) {
-                        ex += `<div style=\"margin-bottom:6px;\">`;
-                        ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
-                    }
-                    if (output) {
-                        ex += `<div style=\"margin-bottom:6px;\">`;
-                        ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
-                    }
-                    if (explanation) {
-                        explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
-                        explanation = explanation.replace(/\n+/g, ' ');
-                        explanation = explanation.replace(/\s{2,}/g, ' ');
-                        explanation = explanation.trim();
-                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:var(--accent-primary);font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:var(--bg-secondary);color:var(--text-primary);padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
-                    }
-                    tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
             });
         });
@@ -721,6 +745,38 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFileEditor();
     updateCustomInputVisibility();
 
+    // Încarcă problema salvată din localStorage (dacă există)
+    const savedProblemId = localStorage.getItem('currentProblemId');
+    if (savedProblemId) {
+        console.log('Loading saved problem:', savedProblemId);
+        fetch(`/api/problem_details?id=${savedProblemId}&t=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data || data.error) {
+                    console.log('Error loading saved problem:', data.error);
+                    return;
+                }
+                currentProblem = data;
+                window.currentProblemId = data.id;
+                window.InfoCoachApp.currentProblemId = data.id;
+                window.InfoCoachApp.currentProblem = data;
+                console.log('Loaded saved problem:', data);
+                
+                // Actualizează câmpul de căutare cu numele problemei
+                const searchInput = document.getElementById('problem-search');
+                if (searchInput) {
+                    searchInput.value = data.name || `Problema ${data.id}`;
+                }
+                
+                // Actualizează interfața
+                tabButtons.forEach(btn => btn.disabled = false);
+                updateTabsWithProblem(currentProblem);
+            })
+            .catch(error => {
+                console.error('Error loading saved problem:', error);
+            });
+    }
+
     if (generateExampleBtn) {
         generateExampleBtn.onclick = function() {
             if (!currentProblem) return;
@@ -761,6 +817,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Golește inputul de test personalizat
             const customInput = document.querySelector('.ide-custom-test');
             if (customInput) customInput.value = '';
+            
+            // NU șterge problema salvată - vrei să rămâi pe aceeași problemă
         };
     }
 
@@ -1017,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.onclick = () => {
                     problemSearchInput.value = sug.name;
                     problemSuggestionsList.classList.remove('show');
-                    fetch(`/api/problem_details?id=${sug.id}`)
+                    fetch(`/api/problem_details?id=${sug.id}&t=${Date.now()}`)
                         .then(res => res.json())
                         .then(data => {
                             if (!data || data.error) return;
@@ -1025,6 +1083,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             window.currentProblemId = data.id;
                             window.InfoCoachApp.currentProblemId = data.id;
                             window.InfoCoachApp.currentProblem = data;
+                            
+                            // Salvează problema în localStorage
+                            localStorage.setItem('currentProblemId', data.id);
+                            localStorage.setItem('currentProblemName', data.name || sug.name);
+                            
                             console.log('Suggestion selected - set currentProblemId to:', window.currentProblemId);
                             console.log('Suggestion data:', data);
                             tabButtons.forEach(btn => btn.disabled = false);
@@ -1067,11 +1130,19 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (e.key === 'Enter' && selectedIdx >= 0) {
                 problemSearchInput.value = suggestions[selectedIdx].name;
                 problemSuggestionsList.classList.remove('show');
-                fetch(`/api/problem_details?id=${suggestions[selectedIdx].id}`)
+                fetch(`/api/problem_details?id=${suggestions[selectedIdx].id}&t=${Date.now()}`)
                     .then(res => res.json())
                     .then(data => {
                         if (!data || data.error) return;
                         currentProblem = data;
+                        window.currentProblemId = data.id;
+                        window.InfoCoachApp.currentProblemId = data.id;
+                        window.InfoCoachApp.currentProblem = data;
+                        
+                        // Salvează problema în localStorage
+                        localStorage.setItem('currentProblemId', data.id);
+                        localStorage.setItem('currentProblemName', data.name || suggestions[selectedIdx].name);
+                        
                         tabButtons.forEach(btn => btn.disabled = false);
                         updateTabsWithProblem(currentProblem);
                     });
@@ -1087,6 +1158,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTabsWithProblem(problem) {
         console.log('updateTabsWithProblem called with:', problem);
+        console.log('Problem examples:', problem.examples);
+        console.log('Examples length:', problem.examples ? problem.examples.length : 0);
         if (!problem) return;
         
         // Setează problema globală și ID-ul
@@ -1094,17 +1167,22 @@ document.addEventListener('DOMContentLoaded', () => {
         window.currentProblemId = problem.id;
         window.InfoCoachApp.currentProblemId = problem.id;
         window.InfoCoachApp.currentProblem = problem;
-        console.log('Set currentProblem:', currentProblem);
-        console.log('Set currentProblemId:', window.currentProblemId);
-        console.log('Set InfoCoachApp.currentProblemId:', window.InfoCoachApp.currentProblemId);
-        console.log('Problem ID type:', typeof window.currentProblemId);
-        console.log('currentProblemId from InfoCoachApp:', window.InfoCoachApp.currentProblemId);
-        console.log('currentProblemId from window:', window.currentProblemId);
-        console.log('currentProblem?.id:', currentProblem?.id);
-        console.log('currentProblem object keys:', Object.keys(currentProblem || {}));
-        console.log('currentProblem full object:', JSON.stringify(currentProblem, null, 2));
-        console.log('Final currentProblemId:', problem.id);
-        console.log('currentProblem:', problem);
+        
+        // Gestionare exemple multiple - va fi apelată după reatașarea event listener-eilor
+        console.log('Problem examples from API:', problem.examples);
+        console.log('Problem examples length:', problem.examples ? problem.examples.length : 0);
+        
+        // Salvează exemplele pentru a fi folosite după reatașarea event listener-eilor
+        let examplesToProcess = null;
+        let examplesFromServer = false;
+        
+        if (problem.examples && problem.examples.length > 0) {
+            console.log('Setting currentExamples from API:', problem.examples);
+            examplesToProcess = problem.examples;
+        } else {
+            console.log('No examples in API response, will load from server after event listeners');
+            examplesFromServer = true;
+        }
         
         // === ȘTERGE FIȘIERELE SUPLIMENTARE LA SCHIMBAREA PROBLEMEI ===
         localStorage.removeItem('ide_user_files');
@@ -1120,6 +1198,24 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.ide-tab')[0].classList.add('active');
         // Populează tab-ul Enunț
         tabContent.textContent = problem.statement || 'Fără enunț.';
+
+        // Actualizează link-ul pentru pbinfo
+        const pbinfoLink = document.getElementById('pbinfo-link');
+        console.log('Pbinfo link element:', pbinfoLink);
+        console.log('Problem ID:', problem.id);
+        console.log('Problem object:', problem);
+        console.log('Problem ID type:', typeof problem.id);
+        if (pbinfoLink && problem.id) {
+            const pbinfoUrl = `https://www.pbinfo.ro/probleme/${problem.id}`;
+            pbinfoLink.href = pbinfoUrl;
+            pbinfoLink.style.display = 'inline-flex';
+            console.log('Pbinfo link updated to:', pbinfoUrl);
+            console.log('Pbinfo link updated and made visible');
+        } else {
+            console.log('Pbinfo link not found or problem ID missing');
+            console.log('Pbinfo link element:', pbinfoLink);
+            console.log('Problem ID value:', problem.id);
+        }
 
         // Detectează tipul problemei și adaptează interfața
         const problemType = problem.problem_type || 'complete';
@@ -1198,14 +1294,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Reatașează event listener-ele pentru tab-uri (Enunț, Date, Restricții, Limite, Exemplu)
+        // NU mai clonează butoanele pentru a păstra dropdown-ul
         let tabButtons = document.querySelectorAll('.ide-tab');
-        for (let i = 0; i < tabButtons.length; i++) {
-            const btn = tabButtons[i];
+        
+        // Reatașează event listener-ele corecte
+        tabButtons.forEach((btn, idx) => {
+            // Elimină event listener-ele vechi
             const newBtn = btn.cloneNode(true);
             btn.parentNode.replaceChild(newBtn, btn);
-        }
+        });
+        
         // Refac selecția pentru a avea referințe proaspete
         tabButtons = document.querySelectorAll('.ide-tab');
+        
         // Reatașează event listener-ele corecte
         tabButtons.forEach((btn, idx) => {
             btn.addEventListener('click', function() {
@@ -1251,42 +1352,66 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     tabContent.innerHTML = limHtml;
                 } else if (idx === 4) {
-                    let ex = '';
-                    const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
-                    const forceConsoleBadges = currentProblem && currentProblem.id == 11;
-                    const isConsoleInput = currentProblem.example_input_name === 'consola';
-                    const isConsoleOutput = currentProblem.example_output_name === 'consola';
-                    const isComplete = !currentProblem.problem_type || currentProblem.problem_type === 'complete';
-                    let inputLabel = (forceConsoleBadges || (isConsoleInput && isComplete)) ? 'Intrare' : (currentProblem.example_input_name || 'Intrare');
-                    let outputLabel = (forceConsoleBadges || (isConsoleOutput && isComplete)) ? 'Ieșire' : (currentProblem.example_output_name || 'Ieșire');
-                    let explanation = currentProblem.example_explanation || '';
-                    let output = currentProblem.example_output || '';
-                    // Dacă nu există explanation, dar outputul conține Explicații, taie și mută
-                    if (!explanation && output) {
-                        let idxExp = output.toLowerCase().indexOf('explica');
-                        if (idxExp !== -1) {
-                            explanation = output.substring(idxExp).trim();
-                            output = output.substring(0, idxExp).trim();
+                    // Folosește exemplele multiple dacă există
+                    if (window.currentExamples && window.currentExamples.length > 0) {
+                        const currentExample = window.currentExamples[window.currentExampleIndex || 0];
+                        let ex = '';
+                        const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                        
+                        let inputLabel = currentExample.input_file_name || 'Intrare';
+                        let outputLabel = currentExample.output_file_name || 'Ieșire';
+                        
+                        if (currentExample.input) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentExample.input}</pre></div>`;
                         }
+                        if (currentExample.output) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentExample.output}</pre></div>`;
+                        }
+                        
+                        tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
+                    } else {
+                        // Fallback la exemplul vechi dacă nu există exemple multiple
+                        let ex = '';
+                        const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                        const forceConsoleBadges = currentProblem && currentProblem.id == 11;
+                        const isConsoleInput = currentProblem.example_input_name === 'consola';
+                        const isConsoleOutput = currentProblem.example_output_name === 'consola';
+                        const isComplete = !currentProblem.problem_type || currentProblem.problem_type === 'complete';
+                        let inputLabel = (forceConsoleBadges || (isConsoleInput && isComplete)) ? 'Intrare' : (currentProblem.example_input_name || 'Intrare');
+                        let outputLabel = (forceConsoleBadges || (isConsoleOutput && isComplete)) ? 'Ieșire' : (currentProblem.example_output_name || 'Ieșire');
+                        let explanation = currentProblem.example_explanation || '';
+                        let output = currentProblem.example_output || '';
+                        // Dacă nu există explanation, dar outputul conține Explicații, taie și mută
+                        if (!explanation && output) {
+                            let idxExp = output.toLowerCase().indexOf('explica');
+                            if (idxExp !== -1) {
+                                explanation = output.substring(idxExp).trim();
+                                output = output.substring(0, idxExp).trim();
+                            }
+                        }
+                        if (currentProblem.example_input) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
+                        }
+                        if (output) {
+                            ex += `<div style=\"margin-bottom:6px;\">`;
+                            ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
+                            ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
+                        }
+                        if (explanation) {
+                            explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
+                            explanation = explanation.replace(/\n+/g, ' ');
+                            explanation = explanation.replace(/\s{2,}/g, ' ');
+                            explanation = explanation.trim();
+                            ex += `<div style=\"margin-top:8px;\"><span style=\"color:var(--accent-primary);font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:var(--bg-secondary);color:var(--text-primary);padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
+                        }
+                        tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                     }
-                    if (currentProblem.example_input) {
-                        ex += `<div style=\"margin-bottom:6px;\">`;
-                        ex += `<span style=\"${badgeStyle}\">${inputLabel}</span>`;
-                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${currentProblem.example_input}</pre></div>`;
-                    }
-                    if (output) {
-                        ex += `<div style=\"margin-bottom:6px;\">`;
-                        ex += `<span style=\"${badgeStyle}\">${outputLabel}</span>`;
-                        ex += `<pre style=\"background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;\">${output}</pre></div>`;
-                    }
-                    if (explanation) {
-                        explanation = explanation.replace(/^\s*Explica(ț|t)ii?:?\s*/i, '');
-                        explanation = explanation.replace(/\n+/g, ' ');
-                        explanation = explanation.replace(/\s{2,}/g, ' ');
-                        explanation = explanation.trim();
-                        ex += `<div style=\"margin-top:8px;\"><span style=\"color:var(--accent-primary);font-size:0.95em;font-weight:500;\">Explicație</span><div style=\"background:var(--bg-secondary);color:var(--text-primary);padding:10px 14px;border-radius:6px;white-space:normal;margin-top:2px;\">${explanation}</div></div>`;
-                    }
-                    tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
                 }
             });
         });
@@ -1302,6 +1427,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentProblem.example_output = parts.slice(1).join(sep).replace(/^\s*\n?/, '').trim();
             }
         }
+        
+        // Procesează exemplele după reatașarea event listener-eilor
+        if (examplesToProcess) {
+            console.log('Processing examples from API after event listeners');
+            window.currentExamples = examplesToProcess;
+            window.currentExampleIndex = 0;
+            console.log('Calling updateExamplesTabs with', window.currentExamples.length, 'examples');
+            updateExamplesTabs();
+            updateExampleTab();
+            updateCustomInputWithExample();
+        } else if (examplesFromServer) {
+            console.log('Loading examples from server after event listeners');
+            fetch(`/api/public/problem_examples/${problem.id}?t=${Date.now()}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Loaded examples from server:', data.examples);
+                    if (data.examples && data.examples.length > 0) {
+                        window.currentExamples = data.examples;
+                        window.currentExampleIndex = 0;
+                        console.log('Calling updateExamplesTabs with', window.currentExamples.length, 'examples from server');
+                        updateExamplesTabs();
+                        updateExampleTab();
+                        updateCustomInputWithExample();
+                    } else {
+                        console.log('No examples found on server either');
+                        window.currentExamples = [];
+                        window.currentExampleIndex = 0;
+                        hideExamplesSection();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading examples from server:', error);
+                    window.currentExamples = [];
+                    window.currentExampleIndex = 0;
+                    hideExamplesSection();
+                });
+        }
+        
+        // Salvează problema în localStorage pentru persistență
+        localStorage.setItem('currentProblemId', problem.id);
+        localStorage.setItem('currentProblemName', problem.name);
+        console.log('Problem saved to localStorage:', problem.id, problem.name);
     }
 
     function showError(message, duration = 5000) {
@@ -1548,4 +1715,314 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+    
+    // === Funcții pentru gestionarea exemplelor multiple ===
+    
+    // Funcție pentru a șterge problema salvată
+    function clearSavedProblem() {
+        localStorage.removeItem('currentProblemId');
+        localStorage.removeItem('currentProblemName');
+        console.log('Cleared saved problem');
+    }
+    
+    function updateExamplesTabs() {
+        console.log('updateExamplesTabs called with examples:', window.currentExamples);
+        console.log('Examples length:', window.currentExamples ? window.currentExamples.length : 0);
+        
+        if (!window.currentExamples || window.currentExamples.length === 0) {
+            console.log('No examples, hiding dropdown');
+            hideExamplesDropdown();
+            return;
+        }
+        
+        // Verifică dacă sunt mai multe exemple pentru a afișa dropdown-ul
+        console.log('Checking examples count:', window.currentExamples.length);
+        if (window.currentExamples.length <= 1) {
+            console.log('Only one or zero examples, hiding dropdown');
+            hideExamplesDropdown();
+            return;
+        }
+        
+        console.log('Multiple examples found, showing dropdown');
+        
+        // Găsește tab-ul Exemplu și adaugă dropdown-ul
+        const tabButtons = document.querySelectorAll('.ide-tab');
+        
+        tabButtons.forEach((btn, idx) => {
+            if (btn.textContent.trim() === 'Exemple') {
+                // Creează container pentru tab și dropdown
+                if (!btn.querySelector('.example-dropdown-container')) {
+                    const container = document.createElement('div');
+                    container.className = 'example-dropdown-container';
+                    container.style.cssText = 'display: inline-flex; align-items: center; gap: 8px;';
+                    
+                    const tabText = document.createElement('span');
+                    tabText.textContent = 'Exemple';
+                    container.appendChild(tabText);
+                    
+                    const dropdown = document.createElement('select');
+                    dropdown.className = 'example-dropdown';
+                    dropdown.style.cssText = 'background: var(--bg-secondary); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; font-size: 0.9em; cursor: pointer;';
+                    
+                    // Adaugă opțiunile pentru exemple
+                    window.currentExamples.forEach((example, index) => {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = `Exemplu ${example.number}`;
+                        if (index === window.currentExampleIndex) {
+                            option.selected = true;
+                        }
+                        dropdown.appendChild(option);
+                        console.log(`Added option: Exemplu ${example.number} with value ${index}`);
+                    });
+                    
+                    dropdown.addEventListener('change', (e) => {
+                        console.log('Dropdown changed to:', e.target.value);
+                        console.log('Selected option text:', e.target.options[e.target.selectedIndex].text);
+                        console.log('Previous currentExampleIndex:', window.currentExampleIndex);
+                        window.currentExampleIndex = parseInt(e.target.value);
+                        console.log('New currentExampleIndex:', window.currentExampleIndex);
+                        console.log('All examples:', window.currentExamples);
+                        console.log('Current example:', window.currentExamples[window.currentExampleIndex]);
+                        
+                        // Forțează reîncărcarea exemplelor de la server
+                        if (window.currentProblemId) {
+                            fetch(`/api/public/problem_examples/${window.currentProblemId}?t=${Date.now()}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Reloaded examples from server:', data.examples);
+                                    window.currentExamples = data.examples;
+                                    
+                                    // Activează tab-ul Exemple și actualizează conținutul
+                                    const tabButtons = document.querySelectorAll('.ide-tab');
+                                    tabButtons.forEach((btn, idx) => {
+                                        if (btn.querySelector('.example-dropdown-container')) {
+                                            // Activează tab-ul Exemple
+                                            tabButtons.forEach(b => b.classList.remove('active'));
+                                            btn.classList.add('active');
+                                            
+                                            // Actualizează conținutul
+                                            updateExampleTab();
+                                            updateCustomInputWithExample();
+                                            console.log('Switched to example:', window.currentExamples[window.currentExampleIndex].number);
+                                        }
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error reloading examples:', error);
+                                    // Fallback la exemplele locale
+                                    updateExampleTab();
+                                    updateCustomInputWithExample();
+                                });
+                        } else {
+                            // Activează tab-ul Exemple și actualizează conținutul
+                            const tabButtons = document.querySelectorAll('.ide-tab');
+                            tabButtons.forEach((btn, idx) => {
+                                if (btn.querySelector('.example-dropdown-container')) {
+                                    // Activează tab-ul Exemple
+                                    tabButtons.forEach(b => b.classList.remove('active'));
+                                    btn.classList.add('active');
+                                    
+                                    // Actualizează conținutul
+                                    updateExampleTab();
+                                    updateCustomInputWithExample();
+                                }
+                            });
+                        }
+                    });
+                    
+                    container.appendChild(dropdown);
+                    
+                    // Înlocuiește conținutul tab-ului
+                    btn.innerHTML = '';
+                    btn.appendChild(container);
+                } else {
+                    // Actualizează dropdown-ul existent
+                    const dropdown = btn.querySelector('.example-dropdown');
+                    if (dropdown) {
+                        dropdown.innerHTML = '';
+                        window.currentExamples.forEach((example, index) => {
+                            const option = document.createElement('option');
+                            option.value = index;
+                            option.textContent = `Exemplu ${example.number}`;
+                            if (index === window.currentExampleIndex) {
+                                option.selected = true;
+                            }
+                            dropdown.appendChild(option);
+                        });
+                    }
+                }
+            }
+        });
+    }
+    
+    function hideExamplesDropdown() {
+        console.log('hideExamplesDropdown called');
+        const tabButtons = document.querySelectorAll('.ide-tab');
+        let foundAndCleaned = false;
+        tabButtons.forEach((btn) => {
+            if (btn.textContent.includes('Exemple') || btn.querySelector('.example-dropdown-container')) {
+                console.log('Found Exemple tab, restoring original text');
+                // Restaurează textul original
+                btn.innerHTML = 'Exemple';
+                foundAndCleaned = true;
+            }
+        });
+        if (!foundAndCleaned) {
+            console.log('No Exemple tab found to clean');
+        }
+    }
+    
+    function updateExampleTab() {
+        console.log('updateExampleTab called');
+        console.log('window.currentExamples:', window.currentExamples);
+        console.log('window.currentExampleIndex:', window.currentExampleIndex);
+        
+        if (!window.currentExamples || window.currentExamples.length === 0) {
+            console.log('No examples, returning');
+            return;
+        }
+        
+        const currentExample = window.currentExamples[window.currentExampleIndex];
+        console.log('Current example:', currentExample);
+        if (!currentExample) {
+            console.log('No current example found');
+            return;
+        }
+        
+        // Găsește tab-ul Exemplu și actualizează conținutul
+        const tabButtons = document.querySelectorAll('.ide-tab');
+        const tabContent = document.querySelector('.ide-tab-content');
+        console.log('Found tab buttons:', tabButtons.length);
+        console.log('Found tab content element:', tabContent);
+        
+        // Caută tab-ul care conține dropdown-ul pentru exemple
+        let foundExampleTab = false;
+        tabButtons.forEach((btn, idx) => {
+            console.log(`Checking tab ${idx}: "${btn.textContent.trim()}"`);
+            if (btn.querySelector('.example-dropdown-container')) {
+                console.log('Found Exemplu tab with dropdown at index:', idx);
+                foundExampleTab = true;
+                if (tabContent) {
+                    // Formatează exemplul cu badge-uri și stilizare
+                    let ex = '';
+                    const badgeStyle = 'display:inline-block;background:#dbeafe;color:#2563eb;font-size:0.89em;font-weight:600;padding:1.5px 8px;border-radius:5px;margin-bottom:4px;margin-right:6px;border:1px solid #b6d0fa;';
+                    
+                    let inputLabel = currentExample.input_file_name || 'Intrare';
+                    let outputLabel = currentExample.output_file_name || 'Ieșire';
+                    
+                    if (currentExample.input) {
+                        ex += `<div style="margin-bottom:6px;">`;
+                        ex += `<span style="${badgeStyle}">${inputLabel}</span>`;
+                        ex += `<pre style="background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;">${currentExample.input}</pre></div>`;
+                    }
+                    if (currentExample.output) {
+                        ex += `<div style="margin-bottom:6px;">`;
+                        ex += `<span style="${badgeStyle}">${outputLabel}</span>`;
+                        ex += `<pre style="background:var(--bg-tertiary);color:var(--text-primary);padding:8px 12px;border-radius:6px;white-space:pre-wrap;">${currentExample.output}</pre></div>`;
+                    }
+                    
+                    console.log('Setting formatted tab content');
+                    tabContent.innerHTML = `<div>${highlightFilenames(ex.trim() || 'Fără exemplu.')}</div>`;
+                    console.log('Updated example tab with formatted content');
+                } else {
+                    console.log('No tab content element found');
+                }
+            }
+        });
+        
+        if (!foundExampleTab) {
+            console.log('No example tab with dropdown found');
+        }
+    }
+    
+    function updateCustomInputWithExample() {
+        console.log('updateCustomInputWithExample called');
+        console.log('window.currentExamples:', window.currentExamples);
+        console.log('window.currentExampleIndex:', window.currentExampleIndex);
+        
+        if (!window.currentExamples || window.currentExamples.length === 0) {
+            console.log('No examples, returning');
+            return;
+        }
+        
+        const currentExample = window.currentExamples[window.currentExampleIndex];
+        console.log('Current example:', currentExample);
+        if (!currentExample || !currentExample.input) {
+            console.log('No current example or input found');
+            return;
+        }
+        
+        const customInput = document.querySelector('.ide-custom-test');
+        console.log('Custom input element:', customInput);
+        if (customInput) {
+            console.log('Setting custom input to:', currentExample.input);
+            customInput.value = currentExample.input;
+            console.log('Updated custom input with example:', currentExample.input);
+        } else {
+            console.log('Custom input element not found');
+        }
+    }
+    
+    function hideExamplesSection() {
+        const examplesSection = document.getElementById('ide-examples-section');
+        if (examplesSection) {
+            examplesSection.style.display = 'none';
+        }
+    }
+    
+    // Actualizează funcția de generare fișiere pentru a folosi exemplul curent
+    const originalGenerateExampleFiles = window.generateExampleFiles;
+    window.generateExampleFiles = function() {
+        if (!window.currentExamples || window.currentExamples.length === 0) {
+            if (originalGenerateExampleFiles) {
+                originalGenerateExampleFiles();
+            }
+            return;
+        }
+        
+        const currentExample = window.currentExamples[window.currentExampleIndex];
+        if (!currentExample) return;
+        
+        // Generează fișierele pentru exemplul curent
+        let files = JSON.parse(localStorage.getItem('ide_user_files') || '[]');
+        
+        if (currentExample.input_file_name && currentExample.input) {
+            if (!files.some(f => f.name === currentExample.input_file_name)) {
+                files.push({ name: currentExample.input_file_name, content: currentExample.input });
+            }
+        }
+        
+        localStorage.setItem('ide_user_files', JSON.stringify(files));
+        userFiles = files;
+        activeFileIdx = null;
+        renderFilesTabs();
+        renderFileEditor();
+        updateCustomInputVisibility();
+    };
+    
+    // Funcție de test pentru debugging
+    window.testExamples = function() {
+        console.log('=== TEST EXAMPLES ===');
+        console.log('window.currentExamples:', window.currentExamples);
+        console.log('window.currentExampleIndex:', window.currentExampleIndex);
+        console.log('window.currentProblemId:', window.currentProblemId);
+        
+        const tabButtons = document.querySelectorAll('.ide-tab');
+        console.log('Tab buttons found:', tabButtons.length);
+        tabButtons.forEach((btn, idx) => {
+            console.log(`Tab ${idx}: "${btn.textContent.trim()}"`);
+            if (btn.querySelector('.example-dropdown-container')) {
+                console.log(`Tab ${idx} has dropdown container`);
+            }
+        });
+        
+        if (window.currentProblemId) {
+            fetch(`/api/public/problem_examples/${window.currentProblemId}?t=${Date.now()}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server examples:', data.examples);
+                });
+        }
+    };
 });

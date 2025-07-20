@@ -377,6 +377,37 @@ body {
   background: var(--accent-secondary);
 }
 
+.btn-pbinfo {
+  background: var(--accent-primary);
+  color: white;
+  font-size: 0.9em;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-left: 10px;
+  z-index: 1000;
+}
+
+.btn-pbinfo:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.ide-problem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
 @media (max-width: 1300px) {
   .leetcode-card { max-width: 98vw; margin-right: 0; padding: 24px 2vw 24px 2vw; }
 }
@@ -409,12 +440,17 @@ body {
           <ul id="problem-suggestions" class="autocomplete-suggestions"></ul>
         </div>
         <div class="ide-problem-card">
-          <div class="ide-tabs">
-            <button class="ide-tab active">Enunț</button>
-            <button class="ide-tab">Date</button>
-            <button class="ide-tab">Restricții</button>
-            <button class="ide-tab">Limite</button>
-            <button class="ide-tab">Exemplu</button>
+          <div class="ide-problem-header">
+            <div class="ide-tabs">
+              <button class="ide-tab active">Enunț</button>
+              <button class="ide-tab">Date</button>
+              <button class="ide-tab">Restricții</button>
+              <button class="ide-tab">Limite</button>
+              <button class="ide-tab">Exemple</button>
+            </div>
+            <a href="#" id="pbinfo-link" target="_blank" class="btn-pbinfo" style="display: none;" title="Deschide pe pbinfo.ro">
+              🌐 Deschide pe pbinfo
+            </a>
           </div>
           <div class="ide-tab-content">
             Aici va fi enunțul problemei...

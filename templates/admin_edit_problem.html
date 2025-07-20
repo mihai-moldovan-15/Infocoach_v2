@@ -1,0 +1,453 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Editează Problema {{ problem.id }}{% endblock %}
+
+{% block content %}
+<div class="admin-edit-container">
+    <div class="admin-edit-header">
+        <h1>Editează Problema {{ problem.id }}</h1>
+        <a href="{{ url_for('admin_problems') }}" class="btn-back">← Înapoi la lista problemelor</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" class="edit-form">
+        <div class="form-section">
+            <h3>Informații de bază</h3>
+            <div class="form-group">
+                <label for="name">Nume problema:</label>
+                <input type="text" id="name" name="name" value="{{ problem.name }}" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Enunț și descrieri</h3>
+            <div class="form-group">
+                <label for="statement">Enunț:</label>
+                <textarea id="statement" name="statement" rows="8" required>{{ problem.statement }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="input_description">Descrierea datelor de intrare:</label>
+                <textarea id="input_description" name="input_description" rows="4">{{ problem.input_description }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="output_description">Descrierea datelor de ieșire:</label>
+                <textarea id="output_description" name="output_description" rows="4">{{ problem.output_description }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="constraints">Restricții:</label>
+                <textarea id="constraints" name="constraints" rows="4">{{ problem.constraints }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Exemple</h3>
+            <div id="examples-container">
+                <!-- Exemplele vor fi încărcate dinamic -->
+            </div>
+            <button type="button" id="add-example-btn" class="btn-add-example" onclick="addNewExample()">➕ Adaugă exemplu nou</button>
+        </div>
+
+        <div class="form-section">
+            <h3>Limite</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="time_limit">Limită timp (secunde):</label>
+                    <input type="number" id="time_limit" name="time_limit" value="{{ problem.time_limit }}" min="0" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="memory_limit">Limită memorie (MB):</label>
+                    <input type="number" id="memory_limit" name="memory_limit" value="{{ problem.memory_limit }}" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">💾 Salvează modificările</button>
+            <a href="{{ url_for('admin_problems') }}" class="btn-cancel">❌ Anulează</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.admin-edit-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.admin-edit-header h1 {
+    color: var(--text-color);
+    margin: 0;
+}
+
+.btn-back {
+    padding: 8px 16px;
+    background: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-back:hover {
+    background: var(--secondary-hover);
+}
+
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash-message {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.flash-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.edit-form {
+    background: var(--bg-color);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h3 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 14px;
+    font-family: inherit;
+    margin: 0;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+}
+
+.btn-save, .btn-cancel {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-save {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-save:hover {
+    background: var(--primary-hover);
+}
+
+.btn-cancel {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #5a6268;
+}
+
+[data-theme="dark"] .edit-form {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea {
+    background: var(--bg-secondary);
+}
+
+@media (max-width: 768px) {
+    .admin-edit-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+.btn-add-example {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.btn-add-example:hover {
+    background: var(--primary-hover);
+}
+
+.example-item {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.example-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.example-number {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.btn-remove-example {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-remove-example:hover {
+    background: #c82333;
+}
+
+.example-fields {
+    display: grid;
+    gap: 15px;
+}
+
+.example-fields .form-row {
+    grid-template-columns: 1fr 1fr;
+}
+
+[data-theme="dark"] .example-item {
+    background: var(--bg-tertiary);
+}
+</style>
+
+<script>
+let exampleCounter = 0;
+
+function loadExamples() {
+    fetch(`/api/public/problem_examples/{{ problem.id }}?t=${Date.now()}`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('examples-container');
+            if (!container) {
+                return;
+            }
+            container.innerHTML = '';
+            
+            if (data.examples && data.examples.length > 0) {
+                data.examples.forEach(example => {
+                    addExampleToForm(example.number, example.input, example.output, example.input_file_name, example.output_file_name);
+                });
+            } else {
+                // Adaugă un exemplu gol dacă nu există
+                addExampleToForm(1, '', '', '', '');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading examples:', error);
+            // Adaugă un exemplu gol în caz de eroare
+            addExampleToForm(1, '', '', '', '');
+        });
+}
+
+function addExampleToForm(number, input, output, inputFileName, outputFileName) {
+    const container = document.getElementById('examples-container');
+    if (!container) {
+        return;
+    }
+    const exampleDiv = document.createElement('div');
+    exampleDiv.className = 'example-item';
+    exampleDiv.innerHTML = `
+        <div class="example-header">
+            <span class="example-number">Exemplu ${number}</span>
+            ${number > 1 ? '<button type="button" class="btn-remove-example" onclick="removeExample(this)">🗑️ Șterge</button>' : ''}
+        </div>
+        <div class="example-fields">
+            <div class="form-group">
+                <label>Date de intrare exemplu:</label>
+                <textarea name="examples[${number}][input]" rows="4">${input}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Date de ieșire exemplu:</label>
+                <textarea name="examples[${number}][output]" rows="4">${output}</textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nume fișier intrare exemplu:</label>
+                    <input type="text" name="examples[${number}][input_file_name]" value="${inputFileName}">
+                </div>
+                
+                <div class="form-group">
+                    <label>Nume fișier ieșire exemplu:</label>
+                    <input type="text" name="examples[${number}][output_file_name]" value="${outputFileName}">
+                </div>
+            </div>
+        </div>
+    `;
+    container.appendChild(exampleDiv);
+}
+
+function addNewExample() {
+    const container = document.getElementById('examples-container');
+    if (!container) {
+        return;
+    }
+    const existingExamples = container.querySelectorAll('.example-item');
+    const nextNumber = existingExamples.length + 1;
+    
+    // Copiază numele fișierelor de la primul exemplu (dacă există)
+    let inputFileName = '', outputFileName = '';
+    if (existingExamples.length > 0) {
+        const firstExample = existingExamples[0];
+        const inputFileInput = firstExample.querySelector('input[name*="[input_file_name]"]');
+        const outputFileInput = firstExample.querySelector('input[name*="[output_file_name]"]');
+        if (inputFileInput) inputFileName = inputFileInput.value;
+        if (outputFileInput) outputFileName = outputFileInput.value;
+    }
+    
+    addExampleToForm(nextNumber, '', '', inputFileName, outputFileName);
+}
+
+function removeExample(button) {
+    if (confirm('Ești sigur că vrei să ștergi acest exemplu?')) {
+        button.closest('.example-item').remove();
+        // Renumerotează exemplele
+        const examples = document.querySelectorAll('.example-item');
+        examples.forEach((example, index) => {
+            const numberSpan = example.querySelector('.example-number');
+            numberSpan.textContent = `Exemplu ${index + 1}`;
+            
+            // Actualizează numele câmpurilor
+            const inputs = example.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                const oldName = input.name;
+                const newName = oldName.replace(/\[\d+\]/, `[${index + 1}]`);
+                input.name = newName;
+            });
+            
+            // Actualizează butonul de ștergere
+            const removeBtn = example.querySelector('.btn-remove-example');
+            if (removeBtn && index === 0) {
+                removeBtn.remove();
+            }
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadExamples();
+});
+</script>
+{% endblock %} 

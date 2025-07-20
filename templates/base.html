@@ -251,6 +251,9 @@
                 {% if not current_user.is_premium_active() %}
                     <a href="{{ url_for('premium') }}" class="nav-link" style="margin-right: 15px; background: var(--gradient-secondary); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">🚀 Premium</a>
                 {% endif %}
+                {% if current_user.username == 'mihaimoldovan' %}
+                    <a href="{{ url_for('admin_problems') }}" class="nav-link" style="margin-right: 15px; background: #dc3545; color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">⚙️ Admin</a>
+                {% endif %}
                 <a href="{{ url_for('profile') }}" class="nav-profile-avatar-link" style="display:inline-block;vertical-align:middle;margin:0 10px;">
                     <span class="nav-profile-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--gradient-primary);box-shadow:0 1px 4px var(--shadow-light);font-size:1.25em;font-weight:700;color:#fff;">
                         {{ current_user.username[0]|upper }}

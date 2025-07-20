@@ -163,6 +163,35 @@
         box-shadow: 0 4px 16px rgba(0,116,217,0.18);
         transform: translateY(-2px) scale(1.03);
     }
+
+    .btn-pbinfo {
+        background: var(--accent-primary);
+        color: white;
+        font-size: 0.9em;
+        font-weight: 600;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .btn-pbinfo:hover {
+        background: var(--accent-secondary);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .problem-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 </style>
 {% endblock %}
 
@@ -216,16 +245,21 @@
         <div class="problem-card">
             <div class="problem-header">
                 <h2 class="problem-title">{{ problem.name }}</h2>
-                <div class="problem-meta">
-                    {% if problem.grade %}
-                    <span class="badge badge-grade">Clasa {{ problem.grade }}</span>
-                    {% endif %}
-                    {% if problem.category %}
-                    <span class="badge badge-category">{{ problem.category }}</span>
-                    {% endif %}
-                    {% if problem.difficulty %}
-                    <span class="badge badge-difficulty">{{ problem.difficulty }}</span>
-                    {% endif %}
+                <div class="problem-actions">
+                    <div class="problem-meta">
+                        {% if problem.grade %}
+                        <span class="badge badge-grade">Clasa {{ problem.grade }}</span>
+                        {% endif %}
+                        {% if problem.category %}
+                        <span class="badge badge-category">{{ problem.category }}</span>
+                        {% endif %}
+                        {% if problem.difficulty %}
+                        <span class="badge badge-difficulty">{{ problem.difficulty }}</span>
+                        {% endif %}
+                    </div>
+                    <a href="https://www.pbinfo.ro/?problema={{ problem.id }}" target="_blank" class="btn-pbinfo" title="Deschide pe pbinfo.ro">
+                        🌐 Deschide pe pbinfo
+                    </a>
                 </div>
             </div>
 

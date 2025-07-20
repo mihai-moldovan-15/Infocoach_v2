@@ -5,7 +5,7 @@
 {% block content %}
 <style>
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-secondary);
     min-height: 100vh;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
@@ -21,11 +21,12 @@ body {
 }
 
 .register-form-section {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 20px;
     padding: 2.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px var(--shadow-heavy);
     animation: slideInLeft 0.6s ease-out;
+    border: 1px solid var(--border-color);
 }
 
 .register-header {
@@ -34,18 +35,18 @@ body {
 }
 
 .register-header h2 {
-    color: #1a1a1a;
+    color: var(--text-primary);
     font-size: 2.2rem;
     margin: 0 0 0.5rem 0;
     font-weight: 700;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: var(--gradient-secondary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .register-subtitle {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1.1rem;
     margin: 0;
     line-height: 1.5;
@@ -62,7 +63,7 @@ body {
 .form-label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #444;
+    color: var(--text-primary);
     font-weight: 600;
     font-size: 1rem;
 }
@@ -71,23 +72,24 @@ body {
     width: 100%;
     padding: 1rem 1.2rem;
     font-size: 1rem;
-    border: 2px solid #e1e4e8;
+    border: 2px solid var(--input-border);
     border-radius: 12px;
     transition: all 0.3s ease;
-    background: #f8f9fa;
+    background: var(--input-bg);
+    color: var(--text-primary);
     box-sizing: border-box;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--input-focus);
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-    background: #fff;
+    background: var(--input-bg);
     transform: translateY(-2px);
 }
 
 .form-control::placeholder {
-    color: #999;
+    color: var(--text-muted);
     font-size: 1rem;
 }
 
@@ -104,44 +106,44 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: var(--gradient-secondary);
     color: #fff;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px var(--shadow-medium);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+    background: var(--gradient-secondary);
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px var(--shadow-heavy);
 }
 
 .auth-footer {
     text-align: center;
     margin-top: 1.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
 }
 
 .auth-link {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1rem;
     margin: 0;
 }
 
 .auth-link a {
-    color: #667eea;
+    color: var(--accent-primary);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
 }
 
 .auth-link a:hover {
-    color: #5a6fd8;
+    color: var(--accent-secondary);
     text-decoration: underline;
 }
 
 .error {
-    color: #dc3545;
+    color: var(--error-color);
     font-size: 0.875rem;
     margin-top: 0.5rem;
     display: block;
@@ -150,11 +152,12 @@ body {
 
 /* Plan Selection Section */
 .plan-selection-section {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 20px;
     padding: 2.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px var(--shadow-heavy);
     animation: slideInRight 0.6s ease-out;
+    border: 1px solid var(--border-color);
 }
 
 .plan-header {
@@ -163,14 +166,14 @@ body {
 }
 
 .plan-header h3 {
-    color: #1a1a1a;
+    color: var(--text-primary);
     font-size: 1.8rem;
     margin: 0 0 0.5rem 0;
     font-weight: 700;
 }
 
 .plan-subtitle {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1rem;
     margin: 0;
 }
@@ -183,42 +186,42 @@ body {
 }
 
 .plan-option {
-    border: 2px solid #e1e4e8;
+    border: 2px solid var(--border-color);
     border-radius: 16px;
     padding: 1.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    background: #fff;
+    background: var(--card-bg);
 }
 
 .plan-option:hover {
-    border-color: #667eea;
+    border-color: var(--accent-primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 8px 25px var(--shadow-medium);
 }
 
 .plan-option.selected {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+    border-color: var(--accent-primary);
+    background: var(--bg-tertiary);
+    box-shadow: 0 8px 25px var(--shadow-medium);
 }
 
 .plan-option.premium {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: var(--accent-primary);
+    background: var(--gradient-secondary);
     color: #fff;
     transform: scale(1.02);
 }
 
 .plan-option.premium:hover {
     transform: scale(1.02) translateY(-2px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 12px 35px var(--shadow-heavy);
 }
 
 .plan-option.premium.selected {
-    background: linear-gradient(135deg, #5a6fd8, #6a4c93);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    background: var(--gradient-secondary);
+    box-shadow: 0 12px 35px var(--shadow-heavy);
 }
 
 .plan-radio {
@@ -280,20 +283,20 @@ body {
 .btn-learn-more {
     display: inline-block;
     padding: 0.6rem 1.2rem;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: var(--gradient-secondary);
     color: white;
     text-decoration: none;
     border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
 .btn-learn-more:hover {
-    background: linear-gradient(135deg, #5a6fd8, #6a4c93);
+    background: var(--gradient-secondary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px var(--shadow-heavy);
     color: white;
     text-decoration: none;
 }
@@ -497,7 +500,7 @@ body {
         </div>
         
         <div style="text-align: center; margin-top: 2rem;">
-            <p style="color: #666; font-size: 0.9rem; margin: 0;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">
                 💡 <strong>Recomandare:</strong> Planul Premium îți oferă accesul complet la toate funcționalitățile AI avansate!
             </p>
         </div>

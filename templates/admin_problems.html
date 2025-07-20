@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Probleme{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Administrare Probleme</h1>
+        <p>Gestionare probleme din baza de date</p>
+    </div>
+
+    <div class="admin-search">
+        <input type="text" id="problem-search" placeholder="Caută probleme după ID sau nume..." class="search-input">
+    </div>
+
+    <div class="problems-table-container">
+        <table class="problems-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nume</th>
+                    <th>Enunț (primele 100 caractere)</th>
+                    <th>Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for problem in problems %}
+                <tr class="problem-row" data-id="{{ problem.id }}" data-name="{{ problem.name.lower() }}">
+                    <td>{{ problem.id }}</td>
+                    <td>{{ problem.name }}</td>
+                    <td class="statement-preview">
+                        {{ problem.statement[:100] }}{% if problem.statement|length > 100 %}...{% endif %}
+                    </td>
+                    <td class="actions">
+                        <a href="{{ url_for('admin_edit_problem', problem_id=problem.id) }}" class="btn-edit">
+                            ✏️ Editează
+                        </a>
+                        <button onclick="deleteProblem({{ problem.id }}, '{{ problem.name }}')" class="btn-delete">
+                            🗑️ Șterge
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-header h1 {
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.admin-header p {
+    color: var(--text-muted);
+}
+
+.admin-search {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.problems-table-container {
+    overflow-x: auto;
+}
+
+.problems-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.problems-table th {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.problems-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.problems-table tr:hover {
+    background: var(--hover-color);
+}
+
+.statement-preview {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.btn-edit, .btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-edit {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: var(--primary-hover);
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
+.problem-row.hidden {
+    display: none;
+}
+
+[data-theme="dark"] .problems-table {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .search-input {
+    background: var(--bg-secondary);
+}
+</style>
+
+<script>
+document.getElementById('problem-search').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll('.problem-row');
+    
+    rows.forEach(row => {
+        const id = row.getAttribute('data-id');
+        const name = row.getAttribute('data-name');
+        
+        if (id.includes(searchTerm) || name.includes(searchTerm)) {
+            row.classList.remove('hidden');
+        } else {
+            row.classList.add('hidden');
+        }
+    });
+});
+
+function deleteProblem(id, name) {
+    if (confirm(`Ești sigur că vrei să ștergi problema ${id} (${name})?`)) {
+        fetch(`/admin/problem/${id}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Eroare la ștergerea problemei');
+            }
+        });
+    }
+}
+</script>
+{% endblock %} 

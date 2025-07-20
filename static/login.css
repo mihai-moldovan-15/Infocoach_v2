@@ -1,8 +1,9 @@
 /* static/login.css */
 body {
-    background: #f6f8fa;
+    background: var(--bg-primary);
     margin: 0;
     font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    color: var(--text-primary);
 }
 
 .login-page-container {
@@ -10,10 +11,11 @@ body {
     min-height: calc(100vh - 70px); /* Full height minus navbar */
     width: 100%;
     align-items: stretch;
+    background: var(--gradient-secondary);
 }
 
 .welcome-section {
-    background: linear-gradient(135deg, #007acc, #005999);
+    background: var(--gradient-secondary);
     color: #fff;
     padding: 60px 40px;
     width: 55%;
@@ -61,16 +63,16 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px;
-    background: #f6f8fa;
+    background: var(--bg-secondary);
     box-sizing: border-box;
 }
 
 .login-section .auth-container {
     max-width: 380px;
     width: 100%;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #e8e8e8;
-    background: #fff;
+    box-shadow: 0 4px 20px var(--shadow-medium);
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
     padding: 40px;
     border-radius: 8px;
 }
@@ -78,6 +80,7 @@ body {
 .login-section .auth-header h2 {
     font-size: 2em;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 /* Responsive adjustments */

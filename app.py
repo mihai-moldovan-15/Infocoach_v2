@@ -1582,27 +1582,47 @@ def api_problem_details():
     conn = sqlite3.connect('problems.db')
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
-    cur.execute("SELECT statement, input_description, output_description, constraints, example_input, example_output, example_input_name, example_output_name, time_limit, memory_limit FROM problems WHERE id = ?", (problem_id,))
+    cur.execute("SELECT name, statement, input_description, output_description, constraints, example_input, example_output, example_input_name, example_output_name, time_limit, memory_limit FROM problems WHERE id = ?", (problem_id,))
     row = cur.fetchone()
     if not row:
         return jsonify({'error': 'Problemă inexistentă'}), 404
     
+    # Obține exemplele multiple
+    cur.execute("SELECT example_number, input_data, output_data, input_file_name, output_file_name FROM examples WHERE problem_id = ? ORDER BY example_number", (problem_id,))
+    examples = cur.fetchall()
+    
     # Detectează tipul problemei
     problem_type = detect_problem_type(row['statement'])
     
-    return jsonify({
+    response = jsonify({
+        'id': problem_id,
+        'name': row['name'],
         'statement': row['statement'],
         'input_description': row['input_description'],
         'output_description': row['output_description'],
         'constraints': row['constraints'],
-        'example_input': row['example_input'],
-        'example_output': row['example_output'],
+        'example_input': row['example_input'],  # Păstrează pentru compatibilitate
+        'example_output': row['example_output'],  # Păstrează pentru compatibilitate
         'example_input_name': row['example_input_name'],
         'example_output_name': row['example_output_name'],
         'time_limit': row['time_limit'],
         'memory_limit': row['memory_limit'],
-        'problem_type': problem_type
+        'problem_type': problem_type,
+        'examples': [{
+            'number': ex['example_number'],
+            'input': ex['input_data'],
+            'output': ex['output_data'],
+            'input_file_name': ex['input_file_name'],
+            'output_file_name': ex['output_file_name']
+        } for ex in examples]
     })
+    
+    # Adaugă headers pentru a preveni cache-ul
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 # === Function to detect problem type ===
 def detect_problem_type(statement):
@@ -2812,7 +2832,242 @@ def inject_theme():
 def test_theme():
     return render_template('test_theme.html')
 
+# === Admin decorator ===
+def require_admin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for('login'))
+        if current_user.username != 'mihaimoldovan':
+            flash('Nu ai permisiuni de admin.', 'error')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# === Admin routes ===
+@app.route('/admin/problems')
+@login_required
+@require_admin
+def admin_problems():
+    conn = sqlite3.connect('problems.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, statement FROM problems ORDER BY id")
+    problems = cur.fetchall()
+    conn.close()
+    return render_template('admin_problems.html', problems=problems)
+
+@app.route('/admin/problem/<int:problem_id>')
+@login_required
+@require_admin
+def admin_edit_problem(problem_id):
+    conn = sqlite3.connect('problems.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM problems WHERE id = ?", (problem_id,))
+    problem = cur.fetchone()
+    conn.close()
+    
+    if not problem:
+        flash('Problema nu a fost găsită.', 'error')
+        return redirect(url_for('admin_problems'))
+    
+    return render_template('admin_edit_problem.html', problem=problem)
+
+@app.route('/admin/problem/<int:problem_id>', methods=['POST'])
+@login_required
+@require_admin
+def admin_update_problem(problem_id):
+    conn = sqlite3.connect('problems.db')
+    cur = conn.cursor()
+    
+    try:
+        # Obține datele din formular
+        name = request.form.get('name', '').strip()
+        statement = request.form.get('statement', '').strip()
+        input_description = request.form.get('input_description', '').strip()
+        output_description = request.form.get('output_description', '').strip()
+        constraints = request.form.get('constraints', '').strip()
+        time_limit = request.form.get('time_limit', '').strip()
+        memory_limit = request.form.get('memory_limit', '').strip()
+        
+        # Actualizează problema
+        cur.execute("""
+            UPDATE problems SET 
+                name = ?, statement = ?, input_description = ?, output_description = ?,
+                constraints = ?, time_limit = ?, memory_limit = ?
+            WHERE id = ?
+        """, (name, statement, input_description, output_description, constraints,
+              time_limit, memory_limit, problem_id))
+        
+        # Procesează exemplele multiple
+        examples_data = {}
+        for key, value in request.form.items():
+            if key.startswith('examples['):
+                # Parsează examples[1][input] -> (1, 'input', value)
+                parts = key.replace('examples[', '').replace(']', '').split('[')
+                if len(parts) == 2:
+                    example_num = int(parts[0])
+                    field_name = parts[1]
+                    if example_num not in examples_data:
+                        examples_data[example_num] = {}
+                    examples_data[example_num][field_name] = value.strip()
+        
+        # Șterge exemplele existente
+        cur.execute("DELETE FROM examples WHERE problem_id = ?", (problem_id,))
+        
+        # Adaugă exemplele noi
+        for example_num, example_data in examples_data.items():
+            if example_data.get('input') or example_data.get('output'):
+                cur.execute("""
+                    INSERT INTO examples (problem_id, example_number, input_data, output_data, input_file_name, output_file_name)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (
+                    problem_id, example_num, 
+                    example_data.get('input', ''), 
+                    example_data.get('output', ''),
+                    example_data.get('input_file_name', ''),
+                    example_data.get('output_file_name', '')
+                ))
+        
+        conn.commit()
+        flash('Problema a fost actualizată cu succes!', 'success')
+        
+    except Exception as e:
+        conn.rollback()
+        flash(f'Eroare la actualizarea problemei: {str(e)}', 'error')
+    finally:
+        conn.close()
+    
+    return redirect(url_for('admin_edit_problem', problem_id=problem_id))
+
+@app.route('/api/problem_examples/<int:problem_id>')
+@login_required
+@require_admin
+def api_problem_examples(problem_id):
+    conn = sqlite3.connect('problems.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    
+    cur.execute("""
+        SELECT example_number, input_data, output_data, input_file_name, output_file_name 
+        FROM examples 
+        WHERE problem_id = ? 
+        ORDER BY example_number
+    """, (problem_id,))
+    
+    examples = cur.fetchall()
+    conn.close()
+    
+    return jsonify({
+        'examples': [{
+            'number': ex['example_number'],
+            'input': ex['input_data'],
+            'output': ex['output_data'],
+            'input_file_name': ex['input_file_name'],
+            'output_file_name': ex['output_file_name']
+        } for ex in examples]
+    })
+
+@app.route('/api/public/problem_examples/<int:problem_id>')
+def api_public_problem_examples(problem_id):
+    """API public pentru exemple, fără permisiuni de admin"""
+    conn = sqlite3.connect('problems.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    
+    cur.execute("""
+        SELECT example_number, input_data, output_data, input_file_name, output_file_name 
+        FROM examples 
+        WHERE problem_id = ? 
+        ORDER BY example_number
+    """, (problem_id,))
+    
+    examples = cur.fetchall()
+    conn.close()
+    
+    response = jsonify({
+        'examples': [{
+            'number': ex['example_number'],
+            'input': ex['input_data'],
+            'output': ex['output_data'],
+            'input_file_name': ex['input_file_name'],
+            'output_file_name': ex['output_file_name']
+        } for ex in examples]
+    })
+    
+    # Adaugă headers pentru a preveni cache-ul
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
+
+@app.route('/admin/problem/<int:problem_id>/delete', methods=['POST'])
+@login_required
+@require_admin
+def admin_delete_problem(problem_id):
+    conn = sqlite3.connect('problems.db')
+    cur = conn.cursor()
+    
+    try:
+        cur.execute("DELETE FROM problems WHERE id = ?", (problem_id,))
+        conn.commit()
+        flash('Problema a fost ștearsă cu succes!', 'success')
+    except Exception as e:
+        conn.rollback()
+        flash(f'Eroare la ștergerea problemei: {str(e)}', 'error')
+    finally:
+        conn.close()
+    
+    return redirect(url_for('admin_problems'))
+
+# === Function to ensure problems schema updates ===
+def ensure_problems_schema_updates():
+    conn = sqlite3.connect('problems.db')
+    cur = conn.cursor()
+    
+    # Verifică dacă tabelul examples există
+    cur.execute("""
+        SELECT name FROM sqlite_master 
+        WHERE type='table' AND name='examples'
+    """)
+    
+    if not cur.fetchone():
+        # Creează tabelul examples pentru exemple multiple
+        cur.execute("""
+            CREATE TABLE examples (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                problem_id INTEGER NOT NULL,
+                example_number INTEGER NOT NULL,
+                input_data TEXT,
+                output_data TEXT,
+                input_file_name TEXT,
+                output_file_name TEXT,
+                FOREIGN KEY (problem_id) REFERENCES problems (id) ON DELETE CASCADE,
+                UNIQUE(problem_id, example_number)
+            )
+        """)
+        
+        # Migrează exemplele existente din tabelul problems
+        cur.execute("""
+            INSERT INTO examples (problem_id, example_number, input_data, output_data, input_file_name, output_file_name)
+            SELECT id, 1, example_input, example_output, example_input_name, example_output_name
+            FROM problems 
+            WHERE example_input IS NOT NULL AND example_input != ''
+        """)
+        
+        print("Tabelul examples a fost creat și datele au fost migrate.")
+    
+    conn.commit()
+    conn.close()
+
+# Run problems schema updates
+ensure_problems_schema_updates()
+
 # === Start application ===
 if __name__ == '__main__':
     migrate_set_titles_for_old_conversations()
     app.run(debug=True)
+    
+##nu pot adauga exemple, nu mi se schimba exemplele atunci cand selectez din dropbar
